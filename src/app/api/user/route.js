@@ -107,14 +107,60 @@ export async function GET(req) {
             {
                 success:false,
                 message:"Email already exists"
-            }
+            },
+               { status: 409 }
         )
     }
+
+
 
     }
 
 
     catch(error){
-
+        return response.json(
+            {
+                success:false,
+                message:error.message
+            },
+            { status: 500 }
+        )   
     }
+
+
+    const [result] =await db.query(
+        `
+            INSERT INTO users (
+                first_name,
+                last_name,
+                email,
+                password,
+                phone,
+                whatsapp_number,
+                postal_code,
+                address_line1,
+                address_line2,
+                city,
+                district
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `,
+        [
+            first_name||"",
+            last_name||"",
+            email,
+            password,
+            phone||"",
+            whatsapp_number||"",
+            postal_code ||"",
+            address_line1||"",
+            address_line2||"",
+            city||"",
+            district||""
+        ]
+    )
+
+    
   }
+
+
+
