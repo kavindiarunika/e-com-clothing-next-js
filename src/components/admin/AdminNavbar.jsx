@@ -13,8 +13,7 @@ export default function AdminNavbar({
     <header className="admin-navbar">
 
       <div className="navbar-title">
-        <Menu size={20} />
-        <strong>Clothing Store Admin</strong>
+          <strong>Clothing Store Admin</strong>
       </div>
 
       <div className="navbar-search">

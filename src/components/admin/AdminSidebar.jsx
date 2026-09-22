@@ -53,7 +53,7 @@ const menuGroups = [
         href: "/admin/subcategories",
         icon: FolderTree,
       },
-      {
+  /*    {
         name: "Sizes",
         href: "/admin/sizes",
         icon: Ruler,
@@ -72,7 +72,7 @@ const menuGroups = [
         name: "Featured Products",
         href: "/admin/featured-products",
         icon: Sparkles,
-      },
+      },*/
     ],
   },
 
@@ -83,18 +83,18 @@ const menuGroups = [
         name: "Orders",
         href: "/admin/orders",
         icon: ShoppingBag,
-      },
+      },/*
       {
         name: "Customers",
         href: "/admin/customers",
         icon: Users,
-      },
+      },*/
       {
         name: "Payments",
         href: "/admin/payments",
         icon: CreditCard,
       },
-      {
+     /* {
         name: "Shipments",
         href: "/admin/shipments",
         icon: Truck,
@@ -103,7 +103,7 @@ const menuGroups = [
         name: "Returns",
         href: "/admin/returns",
         icon: RotateCcw,
-      },
+      },*/
     ],
   },
 
@@ -114,12 +114,12 @@ const menuGroups = [
         name: "Coupons",
         href: "/admin/coupons",
         icon: TicketPercent,
-      },
+      },/*
       {
         name: "Banners",
         href: "/admin/banners",
         icon: Image,
-      },
+      },*/
       {
         name: "Reviews",
         href: "/admin/reviews",
@@ -157,9 +157,9 @@ export default function AdminSidebar() {
 
       <div className="sidebar-brand">
 
-        <div className="brand-logo">
-          CS
-        </div>
+       <div className="brand-logo">
+ 
+</div>
 
         <div>
           <strong>Clothing Store</strong>

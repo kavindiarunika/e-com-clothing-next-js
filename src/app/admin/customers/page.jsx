@@ -10,7 +10,7 @@ export default function CustomersPage() {
       addLabel="Add Customer"
       fields={[
         {
-          key: "name",
+          key: "first_name",
           label: "Customer",
         },
         {
@@ -22,7 +22,7 @@ export default function CustomersPage() {
           label: "Phone",
         },
         {
-          key: "orders",
+          key: "order_count",
           label: "Orders",
         },
       ]}
@@ -49,6 +49,10 @@ export default function CustomersPage() {
           orders: 12,
         },
       ]}
+      endpoint="/api/admin/customers"
+      resultKey="customers"
+      idKey="user_id"
+      readOnly
     />
   );
 }
