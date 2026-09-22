@@ -10,11 +10,11 @@ export default function PaymentsPage() {
       addLabel="Add Payment"
       fields={[
         {
-          key: "transaction",
+          key: "transaction_id",
           label: "Transaction ID",
         },
         {
-          key: "order",
+          key: "order_id",
           label: "Order",
         },
         {
@@ -22,11 +22,11 @@ export default function PaymentsPage() {
           label: "Amount",
         },
         {
-          key: "method",
+          key: "payment_method",
           label: "Method",
         },
         {
-          key: "status",
+          key: "payment_status",
           label: "Status",
         },
       ]}
@@ -48,6 +48,10 @@ export default function PaymentsPage() {
           status: "Pending",
         },
       ]}
+      endpoint="/api/admin/payments"
+      resultKey="payments"
+      idKey="payment_id"
+      readOnly
     />
   );
 }

@@ -10,11 +10,11 @@ export default function ReturnsPage() {
       addLabel="Add Return"
       fields={[
         {
-          key: "order",
+          key: "order_id",
           label: "Order",
         },
         {
-          key: "customer",
+          key: "customer_name",
           label: "Customer",
         },
         {
@@ -42,6 +42,10 @@ export default function ReturnsPage() {
           status: "Approved",
         },
       ]}
+      endpoint="/api/admin/returns"
+      resultKey="returns"
+      idKey="return_id"
+      editOnly
     />
   );
 }
