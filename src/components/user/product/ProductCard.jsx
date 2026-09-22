@@ -283,19 +283,8 @@ export default function ProductCard({ product }) {
             src={productImage}
             alt={product.name}
             fill
-            sizes="
-              (max-width: 640px) 50vw,
-              (max-width: 1024px) 33vw,
-              25vw
-            "
-            className="
-              object-cover
-              object-center
-              transition
-              duration-700
-              ease-out
-              group-hover:scale-105
-            "
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover object-center transition duration-700 ease-out group-hover:scale-105"
           />
         </Link>
 
@@ -305,21 +294,7 @@ export default function ProductCard({ product }) {
 
         {isSoldOut && (
           <span
-            className="
-              absolute
-              left-0
-              top-4
-              z-20
-              bg-red-600
-              px-4
-              py-2
-              text-[10px]
-              font-semibold
-              uppercase
-              tracking-[1.5px]
-              text-white
-              shadow-sm
-            "
+            className="absolute left-0 top-4 z-20 bg-red-600 px-4 py-2 text-[10px] font-semibold uppercase tracking-[1.5px] text-white shadow-sm"
           >
             Sold Out
           </span>
@@ -331,20 +306,7 @@ export default function ProductCard({ product }) {
 
         {hasDiscount && !isSoldOut && (
           <span
-            className="
-              absolute
-              left-3
-              top-3
-              z-10
-              bg-[#72383D]
-              px-3
-              py-1.5
-              text-[10px]
-              font-semibold
-              uppercase
-              tracking-wider
-              text-white
-            "
+            className="absolute left-3 top-3 z-10 bg-[#72383D] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white"
           >
             -{product.discount}%
           </span>
@@ -362,30 +324,7 @@ export default function ProductCard({ product }) {
               ? "Remove from wishlist"
               : "Add to wishlist"
           }
-          className={`
-            absolute
-            right-3
-            top-3
-            z-30
-            flex
-            h-10
-            w-10
-            items-center
-            justify-center
-            rounded-full
-            bg-white/90
-            shadow-sm
-            backdrop-blur-sm
-            transition-all
-            duration-300
-            hover:bg-white
-
-            ${
-              isWishlisted
-                ? "text-[#72383D]"
-                : "text-[#322D29]"
-            }
-          `}
+          className={`absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-white ${isWishlisted ? "text-[#72383D]" : "text-[#322D29]"}`}
         >
           <Heart
             size={19}
@@ -406,28 +345,7 @@ export default function ProductCard({ product }) {
           <button
             type="button"
             onClick={handleAddToCart}
-            className="
-              absolute
-              bottom-0
-              left-0
-              right-0
-              z-30
-              flex
-              translate-y-full
-              items-center
-              justify-center
-              gap-2
-              bg-[#322D29]
-              py-3
-              text-xs
-              font-semibold
-              uppercase
-              tracking-[1.5px]
-              text-white
-              transition-transform
-              duration-300
-              group-hover:translate-y-0
-            "
+            className="absolute bottom-0 left-0 right-0 z-30 flex translate-y-full items-center justify-center gap-2 bg-[#322D29] py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition-transform duration-300 group-hover:translate-y-0"
           >
             <ShoppingBag
               size={16}
@@ -452,13 +370,7 @@ export default function ProductCard({ product }) {
           href={`/user/product/${product.id}`}
         >
           <h3
-            className="
-              text-sm
-              font-medium
-              text-[#322D29]
-              transition-colors
-              hover:text-[#72383D]
-            "
+            className="text-sm font-medium text-[#322D29] transition-colors hover:text-[#72383D]"
           >
             {product.name}
           </h3>
@@ -491,11 +403,7 @@ export default function ProductCard({ product }) {
           </div>
 
           <span
-            className="
-              ml-1
-              text-[11px]
-              text-[#6B625D]
-            "
+            className="ml-1 text-[11px] text-[#6B625D]"
           >
             {currentRating} ({reviewCount})
           </span>
@@ -507,20 +415,11 @@ export default function ProductCard({ product }) {
         ================================== */}
 
         <div
-          className="
-            mt-2
-            flex
-            items-center
-            gap-2
-          "
+          className="mt-2 flex items-center gap-2"
         >
 
           <span
-            className="
-              text-sm
-              font-semibold
-              text-[#72383D]
-            "
+            className="text-sm font-semibold text-[#72383D]"
           >
             Rs.{" "}
             {Math.round(
@@ -530,11 +429,7 @@ export default function ProductCard({ product }) {
 
           {hasDiscount && (
             <span
-              className="
-                text-xs
-                text-[#6B625D]
-                line-through
-              "
+              className="text-xs text-[#6B625D] line-through"
             >
               Rs.{" "}
               {originalPrice.toLocaleString()}

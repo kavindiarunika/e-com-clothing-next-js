@@ -9,14 +9,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
-        <Navbar />
+    <>
+      <Navbar />
 
-        <main>{children}</main>
+      <main>{children}</main>
 
-        <Footer />
-      </body>
-    </html>
+      <Footer />
+    </>
   );
 }

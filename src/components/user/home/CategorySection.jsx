@@ -4,17 +4,17 @@ import Image from "next/image";
 const categories = [
   {
     name: "Men",
-    image: "/images/categories/velora-hero3.jpg",
+    image: "/images/categories/velora-hero4.jpg",
     href: "/user/men",
   },
   {
     name: "Women",
-    image: "/images/categories/velora-hero4.jpg",
+    image: "/images/categories/velora-hero3.jpg",
     href: "/user/women",
   },
   {
     name: "Kids",
-    image: "/images/categories/velora-hero6.jpg",
+    image: "/images/categories/kids-tshirt1.webp",
     href: "/user/kids",
   },
 ];
