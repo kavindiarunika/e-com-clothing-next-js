@@ -14,7 +14,7 @@ export default function ColorsPage() {
           label: "Color Name",
         },
         {
-          key: "code",
+          key: "hex_code",
           label: "Color Code",
         },
         {
@@ -48,6 +48,9 @@ export default function ColorsPage() {
           status: "Active",
         },
       ]}
+      endpoint="/api/admin/colors"
+      resultKey="colors"
+      idKey="color_id"
     />
   );
 }

@@ -44,7 +44,11 @@ export async function POST(request) {
     const user = users[0];
 
     // Only admin users can access admin panel
-    if (user.role !== "admin") {
+    if (
+      user.role !== "admin" &&
+      user.role !== "super_admin" &&
+      user.role !== "superadmin"
+    ) {
       return NextResponse.json(
         {
           success: false,

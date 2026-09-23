@@ -10,23 +10,23 @@ export default function ShipmentsPage() {
       addLabel="Add Shipment"
       fields={[
         {
-          key: "order",
+          key: "order_id",
           label: "Order",
         },
         {
-          key: "customer",
+          key: "customer_name",
           label: "Customer",
         },
         {
-          key: "courier",
-          label: "Courier",
+          key: "shipping_address",
+          label: "Shipping Address",
         },
         {
-          key: "tracking",
-          label: "Tracking",
+          key: "order_date",
+          label: "Order Date",
         },
         {
-          key: "status",
+          key: "order_status",
           label: "Status",
         },
       ]}
@@ -48,6 +48,10 @@ export default function ShipmentsPage() {
           status: "Processing",
         },
       ]}
+      endpoint="/api/admin/shipments"
+      resultKey="shipments"
+      idKey="order_id"
+      readOnly
     />
   );
 }

@@ -1,82 +1,60 @@
-import { NextResponse } from "next/server";
-import { isAdmin } from "@/lib/auth";
-import { query } from "@/lib/db";
+import { getPool } from "@/lib/db";
+import { getAdmin } from "@/lib/auth";
 
-export async function GET(request) {
+export async function GET() {
   try {
-    const admin = isAdmin(request);
+    const admin = await getAdmin();
 
     if (!admin) {
-      return NextResponse.json(
+      return Response.json(
         {
           success: false,
           message: "Unauthorized",
         },
-        { status: 401 }
+        {
+          status: 401,
+        }
       );
     }
 
-    const columns = await query(
-      `
-      SELECT COLUMN_NAME
-      FROM INFORMATION_SCHEMA.COLUMNS
-      WHERE TABLE_SCHEMA = DATABASE()
-        AND TABLE_NAME = 'orders'
-      `
-    );
+    const pool = getPool();
 
-    const names = columns.map((item) => item.COLUMN_NAME);
-
-    const dateColumn =
-      names.find((name) =>
-        ["created_at", "order_date", "createdAt"].includes(name)
-      ) || null;
-
-    const amountColumn =
-      names.find((name) =>
-        [
-          "total",
-          "total_amount",
-          "grand_total",
-          "order_total",
-          "amount",
-        ].includes(name)
-      ) || null;
-
-    if (!dateColumn || !amountColumn) {
-      return NextResponse.json({
-        success: true,
-        data: [],
-        message: "Sales columns were not found",
-      });
-    }
-
-    const rows = await query(
-      `
+    const [sales] = await pool.query(`
       SELECT
-        DATE(\`${dateColumn}\`) AS date,
-        COUNT(*) AS orders,
-        COALESCE(SUM(\`${amountColumn}\`), 0) AS revenue
+        order_id,
+        user_id,
+        order_date,
+        subtotal,
+        discount,
+        shipping_fee,
+        total_amount,
+        payment_status,
+        order_status,
+        created_at,
+        updated_at
       FROM orders
-      GROUP BY DATE(\`${dateColumn}\`)
-      ORDER BY date ASC
-      LIMIT 365
-      `
-    );
+      ORDER BY order_date DESC
+    `);
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
-      data: rows,
+      sales,
     });
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Sales Report GET API Error:",
+      error
+    );
 
-    return NextResponse.json(
+    return Response.json(
       {
         success: false,
-        message: error.message,
+        message: "Failed to load sales report",
+        error: error.message,
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }
