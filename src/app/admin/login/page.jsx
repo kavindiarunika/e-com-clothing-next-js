@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -7,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function AdminLoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -27,7 +26,7 @@ export default function AdminLoginPage() {
         },
         credentials: "include",
         body: JSON.stringify({
-          email: email.trim(),
+          username: username.trim(),
           password,
         }),
       });
@@ -36,20 +35,20 @@ export default function AdminLoginPage() {
 
       // Login failed
       if (!response.ok || !data.success) {
-        setError(data.message || "Invalid email or password");
+        setError(data.message || "Invalid username or password");
         return;
       }
 
-      // Login successful
-      // The API has already created the admin_token cookie.
+      // Login successful. The response has committed the auth cookie.
       router.replace("/admin/dashboard");
-      router.refresh();
+
     } catch (error) {
       console.error("Admin login error:", error);
 
       setError(
         error.message || "Login failed. Please try again."
       );
+
     } finally {
       setLoading(false);
     }
@@ -58,8 +57,6 @@ export default function AdminLoginPage() {
   return (
     <main className="login-page">
       <div className="login-card">
-
-  
 
         <p className="eyebrow">
           Admin Panel Login Page
@@ -80,20 +77,20 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleSubmit}>
 
-          {/* Email */}
+          {/* Username */}
           <div className="form-group">
-            <label htmlFor="email">
-              Email Address
+            <label htmlFor="username">
+              Username
             </label>
 
             <input
-              id="email"
-              type="email"
-              placeholder="admin@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              type="text"
+              placeholder="admin"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
-              autoComplete="email"
+              autoComplete="username"
             />
           </div>
 
@@ -128,4 +125,3 @@ export default function AdminLoginPage() {
     </main>
   );
 }
-

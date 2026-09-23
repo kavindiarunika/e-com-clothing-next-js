@@ -1,91 +1,58 @@
-
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import { query } from "@/lib/db";
 import { createAdminToken } from "@/lib/auth";
 
-const SEEDED_PASSWORD_PLACEHOLDER = "PASTE_BCRYPT_HASH_HERE";
-const SEEDED_ADMIN_PASSWORD = "Admin@12345";
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "Admin@12345";
 
 export async function POST(request) {
   try {
     const body = await request.json();
 
-    const email = String(body.email || "").trim().toLowerCase();
+    const username = String(body.username || "").trim();
     const password = String(body.password || "");
 
     // Check required fields
-    if (!email || !password) {
+    if (!username || !password) {
       return NextResponse.json(
         {
           success: false,
-          message: "Email and password are required",
+          message: "Username and password are required",
         },
         { status: 400 }
       );
     }
 
-    // Find admin/user by email
-    const users = await query(
-      "SELECT * FROM users WHERE LOWER(email) = ? LIMIT 1",
-      [email]
-    );
-
-    if (!users.length) {
+    // Check username
+    if (username !== ADMIN_USERNAME) {
       return NextResponse.json(
         {
           success: false,
-          message: "Invalid email or password",
+          message: "Invalid username or password",
         },
         { status: 401 }
-      );
-    }
-
-    const user = users[0];
-
-    // Only admin users can access admin panel
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Admin access required",
-        },
-        { status: 403 }
-      );
-    }
-
-    // Check account status
-    if (user.status && user.status !== "active") {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Admin account is not active",
-        },
-        { status: 403 }
       );
     }
 
     // Check password
-    let validPassword = false;
-
-    if (user.password === SEEDED_PASSWORD_PLACEHOLDER) {
-      validPassword = password === SEEDED_ADMIN_PASSWORD;
-    } else {
-      validPassword = await bcrypt.compare(
-        password,
-        user.password
-      );
-    }
-
-    if (!validPassword) {
+    if (password !== ADMIN_PASSWORD) {
       return NextResponse.json(
         {
           success: false,
-          message: "Invalid email or password",
+          message: "Invalid username or password",
         },
         { status: 401 }
       );
     }
+
+    // Admin user information
+    const user = {
+      user_id: 1,
+      first_name: "Admin",
+      last_name: "",
+      username: "admin",
+      email: "admin@example.com",
+      role: "admin",
+    };
 
     // Create JWT token
     const token = createAdminToken(user);
@@ -98,6 +65,7 @@ export async function POST(request) {
         user_id: user.user_id,
         first_name: user.first_name,
         last_name: user.last_name,
+        username: user.username,
         email: user.email,
         role: user.role,
       },
@@ -119,6 +87,7 @@ export async function POST(request) {
     });
 
     return response;
+
   } catch (error) {
     console.error("Admin login error:", error);
 
@@ -131,4 +100,3 @@ export async function POST(request) {
     );
   }
 }
-
