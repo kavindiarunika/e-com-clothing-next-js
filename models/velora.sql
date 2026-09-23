@@ -23,6 +23,7 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+
 -- =====================================================
 -- 2. CATEGORIES
 -- =====================================================
@@ -30,7 +31,10 @@ CREATE TABLE categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    image VARCHAR(500),
+
+    -- Image stored directly in MySQL
+    image LONGBLOB,
+
     parent_category_id INT NULL,
     status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -40,6 +44,7 @@ CREATE TABLE categories (
         ON DELETE SET NULL
 );
 
+
 -- =====================================================
 -- 3. PRODUCTS / ITEMS
 -- =====================================================
@@ -47,7 +52,10 @@ CREATE TABLE products (
     item_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    main_image VARCHAR(500),
+
+    -- Main product image
+    main_image LONGBLOB,
+
     price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     discount DECIMAL(10,2) DEFAULT 0.00,
     category_id INT,
@@ -58,12 +66,14 @@ CREATE TABLE products (
     is_featured BOOLEAN DEFAULT FALSE,
     is_best_selling BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
 
     FOREIGN KEY (category_id)
         REFERENCES categories(category_id)
         ON DELETE SET NULL
 );
+
 
 -- =====================================================
 -- 4. PRODUCT IMAGES
@@ -71,7 +81,10 @@ CREATE TABLE products (
 CREATE TABLE product_images (
     image_id INT AUTO_INCREMENT PRIMARY KEY,
     item_id INT NOT NULL,
-    image VARCHAR(500) NOT NULL,
+
+    -- Actual image binary data
+    image LONGBLOB NOT NULL,
+
     sort_order INT DEFAULT 0,
     is_main BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -80,6 +93,7 @@ CREATE TABLE product_images (
         REFERENCES products(item_id)
         ON DELETE CASCADE
 );
+
 
 -- =====================================================
 -- 5. SIZES
@@ -91,6 +105,7 @@ CREATE TABLE sizes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
 -- =====================================================
 -- 6. COLORS
 -- =====================================================
@@ -101,6 +116,7 @@ CREATE TABLE colors (
     status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 -- =====================================================
 -- 7. PRODUCT VARIANTS
@@ -114,10 +130,14 @@ CREATE TABLE product_variants (
     price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     discount DECIMAL(10,2) DEFAULT 0.00,
     stock_quantity INT DEFAULT 0,
-    image VARCHAR(500),
+
+    -- Variant image
+    image LONGBLOB,
+
     status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
 
     FOREIGN KEY (item_id)
         REFERENCES products(item_id)
@@ -131,6 +151,7 @@ CREATE TABLE product_variants (
         REFERENCES colors(color_id)
         ON DELETE SET NULL
 );
+
 
 -- =====================================================
 -- 8. INVENTORY
@@ -149,18 +170,21 @@ CREATE TABLE inventory (
         ON DELETE CASCADE
 );
 
+
 -- =====================================================
 -- 9. INVENTORY TRANSACTIONS
 -- =====================================================
 CREATE TABLE inventory_transactions (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
     variant_id INT NOT NULL,
+
     transaction_type ENUM(
         'purchase',
         'sale',
         'return',
         'adjustment'
     ) NOT NULL,
+
     quantity INT NOT NULL,
     reference_id INT,
     note VARCHAR(500),
@@ -170,6 +194,7 @@ CREATE TABLE inventory_transactions (
         REFERENCES product_variants(variant_id)
         ON DELETE CASCADE
 );
+
 
 -- =====================================================
 -- 10. CUSTOMER ADDRESSES
@@ -194,6 +219,7 @@ CREATE TABLE addresses (
         ON DELETE CASCADE
 );
 
+
 -- =====================================================
 -- 11. CARTS
 -- =====================================================
@@ -209,6 +235,7 @@ CREATE TABLE carts (
         REFERENCES users(user_id)
         ON DELETE CASCADE
 );
+
 
 -- =====================================================
 -- 12. CART ITEMS
@@ -234,6 +261,7 @@ CREATE TABLE cart_items (
         ON DELETE SET NULL
 );
 
+
 -- =====================================================
 -- 13. WISHLIST
 -- =====================================================
@@ -253,6 +281,7 @@ CREATE TABLE wishlists (
         REFERENCES products(item_id)
         ON DELETE CASCADE
 );
+
 
 -- =====================================================
 -- 14. COUPONS
@@ -274,6 +303,7 @@ CREATE TABLE coupons (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
 -- =====================================================
 -- 15. ORDERS
 -- =====================================================
@@ -281,17 +311,21 @@ CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NULL,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     discount DECIMAL(10,2) DEFAULT 0.00,
     shipping_fee DECIMAL(10,2) DEFAULT 0.00,
     total_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+
     coupon_id INT NULL,
+
     payment_status ENUM(
         'pending',
         'paid',
         'failed',
         'refunded'
     ) DEFAULT 'pending',
+
     order_status ENUM(
         'pending',
         'processing',
@@ -315,6 +349,7 @@ CREATE TABLE orders (
         REFERENCES coupons(coupon_id)
         ON DELETE SET NULL
 );
+
 
 -- =====================================================
 -- 16. ORDER ITEMS
@@ -342,26 +377,31 @@ CREATE TABLE order_items (
         ON DELETE SET NULL
 );
 
+
 -- =====================================================
 -- 17. PAYMENTS
 -- =====================================================
 CREATE TABLE payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT NOT NULL,
+
     payment_method ENUM(
         'card',
         'payhere',
         'cash_on_delivery',
         'bank_transfer'
     ) NOT NULL,
+
     transaction_id VARCHAR(255),
     amount DECIMAL(10,2) NOT NULL,
+
     payment_status ENUM(
         'pending',
         'successful',
         'failed',
         'refunded'
     ) DEFAULT 'pending',
+
     paid_at DATETIME,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -369,6 +409,7 @@ CREATE TABLE payments (
         REFERENCES orders(order_id)
         ON DELETE CASCADE
 );
+
 
 -- =====================================================
 -- 18. PRODUCT REVIEWS
@@ -380,8 +421,13 @@ CREATE TABLE reviews (
     order_id INT NULL,
     rating INT NOT NULL,
     review_text TEXT,
-    status ENUM('pending', 'approved', 'rejected')
-        DEFAULT 'pending',
+
+    status ENUM(
+        'pending',
+        'approved',
+        'rejected'
+    ) DEFAULT 'pending',
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (item_id)
@@ -399,6 +445,7 @@ CREATE TABLE reviews (
     CHECK (rating >= 1 AND rating <= 5)
 );
 
+
 -- =====================================================
 -- 19. OFFERS
 -- =====================================================
@@ -406,13 +453,17 @@ CREATE TABLE offers (
     offer_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    banner_image VARCHAR(500),
+
+    -- Offer banner image
+    banner_image LONGBLOB,
+
     link VARCHAR(500),
     start_date DATETIME,
     end_date DATETIME,
     status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 -- =====================================================
 -- 20. HERO BANNERS
@@ -421,7 +472,10 @@ CREATE TABLE hero_banners (
     banner_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255),
     subtitle VARCHAR(500),
-    image VARCHAR(500) NOT NULL,
+
+    -- Hero banner image
+    image LONGBLOB NOT NULL,
+
     button_text VARCHAR(100),
     button_link VARCHAR(500),
     sort_order INT DEFAULT 0,
@@ -431,6 +485,7 @@ CREATE TABLE hero_banners (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
 -- =====================================================
 -- 21. RETURNS / EXCHANGES
 -- =====================================================
@@ -439,15 +494,22 @@ CREATE TABLE returns_exchanges (
     order_id INT NOT NULL,
     order_item_id INT NOT NULL,
     user_id INT NOT NULL,
-    request_type ENUM('return', 'exchange') NOT NULL,
+
+    request_type ENUM(
+        'return',
+        'exchange'
+    ) NOT NULL,
+
     reason VARCHAR(255),
     description TEXT,
+
     status ENUM(
         'pending',
         'approved',
         'rejected',
         'completed'
     ) DEFAULT 'pending',
+
     requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     processed_at DATETIME,
 
@@ -463,6 +525,7 @@ CREATE TABLE returns_exchanges (
         REFERENCES users(user_id)
         ON DELETE CASCADE
 );
+
 
 -- =====================================================
 -- 22. NOTIFICATIONS

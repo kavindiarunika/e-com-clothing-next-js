@@ -1,4 +1,5 @@
 import db from '@/lib/db';
+import { NextResponse } from 'next/server';
 
 
 export async function GET(req) {
@@ -159,6 +160,23 @@ export async function GET(req) {
         ]
     )
 
+
+    return NextResponse.json(
+        { 
+            success: true,
+             message: "User created successfully", 
+             data: { user_id: result.insertId,
+                 first_name: first_name || "", 
+                 last_name: last_name || "",
+                  email, phone: phone || "",
+                   whatsapp_number: whatsapp_number || "",
+                    postal_code: postal_code || "", 
+                    address_line1: address_line1 || "", 
+                address_line2: address_line2 || "", 
+                city: city || "", 
+                district: district || "", } },
+        { status: 201 }
+    )
     
   }
 
