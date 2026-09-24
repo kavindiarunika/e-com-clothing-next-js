@@ -43,9 +43,18 @@ export async function GET() {
       ORDER BY c1.name ASC
     `);
 
+    const formattedSubcategories = subcategories.map((subcategory) => ({
+      ...subcategory,
+      image: subcategory.image
+        ? `data:image/jpeg;base64,${Buffer.from(
+            subcategory.image
+          ).toString("base64")}`
+        : null,
+    }));
+
     return Response.json({
       success: true,
-      subcategories,
+      subcategories: formattedSubcategories,
     });
   } catch (error) {
     console.error("Subcategories GET Error:", error);
@@ -79,15 +88,12 @@ export async function POST(request) {
       );
     }
 
-    const body = await request.json();
-
-    const {
-      name,
-      description,
-      image,
-      parent_category_id,
-      status,
-    } = body;
+    const formData = await request.formData();
+    const name = formData.get("name")?.toString().trim();
+    const description = formData.get("description")?.toString() || "";
+    const parent_category_id = formData.get("parent_category_id");
+    const status = formData.get("status")?.toString() || "active";
+    const imageFile = formData.get("image");
 
     if (!name || !parent_category_id) {
       return Response.json(
@@ -125,6 +131,13 @@ export async function POST(request) {
     }
 
     /* Insert */
+
+    const image =
+      imageFile &&
+      typeof imageFile !== "string" &&
+      imageFile.size > 0
+        ? Buffer.from(await imageFile.arrayBuffer())
+        : null;
 
     const [result] = await pool.query(
       `

@@ -10,6 +10,7 @@ import {
   Banknote,
   Tag,
   Truck,
+  FileDown,
 } from "lucide-react";
 
 export default function SalesReportPage() {
@@ -189,6 +190,10 @@ export default function SalesReportPage() {
     setShowViewModal(false);
   };
 
+  const exportPdf = () => {
+    window.print();
+  };
+
   return (
     <div className="admin-sales-report-page">
 
@@ -204,18 +209,30 @@ export default function SalesReportPage() {
           </p>
         </div>
 
-        <button
-          className="sales-report-refresh-btn"
-          onClick={loadSales}
-          disabled={loading}
-        >
-          <RefreshCw
-            size={17}
-            className={loading ? "sales-spin" : ""}
-          />
+        <div className="sales-report-header-actions">
+          <button
+            className="sales-report-export-btn"
+            onClick={exportPdf}
+            type="button"
+          >
+            <FileDown size={17} />
+            Save PDF
+          </button>
 
-          Refresh
-        </button>
+          <button
+            className="sales-report-refresh-btn"
+            onClick={loadSales}
+            disabled={loading}
+            type="button"
+          >
+            <RefreshCw
+              size={17}
+              className={loading ? "sales-spin" : ""}
+            />
+
+            Refresh
+          </button>
+        </div>
       </div>
 
       {/* =========================

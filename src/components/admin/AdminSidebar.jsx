@@ -7,18 +7,13 @@ import {
   LayoutDashboard,
   Package,
   FolderTree,
-  Ruler,
-  Palette,
   ShoppingBag,
   Users,
-  Boxes,
   TicketPercent,
   Image,
   Star,
   RotateCcw,
   CreditCard,
-  Truck,
-  Sparkles,
   BarChart3,
   LogOut,
 } from "lucide-react";
@@ -53,26 +48,6 @@ const menuGroups = [
         href: "/admin/subcategories",
         icon: FolderTree,
       },
-  /*    {
-        name: "Sizes",
-        href: "/admin/sizes",
-        icon: Ruler,
-      },
-      {
-        name: "Colors",
-        href: "/admin/colors",
-        icon: Palette,
-      },
-      {
-        name: "Inventory",
-        href: "/admin/inventory",
-        icon: Boxes,
-      },
-      {
-        name: "Featured Products",
-        href: "/admin/featured-products",
-        icon: Sparkles,
-      },*/
     ],
   },
 
@@ -94,11 +69,6 @@ const menuGroups = [
         href: "/admin/payments",
         icon: CreditCard,
       },
-     /* {
-        name: "Shipments",
-        href: "/admin/shipments",
-        icon: Truck,
-      },*/
       {
         name: "Returns",
         href: "/admin/returns",
@@ -110,6 +80,11 @@ const menuGroups = [
   {
     title: "MARKETING",
     items: [
+      {
+        name: "Offers",
+        href: "/admin/offers",
+        icon: TicketPercent,
+      },
       {
         name: "Coupons",
         href: "/admin/coupons",
@@ -157,9 +132,8 @@ export default function AdminSidebar() {
 
       <div className="sidebar-brand">
 
-       <div className="brand-logo">
- 
-</div>
+        <div className="brand-logo">
+        </div>
 
         <div>
           <strong>Clothing Store</strong>

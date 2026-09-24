@@ -1,13 +1,12 @@
-
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function AdminLoginPage() {
+function AdminLoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("admin@clothingstore.com");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -27,29 +26,27 @@ export default function AdminLoginPage() {
         },
         credentials: "include",
         body: JSON.stringify({
-          email: email.trim(),
+          username: username.trim(),
           password,
         }),
       });
 
       const data = await response.json();
 
-      // Login failed
       if (!response.ok || !data.success) {
-        setError(data.message || "Invalid email or password");
+        setError(data.message || "Invalid username or password");
         return;
       }
 
       // Login successful
-      // The API has already created the admin_token cookie.
       router.replace("/admin/dashboard");
-      router.refresh();
     } catch (error) {
       console.error("Admin login error:", error);
 
       setError(
         error.message || "Login failed. Please try again."
       );
+
     } finally {
       setLoading(false);
     }
@@ -58,8 +55,6 @@ export default function AdminLoginPage() {
   return (
     <main className="login-page">
       <div className="login-card">
-
-  
 
         <p className="eyebrow">
           Admin Panel Login Page
@@ -79,25 +74,22 @@ export default function AdminLoginPage() {
         )}
 
         <form onSubmit={handleSubmit}>
-
-          {/* Email */}
           <div className="form-group">
-            <label htmlFor="email">
-              Email Address
+            <label htmlFor="username">
+              Username
             </label>
 
             <input
-              id="email"
-              type="email"
-              placeholder="admin@clothingstore.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              type="text"
+              placeholder="admin"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
-              autoComplete="email"
+              autoComplete="username"
             />
           </div>
 
-          {/* Password */}
           <div className="form-group">
             <label htmlFor="password">
               Password
@@ -114,7 +106,6 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          {/* Login button */}
           <button
             type="submit"
             className="btn primary full"
@@ -129,3 +120,4 @@ export default function AdminLoginPage() {
   );
 }
 
+export default AdminLoginPage;
