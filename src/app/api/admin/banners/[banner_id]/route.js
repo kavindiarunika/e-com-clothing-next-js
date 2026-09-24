@@ -2,10 +2,13 @@ import { getPool } from "@/lib/db";
 import { getAdmin } from "@/lib/auth";
 
 /* =========================================
-  GET ALL CUSTOMERS
+   GET SINGLE BANNER
 ========================================= */
 
-export async function GET() {
+export async function GET(
+  request,
+  { params }
+) {
   try {
     const admin = await getAdmin();
 
@@ -21,38 +24,56 @@ export async function GET() {
       );
     }
 
+    const bannerId = params.banner_id;
+
     const pool = getPool();
 
-    const [customers] = await pool.query(
+    const [banners] = await pool.query(
       `
       SELECT
-        user_id,
-        first_name,
-        last_name,
-        email,
-        phone,
+        banner_id,
+        title,
+        subtitle,
+        image,
+        button_text,
+        button_link,
+        sort_order,
+        start_date,
+        end_date,
         status,
         created_at
-      FROM users
-      WHERE role = 'customer'
-      ORDER BY user_id DESC
-      `
+      FROM hero_banners
+      WHERE banner_id = ?
+      `,
+      [bannerId]
     );
+
+    if (banners.length === 0) {
+      return Response.json(
+        {
+          success: false,
+          message: "Banner not found",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
 
     return Response.json({
       success: true,
-      customers,
+      banner: banners[0],
     });
   } catch (error) {
     console.error(
-      "Customer GET API Error:",
+      "Banner GET API Error:",
       error
     );
 
     return Response.json(
       {
         success: false,
-        message: "Failed to load customer",
+        message: "Failed to load banner",
         error: error.message,
       },
       {
@@ -63,7 +84,7 @@ export async function GET() {
 }
 
 /* =========================================
-   UPDATE CUSTOMER
+   UPDATE BANNER
 ========================================= */
 
 export async function PUT(
@@ -85,35 +106,27 @@ export async function PUT(
       );
     }
 
-    const userId = params.user_id;
+    const bannerId = params.banner_id;
 
     const body = await request.json();
 
     const {
-      first_name,
-      last_name,
-      email,
-      phone,
+      title,
+      subtitle,
+      image,
+      button_text,
+      button_link,
+      sort_order,
+      start_date,
+      end_date,
       status,
     } = body;
 
-    if (!first_name || !first_name.trim()) {
+    if (!image || !image.trim()) {
       return Response.json(
         {
           success: false,
-          message: "First name is required",
-        },
-        {
-          status: 400,
-        }
-      );
-    }
-
-    if (!email || !email.trim()) {
-      return Response.json(
-        {
-          success: false,
-          message: "Email is required",
+          message: "Banner image is required",
         },
         {
           status: 400,
@@ -130,7 +143,7 @@ export async function PUT(
       return Response.json(
         {
           success: false,
-          message: "Invalid customer status",
+          message: "Invalid banner status",
         },
         {
           status: 400,
@@ -140,50 +153,32 @@ export async function PUT(
 
     const pool = getPool();
 
-    const [existing] = await pool.query(
-      `
-      SELECT user_id
-      FROM users
-      WHERE email = ?
-      AND user_id != ?
-      LIMIT 1
-      `,
-      [
-        email.trim(),
-        userId,
-      ]
-    );
-
-    if (existing.length > 0) {
-      return Response.json(
-        {
-          success: false,
-          message: "Another customer already uses this email",
-        },
-        {
-          status: 409,
-        }
-      );
-    }
-
     const [result] = await pool.query(
       `
-      UPDATE users
+      UPDATE hero_banners
       SET
-        first_name = ?,
-        last_name = ?,
-        email = ?,
-        phone = ?,
+        title = ?,
+        subtitle = ?,
+        image = ?,
+        button_text = ?,
+        button_link = ?,
+        sort_order = ?,
+        start_date = ?,
+        end_date = ?,
         status = ?
-      WHERE user_id = ?
+      WHERE banner_id = ?
       `,
       [
-        first_name.trim(),
-        last_name?.trim() || null,
-        email.trim(),
-        phone?.trim() || null,
+        title || null,
+        subtitle || null,
+        image.trim(),
+        button_text || null,
+        button_link || null,
+        Number(sort_order) || 0,
+        start_date || null,
+        end_date || null,
         status,
-        userId,
+        bannerId,
       ]
     );
 
@@ -191,7 +186,7 @@ export async function PUT(
       return Response.json(
         {
           success: false,
-          message: "Customer not found",
+          message: "Banner not found",
         },
         {
           status: 404,
@@ -201,18 +196,18 @@ export async function PUT(
 
     return Response.json({
       success: true,
-      message: "Customer updated successfully",
+      message: "Banner updated successfully",
     });
   } catch (error) {
     console.error(
-      "Customer PUT API Error:",
+      "Banner PUT API Error:",
       error
     );
 
     return Response.json(
       {
         success: false,
-        message: "Failed to update customer",
+        message: "Failed to update banner",
         error: error.message,
       },
       {
@@ -223,7 +218,7 @@ export async function PUT(
 }
 
 /* =========================================
-   DELETE CUSTOMER
+   DELETE BANNER
 ========================================= */
 
 export async function DELETE(
@@ -245,23 +240,23 @@ export async function DELETE(
       );
     }
 
-    const userId = params.user_id;
+    const bannerId = params.banner_id;
 
     const pool = getPool();
 
     const [result] = await pool.query(
       `
-      DELETE FROM users
-      WHERE user_id = ?
+      DELETE FROM hero_banners
+      WHERE banner_id = ?
       `,
-      [userId]
+      [bannerId]
     );
 
     if (result.affectedRows === 0) {
       return Response.json(
         {
           success: false,
-          message: "Customer not found",
+          message: "Banner not found",
         },
         {
           status: 404,
@@ -271,18 +266,18 @@ export async function DELETE(
 
     return Response.json({
       success: true,
-      message: "Customer deleted successfully",
+      message: "Banner deleted successfully",
     });
   } catch (error) {
     console.error(
-      "Customer DELETE API Error:",
+      "Banner DELETE API Error:",
       error
     );
 
     return Response.json(
       {
         success: false,
-        message: "Failed to delete customer",
+        message: "Failed to delete banner",
         error: error.message,
       },
       {

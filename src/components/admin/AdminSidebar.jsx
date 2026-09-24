@@ -53,7 +53,7 @@ const menuGroups = [
         href: "/admin/subcategories",
         icon: FolderTree,
       },
-      {
+  /*    {
         name: "Sizes",
         href: "/admin/sizes",
         icon: Ruler,
@@ -72,7 +72,7 @@ const menuGroups = [
         name: "Featured Products",
         href: "/admin/featured-products",
         icon: Sparkles,
-      },
+      },*/
     ],
   },
 
@@ -94,11 +94,11 @@ const menuGroups = [
         href: "/admin/payments",
         icon: CreditCard,
       },
-      {
+     /* {
         name: "Shipments",
         href: "/admin/shipments",
         icon: Truck,
-      },
+      },*/
       {
         name: "Returns",
         href: "/admin/returns",
@@ -157,9 +157,9 @@ export default function AdminSidebar() {
 
       <div className="sidebar-brand">
 
-        <div className="brand-logo">
-          CS
-        </div>
+       <div className="brand-logo">
+ 
+</div>
 
         <div>
           <strong>Clothing Store</strong>

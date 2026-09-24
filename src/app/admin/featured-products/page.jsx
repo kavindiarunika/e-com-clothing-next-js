@@ -10,20 +10,20 @@ export default function FeaturedProductsPage() {
       addLabel="Add Featured Product"
       fields={[
         {
-          key: "product",
+          key: "title",
           label: "Product",
         },
         {
-          key: "category",
+          key: "category_name",
           label: "Category",
         },
         {
-          key: "position",
-          label: "Position",
+          key: "price",
+          label: "Price",
         },
         {
-          key: "status",
-          label: "Status",
+          key: "is_featured",
+          label: "Featured",
         },
       ]}
       initialData={[
@@ -42,6 +42,10 @@ export default function FeaturedProductsPage() {
           status: "Active",
         },
       ]}
+      endpoint="/api/admin/featured-products"
+      resultKey="products"
+      idKey="item_id"
+      editOnly
     />
   );
 }

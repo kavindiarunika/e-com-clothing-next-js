@@ -14,10 +14,6 @@ export default function SizesPage() {
           label: "Size",
         },
         {
-          key: "description",
-          label: "Description",
-        },
-        {
           key: "status",
           label: "Status",
         },
@@ -54,6 +50,9 @@ export default function SizesPage() {
           status: "Active",
         },
       ]}
+      endpoint="/api/admin/sizes"
+      resultKey="sizes"
+      idKey="size_id"
     />
   );
 }

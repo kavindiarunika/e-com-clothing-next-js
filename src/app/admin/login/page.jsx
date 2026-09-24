@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function AdminLoginPage() {
+function AdminLoginPage() {
   const router = useRouter();
 
   const [username, setUsername] = useState("");
@@ -33,15 +33,13 @@ export default function AdminLoginPage() {
 
       const data = await response.json();
 
-      // Login failed
       if (!response.ok || !data.success) {
         setError(data.message || "Invalid username or password");
         return;
       }
 
-      // Login successful. The response has committed the auth cookie.
+      // Login successful
       router.replace("/admin/dashboard");
-
     } catch (error) {
       console.error("Admin login error:", error);
 
@@ -76,8 +74,6 @@ export default function AdminLoginPage() {
         )}
 
         <form onSubmit={handleSubmit}>
-
-          {/* Username */}
           <div className="form-group">
             <label htmlFor="username">
               Username
@@ -94,7 +90,6 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          {/* Password */}
           <div className="form-group">
             <label htmlFor="password">
               Password
@@ -111,7 +106,6 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          {/* Login button */}
           <button
             type="submit"
             className="btn primary full"
@@ -125,3 +119,5 @@ export default function AdminLoginPage() {
     </main>
   );
 }
+
+export default AdminLoginPage;
