@@ -32,6 +32,7 @@ export default function CustomersPage() {
     first_name: "",
     last_name: "",
     email: "",
+    password: "",
     phone: "",
     status: "active",
   });
@@ -115,6 +116,7 @@ export default function CustomersPage() {
       first_name: "",
       last_name: "",
       email: "",
+      password: "",
       phone: "",
       status: "active",
     });
@@ -133,6 +135,7 @@ export default function CustomersPage() {
       first_name: customer.first_name || "",
       last_name: customer.last_name || "",
       email: customer.email || "",
+      password: "",
       phone: customer.phone || "",
       status: customer.status || "active",
     });
@@ -176,6 +179,11 @@ export default function CustomersPage() {
 
     if (!formData.email.trim()) {
       alert("Email is required.");
+      return;
+    }
+
+    if (!editingCustomer && !formData.password) {
+      alert("Password is required for a new customer.");
       return;
     }
 
@@ -768,6 +776,21 @@ export default function CustomersPage() {
                 />
 
               </div>
+
+              {/* Phone */}
+              {!editingCustomer && (
+                <div className="customer-form-group">
+                  <label>Password *</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Account password"
+                    required
+                  />
+                </div>
+              )}
 
               {/* Phone */}
               <div className="customer-form-group">

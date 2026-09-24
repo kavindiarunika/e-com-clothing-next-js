@@ -33,26 +33,29 @@ export default function AdminDashboard() {
         return;
       }
 
-      const [dashboardResponse, productsResponse] = await Promise.all([
-        fetch("/api/admin/dashboard"),
-        fetch("/api/admin/products"),
-      ]);
+      try {
+        const [dashboardResponse, productsResponse] = await Promise.all([
+          fetch("/api/admin/dashboard"),
+          fetch("/api/admin/products"),
+        ]);
 
-      const dashboardResult =
-        await dashboardResponse.json();
-      const productsResult =
-        await productsResponse.json();
+        const dashboardResult = await dashboardResponse.json();
+        const productsResult = await productsResponse.json();
 
-      if (dashboardResult.success) {
-        setData(dashboardResult.data);
-      }
+        if (dashboardResult.success) {
+          setData(dashboardResult.data);
+        }
 
-      if (productsResult.success) {
-        setProducts(productsResult.products.slice(0, 5));
+        if (productsResult.success) {
+          setProducts((productsResult.data || []).slice(0, 5));
+        }
+      } catch (error) {
+        console.error("Dashboard data error:", error);
       }
     }
 
-    loadDashboard().catch(() => {
+    loadDashboard().catch((error) => {
+      console.error("Admin session check error:", error);
       router.replace("/admin/login");
     });
   }, [router]);

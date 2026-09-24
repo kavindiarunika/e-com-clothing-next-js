@@ -8,127 +8,132 @@ import {
   Trash2,
   X,
   Image as ImageIcon,
-  Star,
-  Flame,
 } from "lucide-react";
 
-export default function ProductPage() {
+export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
 
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-
-  const emptyForm = {
+  const [form, setForm] = useState({
     title: "",
     description: "",
-    main_image: "",
     price: "",
-    discount: "0",
+    discount: "",
     category_id: "",
     sku: "",
     brand: "",
     tags: "",
     status: "active",
-    is_featured: false,
-    is_best_selling: false,
-  };
+    main_image: null,
+    images: [],
+  });
 
-  const [form, setForm] = useState(emptyForm);
-
-  // =====================================================
-  // FETCH PRODUCTS
-  // =====================================================
-
-  async function fetchProducts() {
-    try {
-      setLoading(true);
-      setError("");
-
-      const response = await fetch("/api/admin/products");
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to load products");
-      }
-
-      setProducts(data.products || []);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // =====================================================
-  // FETCH CATEGORIES
-  // =====================================================
-
-  async function fetchCategories() {
-    try {
-      const response = await fetch("/api/admin/categories");
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setCategories(data.categories || []);
-      }
-    } catch (err) {
-      console.error("Category fetch error:", err);
-    }
-  }
+  const [mainImagePreview, setMainImagePreview] = useState("");
+  const [imagePreviews, setImagePreviews] = useState([]);
 
   useEffect(() => {
     fetchProducts();
     fetchCategories();
   }, []);
 
-  // =====================================================
-  // INPUT CHANGE
-  // =====================================================
+  /* =====================================================
+     FETCH PRODUCTS
+  ===================================================== */
 
-  function handleChange(e) {
-    const { name, value, type, checked } = e.target;
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
 
-    setForm((previous) => ({
-      ...previous,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  }
+      const res = await fetch("/api/admin/products");
 
-  // =====================================================
-  // OPEN ADD MODAL
-  // =====================================================
+      if (!res.ok) {
+        throw new Error("Failed to load products");
+      }
 
-  function openAddModal() {
+      const data = await res.json();
+
+      setProducts(data.products || []);
+    } catch (error) {
+      console.error("Fetch products error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* =====================================================
+     FETCH CATEGORIES
+  ===================================================== */
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("/api/admin/categories");
+
+      if (!res.ok) {
+        return;
+      }
+
+      const data = await res.json();
+
+      setCategories(data.categories || []);
+    } catch (error) {
+      console.error("Fetch categories error:", error);
+    }
+  };
+
+  /* =====================================================
+     RESET FORM
+  ===================================================== */
+
+  const resetForm = () => {
+    setForm({
+      title: "",
+      description: "",
+      price: "",
+      discount: "",
+      category_id: "",
+      sku: "",
+      brand: "",
+      tags: "",
+      status: "active",
+      main_image: null,
+      images: [],
+    });
+
+    setMainImagePreview("");
+    setImagePreviews([]);
     setEditingProduct(null);
-    setForm(emptyForm);
-    setError("");
+  };
+
+  /* =====================================================
+     OPEN ADD MODAL
+  ===================================================== */
+
+  const openAddModal = () => {
+    resetForm();
     setShowModal(true);
-  }
+  };
 
-  // =====================================================
-  // OPEN EDIT MODAL
-  // =====================================================
+  /* =====================================================
+     OPEN EDIT MODAL
+  ===================================================== */
 
-  function openEditModal(product) {
+  const openEditModal = (product) => {
     setEditingProduct(product);
 
     setForm({
       title: product.title || "",
       description: product.description || "",
-      main_image: product.main_image || "",
       price: product.price || "",
-      discount: product.discount || "0",
+      discount: product.discount || "",
       category_id: product.category_id || "",
       sku: product.sku || "",
       brand: product.brand || "",
@@ -136,55 +141,141 @@ export default function ProductPage() {
         ? product.tags.join(", ")
         : product.tags || "",
       status: product.status || "active",
-      is_featured: Boolean(product.is_featured),
-      is_best_selling: Boolean(product.is_best_selling),
+      main_image: null,
+      images: [],
     });
 
-    setError("");
+    if (product.main_image) {
+      setMainImagePreview(getImageUrl(product));
+    } else {
+      setMainImagePreview("");
+    }
+
+    setImagePreviews([]);
+
     setShowModal(true);
-  }
+  };
 
-  // =====================================================
-  // CLOSE MODAL
-  // =====================================================
+  /* =====================================================
+     CLOSE MODAL
+  ===================================================== */
 
-  function closeModal() {
+  const closeModal = () => {
     if (saving) return;
 
     setShowModal(false);
-    setEditingProduct(null);
-    setForm(emptyForm);
-    setError("");
-  }
+    resetForm();
+  };
 
-  // =====================================================
-  // SAVE PRODUCT
-  // =====================================================
+  /* =====================================================
+     HANDLE FORM CHANGE
+  ===================================================== */
 
-  async function handleSubmit(e) {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  /* =====================================================
+     MAIN IMAGE
+  ===================================================== */
+
+  const handleMainImageChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    setForm((prev) => ({
+      ...prev,
+      main_image: file,
+    }));
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setMainImagePreview(reader.result);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  /* =====================================================
+     ADDITIONAL IMAGES
+  ===================================================== */
+
+  const handleImagesChange = (e) => {
+    const files = Array.from(e.target.files || []);
+
+    setForm((prev) => ({
+      ...prev,
+      images: files,
+    }));
+
+    const previews = files.map((file) =>
+      URL.createObjectURL(file)
+    );
+
+    setImagePreviews(previews);
+  };
+
+  /* =====================================================
+     SUBMIT FORM
+  ===================================================== */
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.title.trim()) {
+      alert("Product title is required.");
+      return;
+    }
+
+    if (!form.price) {
+      alert("Product price is required.");
+      return;
+    }
 
     try {
       setSaving(true);
-      setError("");
 
-      const payload = {
-        ...form,
+      const formData = new FormData();
 
-        price: Number(form.price),
-        discount: Number(form.discount),
+      formData.append("title", form.title);
+      formData.append("description", form.description);
+      formData.append("price", form.price);
+      formData.append("discount", form.discount || "0");
+      formData.append(
+        "category_id",
+        form.category_id
+      );
+      formData.append("sku", form.sku);
+      formData.append("brand", form.brand);
+      formData.append("status", form.status);
 
-        category_id: form.category_id
-          ? Number(form.category_id)
-          : null,
+      formData.append(
+        "tags",
+        JSON.stringify(
+          form.tags
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter(Boolean)
+        )
+      );
 
-        tags: form.tags
-          ? form.tags
-              .split(",")
-              .map((tag) => tag.trim())
-              .filter(Boolean)
-          : [],
-      };
+      if (form.main_image) {
+        formData.append(
+          "main_image",
+          form.main_image
+        );
+      }
+
+      form.images.forEach((image) => {
+        formData.append("images", image);
+      });
 
       const url = editingProduct
         ? `/api/admin/products/${editingProduct.item_id}`
@@ -192,34 +283,43 @@ export default function ProductPage() {
 
       const method = editingProduct ? "PUT" : "POST";
 
-      const response = await fetch(url, {
+      const res = await fetch(url, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        body: formData,
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to save product");
+      if (!res.ok) {
+        throw new Error(
+          data.message || "Failed to save product"
+        );
       }
 
-      closeModal();
       await fetchProducts();
-    } catch (err) {
-      setError(err.message);
+
+      setShowModal(false);
+      resetForm();
+
+      alert(
+        editingProduct
+          ? "Product updated successfully."
+          : "Product added successfully."
+      );
+    } catch (error) {
+      console.error("Save product error:", error);
+
+      alert(error.message);
     } finally {
       setSaving(false);
     }
-  }
+  };
 
-  // =====================================================
-  // DELETE PRODUCT
-  // =====================================================
+  /* =====================================================
+     DELETE PRODUCT
+  ===================================================== */
 
-  async function handleDelete(itemId) {
+  const handleDelete = async (itemId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this product?"
     );
@@ -227,122 +327,131 @@ export default function ProductPage() {
     if (!confirmed) return;
 
     try {
-      const response = await fetch(
+      const res = await fetch(
         `/api/admin/products/${itemId}`,
         {
           method: "DELETE",
         }
       );
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to delete product");
+      if (!res.ok) {
+        throw new Error(
+          data.message || "Failed to delete product"
+        );
       }
 
-      await fetchProducts();
-    } catch (err) {
-      setError(err.message);
+      setProducts((prev) =>
+        prev.filter(
+          (product) => product.item_id !== itemId
+        )
+      );
+    } catch (error) {
+      console.error("Delete product error:", error);
+
+      alert(error.message);
     }
-  }
+  };
 
-  // =====================================================
-  // FILTER PRODUCTS
-  // =====================================================
+  /* =====================================================
+     IMAGE URL
+  ===================================================== */
 
-  const filteredProducts = products.filter((product) => {
-    const searchText = search.toLowerCase();
+  const getImageUrl = (product) => {
+    if (!product.main_image) {
+      return null;
+    }
 
-    const matchesSearch =
-      product.title?.toLowerCase().includes(searchText) ||
-      product.sku?.toLowerCase().includes(searchText) ||
-      product.brand?.toLowerCase().includes(searchText);
+    if (
+      product.main_image.startsWith("/") ||
+      product.main_image.startsWith("http") ||
+      product.main_image.startsWith("data:")
+    ) {
+      return product.main_image;
+    }
 
-    const matchesStatus =
-      statusFilter === "all" ||
-      product.status === statusFilter;
+    return `data:image/jpeg;base64,${product.main_image}`;
+  };
 
-    const matchesCategory =
-      categoryFilter === "all" ||
-      String(product.category_id) === String(categoryFilter);
+  /* =====================================================
+     CATEGORY NAME
+  ===================================================== */
+
+  const getCategoryName = (categoryId) => {
+    const category = categories.find(
+      (cat) =>
+        String(cat.category_id) ===
+        String(categoryId)
+    );
 
     return (
-      matchesSearch &&
-      matchesStatus &&
-      matchesCategory
+      category?.name ||
+      category?.category_name ||
+      "Uncategorized"
     );
-  });
+  };
 
-  // =====================================================
-  // FORMAT PRICE
-  // =====================================================
+  /* =====================================================
+     FILTER PRODUCTS
+  ===================================================== */
 
-  function formatPrice(price) {
-    return `Rs. ${Number(price || 0).toLocaleString("en-LK", {
-      minimumFractionDigits: 2,
-    })}`;
-  }
+  const filteredProducts = products.filter(
+    (product) => {
+      const searchText = search.toLowerCase();
 
-  // =====================================================
-  // CATEGORY NAME
-  // =====================================================
+      const matchesSearch =
+        product.title
+          ?.toLowerCase()
+          .includes(searchText) ||
+        product.sku
+          ?.toLowerCase()
+          .includes(searchText) ||
+        product.brand
+          ?.toLowerCase()
+          .includes(searchText);
 
-  function getCategoryName(categoryId) {
-    const category = categories.find(
-      (item) =>
-        String(item.category_id) === String(categoryId)
-    );
+      const matchesStatus =
+        statusFilter === "all" ||
+        product.status === statusFilter;
 
-    return category?.name || category?.title || "Uncategorized";
-  }
+      return matchesSearch && matchesStatus;
+    }
+  );
 
   return (
-    <div className="admin-product-page">
+    <div className="products-page">
 
       {/* =================================================
-          PAGE HEADER
+          HEADER
       ================================================= */}
 
-      <div className="product-page-header">
-
+      <div className="products-header">
         <div>
           <h1>Products</h1>
 
           <p>
-            Manage your clothing products
+            Manage your VELORA clothing products,
+            pricing and inventory.
           </p>
         </div>
 
         <button
-          className="add-product-btn"
+          className="primary-button"
           onClick={openAddModal}
         >
           <Plus size={18} />
           Add Product
         </button>
-
       </div>
 
       {/* =================================================
-          ERROR
+          SEARCH / FILTER
       ================================================= */}
 
-      {error && !showModal && (
-        <div className="product-error">
-          {error}
-        </div>
-      )}
-
-      {/* =================================================
-          FILTER SECTION
-      ================================================= */}
-
-      <div className="product-filters">
-
-        {/* Search */}
+      <div className="products-toolbar">
 
         <div className="product-search">
-
           <Search size={18} />
 
           <input
@@ -353,34 +462,10 @@ export default function ProductPage() {
               setSearch(e.target.value)
             }
           />
-
         </div>
 
-        {/* Category */}
-
         <select
-          value={categoryFilter}
-          onChange={(e) =>
-            setCategoryFilter(e.target.value)
-          }
-        >
-          <option value="all">
-            All Categories
-          </option>
-
-          {categories.map((category) => (
-            <option
-              key={category.category_id}
-              value={category.category_id}
-            >
-              {category.name || category.title}
-            </option>
-          ))}
-        </select>
-
-        {/* Status */}
-
-        <select
+          className="status-filter"
           value={statusFilter}
           onChange={(e) =>
             setStatusFilter(e.target.value)
@@ -406,117 +491,106 @@ export default function ProductPage() {
       </div>
 
       {/* =================================================
-          PRODUCT TABLE
+          PRODUCTS TABLE
       ================================================= */}
 
-      <div className="product-table-card">
+      <div className="products-table-wrapper">
 
-        <div className="product-table-wrapper">
+        {loading ? (
+          <div className="products-loading">
+            Loading products...
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="products-empty">
 
-          <table className="product-table">
+            <ImageIcon size={40} />
+
+            <h3>
+              No products found
+            </h3>
+
+            <p>
+              Add your first product to start
+              managing your store.
+            </p>
+
+            <button
+              className="primary-button"
+              onClick={openAddModal}
+            >
+              <Plus size={18} />
+              Add Product
+            </button>
+
+          </div>
+        ) : (
+          <table className="products-table">
 
             <thead>
-
               <tr>
-
                 <th>Product</th>
-
                 <th>SKU</th>
-
                 <th>Category</th>
-
                 <th>Price</th>
-
-                <th>Discount</th>
-
                 <th>Status</th>
-
-                <th>Features</th>
-
                 <th>Actions</th>
-
               </tr>
-
             </thead>
 
             <tbody>
 
-              {loading ? (
-
-                <tr>
-
-                  <td
-                    colSpan="8"
-                    className="table-message"
+              {filteredProducts.map(
+                (product) => (
+                  <tr
+                    key={product.item_id}
                   >
-                    Loading products...
-                  </td>
-
-                </tr>
-
-              ) : filteredProducts.length === 0 ? (
-
-                <tr>
-
-                  <td
-                    colSpan="8"
-                    className="table-message"
-                  >
-                    No products found.
-                  </td>
-
-                </tr>
-
-              ) : (
-
-                filteredProducts.map((product) => (
-
-                  <tr key={product.item_id}>
 
                     {/* PRODUCT */}
 
                     <td>
-
                       <div className="product-info">
 
                         <div className="product-image">
 
-                          {product.main_image ? (
-
+                          {getImageUrl(
+                            product
+                          ) ? (
                             <img
-                              src={product.main_image}
-                              alt={product.title}
+                              src={getImageUrl(
+                                product
+                              )}
+                              alt={
+                                product.title
+                              }
                             />
-
                           ) : (
-
-                            <ImageIcon size={22} />
-
+                            <ImageIcon
+                              size={22}
+                            />
                           )}
 
                         </div>
 
                         <div>
 
-                          <div className="product-name">
+                          <strong>
                             {product.title}
-                          </div>
+                          </strong>
 
                           {product.brand && (
-                            <div className="product-brand">
+                            <span>
                               {product.brand}
-                            </div>
+                            </span>
                           )}
 
                         </div>
 
                       </div>
-
                     </td>
 
                     {/* SKU */}
 
-                    <td>
+                    <td className="sku-cell">
                       {product.sku || "-"}
                     </td>
 
@@ -531,17 +605,28 @@ export default function ProductPage() {
                     {/* PRICE */}
 
                     <td>
-                      {formatPrice(product.price)}
-                    </td>
 
-                    {/* DISCOUNT */}
+                      <div className="price-cell">
 
-                    <td>
+                        <strong>
+                          Rs.{" "}
+                          {Number(
+                            product.price || 0
+                          ).toLocaleString()}
+                        </strong>
 
-                      {Number(product.discount || 0) > 0
-                        ? `${product.discount}%`
-                        : "-"
-                      }
+                        {Number(
+                          product.discount || 0
+                        ) > 0 && (
+                          <span>
+                            {
+                              product.discount
+                            }
+                            % OFF
+                          </span>
+                        )}
+
+                      </div>
 
                     </td>
 
@@ -550,50 +635,13 @@ export default function ProductPage() {
                     <td>
 
                       <span
-                        className={`status-badge ${product.status}`}
+                        className={`status-badge status-${product.status}`}
                       >
-                        {product.status === "out_of_stock"
+                        {product.status ===
+                        "out_of_stock"
                           ? "Out of Stock"
-                          : product.status
-                              ?.charAt(0)
-                              .toUpperCase() +
-                            product.status?.slice(1)}
+                          : product.status}
                       </span>
-
-                    </td>
-
-                    {/* FEATURES */}
-
-                    <td>
-
-                      <div className="feature-badges">
-
-                        {Boolean(product.is_featured) && (
-                          <span
-                            className="feature-badge featured"
-                            title="Featured"
-                          >
-                            <Star size={13} />
-                          </span>
-                        )}
-
-                        {Boolean(product.is_best_selling) && (
-                          <span
-                            className="feature-badge best-selling"
-                            title="Best Selling"
-                          >
-                            <Flame size={13} />
-                          </span>
-                        )}
-
-                        {!product.is_featured &&
-                          !product.is_best_selling && (
-                            <span className="no-feature">
-                              -
-                            </span>
-                          )}
-
-                      </div>
 
                     </td>
 
@@ -601,28 +649,30 @@ export default function ProductPage() {
 
                     <td>
 
-                      <div className="product-actions">
+                      <div className="action-buttons">
 
                         <button
-                          className="edit-btn"
-                          onClick={() =>
-                            openEditModal(product)
-                          }
+                          className="icon-button edit"
                           title="Edit"
+                          onClick={() =>
+                            openEditModal(
+                              product
+                            )
+                          }
                         >
-                          <Pencil size={16} />
+                          <Pencil size={17} />
                         </button>
 
                         <button
-                          className="delete-btn"
+                          className="icon-button delete"
+                          title="Delete"
                           onClick={() =>
                             handleDelete(
                               product.item_id
                             )
                           }
-                          title="Delete"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={17} />
                         </button>
 
                       </div>
@@ -630,16 +680,13 @@ export default function ProductPage() {
                     </td>
 
                   </tr>
-
-                ))
-
+                )
               )}
 
             </tbody>
 
           </table>
-
-        </div>
+        )}
 
       </div>
 
@@ -648,24 +695,13 @@ export default function ProductPage() {
       ================================================= */}
 
       {showModal && (
-
-        <div
-          className="product-modal-overlay"
-          onMouseDown={(e) => {
-            if (
-              e.target === e.currentTarget &&
-              !saving
-            ) {
-              closeModal();
-            }
-          }}
-        >
+        <div className="product-modal-overlay">
 
           <div className="product-modal">
 
             {/* MODAL HEADER */}
 
-            <div className="product-modal-header">
+            <div className="modal-header">
 
               <div>
 
@@ -677,302 +713,431 @@ export default function ProductPage() {
 
                 <p>
                   {editingProduct
-                    ? "Update product information"
-                    : "Add a new product"}
+                    ? "Update product information."
+                    : "Add a new product to your store."}
                 </p>
 
               </div>
 
               <button
-                className="modal-close-btn"
+                className="modal-close"
                 onClick={closeModal}
-                disabled={saving}
               >
-                <X size={20} />
+                <X size={21} />
               </button>
 
             </div>
 
-            {/* MODAL FORM */}
+            {/* FORM */}
 
             <form
               className="product-form"
               onSubmit={handleSubmit}
             >
 
-              {error && (
-                <div className="product-error">
-                  {error}
-                </div>
-              )}
+              {/* =================================================
+                  BASIC INFORMATION
+              ================================================= */}
 
-              {/* IMAGE */}
+              <div className="form-section">
 
-              <div className="form-group">
+                <h3>
+                  Basic Information
+                </h3>
 
-                <label>
-                  Main Image
-                </label>
+                <div className="form-grid">
 
-                <input
-                  type="text"
-                  name="main_image"
-                  value={form.main_image}
-                  onChange={handleChange}
-                  placeholder="Enter image URL"
-                />
+                  <div className="form-group full">
 
-              </div>
+                    <label>
+                      Product Name *
+                    </label>
 
-              {/* TITLE */}
+                    <input
+                      name="title"
+                      value={form.title}
+                      onChange={
+                        handleChange
+                      }
+                      placeholder="e.g. Premium Oversized T-Shirt"
+                      required
+                    />
 
-              <div className="form-group">
+                  </div>
 
-                <label>
-                  Product Title *
-                </label>
+                  <div className="form-group full">
 
-                <input
-                  type="text"
-                  name="title"
-                  value={form.title}
-                  onChange={handleChange}
-                  placeholder="Enter product title"
-                  required
-                />
+                    <label>
+                      Description
+                    </label>
 
-              </div>
+                    <textarea
+                      name="description"
+                      value={
+                        form.description
+                      }
+                      onChange={
+                        handleChange
+                      }
+                      placeholder="Enter product description..."
+                      rows={4}
+                    />
 
-              {/* DESCRIPTION */}
+                  </div>
 
-              <div className="form-group">
+                  <div className="form-group">
 
-                <label>
-                  Description
-                </label>
+                    <label>
+                      SKU
+                    </label>
 
-                <textarea
-                  name="description"
-                  value={form.description}
-                  onChange={handleChange}
-                  placeholder="Enter product description"
-                  rows="4"
-                />
+                    <input
+                      name="sku"
+                      value={form.sku}
+                      onChange={
+                        handleChange
+                      }
+                      placeholder="VELORA-TS-001"
+                    />
 
-              </div>
+                  </div>
 
-              {/* PRICE + DISCOUNT */}
+                  <div className="form-group">
 
-              <div className="form-row">
+                    <label>
+                      Brand
+                    </label>
 
-                <div className="form-group">
+                    <input
+                      name="brand"
+                      value={form.brand}
+                      onChange={
+                        handleChange
+                      }
+                      placeholder="VELORA"
+                    />
 
-                  <label>
-                    Price *
-                  </label>
-
-                  <input
-                    type="number"
-                    name="price"
-                    value={form.price}
-                    onChange={handleChange}
-                    placeholder="4500.00"
-                    min="0"
-                    step="0.01"
-                    required
-                  />
-
-                </div>
-
-                <div className="form-group">
-
-                  <label>
-                    Discount
-                  </label>
-
-                  <input
-                    type="number"
-                    name="discount"
-                    value={form.discount}
-                    onChange={handleChange}
-                    placeholder="10.00"
-                    min="0"
-                    step="0.01"
-                  />
+                  </div>
 
                 </div>
 
               </div>
 
-              {/* CATEGORY + SKU */}
+              {/* =================================================
+                  PRICING
+              ================================================= */}
 
-              <div className="form-row">
+              <div className="form-section">
 
-                <div className="form-group">
+                <h3>
+                  Pricing
+                </h3>
 
-                  <label>
-                    Category
-                  </label>
+                <div className="form-grid">
 
-                  <select
-                    name="category_id"
-                    value={form.category_id}
-                    onChange={handleChange}
-                  >
+                  <div className="form-group">
 
-                    <option value="">
-                      Select Category
-                    </option>
+                    <label>
+                      Price *
+                    </label>
 
-                    {categories.map((category) => (
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      name="price"
+                      value={form.price}
+                      onChange={
+                        handleChange
+                      }
+                      placeholder="0.00"
+                      required
+                    />
 
-                      <option
-                        key={category.category_id}
-                        value={category.category_id}
-                      >
-                        {category.name ||
-                          category.title}
+                  </div>
+
+                  <div className="form-group">
+
+                    <label>
+                      Discount (%)
+                    </label>
+
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="100"
+                      name="discount"
+                      value={
+                        form.discount
+                      }
+                      onChange={
+                        handleChange
+                      }
+                      placeholder="0"
+                    />
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* =================================================
+                  CATEGORY
+              ================================================= */}
+
+              <div className="form-section">
+
+                <h3>
+                  Category
+                </h3>
+
+                <div className="form-grid">
+
+                  <div className="form-group">
+
+                    <label>
+                      Category
+                    </label>
+
+                    <select
+                      name="category_id"
+                      value={
+                        form.category_id
+                      }
+                      onChange={
+                        handleChange
+                      }
+                    >
+
+                      <option value="">
+                        Select Category
                       </option>
 
-                    ))}
+                      {categories.map(
+                        (category) => (
+                          <option
+                            key={
+                              category.category_id
+                            }
+                            value={
+                              category.category_id
+                            }
+                          >
+                            {category.name ||
+                              category.category_name}
+                          </option>
+                        )
+                      )}
 
-                  </select>
+                    </select>
+
+                  </div>
+
+                  <div className="form-group">
+
+                    <label>
+                      Status
+                    </label>
+
+                    <select
+                      name="status"
+                      value={
+                        form.status
+                      }
+                      onChange={
+                        handleChange
+                      }
+                    >
+
+                      <option value="active">
+                        Active
+                      </option>
+
+                      <option value="inactive">
+                        Inactive
+                      </option>
+
+                      <option value="out_of_stock">
+                        Out of Stock
+                      </option>
+
+                    </select>
+
+                  </div>
+
+                  <div className="form-group full">
+
+                    <label>
+                      Tags
+                    </label>
+
+                    <input
+                      name="tags"
+                      value={form.tags}
+                      onChange={
+                        handleChange
+                      }
+                      placeholder="t-shirt, men, casual, cotton"
+                    />
+
+                    <small>
+                      Separate tags using
+                      commas.
+                    </small>
+
+                  </div>
 
                 </div>
 
-                <div className="form-group">
+              </div>
 
-                  <label>
-                    SKU
-                  </label>
+              {/* =================================================
+                  MAIN IMAGE
+              ================================================= */}
 
-                  <input
-                    type="text"
-                    name="sku"
-                    value={form.sku}
-                    onChange={handleChange}
-                    placeholder="VEL-DRESS-001"
-                  />
+              <div className="form-section">
+
+                <h3>
+                  Main Product Image
+                </h3>
+
+                <div className="image-upload-area">
+
+                  {mainImagePreview ? (
+                    <div className="main-image-preview">
+
+                      <img
+                        src={
+                          mainImagePreview
+                        }
+                        alt="Main product"
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMainImagePreview(
+                            ""
+                          );
+
+                          setForm(
+                            (prev) => ({
+                              ...prev,
+                              main_image:
+                                null,
+                            })
+                          );
+                        }}
+                      >
+                        <X size={16} />
+                      </button>
+
+                    </div>
+                  ) : (
+                    <label className="upload-box">
+
+                      <ImageIcon
+                        size={30}
+                      />
+
+                      <strong>
+                        Upload Main Image
+                      </strong>
+
+                      <span>
+                        JPG, PNG or WEBP
+                      </span>
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={
+                          handleMainImageChange
+                        }
+                      />
+
+                    </label>
+                  )}
 
                 </div>
 
               </div>
 
-              {/* BRAND */}
+              {/* =================================================
+                  ADDITIONAL IMAGES
+              ================================================= */}
 
-              <div className="form-group">
+              <div className="form-section">
 
-                <label>
-                  Brand
-                </label>
+                <h3>
+                  Additional Product Images
+                </h3>
 
-                <input
-                  type="text"
-                  name="brand"
-                  value={form.brand}
-                  onChange={handleChange}
-                  placeholder="Velora"
-                />
+                <label className="upload-box small">
 
-              </div>
-
-              {/* TAGS */}
-
-              <div className="form-group">
-
-                <label>
-                  Tags
-                </label>
-
-                <input
-                  type="text"
-                  name="tags"
-                  value={form.tags}
-                  onChange={handleChange}
-                  placeholder="summer, floral, women"
-                />
-
-                <small>
-                  Separate tags using commas.
-                </small>
-
-              </div>
-
-              {/* STATUS */}
-
-              <div className="form-group">
-
-                <label>
-                  Status
-                </label>
-
-                <select
-                  name="status"
-                  value={form.status}
-                  onChange={handleChange}
-                >
-
-                  <option value="active">
-                    Active
-                  </option>
-
-                  <option value="inactive">
-                    Inactive
-                  </option>
-
-                  <option value="out_of_stock">
-                    Out of Stock
-                  </option>
-
-                </select>
-
-              </div>
-
-              {/* FEATURES */}
-
-              <div className="product-options">
-
-                <label className="checkbox-option">
-
-                  <input
-                    type="checkbox"
-                    name="is_featured"
-                    checked={form.is_featured}
-                    onChange={handleChange}
+                  <ImageIcon
+                    size={25}
                   />
 
+                  <strong>
+                    Select Multiple Images
+                  </strong>
+
                   <span>
-                    <Star size={16} />
-                    Featured Product
+                    You can select multiple
+                    images.
                   </span>
-
-                </label>
-
-                <label className="checkbox-option">
 
                   <input
-                    type="checkbox"
-                    name="is_best_selling"
-                    checked={form.is_best_selling}
-                    onChange={handleChange}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={
+                      handleImagesChange
+                    }
                   />
 
-                  <span>
-                    <Flame size={16} />
-                    Best Selling Product
-                  </span>
-
                 </label>
+
+                {imagePreviews.length >
+                  0 && (
+                  <div className="image-preview-grid">
+
+                    {imagePreviews.map(
+                      (
+                        preview,
+                        index
+                      ) => (
+                        <div
+                          className="additional-image"
+                          key={index}
+                        >
+                          <img
+                            src={preview}
+                            alt={`Product ${
+                              index + 1
+                            }`}
+                          />
+                        </div>
+                      )
+                    )}
+
+                  </div>
+                )}
 
               </div>
 
-              {/* BUTTONS */}
+              {/* =================================================
+                  ACTIONS
+              ================================================= */}
 
-              <div className="form-actions">
+              <div className="modal-actions">
 
                 <button
                   type="button"
-                  className="cancel-btn"
+                  className="secondary-button"
                   onClick={closeModal}
                   disabled={saving}
                 >
@@ -981,7 +1146,7 @@ export default function ProductPage() {
 
                 <button
                   type="submit"
-                  className="save-product-btn"
+                  className="primary-button"
                   disabled={saving}
                 >
                   {saving
@@ -998,7 +1163,6 @@ export default function ProductPage() {
           </div>
 
         </div>
-
       )}
 
     </div>

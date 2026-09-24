@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Search,
   Eye,
@@ -9,253 +9,273 @@ import {
   User,
   MapPin,
   CreditCard,
-  CalendarDays,
   Truck,
+  CalendarDays,
 } from "lucide-react";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
 
-  const [search, setSearch] = useState("");
-  const [paymentFilter, setPaymentFilter] = useState("all");
-  const [orderStatusFilter, setOrderStatusFilter] = useState("all");
-
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [search, setSearch] = useState("");
 
-  const [updating, setUpdating] = useState(false);
+  const [orderStatusFilter, setOrderStatusFilter] =
+    useState("all");
 
-  /* =========================================
-     LOAD ORDERS
-  ========================================= */
+  const [paymentStatusFilter, setPaymentStatusFilter] =
+    useState("all");
+
+  const [selectedOrder, setSelectedOrder] =
+    useState(null);
+
+  // ==========================================
+  // FETCH ORDERS
+  // ==========================================
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        "/api/admin/orders"
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          "Failed to fetch orders."
+        );
+      }
+
+      const data = await response.json();
+
+      setOrders(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error(
+        "Fetch orders error:",
+        error
+      );
+
+      alert("Failed to load orders.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchOrders();
   }, []);
 
-  async function fetchOrders() {
-    try {
-      setLoading(true);
+  // ==========================================
+  // OPEN ORDER
+  // ==========================================
 
-      const response = await fetch("/api/admin/orders");
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(
-          data.message || "Failed to load orders."
-        );
-      }
-
-      setOrders(data.orders || []);
-    } catch (error) {
-      console.error("Orders Load Error:", error);
-      alert(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  /* =========================================
-     FILTER ORDERS
-  ========================================= */
-
-  const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
-      const searchValue = search.toLowerCase();
-
-      const customerName =
-        `${order.first_name || ""} ${
-          order.last_name || ""
-        }`.toLowerCase();
-
-      const customerEmail =
-        order.email?.toLowerCase() || "";
-
-      const orderId =
-        String(order.order_id || "").toLowerCase();
-
-      const matchesSearch =
-        orderId.includes(searchValue) ||
-        customerName.includes(searchValue) ||
-        customerEmail.includes(searchValue);
-
-      const matchesPayment =
-        paymentFilter === "all" ||
-        order.payment_status === paymentFilter;
-
-      const matchesOrderStatus =
-        orderStatusFilter === "all" ||
-        order.order_status === orderStatusFilter;
-
-      return (
-        matchesSearch &&
-        matchesPayment &&
-        matchesOrderStatus
-      );
-    });
-  }, [
-    orders,
-    search,
-    paymentFilter,
-    orderStatusFilter,
-  ]);
-
-  /* =========================================
-     VIEW ORDER
-  ========================================= */
-
-  async function openOrder(orderId) {
+  const openOrder = async (orderId) => {
     try {
       const response = await fetch(
         `/api/admin/orders/${orderId}`
       );
 
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
+      if (!response.ok) {
         throw new Error(
-          data.message || "Failed to load order."
+          "Failed to fetch order details."
         );
       }
 
-      setSelectedOrder(data.order);
-      setShowModal(true);
+      const data = await response.json();
+
+      setSelectedOrder(data);
     } catch (error) {
-      console.error("Order Details Error:", error);
-      alert(error.message);
+      console.error(
+        "Order details error:",
+        error
+      );
+
+      alert("Failed to load order details.");
     }
-  }
+  };
 
-  /* =========================================
-     CLOSE MODAL
-  ========================================= */
+  // ==========================================
+  // CLOSE ORDER
+  // ==========================================
 
-  function closeModal() {
-    if (updating) return;
-
-    setShowModal(false);
+  const closeOrder = () => {
     setSelectedOrder(null);
-  }
+  };
 
-  /* =========================================
-     UPDATE ORDER STATUS
-  ========================================= */
+  // ==========================================
+  // UPDATE ORDER STATUS
+  // ==========================================
 
-  async function updateOrderStatus(orderStatus) {
-    if (!selectedOrder) return;
-
+  const updateOrderStatus = async (
+    orderId,
+    newStatus
+  ) => {
     try {
-      setUpdating(true);
+      setSaving(true);
 
       const response = await fetch(
-        `/api/admin/orders/${selectedOrder.order_id}`,
+        `/api/admin/orders/${orderId}`,
         {
           method: "PUT",
+
           headers: {
             "Content-Type": "application/json",
           },
+
           body: JSON.stringify({
-            order_status: orderStatus,
+            order_status: newStatus,
           }),
         }
       );
 
       const data = await response.json();
 
-      if (!response.ok || !data.success) {
+      if (!response.ok) {
         throw new Error(
-          data.message || "Failed to update order."
+          data.error ||
+            "Failed to update order status."
         );
       }
 
-      setSelectedOrder((prev) => ({
-        ...prev,
-        order_status: orderStatus,
-      }));
+      await fetchOrders();
 
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.order_id === selectedOrder.order_id
-            ? {
-                ...order,
-                order_status: orderStatus,
-              }
-            : order
-        )
-      );
+      await openOrder(orderId);
     } catch (error) {
-      console.error("Order Status Update Error:", error);
+      console.error(
+        "Update order status error:",
+        error
+      );
+
       alert(error.message);
     } finally {
-      setUpdating(false);
+      setSaving(false);
     }
-  }
+  };
 
-  /* =========================================
-     PAYMENT STATUS CLASS
-  ========================================= */
+  // ==========================================
+  // UPDATE PAYMENT STATUS
+  // ==========================================
 
-  function getPaymentClass(status) {
-    switch (status) {
-      case "paid":
-        return "paid";
+  const updatePaymentStatus = async (
+    orderId,
+    newStatus
+  ) => {
+    try {
+      setSaving(true);
 
-      case "failed":
-        return "failed";
+      const response = await fetch(
+        `/api/admin/orders/${orderId}`,
+        {
+          method: "PUT",
 
-      case "refunded":
-        return "refunded";
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-      default:
-        return "pending";
-    }
-  }
+          body: JSON.stringify({
+            payment_status: newStatus,
+          }),
+        }
+      );
 
-  /* =========================================
-     ORDER STATUS CLASS
-  ========================================= */
+      const data = await response.json();
 
-  function getOrderStatusClass(status) {
-    switch (status) {
-      case "processing":
-        return "processing";
-
-      case "shipped":
-        return "shipped";
-
-      case "delivered":
-        return "delivered";
-
-      case "cancelled":
-        return "cancelled";
-
-      default:
-        return "pending";
-    }
-  }
-
-  /* =========================================
-     FORMAT MONEY
-  ========================================= */
-
-  function formatMoney(value) {
-    return `Rs. ${Number(value || 0).toLocaleString(
-      "en-LK",
-      {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+            "Failed to update payment status."
+        );
       }
-    )}`;
-  }
 
-  /* =========================================
-     FORMAT DATE
-  ========================================= */
+      await fetchOrders();
 
-  function formatDate(value) {
+      await openOrder(orderId);
+    } catch (error) {
+      console.error(
+        "Update payment status error:",
+        error
+      );
+
+      alert(error.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // ==========================================
+  // FILTER ORDERS
+  // ==========================================
+
+  const filteredOrders = orders.filter(
+    (order) => {
+      const searchText =
+        search.toLowerCase();
+
+      const matchesSearch =
+        String(order.order_id)
+          .toLowerCase()
+          .includes(searchText) ||
+        String(
+          order.customer_name || ""
+        )
+          .toLowerCase()
+          .includes(searchText) ||
+        String(
+          order.customer_email || ""
+        )
+          .toLowerCase()
+          .includes(searchText);
+
+      const matchesOrderStatus =
+        orderStatusFilter === "all" ||
+        order.order_status ===
+          orderStatusFilter;
+
+      const matchesPaymentStatus =
+        paymentStatusFilter === "all" ||
+        order.payment_status ===
+          paymentStatusFilter;
+
+      return (
+        matchesSearch &&
+        matchesOrderStatus &&
+        matchesPaymentStatus
+      );
+    }
+  );
+
+  // ==========================================
+  // STATUS CLASS
+  // ==========================================
+
+  const getOrderStatusClass = (status) => {
+    return `order-status ${status}`;
+  };
+
+  const getPaymentStatusClass = (status) => {
+    return `payment-status ${status}`;
+  };
+
+  // ==========================================
+  // FORMAT MONEY
+  // ==========================================
+
+  const formatMoney = (value) => {
+    return `Rs. ${Number(
+      value || 0
+    ).toLocaleString("en-LK", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  };
+
+  // ==========================================
+  // FORMAT DATE
+  // ==========================================
+
+  const formatDate = (value) => {
     if (!value) return "-";
 
     return new Date(value).toLocaleDateString(
@@ -266,105 +286,53 @@ export default function OrdersPage() {
         day: "numeric",
       }
     );
-  }
-
-  /* =========================================
-     CUSTOMER NAME
-  ========================================= */
-
-  function getCustomerName(order) {
-    const name =
-      `${order.first_name || ""} ${
-        order.last_name || ""
-      }`.trim();
-
-    return name || "Guest Customer";
-  }
+  };
 
   return (
-    <div className="admin-orders-page">
+    <div className="admin-orders">
 
-      {/* =========================================
+      {/* =====================================
           PAGE HEADER
-      ========================================= */}
+      ====================================== */}
 
-      <div className="orders-page-header">
-
+      <div className="orders-header">
         <div>
           <h1>Orders</h1>
 
           <p>
-            Manage customer orders and order status
+            Manage customer orders, payments and
+            deliveries.
           </p>
         </div>
-
-        <div className="orders-total-count">
-          {orders.length} Orders
-        </div>
-
       </div>
 
-      {/* =========================================
-          FILTERS
-      ========================================= */}
+      {/* =====================================
+          FILTER BAR
+      ====================================== */}
 
-      <div className="orders-filters">
-
-        {/* SEARCH */}
+      <div className="orders-toolbar">
 
         <div className="orders-search">
-
           <Search size={18} />
 
           <input
             type="text"
-            placeholder="Search order, customer or email..."
+            placeholder="Search order or customer..."
             value={search}
             onChange={(e) =>
               setSearch(e.target.value)
             }
           />
-
         </div>
 
-        {/* PAYMENT FILTER */}
-
         <select
-          value={paymentFilter}
-          onChange={(e) =>
-            setPaymentFilter(e.target.value)
-          }
-          className="orders-filter-select"
-        >
-          <option value="all">
-            All Payment Status
-          </option>
-
-          <option value="pending">
-            Pending
-          </option>
-
-          <option value="paid">
-            Paid
-          </option>
-
-          <option value="failed">
-            Failed
-          </option>
-
-          <option value="refunded">
-            Refunded
-          </option>
-        </select>
-
-        {/* ORDER STATUS FILTER */}
-
-        <select
+          className="orders-filter"
           value={orderStatusFilter}
           onChange={(e) =>
-            setOrderStatusFilter(e.target.value)
+            setOrderStatusFilter(
+              e.target.value
+            )
           }
-          className="orders-filter-select"
         >
           <option value="all">
             All Order Status
@@ -391,229 +359,226 @@ export default function OrdersPage() {
           </option>
         </select>
 
+        <select
+          className="orders-filter"
+          value={paymentStatusFilter}
+          onChange={(e) =>
+            setPaymentStatusFilter(
+              e.target.value
+            )
+          }
+        >
+          <option value="all">
+            All Payments
+          </option>
+
+          <option value="pending">
+            Pending
+          </option>
+
+          <option value="paid">
+            Paid
+          </option>
+
+          <option value="failed">
+            Failed
+          </option>
+
+          <option value="refunded">
+            Refunded
+          </option>
+        </select>
       </div>
 
-      {/* =========================================
-          TABLE
-      ========================================= */}
+      {/* =====================================
+          ORDERS TABLE
+      ====================================== */}
 
       <div className="orders-table-card">
+        <div className="orders-table-wrapper">
 
-        {loading ? (
-          <div className="orders-loading">
-            Loading orders...
-          </div>
-        ) : filteredOrders.length === 0 ? (
-          <div className="orders-empty">
+          <table className="orders-table">
 
-            <div className="orders-empty-icon">
-              <Package size={30} />
-            </div>
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Order Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
 
-            <h3>No orders found</h3>
+            <tbody>
 
-            <p>
-              There are no orders matching your search
-              or filters.
-            </p>
-
-          </div>
-        ) : (
-          <div className="orders-table-wrapper">
-
-            <table className="orders-table">
-
-              <thead>
-
+              {loading ? (
                 <tr>
-                  <th>Order</th>
-                  <th>Customer</th>
-                  <th>Date</th>
-                  <th>Total</th>
-                  <th>Payment</th>
-                  <th>Order Status</th>
-                  <th>Actions</th>
+                  <td
+                    colSpan="8"
+                    className="orders-empty"
+                  >
+                    Loading orders...
+                  </td>
                 </tr>
+              ) : filteredOrders.length ===
+                0 ? (
+                <tr>
+                  <td
+                    colSpan="8"
+                    className="orders-empty"
+                  >
+                    No orders found.
+                  </td>
+                </tr>
+              ) : (
+                filteredOrders.map(
+                  (order) => (
+                    <tr
+                      key={order.order_id}
+                    >
 
-              </thead>
+                      {/* ORDER */}
 
-              <tbody>
+                      <td>
+                        <div className="order-number">
+                          #
+                          {String(
+                            order.order_id
+                          ).padStart(
+                            5,
+                            "0"
+                          )}
+                        </div>
+                      </td>
 
-                {filteredOrders.map((order) => (
+                      {/* CUSTOMER */}
 
-                  <tr key={order.order_id}>
+                      <td>
+                        <div className="order-customer">
+                          <strong>
+                            {order.customer_name ||
+                              "Guest Customer"}
+                          </strong>
 
-                    {/* ORDER */}
-
-                    <td>
-
-                      <div className="order-id-wrapper">
-
-                        <span className="order-icon">
-                          <Package size={17} />
-                        </span>
-
-                        <div>
-                          <span className="order-id">
-                            #{order.order_id}
-                          </span>
-
-                          <span className="order-subtext">
-                            Order
+                          <span>
+                            {order.customer_email ||
+                              "No email"}
                           </span>
                         </div>
+                      </td>
 
-                      </div>
+                      {/* DATE */}
 
-                    </td>
+                      <td>
+                        <div className="order-date">
+                          <CalendarDays
+                            size={14}
+                          />
 
-                    {/* CUSTOMER */}
-
-                    <td>
-
-                      <div className="order-customer">
-
-                        <div className="customer-avatar">
-                          <User size={17} />
-                        </div>
-
-                        <div>
-
-                          <span className="customer-name">
-                            {getCustomerName(order)}
-                          </span>
-
-                          <span className="customer-email">
-                            {order.email || "No email"}
-                          </span>
-
-                        </div>
-
-                      </div>
-
-                    </td>
-
-                    {/* DATE */}
-
-                    <td>
-
-                      <div className="order-date">
-
-                        <CalendarDays size={15} />
-
-                        <span>
                           {formatDate(
                             order.order_date
                           )}
+                        </div>
+                      </td>
+
+                      {/* ITEMS */}
+
+                      <td>
+                        <span className="order-items-count">
+                          {order.item_count ||
+                            0}{" "}
+                          item
+                          {Number(
+                            order.item_count
+                          ) !== 1
+                            ? "s"
+                            : ""}
                         </span>
+                      </td>
 
-                      </div>
+                      {/* TOTAL */}
 
-                    </td>
-
-                    {/* TOTAL */}
-
-                    <td>
-
-                      <span className="order-total">
-                        {formatMoney(
-                          order.total_amount
-                        )}
-                      </span>
-
-                    </td>
-
-                    {/* PAYMENT */}
-
-                    <td>
-
-                      <span
-                        className={`payment-status ${getPaymentClass(
-                          order.payment_status
-                        )}`}
-                      >
-                        {order.payment_status
-                          ?.replace("_", " ")
-                          .replace(/\b\w/g, (char) =>
-                            char.toUpperCase()
+                      <td>
+                        <strong className="order-total">
+                          {formatMoney(
+                            order.total_amount
                           )}
-                      </span>
+                        </strong>
+                      </td>
 
-                    </td>
+                      {/* PAYMENT */}
 
-                    {/* ORDER STATUS */}
-
-                    <td>
-
-                      <span
-                        className={`order-status ${getOrderStatusClass(
-                          order.order_status
-                        )}`}
-                      >
-                        {order.order_status
-                          ?.replace("_", " ")
-                          .replace(/\b\w/g, (char) =>
-                            char.toUpperCase()
+                      <td>
+                        <span
+                          className={getPaymentStatusClass(
+                            order.payment_status
                           )}
-                      </span>
+                        >
+                          {order.payment_status}
+                        </span>
+                      </td>
 
-                    </td>
+                      {/* ORDER STATUS */}
 
-                    {/* ACTION */}
+                      <td>
+                        <span
+                          className={getOrderStatusClass(
+                            order.order_status
+                          )}
+                        >
+                          {order.order_status}
+                        </span>
+                      </td>
 
-                    <td>
+                      {/* ACTION */}
 
-                      <button
-                        className="view-order-btn"
-                        onClick={() =>
-                          openOrder(order.order_id)
-                        }
-                      >
-                        <Eye size={16} />
-                        View
-                      </button>
+                      <td>
+                        <button
+                          className="order-view-btn"
+                          onClick={() =>
+                            openOrder(
+                              order.order_id
+                            )
+                          }
+                        >
+                          <Eye size={16} />
 
-                    </td>
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                )
+              )}
 
-                  </tr>
+            </tbody>
 
-                ))}
-
-              </tbody>
-
-            </table>
-
-          </div>
-        )}
-
+          </table>
+        </div>
       </div>
 
-      {/* =========================================
+      {/* =====================================
           ORDER DETAILS MODAL
-      ========================================= */}
+      ====================================== */}
 
-      {showModal && selectedOrder && (
+      {selectedOrder && (
+        <div className="order-modal-overlay">
 
-        <div
-          className="order-modal-overlay"
-          onClick={closeModal}
-        >
-
-          <div
-            className="order-modal"
-            onClick={(e) =>
-              e.stopPropagation()
-            }
-          >
+          <div className="order-modal">
 
             {/* MODAL HEADER */}
 
             <div className="order-modal-header">
 
               <div>
-
                 <h2>
-                  Order #{selectedOrder.order_id}
+                  Order #
+                  {String(
+                    selectedOrder.order_id
+                  ).padStart(5, "0")}
                 </h2>
 
                 <p>
@@ -621,107 +586,38 @@ export default function OrdersPage() {
                     selectedOrder.order_date
                   )}
                 </p>
-
               </div>
 
               <button
                 className="order-modal-close"
-                onClick={closeModal}
+                onClick={closeOrder}
               >
                 <X size={20} />
               </button>
 
             </div>
 
-            {/* ORDER DETAILS */}
+            {/* ORDER STATUS CONTROLS */}
 
-            <div className="order-modal-content">
+            <div className="order-status-controls">
 
-              {/* CUSTOMER */}
-
-              <div className="order-detail-section">
-
-                <div className="order-section-title">
-                  <User size={17} />
-                  Customer
-                </div>
-
-                <div className="order-customer-detail">
-
-                  <strong>
-                    {getCustomerName(
-                      selectedOrder
-                    )}
-                  </strong>
-
-                  <span>
-                    {selectedOrder.email ||
-                      "No email"}
-                  </span>
-
-                  {selectedOrder.phone && (
-                    <span>
-                      {selectedOrder.phone}
-                    </span>
-                  )}
-
-                </div>
-
-              </div>
-
-              {/* PAYMENT */}
-
-              <div className="order-detail-section">
-
-                <div className="order-section-title">
-                  <CreditCard size={17} />
-                  Payment
-                </div>
-
-                <div className="order-status-row">
-
-                  <span>
-                    Payment Status
-                  </span>
-
-                  <span
-                    className={`payment-status ${getPaymentClass(
-                      selectedOrder.payment_status
-                    )}`}
-                  >
-                    {selectedOrder.payment_status
-                      ?.replace("_", " ")
-                      .replace(/\b\w/g, (char) =>
-                        char.toUpperCase()
-                      )}
-                  </span>
-
-                </div>
-
-              </div>
-
-              {/* ORDER STATUS */}
-
-              <div className="order-detail-section">
-
-                <div className="order-section-title">
-                  <Truck size={17} />
+              <div>
+                <label>
                   Order Status
-                </div>
+                </label>
 
                 <select
                   value={
                     selectedOrder.order_status
                   }
+                  disabled={saving}
                   onChange={(e) =>
                     updateOrderStatus(
+                      selectedOrder.order_id,
                       e.target.value
                     )
                   }
-                  disabled={updating}
-                  className="order-status-select"
                 >
-
                   <option value="pending">
                     Pending
                   </option>
@@ -741,107 +637,313 @@ export default function OrdersPage() {
                   <option value="cancelled">
                     Cancelled
                   </option>
-
                 </select>
-
               </div>
 
-              {/* SHIPPING ADDRESS */}
+              <div>
+                <label>
+                  Payment Status
+                </label>
 
-              <div className="order-detail-section">
+                <select
+                  value={
+                    selectedOrder.payment_status
+                  }
+                  disabled={saving}
+                  onChange={(e) =>
+                    updatePaymentStatus(
+                      selectedOrder.order_id,
+                      e.target.value
+                    )
+                  }
+                >
+                  <option value="pending">
+                    Pending
+                  </option>
 
-                <div className="order-section-title">
-                  <MapPin size={17} />
-                  Shipping Address
-                </div>
+                  <option value="paid">
+                    Paid
+                  </option>
 
-                <div className="address-box">
-                  {selectedOrder.shipping_address ||
-                    "No shipping address available"}
-                </div>
+                  <option value="failed">
+                    Failed
+                  </option>
 
+                  <option value="refunded">
+                    Refunded
+                  </option>
+                </select>
               </div>
 
-              {/* BILLING ADDRESS */}
+            </div>
 
-              <div className="order-detail-section">
+            {/* CUSTOMER + ADDRESS */}
 
-                <div className="order-section-title">
-                  <MapPin size={17} />
-                  Billing Address
+            <div className="order-info-grid">
+
+              {/* CUSTOMER */}
+
+              <div className="order-info-card">
+
+                <div className="order-info-title">
+                  <User size={18} />
+
+                  <h3>Customer</h3>
                 </div>
 
-                <div className="address-box">
-                  {selectedOrder.billing_address ||
-                    "No billing address available"}
-                </div>
-
-              </div>
-
-              {/* PRICE SUMMARY */}
-
-              <div className="order-summary">
-
-                <h3>Order Summary</h3>
-
-                <div className="summary-row">
-                  <span>Subtotal</span>
-                  <span>
-                    {formatMoney(
-                      selectedOrder.subtotal
-                    )}
-                  </span>
-                </div>
-
-                <div className="summary-row">
-                  <span>Discount</span>
-                  <span>
-                    -{" "}
-                    {formatMoney(
-                      selectedOrder.discount
-                    )}
-                  </span>
-                </div>
-
-                <div className="summary-row">
-                  <span>Shipping Fee</span>
-                  <span>
-                    {formatMoney(
-                      selectedOrder.shipping_fee
-                    )}
-                  </span>
-                </div>
-
-                <div className="summary-total">
-                  <span>Total</span>
+                <p>
                   <strong>
-                    {formatMoney(
-                      selectedOrder.total_amount
-                    )}
+                    {selectedOrder.customer_name ||
+                      "Guest Customer"}
                   </strong>
+                </p>
+
+                <p>
+                  {selectedOrder.customer_email ||
+                    "No email"}
+                </p>
+
+                {selectedOrder.customer_phone && (
+                  <p>
+                    {
+                      selectedOrder.customer_phone
+                    }
+                  </p>
+                )}
+
+              </div>
+
+              {/* SHIPPING */}
+
+              <div className="order-info-card">
+
+                <div className="order-info-title">
+                  <Truck size={18} />
+
+                  <h3>
+                    Shipping Address
+                  </h3>
                 </div>
+
+                <p className="order-address">
+                  {selectedOrder.shipping_address ||
+                    "No shipping address"}
+                </p>
+
+              </div>
+
+              {/* BILLING */}
+
+              <div className="order-info-card">
+
+                <div className="order-info-title">
+                  <MapPin size={18} />
+
+                  <h3>
+                    Billing Address
+                  </h3>
+                </div>
+
+                <p className="order-address">
+                  {selectedOrder.billing_address ||
+                    "No billing address"}
+                </p>
+
+              </div>
+
+              {/* PAYMENT */}
+
+              <div className="order-info-card">
+
+                <div className="order-info-title">
+                  <CreditCard size={18} />
+
+                  <h3>Payment</h3>
+                </div>
+
+                <p>
+                  Status:{" "}
+                  <strong>
+                    {
+                      selectedOrder.payment_status
+                    }
+                  </strong>
+                </p>
 
               </div>
 
             </div>
 
-            {/* MODAL FOOTER */}
+            {/* ORDER ITEMS */}
 
-            <div className="order-modal-footer">
+            <div className="order-items-section">
 
-              <button
-                className="order-close-btn"
-                onClick={closeModal}
-              >
-                Close
-              </button>
+              <div className="order-section-title">
+
+                <Package size={18} />
+
+                <h3>
+                  Order Items
+                </h3>
+
+              </div>
+
+              <div className="order-items-table-wrapper">
+
+                <table className="order-items-table">
+
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Qty</th>
+                      <th>Unit Price</th>
+                      <th>Discount</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    {selectedOrder.items?.map(
+                      (item) => (
+                        <tr
+                          key={
+                            item.order_item_id
+                          }
+                        >
+
+                          <td>
+                            <div className="order-item-product">
+
+                              {item.main_image ? (
+                                <img
+                                  src={
+                                    item.main_image
+                                  }
+                                  alt={
+                                    item.product_title
+                                  }
+                                />
+                              ) : (
+                                <div className="order-item-image-placeholder">
+                                  <Package
+                                    size={18}
+                                  />
+                                </div>
+                              )}
+
+                              <div>
+                                <strong>
+                                  {
+                                    item.product_title
+                                  }
+                                </strong>
+
+                                {item.sku && (
+                                  <span>
+                                    SKU:{" "}
+                                    {item.sku}
+                                  </span>
+                                )}
+                              </div>
+
+                            </div>
+                          </td>
+
+                          <td>
+                            {item.qty}
+                          </td>
+
+                          <td>
+                            {formatMoney(
+                              item.unit_price
+                            )}
+                          </td>
+
+                          <td>
+                            {formatMoney(
+                              item.discount
+                            )}
+                          </td>
+
+                          <td>
+                            <strong>
+                              {formatMoney(
+                                item.total_price
+                              )}
+                            </strong>
+                          </td>
+
+                        </tr>
+                      )
+                    )}
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </div>
+
+            {/* ORDER SUMMARY */}
+
+            <div className="order-summary">
+
+              <div className="order-summary-row">
+                <span>
+                  Subtotal
+                </span>
+
+                <strong>
+                  {formatMoney(
+                    selectedOrder.subtotal
+                  )}
+                </strong>
+              </div>
+
+              <div className="order-summary-row">
+                <span>
+                  Discount
+                </span>
+
+                <strong>
+                  -
+                  {formatMoney(
+                    selectedOrder.discount
+                  )}
+                </strong>
+              </div>
+
+              <div className="order-summary-row">
+                <span>
+                  Shipping Fee
+                </span>
+
+                <strong>
+                  {formatMoney(
+                    selectedOrder.shipping_fee
+                  )}
+                </strong>
+              </div>
+
+              <div className="order-summary-row order-grand-total">
+                <span>
+                  Total
+                </span>
+
+                <strong>
+                  {formatMoney(
+                    selectedOrder.total_amount
+                  )}
+                </strong>
+              </div>
 
             </div>
 
           </div>
 
         </div>
-
       )}
 
     </div>

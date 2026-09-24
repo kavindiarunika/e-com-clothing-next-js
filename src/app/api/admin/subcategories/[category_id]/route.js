@@ -21,15 +21,12 @@ export async function PUT(request, { params }) {
 
     const { category_id } = await params;
 
-    const body = await request.json();
-
-    const {
-      name,
-      description,
-      image,
-      parent_category_id,
-      status,
-    } = body;
+    const formData = await request.formData();
+    const name = formData.get("name")?.toString().trim();
+    const description = formData.get("description")?.toString() || "";
+    const parent_category_id = formData.get("parent_category_id");
+    const status = formData.get("status")?.toString() || "active";
+    const imageFile = formData.get("image");
 
     if (!name || !parent_category_id) {
       return Response.json(
@@ -90,27 +87,33 @@ export async function PUT(request, { params }) {
 
     /* Update */
 
-    await pool.query(
-      `
-      UPDATE categories
-      SET
-        name = ?,
-        description = ?,
-        image = ?,
-        parent_category_id = ?,
-        status = ?
-      WHERE category_id = ?
-      `,
-      [
-        name,
-        description || null,
-        image || null,
-        parent_category_id,
-        status || "active",
-        category_id,
-      ]
-    );
+    const image =
+      imageFile &&
+      typeof imageFile !== "string" &&
+      imageFile.size > 0
+        ? Buffer.from(await imageFile.arrayBuffer())
+        : null;
 
+    if (image) {
+      await pool.query(
+        `
+        UPDATE categories
+        SET name = ?, description = ?, image = ?,
+            parent_category_id = ?, status = ?
+        WHERE category_id = ?
+        `,
+        [name, description || null, image, parent_category_id, status, category_id]
+      );
+    } else {
+      await pool.query(
+        `
+        UPDATE categories
+        SET name = ?, description = ?, parent_category_id = ?, status = ?
+        WHERE category_id = ?
+        `,
+        [name, description || null, parent_category_id, status, category_id]
+      );
+    }
     return Response.json({
       success: true,
       message: "Subcategory updated successfully.",

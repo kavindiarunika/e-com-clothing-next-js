@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,15 +8,13 @@ import {
   Trash2,
   X,
   Image as ImageIcon,
-  ChevronRight,
 } from "lucide-react";
 
 export default function CategoriesPage() {
-  // =====================================================
-  // STATE
-  // =====================================================
-
   const [categories, setCategories] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -25,193 +22,212 @@ export default function CategoriesPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-
-  const [error, setError] = useState("");
-
-  // =====================================================
-  // EMPTY FORM
-  // =====================================================
-
-  const emptyForm = {
+  const [form, setForm] = useState({
     name: "",
     description: "",
-    image: "",
     parent_category_id: "",
     status: "active",
-  };
+    image: null,
+  });
 
-  const [form, setForm] = useState(emptyForm);
-
-  // =====================================================
+  // ==========================================
   // FETCH CATEGORIES
-  // =====================================================
+  // ==========================================
 
-  async function fetchCategories() {
+  const fetchCategories = async () => {
     try {
       setLoading(true);
-      setError("");
 
       const response = await fetch("/api/admin/categories");
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to load categories"
-        );
+        throw new Error("Failed to fetch categories");
       }
 
-      setCategories(data.categories || data.data || []);
-    } catch (err) {
-      console.error("Category fetch error:", err);
-      setError(err.message);
+      const data = await response.json();
+
+      setCategories(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Fetch categories error:", error);
+      alert("Failed to load categories.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
-  // =====================================================
-  // HANDLE FORM CHANGE
-  // =====================================================
+  // ==========================================
+  // FORM CHANGE
+  // ==========================================
 
-  function handleChange(e) {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setForm((previous) => ({
-      ...previous,
+    setForm((prev) => ({
+      ...prev,
       [name]: value,
     }));
-  }
+  };
 
-  // =====================================================
+  // ==========================================
+  // IMAGE CHANGE
+  // ==========================================
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0] || null;
+
+    setForm((prev) => ({
+      ...prev,
+      image: file,
+    }));
+  };
+
+  // ==========================================
   // OPEN ADD MODAL
-  // =====================================================
+  // ==========================================
 
-  function openAddModal() {
+  const openAddModal = () => {
     setEditingCategory(null);
-    setForm(emptyForm);
-    setError("");
+
+    setForm({
+      name: "",
+      description: "",
+      parent_category_id: "",
+      status: "active",
+      image: null,
+    });
+
     setShowModal(true);
-  }
+  };
 
-  // =====================================================
+  // ==========================================
   // OPEN EDIT MODAL
-  // =====================================================
+  // ==========================================
 
-  function openEditModal(category) {
+  const openEditModal = (category) => {
     setEditingCategory(category);
 
     setForm({
       name: category.name || "",
       description: category.description || "",
-      image: category.image || "",
       parent_category_id:
         category.parent_category_id || "",
       status: category.status || "active",
+      image: null,
     });
 
-    setError("");
     setShowModal(true);
-  }
+  };
 
-  // =====================================================
+  // ==========================================
   // CLOSE MODAL
-  // =====================================================
+  // ==========================================
 
-  function closeModal() {
+  const closeModal = () => {
     if (saving) return;
 
     setShowModal(false);
     setEditingCategory(null);
-    setForm(emptyForm);
-    setError("");
-  }
+  };
 
-  // =====================================================
-  // SUBMIT CATEGORY
-  // =====================================================
+  // ==========================================
+  // SAVE CATEGORY
+  // ==========================================
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.name.trim()) {
+      alert("Category name is required.");
+      return;
+    }
 
     try {
       setSaving(true);
-      setError("");
 
-      const payload = {
-        name: form.name.trim(),
-        description: form.description.trim(),
-        image: form.image.trim(),
-        parent_category_id: form.parent_category_id
-          ? Number(form.parent_category_id)
-          : null,
-        status: form.status,
-      };
+      const formData = new FormData();
 
-      const url = editingCategory
-        ? `/api/admin/categories/${editingCategory.category_id}`
-        : "/api/admin/categories";
+      formData.append("name", form.name.trim());
+      formData.append(
+        "description",
+        form.description || ""
+      );
 
-      const method = editingCategory ? "PUT" : "POST";
+      formData.append(
+        "parent_category_id",
+        form.parent_category_id || ""
+      );
 
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      formData.append("status", form.status);
 
-      const responseText = await response.text();
-      let data = {};
-
-      if (responseText) {
-        try {
-          data = JSON.parse(responseText);
-        } catch {
-          data = { message: responseText };
-        }
+      if (form.image) {
+        formData.append("image", form.image);
       }
 
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to save category"
+      let response;
+
+      if (editingCategory) {
+        response = await fetch(
+          `/api/admin/categories/${editingCategory.category_id}`,
+          {
+            method: "PUT",
+            body: formData,
+          }
+        );
+      } else {
+        response = await fetch(
+          "/api/admin/categories",
+          {
+            method: "POST",
+            body: formData,
+          }
         );
       }
 
-      closeModal();
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "Failed to save category."
+        );
+      }
+
+      setShowModal(false);
+      setEditingCategory(null);
 
       await fetchCategories();
-    } catch (err) {
-      console.error("Save category error:", err);
-      setError(err.message);
+
+      alert(
+        editingCategory
+          ? "Category updated successfully."
+          : "Category created successfully."
+      );
+    } catch (error) {
+      console.error("Save category error:", error);
+
+      alert(error.message || "Failed to save category.");
     } finally {
       setSaving(false);
     }
-  }
+  };
 
-  // =====================================================
+  // ==========================================
   // DELETE CATEGORY
-  // =====================================================
+  // ==========================================
 
-  async function handleDelete(categoryId) {
+  const handleDelete = async (category) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this category?"
+      `Are you sure you want to delete "${category.name}"?`
     );
 
     if (!confirmed) return;
 
     try {
-      setError("");
-
       const response = await fetch(
-        `/api/admin/categories/${categoryId}`,
+        `/api/admin/categories/${category.category_id}`,
         {
           method: "DELETE",
         }
@@ -221,38 +237,25 @@ export default function CategoriesPage() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Failed to delete category"
+          data.error || "Failed to delete category."
         );
       }
 
       await fetchCategories();
-    } catch (err) {
-      console.error("Delete category error:", err);
-      setError(err.message);
+
+      alert("Category deleted successfully.");
+    } catch (error) {
+      console.error("Delete category error:", error);
+
+      alert(
+        error.message || "Failed to delete category."
+      );
     }
-  }
+  };
 
-  // =====================================================
-  // GET PARENT CATEGORY NAME
-  // =====================================================
-
-  function getParentCategoryName(parentId) {
-    if (!parentId) {
-      return "Main Category";
-    }
-
-    const parent = categories.find(
-      (category) =>
-        String(category.category_id) ===
-        String(parentId)
-    );
-
-    return parent?.name || "Unknown";
-  }
-
-  // =====================================================
+  // ==========================================
   // FILTER CATEGORIES
-  // =====================================================
+  // ==========================================
 
   const filteredCategories = categories.filter(
     (category) => {
@@ -274,71 +277,54 @@ export default function CategoriesPage() {
     }
   );
 
-  // =====================================================
-  // SEPARATE MAIN / SUB CATEGORIES
-  // =====================================================
+  // ==========================================
+  // GET PARENT NAME
+  // ==========================================
 
-  const mainCategories = filteredCategories.filter(
-    (category) =>
-      !category.parent_category_id
-  );
+  const getParentName = (parentId) => {
+    if (!parentId) return "Main Category";
 
-  const subCategories = filteredCategories.filter(
-    (category) =>
-      category.parent_category_id
-  );
+    const parent = categories.find(
+      (category) =>
+        Number(category.category_id) ===
+        Number(parentId)
+    );
 
-  // =====================================================
-  // RENDER
-  // =====================================================
+    return parent ? parent.name : "Main Category";
+  };
 
   return (
-    <div className="admin-category-page">
-
-      {/* =================================================
+    <div className="admin-categories">
+      {/* =====================================
           PAGE HEADER
-      ================================================= */}
+      ====================================== */}
 
-      <div className="category-page-header">
-
+      <div className="categories-header">
         <div>
           <h1>Categories</h1>
 
           <p>
-            Manage your product categories
+            Manage product categories and
+            subcategories.
           </p>
         </div>
 
         <button
-          className="add-category-btn"
+          className="categories-add-btn"
           onClick={openAddModal}
         >
           <Plus size={18} />
+
           Add Category
         </button>
-
       </div>
 
-      {/* =================================================
-          ERROR
-      ================================================= */}
+      {/* =====================================
+          FILTER BAR
+      ====================================== */}
 
-      {error && !showModal && (
-        <div className="category-error">
-          {error}
-        </div>
-      )}
-
-      {/* =================================================
-          FILTERS
-      ================================================= */}
-
-      <div className="category-filters">
-
-        {/* SEARCH */}
-
-        <div className="category-search">
-
+      <div className="categories-toolbar">
+        <div className="categories-search">
           <Search size={18} />
 
           <input
@@ -349,172 +335,189 @@ export default function CategoriesPage() {
               setSearch(e.target.value)
             }
           />
-
         </div>
 
-        {/* STATUS */}
-
         <select
+          className="categories-status-filter"
           value={statusFilter}
           onChange={(e) =>
             setStatusFilter(e.target.value)
           }
         >
-          <option value="all">
-            All Status
-          </option>
-
-          <option value="active">
-            Active
-          </option>
-
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
           <option value="inactive">
             Inactive
           </option>
         </select>
-
       </div>
 
-      {/* =================================================
+      {/* =====================================
           CATEGORY TABLE
-      ================================================= */}
+      ====================================== */}
 
-      <div className="category-table-card">
-
-        <div className="category-table-wrapper">
-
-          <table className="category-table">
-
+      <div className="categories-table-card">
+        <div className="categories-table-wrapper">
+          <table className="categories-table">
             <thead>
-
               <tr>
-
                 <th>Category</th>
-
                 <th>Description</th>
-
                 <th>Parent Category</th>
-
                 <th>Status</th>
-
                 <th>Created</th>
-
                 <th>Actions</th>
-
               </tr>
-
             </thead>
 
             <tbody>
-
               {loading ? (
-
                 <tr>
-
                   <td
                     colSpan="6"
-                    className="category-table-message"
+                    className="categories-empty"
                   >
                     Loading categories...
                   </td>
-
                 </tr>
-
               ) : filteredCategories.length === 0 ? (
-
                 <tr>
-
                   <td
                     colSpan="6"
-                    className="category-table-message"
+                    className="categories-empty"
                   >
                     No categories found.
                   </td>
-
                 </tr>
-
               ) : (
+                filteredCategories.map(
+                  (category) => (
+                    <tr
+                      key={category.category_id}
+                    >
+                      {/* CATEGORY */}
 
-                <>
-                  {/* MAIN CATEGORIES */}
+                      <td>
+                        <div className="category-product">
+                          <div className="category-image">
+                            {category.image ? (
+                              <img
+                                src={category.image}
+                                alt={category.name}
+                              />
+                            ) : (
+                              <ImageIcon
+                                size={20}
+                              />
+                            )}
+                          </div>
 
-                  {mainCategories.map(
-                    (category) => (
-                      <CategoryRow
-                        key={category.category_id}
-                        category={category}
-                        getParentCategoryName={
-                          getParentCategoryName
-                        }
-                        openEditModal={
-                          openEditModal
-                        }
-                        handleDelete={
-                          handleDelete
-                        }
-                        isSubCategory={false}
-                      />
-                    )
-                  )}
+                          <div>
+                            <strong>
+                              {category.name}
+                            </strong>
 
-                  {/* SUB CATEGORIES */}
+                            <span>
+                              ID #
+                              {
+                                category.category_id
+                              }
+                            </span>
+                          </div>
+                        </div>
+                      </td>
 
-                  {subCategories.map(
-                    (category) => (
-                      <CategoryRow
-                        key={category.category_id}
-                        category={category}
-                        getParentCategoryName={
-                          getParentCategoryName
-                        }
-                        openEditModal={
-                          openEditModal
-                        }
-                        handleDelete={
-                          handleDelete
-                        }
-                        isSubCategory={true}
-                      />
-                    )
-                  )}
-                </>
+                      {/* DESCRIPTION */}
 
+                      <td>
+                        <span className="category-description">
+                          {category.description ||
+                            "No description"}
+                        </span>
+                      </td>
+
+                      {/* PARENT */}
+
+                      <td>
+                        <span className="category-parent">
+                          {getParentName(
+                            category.parent_category_id
+                          )}
+                        </span>
+                      </td>
+
+                      {/* STATUS */}
+
+                      <td>
+                        <span
+                          className={`category-status ${category.status}`}
+                        >
+                          {category.status ===
+                          "active"
+                            ? "Active"
+                            : "Inactive"}
+                        </span>
+                      </td>
+
+                      {/* CREATED */}
+
+                      <td>
+                        {category.created_at
+                          ? new Date(
+                              category.created_at
+                            ).toLocaleDateString()
+                          : "-"}
+                      </td>
+
+                      {/* ACTIONS */}
+
+                      <td>
+                        <div className="category-actions">
+                          <button
+                            className="category-edit-btn"
+                            onClick={() =>
+                              openEditModal(
+                                category
+                              )
+                            }
+                            title="Edit"
+                          >
+                            <Pencil size={16} />
+                          </button>
+
+                          <button
+                            className="category-delete-btn"
+                            onClick={() =>
+                              handleDelete(
+                                category
+                              )
+                            }
+                            title="Delete"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                )
               )}
-
             </tbody>
-
           </table>
-
         </div>
-
       </div>
 
-      {/* =================================================
+      {/* =====================================
           ADD / EDIT MODAL
-      ================================================= */}
+      ====================================== */}
 
       {showModal && (
-
-        <div
-          className="category-modal-overlay"
-          onMouseDown={(e) => {
-            if (
-              e.target === e.currentTarget &&
-              !saving
-            ) {
-              closeModal();
-            }
-          }}
-        >
-
+        <div className="category-modal-overlay">
           <div className="category-modal">
-
             {/* MODAL HEADER */}
 
             <div className="category-modal-header">
-
               <div>
-
                 <h2>
                   {editingCategory
                     ? "Edit Category"
@@ -523,41 +526,31 @@ export default function CategoriesPage() {
 
                 <p>
                   {editingCategory
-                    ? "Update category information"
-                    : "Create a new product category"}
+                    ? "Update category information."
+                    : "Create a new product category."}
                 </p>
-
               </div>
 
               <button
                 className="category-modal-close"
                 onClick={closeModal}
-                disabled={saving}
               >
                 <X size={20} />
               </button>
-
             </div>
 
             {/* FORM */}
 
             <form
-              className="category-form"
               onSubmit={handleSubmit}
+              className="category-form"
             >
-
-              {error && (
-                <div className="category-error">
-                  {error}
-                </div>
-              )}
-
-              {/* NAME */}
+              {/* CATEGORY NAME */}
 
               <div className="category-form-group">
-
                 <label>
-                  Category Name *
+                  Category Name
+                  <span>*</span>
                 </label>
 
                 <input
@@ -565,77 +558,35 @@ export default function CategoriesPage() {
                   name="name"
                   value={form.name}
                   onChange={handleChange}
-                  placeholder="e.g. Dresses"
+                  placeholder="e.g. Women"
                   required
                 />
-
               </div>
 
               {/* DESCRIPTION */}
 
               <div className="category-form-group">
-
-                <label>
-                  Description
-                </label>
+                <label>Description</label>
 
                 <textarea
                   name="description"
                   value={form.description}
                   onChange={handleChange}
-                  placeholder="Enter category description"
+                  placeholder="Enter category description..."
                   rows="4"
                 />
-
-              </div>
-
-              {/* IMAGE */}
-
-              <div className="category-form-group">
-
-                <label>
-                  Category Image
-                </label>
-
-                <input
-                  type="text"
-                  name="image"
-                  value={form.image}
-                  onChange={handleChange}
-                  placeholder="Enter image URL"
-                />
-
-                {form.image && (
-                  <div className="category-image-preview">
-
-                    <img
-                      src={form.image}
-                      alt="Category preview"
-                      onError={(e) => {
-                        e.currentTarget.style.display =
-                          "none";
-                      }}
-                    />
-
-                  </div>
-                )}
-
               </div>
 
               {/* PARENT CATEGORY */}
 
               <div className="category-form-group">
-
-                <label>
-                  Parent Category
-                </label>
+                <label>Parent Category</label>
 
                 <select
                   name="parent_category_id"
                   value={form.parent_category_id}
                   onChange={handleChange}
                 >
-
                   <option value="">
                     Main Category
                   </option>
@@ -643,44 +594,39 @@ export default function CategoriesPage() {
                   {categories
                     .filter(
                       (category) =>
-                        !category.parent_category_id &&
-                        category.category_id !==
-                          editingCategory?.category_id
+                        !editingCategory ||
+                        Number(
+                          category.category_id
+                        ) !==
+                          Number(
+                            editingCategory.category_id
+                          )
                     )
                     .map((category) => (
-
                       <option
-                        key={category.category_id}
-                        value={category.category_id}
+                        key={
+                          category.category_id
+                        }
+                        value={
+                          category.category_id
+                        }
                       >
                         {category.name}
                       </option>
-
                     ))}
-
                 </select>
-
-                <small>
-                  Select a parent category to create
-                  a subcategory.
-                </small>
-
               </div>
 
               {/* STATUS */}
 
               <div className="category-form-group">
-
-                <label>
-                  Status
-                </label>
+                <label>Status</label>
 
                 <select
                   name="status"
                   value={form.status}
                   onChange={handleChange}
                 >
-
                   <option value="active">
                     Active
                   </option>
@@ -688,15 +634,61 @@ export default function CategoriesPage() {
                   <option value="inactive">
                     Inactive
                   </option>
-
                 </select>
-
               </div>
 
-              {/* ACTIONS */}
+              {/* IMAGE */}
+
+              <div className="category-form-group">
+                <label>Category Image</label>
+
+                <div className="category-upload">
+                  <ImageIcon size={24} />
+
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={handleImageChange}
+                    />
+
+                    <small>
+                      JPG, PNG or WEBP
+                    </small>
+                  </div>
+                </div>
+
+                {/* CURRENT IMAGE */}
+
+                {editingCategory &&
+                  editingCategory.image &&
+                  !form.image && (
+                    <div className="current-category-image">
+                      <img
+                        src={editingCategory.image}
+                        alt="Current"
+                      />
+
+                      <span>
+                        Current image
+                      </span>
+                    </div>
+                  )}
+
+                {/* NEW IMAGE */}
+
+                {form.image && (
+                  <div className="selected-category-image">
+                    <span>
+                      Selected: {form.image.name}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* BUTTONS */}
 
               <div className="category-form-actions">
-
                 <button
                   type="button"
                   className="category-cancel-btn"
@@ -715,189 +707,13 @@ export default function CategoriesPage() {
                     ? "Saving..."
                     : editingCategory
                     ? "Update Category"
-                    : "Add Category"}
+                    : "Create Category"}
                 </button>
-
               </div>
-
             </form>
-
           </div>
-
         </div>
-
       )}
-
     </div>
   );
 }
-
-
-/* =========================================================
-   CATEGORY ROW COMPONENT
-========================================================= */
-
-function CategoryRow({
-  category,
-  getParentCategoryName,
-  openEditModal,
-  handleDelete,
-  isSubCategory,
-}) {
-  return (
-    <tr>
-
-      {/* CATEGORY */}
-
-      <td>
-
-        <div
-          className={`category-info ${
-            isSubCategory
-              ? "subcategory-info"
-              : ""
-          }`}
-        >
-
-          {isSubCategory && (
-            <ChevronRight
-              size={16}
-              className="subcategory-icon"
-            />
-          )}
-
-          <div className="category-image">
-
-            {category.image ? (
-
-              <img
-                src={category.image}
-                alt={category.name}
-              />
-
-            ) : (
-
-              <ImageIcon size={21} />
-
-            )}
-
-          </div>
-
-          <div>
-
-            <div className="category-name">
-              {category.name}
-            </div>
-
-            {isSubCategory && (
-              <div className="subcategory-label">
-                Subcategory
-              </div>
-            )}
-
-          </div>
-
-        </div>
-
-      </td>
-
-      {/* DESCRIPTION */}
-
-      <td>
-
-        <div className="category-description">
-
-          {category.description
-            ? category.description
-            : "-"}
-
-        </div>
-
-      </td>
-
-      {/* PARENT */}
-
-      <td>
-
-        <span
-          className={
-            category.parent_category_id
-              ? "parent-category"
-              : "main-category"
-          }
-        >
-          {getParentCategoryName(
-            category.parent_category_id
-          )}
-        </span>
-
-      </td>
-
-      {/* STATUS */}
-
-      <td>
-
-        <span
-          className={`category-status ${category.status}`}
-        >
-          {category.status === "active"
-            ? "Active"
-            : "Inactive"}
-        </span>
-
-      </td>
-
-      {/* CREATED */}
-
-      <td>
-
-        <span className="category-created">
-
-          {category.created_at
-            ? new Date(
-                category.created_at
-              ).toLocaleDateString("en-LK", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })
-            : "-"}
-
-        </span>
-
-      </td>
-
-      {/* ACTIONS */}
-
-      <td>
-
-        <div className="category-actions">
-
-          <button
-            className="category-edit-btn"
-            onClick={() =>
-              openEditModal(category)
-            }
-            title="Edit Category"
-          >
-            <Pencil size={16} />
-          </button>
-
-          <button
-            className="category-delete-btn"
-            onClick={() =>
-              handleDelete(category.category_id)
-            }
-            title="Delete Category"
-          >
-            <Trash2 size={16} />
-          </button>
-
-        </div>
-
-      </td>
-
-    </tr>
-  );
-}
-
