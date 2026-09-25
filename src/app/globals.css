@@ -4808,6 +4808,21 @@ h3 {
   }
 }
 
+<<<<<<<<< Temporary merge branch 1
+/* =========================================================
+   VELORA ADMIN - CATEGORIES PAGE
+   ========================================================= */
+
+.admin-category-page {
+  min-height: calc(100vh - 70px);
+  padding: 28px;
+  background: #efe9e1;
+  color: #322d29;
+  font-family: var(--font-inter), sans-serif;
+}
+
+.category-page-header {
+=========
 /* =========================================
    VELORA CATEGORIES
 ========================================= */
@@ -4820,6 +4835,7 @@ h3 {
 }
 
 .categories-header {
+>>>>>>>>> Temporary merge branch 2
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4827,6 +4843,34 @@ h3 {
   margin-bottom: 28px;
 }
 
+<<<<<<<<< Temporary merge branch 1
+.category-page-header h1 {
+  margin: 0;
+  color: #1c1c1c;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.category-page-header p {
+  margin: 6px 0 0;
+  color: #756e68;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 14px;
+}
+
+.add-category-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 8px;
+  background: #1c1c1c;
+=========
 .categories-header h1 {
   margin: 0;
   font-family: var(--font-poppins), sans-serif;
@@ -4850,11 +4894,92 @@ h3 {
   border: none;
   border-radius: 7px;
   background: #322d29;
+>>>>>>>>> Temporary merge branch 2
   color: #ffffff;
   font-family: var(--font-inter), sans-serif;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
+<<<<<<<<< Temporary merge branch 1
+  transition: all 0.2s ease;
+}
+
+.add-category-btn:hover {
+  background: #322d29;
+  transform: translateY(-1px);
+}
+
+.category-error {
+  margin-bottom: 20px;
+  padding: 12px 15px;
+  border: 1px solid #e1b9b9;
+  border-radius: 8px;
+  background: #fff4f4;
+  color: #a33a3a;
+  font-size: 13px;
+}
+
+.category-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.category-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+  min-width: 240px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #ddd5cd;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #8b827b;
+}
+
+.category-search input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #322d29;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 14px;
+}
+
+.category-search input::placeholder {
+  color: #a39b94;
+}
+
+.category-filters select {
+  height: 44px;
+  min-width: 170px;
+  padding: 0 35px 0 13px;
+  border: 1px solid #ddd5cd;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #4b4540;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+.category-table-card {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #ded6ce;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(50, 45, 41, 0.04);
+}
+
+.category-table-wrapper {
+=========
   transition: 0.2s ease;
 }
 
@@ -4917,10 +5042,74 @@ h3 {
 }
 
 .categories-table-wrapper {
+>>>>>>>>> Temporary merge branch 2
   width: 100%;
   overflow-x: auto;
 }
 
+<<<<<<<<< Temporary merge branch 1
+.category-table {
+  width: 100%;
+  min-width: 950px;
+  border-collapse: collapse;
+}
+
+.category-table thead {
+  background: #f8f6f2;
+}
+
+.category-table th {
+  padding: 15px 18px;
+  border-bottom: 1px solid #e5ded7;
+  color: #6f6760;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.category-table td {
+  padding: 15px 18px;
+  border-bottom: 1px solid #eee9e4;
+  color: #4a443f;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.category-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.category-table tbody tr:hover {
+  background: #fcfaf8;
+}
+
+.category-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 220px;
+}
+
+.category-info.subcategory-info {
+  padding-left: 15px;
+}
+
+.subcategory-icon {
+  flex-shrink: 0;
+  color: #a49a91;
+}
+
+.category-image {
+  width: 52px;
+  height: 52px;
+=========
 .categories-table {
   width: 100%;
   min-width: 900px;
@@ -4964,14 +5153,23 @@ h3 {
 .category-image {
   width: 48px;
   height: 48px;
+>>>>>>>>> Temporary merge branch 2
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+<<<<<<<<< Temporary merge branch 1
+  overflow: hidden;
+  border: 1px solid #e3ddd7;
+  border-radius: 8px;
+  background: #f5f1ed;
+  color: #aaa19a;
+=========
   background: #efe9e1;
   border-radius: 6px;
   overflow: hidden;
   color: #6b625d;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-image img {
@@ -4980,6 +5178,75 @@ h3 {
   object-fit: cover;
 }
 
+<<<<<<<<< Temporary merge branch 1
+.category-name {
+  color: #2e2925;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.subcategory-label {
+  margin-top: 4px;
+  color: #9a918a;
+  font-size: 10px;
+}
+
+.category-description {
+  max-width: 280px;
+  overflow: hidden;
+  color: #746c65;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.parent-category,
+.main-category,
+.category-status {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.parent-category,
+.main-category {
+  padding: 5px 9px;
+}
+
+.parent-category {
+  background: #f2eee9;
+  color: #655c55;
+}
+
+.main-category {
+  background: #f7f3ee;
+  color: #8a8078;
+}
+
+.category-status {
+  justify-content: center;
+  padding: 5px 10px;
+}
+
+.category-status.active {
+  background: #edf5ee;
+  color: #48704d;
+}
+
+.category-status.inactive {
+  background: #f1efed;
+  color: #77706a;
+}
+
+.category-created {
+  color: #817870;
+  font-size: 12px;
+  white-space: nowrap;
+=========
 .category-product strong {
   display: block;
   margin-bottom: 4px;
@@ -5023,6 +5290,7 @@ h3 {
 .category-status.inactive {
   background: #f1e9e5;
   color: #8a5c50;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-actions {
@@ -5031,12 +5299,48 @@ h3 {
   gap: 7px;
 }
 
+<<<<<<<<< Temporary merge branch 1
+.category-edit-btn,
+.category-delete-btn {
+=========
 .category-actions button {
+>>>>>>>>> Temporary merge branch 2
   width: 34px;
   height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
+<<<<<<<<< Temporary merge branch 1
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-edit-btn {
+  border: 1px solid #ddd5cd;
+  background: #ffffff;
+  color: #625b55;
+}
+
+.category-edit-btn:hover {
+  background: #f5f1ed;
+}
+
+.category-delete-btn {
+  border: 1px solid #ead6d2;
+  background: #fffafa;
+  color: #a45b50;
+}
+
+.category-delete-btn:hover {
+  background: #fcefed;
+}
+
+.category-table-message {
+  height: 180px;
+  color: #918982 !important;
+  text-align: center !important;
+=========
   border: 1px solid #ded5cc;
   border-radius: 6px;
   background: #ffffff;
@@ -5064,6 +5368,7 @@ h3 {
   padding: 50px !important;
   text-align: center;
   color: #6b625d !important;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-modal-overlay {
@@ -5073,18 +5378,33 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
+<<<<<<<<< Temporary merge branch 1
+  padding: 25px;
+  background: rgba(28, 28, 28, 0.48);
+  backdrop-filter: blur(3px);
+=========
   padding: 20px;
   background: rgba(50, 45, 41, 0.55);
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-modal {
   width: 100%;
+<<<<<<<<< Temporary merge branch 1
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgba(28, 28, 28, 0.2);
+=========
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(50, 45, 41, 0.2);
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-modal-header {
@@ -5092,22 +5412,38 @@ h3 {
   align-items: flex-start;
   justify-content: space-between;
   padding: 22px 24px;
+<<<<<<<<< Temporary merge branch 1
+  border-bottom: 1px solid #eee8e2;
+=========
   border-bottom: 1px solid #ded5cc;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-modal-header h2 {
   margin: 0;
+<<<<<<<<< Temporary merge branch 1
+  color: #1c1c1c;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 21px;
+  font-weight: 600;
+=========
   font-family: var(--font-poppins), sans-serif;
   font-size: 20px;
   font-weight: 600;
   color: #322d29;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-modal-header p {
   margin: 5px 0 0;
+<<<<<<<<< Temporary merge branch 1
+  color: #8b827b;
+  font-size: 12px;
+=========
   font-family: var(--font-inter), sans-serif;
   font-size: 13px;
   color: #6b625d;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-modal-close {
@@ -5117,14 +5453,24 @@ h3 {
   align-items: center;
   justify-content: center;
   border: none;
+<<<<<<<<< Temporary merge branch 1
+  border-radius: 7px;
+  background: #f5f1ed;
+  color: #655d56;
+=========
   border-radius: 6px;
   background: transparent;
   color: #6b625d;
+>>>>>>>>> Temporary merge branch 2
   cursor: pointer;
 }
 
 .category-modal-close:hover {
+<<<<<<<<< Temporary merge branch 1
+  background: #ebe5df;
+=========
   background: #efe9e1;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-form {
@@ -5132,6 +5478,19 @@ h3 {
 }
 
 .category-form-group {
+<<<<<<<<< Temporary merge branch 1
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.category-form-group label {
+  color: #3c3631;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+=========
   margin-bottom: 20px;
 }
 
@@ -5147,6 +5506,7 @@ h3 {
 .category-form-group label span {
   margin-left: 3px;
   color: #a84c4c;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-form-group input,
@@ -5154,6 +5514,28 @@ h3 {
 .category-form-group select {
   width: 100%;
   box-sizing: border-box;
+<<<<<<<<< Temporary merge branch 1
+  border: 1px solid #ddd5cd;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #322d29;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.category-form-group input,
+.category-form-group select {
+  height: 43px;
+  padding: 0 12px;
+}
+
+.category-form-group textarea {
+  padding: 11px 12px;
+  resize: vertical;
+  line-height: 1.5;
+=========
   padding: 11px 13px;
   border: 1px solid #ded5cc;
   border-radius: 6px;
@@ -5167,11 +5549,41 @@ h3 {
 
 .category-form-group textarea {
   resize: vertical;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-form-group input:focus,
 .category-form-group textarea:focus,
 .category-form-group select:focus {
+<<<<<<<<< Temporary merge branch 1
+  border-color: #9d9084;
+}
+
+.category-form-group input::placeholder,
+.category-form-group textarea::placeholder {
+  color: #aaa19a;
+}
+
+.category-form-group small {
+  color: #9a918a;
+  font-size: 11px;
+}
+
+.category-image-preview {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  margin-top: 4px;
+  border: 1px solid #e3ddd7;
+  border-radius: 8px;
+  background: #f5f1ed;
+}
+
+.category-image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+=========
   border-color: #72383d;
 }
 
@@ -5226,19 +5638,31 @@ h3 {
   border-radius: 6px;
   font-size: 12px;
   color: #322d29;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+<<<<<<<<< Temporary merge branch 1
+  padding-top: 20px;
+  border-top: 1px solid #eee8e2;
+=========
   padding-top: 5px;
+>>>>>>>>> Temporary merge branch 2
 }
 
 .category-cancel-btn,
 .category-save-btn {
+<<<<<<<<< Temporary merge branch 1
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 7px;
+=========
   padding: 11px 18px;
   border-radius: 6px;
+>>>>>>>>> Temporary merge branch 2
   font-family: var(--font-inter), sans-serif;
   font-size: 13px;
   font-weight: 500;
@@ -5246,6 +5670,20 @@ h3 {
 }
 
 .category-cancel-btn {
+<<<<<<<<< Temporary merge branch 1
+  border: 1px solid #dcd4cc;
+  background: #ffffff;
+  color: #5e5751;
+}
+
+.category-cancel-btn:hover {
+  background: #f7f4f1;
+}
+
+.category-save-btn {
+  border: 1px solid #1c1c1c;
+  background: #1c1c1c;
+=========
   border: 1px solid #ded5cc;
   background: #ffffff;
   color: #322d29;
@@ -5254,19 +5692,72 @@ h3 {
 .category-save-btn {
   border: none;
   background: #322d29;
+>>>>>>>>> Temporary merge branch 2
   color: #ffffff;
 }
 
 .category-save-btn:hover {
+<<<<<<<<< Temporary merge branch 1
+  background: #322d29;
+}
+
+.category-save-btn:disabled,
+.category-cancel-btn:disabled,
+.category-modal-close:disabled {
+=========
   opacity: 0.9;
 }
 
 .category-cancel-btn:disabled,
 .category-save-btn:disabled {
+>>>>>>>>> Temporary merge branch 2
   opacity: 0.6;
   cursor: not-allowed;
 }
 
+<<<<<<<<< Temporary merge branch 1
+.category-modal::-webkit-scrollbar,
+.category-table-wrapper::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.category-modal::-webkit-scrollbar-track,
+.category-table-wrapper::-webkit-scrollbar-track {
+  background: #f5f1ed;
+}
+
+.category-modal::-webkit-scrollbar-thumb,
+.category-table-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #cfc6be;
+}
+
+@media (max-width: 800px) {
+  .admin-category-page {
+    padding: 20px;
+  }
+
+  .category-filters {
+    flex-wrap: wrap;
+  }
+
+  .category-search {
+    flex-basis: 100%;
+  }
+
+  .category-filters select {
+    flex: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-category-page {
+    padding: 15px;
+  }
+
+  .category-page-header {
+=========
 @media (max-width: 768px) {
   .admin-categories {
     padding: 20px;
@@ -5283,10 +5774,49 @@ h3 {
   }
 
   .categories-toolbar {
+>>>>>>>>> Temporary merge branch 2
     flex-direction: column;
     align-items: stretch;
   }
 
+<<<<<<<<< Temporary merge branch 1
+  .add-category-btn {
+    width: 100%;
+  }
+
+  .category-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .category-search {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .category-filters select {
+    width: 100%;
+  }
+
+  .category-modal-overlay {
+    padding: 12px;
+  }
+
+  .category-modal {
+    max-height: 94vh;
+  }
+
+  .category-form {
+    padding: 18px;
+  }
+
+  .category-modal-header {
+    padding: 18px;
+  }
+
+  .category-page-header h1 {
+    font-size: 26px;
+=========
   .categories-search {
     max-width: none;
   }
@@ -5297,6 +5827,7 @@ h3 {
 
   .category-modal {
     max-height: 95vh;
+>>>>>>>>> Temporary merge branch 2
   }
 }
 
@@ -8396,6 +8927,8 @@ h3 {
   display: block;
   margin-top: 6px;
 }
+<<<<<<<<< Temporary merge branch 1
+=========
 
 /* =========================================
    VELORA ORDERS
@@ -8477,6 +9010,7 @@ h3 {
   .order-status-controls,.order-info-grid{grid-template-columns:1fr}
   .order-modal{max-height:95vh}
 }
+>>>>>>>>> Temporary merge branch 2
 .dashboard-page {
   min-height: calc(100vh - 70px);
   padding: 28px;
@@ -11540,6 +12074,8 @@ h3 {
   }
 }
 
+<<<<<<<<< Temporary merge branch 1
+=========
 .sales-report-header-actions {
   display: flex;
   align-items: center;
@@ -11631,6 +12167,7 @@ h3 {
   }
 }
 
+>>>>>>>>> Temporary merge branch 2
 /* =========================================
    DASHBOARD STAT CARDS
 ========================================= */
@@ -11761,6 +12298,8 @@ h3 {
     min-height: 82px;
   }
 }
+<<<<<<<<< Temporary merge branch 1
+=========
 
 /* =========================================================
    VELORA ADMIN - OFFERS PAGE
@@ -13374,223 +13913,5 @@ product image */
     grid-template-columns: repeat(2, 1fr);
   }
 }
-/* =========================================
-   VELORA ADMIN LOGIN
-   ========================================= */
 
-.admin-login-page {
-  min-height: 100vh;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 20px;
-
-  background: #efe9e1;
-}
-
-.admin-login-card {
-  width: 400px;
-  max-width: 100%;
-
-  padding: 42px;
-
-  background: #ffffff;
-
-  border: 1px solid #ded5cc;
-
-  border-radius: 6px;
-
-  box-shadow:
-    0 15px 40px rgba(50, 45, 41, 0.08);
-}
-
-/* Logo */
-
-.admin-login-logo {
-  text-align: center;
-
-  margin-bottom: 35px;
-}
-
-.admin-login-logo h1 {
-  margin: 0;
-
-  color: #322d29;
-
-  font-family: Georgia, "Times New Roman", serif;
-
-  font-size: 32px;
-  font-weight: 600;
-
-  letter-spacing: 5px;
-}
-
-.admin-login-logo span {
-  display: block;
-
-  margin-top: 6px;
-
-  color: #72383d;
-
-  font-size: 8px;
-  font-weight: 700;
-
-  letter-spacing: 3px;
-}
-
-/* Heading */
-
-.admin-login-heading {
-  margin-bottom: 25px;
-
-  text-align: center;
-}
-
-.admin-login-heading h2 {
-  margin: 0 0 7px;
-
-  color: #322d29;
-
-  font-size: 24px;
-}
-
-.admin-login-heading p {
-  margin: 0;
-
-  color: #6b625d;
-
-  font-size: 13px;
-}
-
-/* Error */
-
-.admin-login-error {
-  margin-bottom: 20px;
-
-  padding: 11px 13px;
-
-  border: 1px solid #d7b9bb;
-
-  border-radius: 4px;
-
-  background: #f7eeee;
-
-  color: #72383d;
-
-  font-size: 12px;
-}
-
-/* Form */
-
-.admin-login-group {
-  margin-bottom: 19px;
-}
-
-.admin-login-group label {
-  display: block;
-
-  margin-bottom: 8px;
-
-  color: #322d29;
-
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.admin-login-group input {
-  width: 100%;
-  height: 45px;
-
-  box-sizing: border-box;
-
-  padding: 0 13px;
-
-  border: 1px solid #ded5cc;
-
-  border-radius: 4px;
-
-  outline: none;
-
-  background: #ffffff;
-
-  color: #322d29;
-
-  font-size: 13px;
-}
-
-.admin-login-group input:focus {
-  border-color: #72383d;
-
-  box-shadow:
-    0 0 0 2px rgba(114, 56, 61, 0.08);
-}
-
-/* Button */
-
-.admin-login-button {
-  width: 100%;
-  height: 46px;
-
-  margin-top: 5px;
-
-  border: none;
-
-  border-radius: 4px;
-
-  background: #72383d;
-
-  color: #ffffff;
-
-  font-size: 11px;
-  font-weight: 700;
-
-  letter-spacing: 1px;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.admin-login-button:hover {
-  background: #322d29;
-}
-
-.admin-login-button:disabled {
-  opacity: 0.6;
-
-  cursor: not-allowed;
-}
-
-/* Back */
-
-.admin-back-link {
-  display: block;
-
-  margin-top: 25px;
-
-  text-align: center;
-
-  color: #6b625d;
-
-  font-size: 12px;
-
-  text-decoration: none;
-}
-
-.admin-back-link:hover {
-  color: #72383d;
-}
-
-/* Mobile */
-
-@media (max-width: 500px) {
-  .admin-login-card {
-    padding: 30px 22px;
-  }
-
-  .admin-login-logo h1 {
-    font-size: 27px;
-  }
-}
+>>>>>>>>> Temporary merge branch 2
