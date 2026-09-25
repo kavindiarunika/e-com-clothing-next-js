@@ -24,7 +24,7 @@ const menuGroups = [
     items: [
       {
         name: "Dashboard",
-        href: "/admin",
+        href: "/admin/dashboard",
         icon: LayoutDashboard,
       },
     ],
@@ -48,6 +48,16 @@ const menuGroups = [
         href: "/admin/subcategories",
         icon: FolderTree,
       },
+      // {
+      //   name: "Sizes",
+      //   href: "/admin/sizes",
+      //   icon: FolderTree,
+      // },
+      // {
+      //   name: "Colors",
+      //   href: "/admin/colors",
+      //   icon: FolderTree,
+      // },
     ],
   },
 
@@ -100,6 +110,11 @@ const menuGroups = [
         href: "/admin/reviews",
         icon: Star,
       },
+      // {
+      //   name: "Featured Products",
+      //   href: "/admin/featured-products",
+      //   icon: Star,
+      // },
     ],
   },
 
@@ -129,9 +144,7 @@ export default function AdminSidebar() {
 
   return (
     <aside className="admin-sidebar">
-
       <div className="sidebar-brand">
-
         <div className="brand-logo">
         </div>
 
@@ -139,17 +152,14 @@ export default function AdminSidebar() {
           <strong>Clothing Store</strong>
           <span>ADMIN PANEL</span>
         </div>
-
       </div>
 
       <nav className="sidebar-nav">
-
         {menuGroups.map((group) => (
           <div
             className="menu-group"
             key={group.title}
           >
-
             <p>{group.title}</p>
 
             {group.items.map((item) => {
@@ -177,10 +187,8 @@ export default function AdminSidebar() {
                 </Link>
               );
             })}
-
           </div>
         ))}
-
       </nav>
 
       <button

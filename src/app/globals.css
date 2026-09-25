@@ -13374,4 +13374,223 @@ product image */
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* =========================================
+   VELORA ADMIN LOGIN
+   ========================================= */
 
+.admin-login-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: #efe9e1;
+}
+
+.admin-login-card {
+  width: 400px;
+  max-width: 100%;
+
+  padding: 42px;
+
+  background: #ffffff;
+
+  border: 1px solid #ded5cc;
+
+  border-radius: 6px;
+
+  box-shadow:
+    0 15px 40px rgba(50, 45, 41, 0.08);
+}
+
+/* Logo */
+
+.admin-login-logo {
+  text-align: center;
+
+  margin-bottom: 35px;
+}
+
+.admin-login-logo h1 {
+  margin: 0;
+
+  color: #322d29;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 32px;
+  font-weight: 600;
+
+  letter-spacing: 5px;
+}
+
+.admin-login-logo span {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #72383d;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 3px;
+}
+
+/* Heading */
+
+.admin-login-heading {
+  margin-bottom: 25px;
+
+  text-align: center;
+}
+
+.admin-login-heading h2 {
+  margin: 0 0 7px;
+
+  color: #322d29;
+
+  font-size: 24px;
+}
+
+.admin-login-heading p {
+  margin: 0;
+
+  color: #6b625d;
+
+  font-size: 13px;
+}
+
+/* Error */
+
+.admin-login-error {
+  margin-bottom: 20px;
+
+  padding: 11px 13px;
+
+  border: 1px solid #d7b9bb;
+
+  border-radius: 4px;
+
+  background: #f7eeee;
+
+  color: #72383d;
+
+  font-size: 12px;
+}
+
+/* Form */
+
+.admin-login-group {
+  margin-bottom: 19px;
+}
+
+.admin-login-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #322d29;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-login-group input {
+  width: 100%;
+  height: 45px;
+
+  box-sizing: border-box;
+
+  padding: 0 13px;
+
+  border: 1px solid #ded5cc;
+
+  border-radius: 4px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #322d29;
+
+  font-size: 13px;
+}
+
+.admin-login-group input:focus {
+  border-color: #72383d;
+
+  box-shadow:
+    0 0 0 2px rgba(114, 56, 61, 0.08);
+}
+
+/* Button */
+
+.admin-login-button {
+  width: 100%;
+  height: 46px;
+
+  margin-top: 5px;
+
+  border: none;
+
+  border-radius: 4px;
+
+  background: #72383d;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.admin-login-button:hover {
+  background: #322d29;
+}
+
+.admin-login-button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+/* Back */
+
+.admin-back-link {
+  display: block;
+
+  margin-top: 25px;
+
+  text-align: center;
+
+  color: #6b625d;
+
+  font-size: 12px;
+
+  text-decoration: none;
+}
+
+.admin-back-link:hover {
+  color: #72383d;
+}
+
+/* Mobile */
+
+@media (max-width: 500px) {
+  .admin-login-card {
+    padding: 30px 22px;
+  }
+
+  .admin-login-logo h1 {
+    font-size: 27px;
+  }
+}

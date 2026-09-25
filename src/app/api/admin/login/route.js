@@ -1,89 +1,106 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import db from "@/lib/db";
 import { createAdminToken } from "@/lib/auth";
-
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "Admin@12345";
 
 export async function POST(request) {
   try {
     const body = await request.json();
 
-    const username = String(body.username || "").trim();
-    const password = String(body.password || "");
+    const { email, password } = body;
 
-    // Check required fields
-    if (!username || !password) {
+    if (!email || !password) {
       return NextResponse.json(
         {
-          success: false,
-          message: "Username and password are required",
+          message: "Email and password are required",
         },
-        { status: 400 }
+        {
+          status: 400,
+        }
       );
     }
 
-    // Check username
-    if (username !== ADMIN_USERNAME) {
+    const [admins] = await db.execute(
+      `
+      SELECT user_id, first_name, last_name, email, password, role, status
+      FROM users
+      WHERE email = ? AND role = 'admin'
+      LIMIT 1
+      `,
+      [email]
+    );
+
+    if (admins.length === 0) {
       return NextResponse.json(
         {
-          success: false,
-          message: "Invalid username or password",
+          message: "Invalid email or password",
         },
-        { status: 401 }
+        {
+          status: 401,
+        }
       );
     }
+
+    const admin = admins[0];
 
     // Check password
-    if (password !== ADMIN_PASSWORD) {
+    const passwordMatch = await bcrypt.compare(
+      password,
+      admin.password
+    );
+
+    if (!passwordMatch) {
       return NextResponse.json(
         {
-          success: false,
-          message: "Invalid username or password",
+          message: "Invalid email or password",
         },
-        { status: 401 }
+        {
+          status: 401,
+        }
       );
     }
 
-    // Admin user information
-    const user = {
-      user_id: 1,
-      first_name: "Admin",
-      last_name: "",
-      username: "admin",
-      email: "admin@example.com",
-      role: "admin",
-    };
+    // Check status if your table has status
+    if (
+      admin.status &&
+      admin.status !== "active"
+    ) {
+      return NextResponse.json(
+        {
+          message: "This admin account is inactive",
+        },
+        {
+          status: 403,
+        }
+      );
+    }
 
-    // Create JWT token
-    const token = createAdminToken(user);
+    const token = createAdminToken({
+      user_id: admin.user_id,
+      first_name: admin.first_name,
+      last_name: admin.last_name,
+      email: admin.email,
+      role: admin.role,
+    });
 
-    // Create response
     const response = NextResponse.json({
       success: true,
-      message: "Login successful",
-      user: {
-        user_id: user.user_id,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        username: user.username,
-        email: user.email,
-        role: user.role,
+      message: "Admin login successful",
+      admin: {
+        id: admin.user_id,
+        name: `${admin.first_name} ${admin.last_name || ""}`.trim(),
+        email: admin.email,
+        role: admin.role,
       },
     });
 
-    // Save authentication cookie
+    // Admin cookie
     response.cookies.set("admin_token", token, {
       httpOnly: true,
-
-      // Localhost = false
-      // Production HTTPS = true
       secure: process.env.NODE_ENV === "production",
-
       sameSite: "lax",
-
-      maxAge: 60 * 60 * 24,
-
       path: "/",
+      maxAge: 60 * 60 * 24,
     });
 
     return response;
@@ -93,10 +110,11 @@ export async function POST(request) {
 
     return NextResponse.json(
       {
-        success: false,
         message: "Server error",
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }

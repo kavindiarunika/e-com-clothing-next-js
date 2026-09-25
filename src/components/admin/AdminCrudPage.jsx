@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Plus,
   Pencil,
@@ -25,9 +25,21 @@ export default function AdminCrudPage({
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(Boolean(endpoint));
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   const [form, setForm] = useState({});
+
+  const getData = useCallback(async () => {
+    const response = await fetch(endpoint);
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || `Failed to load ${title.toLowerCase()}`);
+    }
+
+    return result[resultKey] || result.data || [];
+  }, [endpoint, resultKey, title]);
 
   useEffect(() => {
     if (!endpoint) return;
@@ -35,10 +47,8 @@ export default function AdminCrudPage({
     async function loadData() {
       try {
         setLoading(true);
-        const response = await fetch(endpoint);
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || `Failed to load ${title.toLowerCase()}`);
-        setData(result[resultKey] || result.data || []);
+        setError("");
+        setData(await getData());
       } catch (loadError) {
         setError(loadError.message);
       } finally {
@@ -47,7 +57,7 @@ export default function AdminCrudPage({
     }
 
     loadData();
-  }, [endpoint, resultKey, title]);
+  }, [getData, endpoint]);
 
   function openAdd() {
     const empty = {};
@@ -84,6 +94,8 @@ export default function AdminCrudPage({
     e.preventDefault();
 
     try {
+      setSaving(true);
+      setError("");
       const response = await fetch(endpoint, {
         method: editingId ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
@@ -93,18 +105,20 @@ export default function AdminCrudPage({
       if (!response.ok) throw new Error(result.message || `Failed to save ${title.toLowerCase()}`);
       setShowForm(false);
       setEditingId(null);
-      const refreshed = await fetch(endpoint);
-      const refreshedResult = await refreshed.json();
-      setData(refreshedResult[resultKey] || refreshedResult.data || []);
+      setData(await getData());
     } catch (saveError) {
       setError(saveError.message);
+    } finally {
+      setSaving(false);
     }
   }
 
   async function deleteItem(id) {
-    if (!confirm("Delete this item?")) return;
+    if (saving || !confirm("Delete this item?")) return;
 
     try {
+      setSaving(true);
+      setError("");
       const response = await fetch(endpoint, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -112,9 +126,11 @@ export default function AdminCrudPage({
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || `Failed to delete ${title.toLowerCase()}`);
-      setData(data.filter((item) => item[idKey] !== id));
+      setData((currentData) => currentData.filter((item) => item[idKey] !== id));
     } catch (deleteError) {
       setError(deleteError.message);
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -205,8 +221,9 @@ export default function AdminCrudPage({
               <button
                 type="submit"
                 className="primary-button"
+                disabled={saving}
               >
-                Save
+                {saving ? "Saving..." : "Save"}
               </button>
             </div>
           </form>
@@ -267,8 +284,9 @@ export default function AdminCrudPage({
                       <button
                         className="icon-action danger"
                         onClick={() =>
-                          deleteItem(item.id)
+                          deleteItem(item[idKey])
                         }
+                        disabled={saving}
                       >
                         <Trash2 size={16} />
                       </button>
