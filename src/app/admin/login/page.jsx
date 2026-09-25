@@ -2,21 +2,22 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-function AdminLoginPage() {
+export default function AdminLoginPage() {
   const router = useRouter();
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
     setError("");
+    setLoading(true);
 
     try {
       const response = await fetch("/api/admin/login", {
@@ -24,73 +25,81 @@ function AdminLoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
         body: JSON.stringify({
-          username: username.trim(),
+          email,
           password,
         }),
       });
 
       const data = await response.json();
 
-      if (!response.ok || !data.success) {
-        setError(data.message || "Invalid username or password");
+      if (!response.ok) {
+        setError(data.message || "Invalid login details");
         return;
       }
 
-      // Login successful
-      router.replace("/admin/dashboard");
-    } catch (error) {
-      console.error("Admin login error:", error);
+      router.push("/admin/dashboard");
 
-      setError(
-        error.message || "Login failed. Please try again."
-      );
+    } catch (error) {
+      console.error(error);
+      setError("Something went wrong. Please try again.");
 
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <main className="login-page">
-      <div className="login-card">
+    <main className="admin-login-page">
 
-        <p className="eyebrow">
-          Admin Panel Login Page
-        </p>
+      <div className="admin-login-card">
 
-        <h1>Welcome Back</h1>
+        {/* Logo */}
+        <div className="admin-login-logo">
+          <h1>VELORA</h1>
+          <span>ADMIN PANEL</span>
+        </div>
 
-        <p className="login-description">
-          Sign in to manage your clothing store.
-        </p>
+        {/* Heading */}
+        <div className="admin-login-heading">
+          <h2>Admin Login</h2>
 
-        {/* Error message */}
+          <p>
+            Sign in to manage your store.
+          </p>
+        </div>
+
+        {/* Error */}
         {error && (
-          <div className="alert">
+          <div className="admin-login-error">
             {error}
           </div>
         )}
 
+        {/* Form */}
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="username">
-              Username
+
+          <div className="admin-login-group">
+
+            <label htmlFor="email">
+              Email
             </label>
 
             <input
-              id="username"
-              type="text"
-              placeholder="admin"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              type="email"
+              placeholder="Enter admin email"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
               required
-              autoComplete="username"
             />
+
           </div>
 
-          <div className="form-group">
+          <div className="admin-login-group">
+
             <label htmlFor="password">
               Password
             </label>
@@ -100,24 +109,34 @@ function AdminLoginPage() {
               type="password"
               placeholder="Enter password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
               required
-              autoComplete="current-password"
             />
+
           </div>
 
           <button
             type="submit"
-            className="btn primary full"
             disabled={loading}
+            className="admin-login-button"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "SIGNING IN..." : "SIGN IN"}
           </button>
 
         </form>
+
+        {/* Back */}
+        <Link
+          href="/"
+          className="admin-back-link"
+        >
+          ← Back to VELORA
+        </Link>
+
       </div>
+
     </main>
   );
 }
-
-export default AdminLoginPage;
