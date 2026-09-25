@@ -1,82 +1,83 @@
-"use client";
+import { NextResponse } from "next/server";
+import pool from "@/lib/db";
 
-import { useParams } from "next/navigation";
+// ==========================================
+// GET ALL ORDERS
+// ==========================================
 
-export default function OrderDetailsPage() {
-  const params = useParams();
+export async function GET() {
+  try {
+    const [orders] = await pool.query(`
+      SELECT
+        o.order_id,
+        o.user_id,
+        o.order_date,
 
-  return (
-    <div>
-      <div className="admin-page-header">
-        <div>
-          <h1>Order #{params.id}</h1>
-          <p>Order details and management</p>
-        </div>
-      </div>
+        o.subtotal,
+        o.discount,
+        o.shipping_fee,
+        o.total_amount,
 
-      <div className="details-grid">
-        <div className="admin-card">
-          <h3>Customer Information</h3>
+        o.coupon_id,
 
-          <div className="detail-list">
-            <div>
-              <span>Name</span>
-              <strong>Chamodi Jayasingha</strong>
-            </div>
+        o.payment_status,
+        o.order_status,
 
-            <div>
-              <span>Email</span>
-              <strong>customer@example.com</strong>
-            </div>
+        o.shipping_address,
+        o.billing_address,
 
-            <div>
-              <span>Phone</span>
-              <strong>0771234567</strong>
-            </div>
-          </div>
-        </div>
+        o.created_at,
+        o.updated_at,
 
-        <div className="admin-card">
-          <h3>Order Status</h3>
+        COUNT(oi.order_item_id) AS item_count,
 
-          <select className="admin-select full-width">
-            <option>Pending</option>
-            <option>Processing</option>
-            <option>Shipped</option>
-            <option>Delivered</option>
-            <option>Cancelled</option>
-          </select>
-        </div>
+        u.name AS customer_name,
+        u.email AS customer_email,
+        u.phone AS customer_phone
 
-        <div className="admin-card full-card">
-          <h3>Order Items</h3>
+      FROM orders o
 
-          <div className="order-product">
-            <div className="product-placeholder">
-              P
-            </div>
+      LEFT JOIN users u
+        ON o.user_id = u.user_id
 
-            <div>
-              <strong>
-                Premium Cotton T-Shirt
-              </strong>
+      LEFT JOIN order_items oi
+        ON o.order_id = oi.order_id
 
-              <span>
-                Size: M | Color: Black
-              </span>
-            </div>
+      GROUP BY
+        o.order_id,
+        o.user_id,
+        o.order_date,
+        o.subtotal,
+        o.discount,
+        o.shipping_fee,
+        o.total_amount,
+        o.coupon_id,
+        o.payment_status,
+        o.order_status,
+        o.shipping_address,
+        o.billing_address,
+        o.created_at,
+        o.updated_at,
+        u.name,
+        u.email,
+        u.phone
 
-            <strong>
-              Rs. 4,500
-            </strong>
-          </div>
+      ORDER BY o.order_id DESC
+    `);
 
-          <div className="order-total">
-            <span>Total</span>
-            <strong>Rs. 4,500</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    return NextResponse.json(orders);
+  } catch (error) {
+    console.error(
+      "GET ORDERS ERROR:",
+      error
+    );
+
+    return NextResponse.json(
+      {
+        error: "Failed to fetch orders.",
+        details: error.message,
+      },
+      { status: 500 }
+    );
+  }
 }

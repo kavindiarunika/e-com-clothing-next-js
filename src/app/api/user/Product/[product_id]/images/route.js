@@ -1,5 +1,7 @@
-import db from '@/lib/db';
+import { getPool } from '@/lib/db';
 import { NextResponse } from 'next/server';
+
+const db = getPool();
 
 export async function GET(req, { params }) {
   try {

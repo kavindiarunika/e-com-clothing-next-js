@@ -1,28 +1,12 @@
-import { getPool } from "@/lib/db";
-import { getAdmin } from "@/lib/auth";
+import { NextResponse } from "next/server";
+import pool from "@/lib/db";
 
-/* =========================================
-   GET ALL ORDERS
-========================================= */
+// ==========================================
+// GET ALL ORDERS
+// ==========================================
 
 export async function GET() {
   try {
-    const admin = await getAdmin();
-
-    if (!admin) {
-      return Response.json(
-        {
-          success: false,
-          message: "Unauthorized",
-        },
-        {
-          status: 401,
-        }
-      );
-    }
-
-    const pool = getPool();
-
     const [orders] = await pool.query(`
       SELECT
         o.order_id,
@@ -45,34 +29,56 @@ export async function GET() {
         o.created_at,
         o.updated_at,
 
-        u.first_name,
-        u.last_name,
-        u.email
+        COUNT(oi.order_item_id) AS item_count,
+
+        CONCAT_WS(' ', u.first_name, u.last_name) AS customer_name,
+        u.email AS customer_email,
+        u.phone AS customer_phone
 
       FROM orders o
 
       LEFT JOIN users u
         ON o.user_id = u.user_id
 
+      LEFT JOIN order_items oi
+        ON o.order_id = oi.order_id
+
+      GROUP BY
+        o.order_id,
+        o.user_id,
+        o.order_date,
+        o.subtotal,
+        o.discount,
+        o.shipping_fee,
+        o.total_amount,
+        o.coupon_id,
+        o.payment_status,
+        o.order_status,
+        o.shipping_address,
+        o.billing_address,
+        o.created_at,
+        o.updated_at,
+        u.first_name,
+        u.last_name,
+        u.email,
+        u.phone
+
       ORDER BY o.order_id DESC
     `);
 
-    return Response.json({
-      success: true,
-      orders,
-    });
+    return NextResponse.json(orders);
   } catch (error) {
-    console.error("Orders GET Error:", error);
+    console.error(
+      "GET ORDERS ERROR:",
+      error
+    );
 
-    return Response.json(
+    return NextResponse.json(
       {
-        success: false,
-        message: "Failed to load orders",
-        error: error.message,
+        error: "Failed to fetch orders.",
+        details: error.message,
       },
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }

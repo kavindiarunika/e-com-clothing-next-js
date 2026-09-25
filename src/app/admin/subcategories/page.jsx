@@ -26,7 +26,7 @@ export default function SubcategoriesPage() {
   const [form, setForm] = useState({
     name: "",
     description: "",
-    image: "",
+    image: null,
     parent_category_id: "",
     status: "active",
   });
@@ -55,7 +55,9 @@ export default function SubcategoriesPage() {
         setSubcategories(subcategoryData.subcategories || []);
       }
 
-      if (categoryData.success) {
+      if (Array.isArray(categoryData)) {
+        setCategories(categoryData);
+      } else if (categoryData.success) {
         setCategories(categoryData.categories || []);
       }
     } catch (error) {
@@ -93,11 +95,11 @@ export default function SubcategoriesPage() {
   ========================================= */
 
   function handleChange(e) {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
 
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "image" ? files?.[0] || null : value,
     }));
   }
 
@@ -111,7 +113,7 @@ export default function SubcategoriesPage() {
     setForm({
       name: "",
       description: "",
-      image: "",
+      image: null,
       parent_category_id: "",
       status: "active",
     });
@@ -129,7 +131,7 @@ export default function SubcategoriesPage() {
     setForm({
       name: subcategory.name || "",
       description: subcategory.description || "",
-      image: subcategory.image || "",
+      image: null,
       parent_category_id: subcategory.parent_category_id || "",
       status: subcategory.status || "active",
     });
@@ -168,13 +170,18 @@ export default function SubcategoriesPage() {
     try {
       setSaving(true);
 
-      const payload = {
-        name: form.name.trim(),
-        description: form.description.trim(),
-        image: form.image.trim(),
-        parent_category_id: Number(form.parent_category_id),
-        status: form.status,
-      };
+      const payload = new FormData();
+      payload.append("name", form.name.trim());
+      payload.append("description", form.description.trim());
+      payload.append(
+        "parent_category_id",
+        String(Number(form.parent_category_id))
+      );
+      payload.append("status", form.status);
+
+      if (form.image) {
+        payload.append("image", form.image);
+      }
 
       const url = editingSubcategory
         ? `/api/admin/subcategories/${editingSubcategory.category_id}`
@@ -184,10 +191,7 @@ export default function SubcategoriesPage() {
 
       const response = await fetch(url, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        body: payload,
       });
 
       const data = await response.json();
@@ -543,15 +547,22 @@ export default function SubcategoriesPage() {
               {/* IMAGE */}
 
               <div className="subcategory-form-group">
-                <label>Image URL</label>
+                <label>Image</label>
 
                 <input
-                  type="text"
+                  type="file"
                   name="image"
-                  placeholder="https://example.com/image.jpg"
-                  value={form.image}
+                  accept="image/*"
                   onChange={handleChange}
                 />
+
+                {editingSubcategory?.image && !form.image && (
+                  <img
+                    src={editingSubcategory.image}
+                    alt="Current subcategory"
+                    className="subcategory-image-preview"
+                  />
+                )}
               </div>
 
               {/* PARENT CATEGORY */}
