@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Search,
   Heart,
@@ -16,6 +17,7 @@ import Image from "next/image";
 import products from "@/data/products";
 
 export default function Navbar() {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
   const [cartCount, setCartCount] = useState(0);
@@ -38,6 +40,17 @@ export default function Navbar() {
   const closeMenu = () => {
     setMobileMenuOpen(false);
     setOpenCategory(null);
+  };
+
+  const handleAccountClick = (event) => {
+    event.preventDefault();
+    closeMenu();
+
+    const isLoggedIn = Boolean(
+      localStorage.getItem("velora-user-session")
+    );
+
+    router.push(isLoggedIn ? "/user/account" : "/user/login");
   };
 
   const categories = Object.entries(
@@ -233,7 +246,8 @@ export default function Navbar() {
           </Link>
 
           <Link
-            href="/user"
+            href="/user/account"
+            onClick={handleAccountClick}
             aria-label="Account"
             className="transition hover:text-[#AC9C8D]"
           >
@@ -351,7 +365,7 @@ export default function Navbar() {
             </Link>
 
             <Link
-              href="/user"
+              href="/user/account"
               onClick={closeMenu}
               className="flex items-center gap-3 py-3 text-sm transition hover:text-[#AC9C8D]"
             >
