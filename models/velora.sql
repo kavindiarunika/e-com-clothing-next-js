@@ -23,7 +23,6 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-
 -- =====================================================
 -- 2. CATEGORIES
 -- =====================================================

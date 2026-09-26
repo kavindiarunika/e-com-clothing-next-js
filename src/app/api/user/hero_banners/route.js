@@ -1,4 +1,4 @@
-import db from '@lib/db.js'
+import db from '@/lib/db'
 import { NextResponse } from 'next/server'
 
 // GET - Get all hero banners

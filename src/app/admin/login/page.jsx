@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function AdminLoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ export default function AdminLoginPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          username,
           password,
         }),
       });
@@ -81,17 +81,18 @@ export default function AdminLoginPage() {
 
           <div className="admin-login-group">
 
-            <label htmlFor="email">
-              Email
+            <label htmlFor="username">
+              Username
             </label>
 
             <input
-              id="email"
-              type="email"
-              placeholder="Enter admin email"
-              value={email}
+              id="username"
+              type="text"
+              autoComplete="username"
+              placeholder="Enter admin username"
+              value={username}
               onChange={(e) =>
-                setEmail(e.target.value)
+                setUsername(e.target.value)
               }
               required
             />

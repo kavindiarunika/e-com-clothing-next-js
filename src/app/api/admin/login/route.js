@@ -1,18 +1,19 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import db from "@/lib/db";
 import { createAdminToken } from "@/lib/auth";
 
 export async function POST(request) {
   try {
     const body = await request.json();
 
-    const { email, password } = body;
+    const username = String(body.username ?? body.email ?? "").trim();
+    const password = String(body.password ?? "");
+    const configuredUsername = process.env.ADMIN_USERNAME?.trim();
+    const configuredPassword = process.env.ADMIN_PASSWORD;
 
-    if (!email || !password) {
+    if (!username || !password) {
       return NextResponse.json(
         {
-          message: "Email and password are required",
+          message: "Username and password are required",
         },
         {
           status: 400,
@@ -20,20 +21,19 @@ export async function POST(request) {
       );
     }
 
-    const [admins] = await db.execute(
-      `
-      SELECT user_id, first_name, last_name, email, password, role, status
-      FROM users
-      WHERE email = ? AND role = 'admin'
-      LIMIT 1
-      `,
-      [email]
-    );
-
-    if (admins.length === 0) {
+    if (!configuredUsername || !configuredPassword) {
       return NextResponse.json(
         {
-          message: "Invalid email or password",
+          message: "Admin login is not configured",
+        },
+        { status: 500 }
+      );
+    }
+
+    if (username !== configuredUsername || password !== configuredPassword) {
+      return NextResponse.json(
+        {
+          message: "Invalid username or password",
         },
         {
           status: 401,
@@ -41,39 +41,13 @@ export async function POST(request) {
       );
     }
 
-    const admin = admins[0];
-
-    // Check password
-    const passwordMatch = await bcrypt.compare(
-      password,
-      admin.password
-    );
-
-    if (!passwordMatch) {
-      return NextResponse.json(
-        {
-          message: "Invalid email or password",
-        },
-        {
-          status: 401,
-        }
-      );
-    }
-
-    // Check status if your table has status
-    if (
-      admin.status &&
-      admin.status !== "active"
-    ) {
-      return NextResponse.json(
-        {
-          message: "This admin account is inactive",
-        },
-        {
-          status: 403,
-        }
-      );
-    }
+    const admin = {
+      user_id: "env-admin",
+      first_name: "Admin",
+      last_name: "",
+      email: "admin@velora.local",
+      role: "admin",
+    };
 
     const token = createAdminToken({
       user_id: admin.user_id,

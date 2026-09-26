@@ -344,53 +344,6 @@ export default function HeroBanner() {
         </span>
       </div>
 
-      {/* ================= CUSTOM STYLES ================= */}
-      <style jsx global>{`
-        .velora-pagination .swiper-pagination-bullet {
-          width: 8px;
-          height: 8px;
-          border-radius: 9999px;
-          margin: 0 !important;
-          opacity: 0.25;
-          background: #432415;
-          transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .velora-pagination .swiper-pagination-bullet-active {
-          transform: scale(1.35);
-          opacity: 1;
-          background: #432415;
-        }
-
-        .velora-image-reveal {
-          animation: veloraImageReveal 1s ease forwards;
-        }
-
-        @keyframes veloraImageReveal {
-          from {
-            opacity: 0;
-            transform: translateX(30px);
-          }
-
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @media (max-width: 1023px) {
-          .velora-pagination {
-            bottom: 18px !important;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .velora-pagination .swiper-pagination-bullet {
-            width: 7px;
-            height: 7px;
-          }
-        }
-      `}</style>
     </section>
   );
 }
