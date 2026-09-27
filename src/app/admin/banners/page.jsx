@@ -35,6 +35,8 @@ export default function BannersPage() {
     end_date: "",
     status: "active",
   });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   /* =========================================
      LOAD BANNERS
@@ -105,6 +107,8 @@ export default function BannersPage() {
 
   const openAddModal = () => {
     setEditingBanner(null);
+    setSelectedImage(null);
+    setImagePreview("");
 
     setFormData({
       title: "",
@@ -127,6 +131,17 @@ export default function BannersPage() {
 
   const openEditModal = (banner) => {
     setEditingBanner(banner);
+    setSelectedImage(null);
+    setImagePreview(
+      banner.image &&
+        (banner.image.startsWith("/") ||
+          banner.image.startsWith("http") ||
+          banner.image.startsWith("data:"))
+        ? banner.image
+        : banner.image
+          ? `data:image/jpeg;base64,${banner.image}`
+          : ""
+    );
 
     setFormData({
       title: banner.title || "",
@@ -176,6 +191,28 @@ export default function BannersPage() {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      setSelectedImage(null);
+      setImagePreview(formData.image || "");
+      return;
+    }
+
+    setSelectedImage(file);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setFormData((prev) => ({
+        ...prev,
+        image: reader.result,
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
   /* =========================================
      SAVE BANNER
   ========================================= */
@@ -183,8 +220,10 @@ export default function BannersPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.image.trim()) {
-      alert("Banner image URL is required.");
+    const hasImage = selectedImage || formData.image || editingBanner?.image;
+
+    if (!hasImage) {
+      alert("Banner image is required.");
       return;
     }
 
@@ -197,15 +236,32 @@ export default function BannersPage() {
 
       const method = editingBanner ? "PUT" : "POST";
 
+      const payload = new FormData();
+
+      Object.entries({
+        title: formData.title,
+        subtitle: formData.subtitle,
+        button_text: formData.button_text,
+        button_link: formData.button_link,
+        sort_order: Number(formData.sort_order) || 0,
+        start_date: formData.start_date,
+        end_date: formData.end_date,
+        status: formData.status,
+      }).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== "") {
+          payload.append(key, String(value));
+        }
+      });
+
+      if (selectedImage) {
+        payload.append("image", selectedImage);
+      } else if (formData.image && !editingBanner?.image) {
+        payload.append("image_url", formData.image);
+      }
+
       const response = await fetch(url, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          sort_order: Number(formData.sort_order) || 0,
-        }),
+        body: payload,
       });
 
       const data = await response.json();
@@ -216,6 +272,8 @@ export default function BannersPage() {
 
       setShowModal(false);
       setEditingBanner(null);
+      setSelectedImage(null);
+      setImagePreview("");
 
       await loadBanners();
     } catch (error) {
@@ -634,27 +692,29 @@ export default function BannersPage() {
               <div className="banner-form-group">
 
                 <label>
-                  Banner Image URL *
+                  Banner Image *
                 </label>
 
                 <input
-                  type="url"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleChange}
-                  placeholder="https://example.com/banner.jpg"
-                  required
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  required={!editingBanner}
                 />
+
+                <small>
+                  Upload a JPG, PNG, or WebP banner image.
+                </small>
 
               </div>
 
               {/* Image Preview */}
-              {formData.image && (
+              {imagePreview && (
 
                 <div className="banner-preview">
 
                   <img
-                    src={formData.image}
+                    src={imagePreview}
                     alt="Banner preview"
                   />
 

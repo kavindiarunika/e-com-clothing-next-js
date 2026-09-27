@@ -5,6 +5,35 @@ import pool from "@/lib/db";
 // GET ALL CATEGORIES
 // ==========================================
 
+function getImageMimeType(buffer) {
+  if (!buffer || buffer.length === 0) return "image/jpeg";
+
+  const bytes = buffer.subarray(0, 12);
+
+  if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
+    return "image/png";
+  }
+
+  if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
+    return "image/jpeg";
+  }
+
+  if (bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46) {
+    return "image/gif";
+  }
+
+  if (
+    bytes[8] === 0x57 &&
+    bytes[9] === 0x45 &&
+    bytes[10] === 0x42 &&
+    bytes[11] === 0x50
+  ) {
+    return "image/webp";
+  }
+
+  return "image/jpeg";
+}
+
 export async function GET() {
   try {
     const [categories] = await pool.query(`
@@ -23,12 +52,22 @@ export async function GET() {
       ORDER BY c.created_at DESC, c.category_id DESC
     `);
 
-    const formattedCategories = categories.map((category) => ({
-      ...category,
-      image: category.image
-        ? Buffer.from(category.image).toString("base64")
-        : null,
-    }));
+    const formattedCategories = categories.map((category) => {
+      if (!category.image) {
+        return { ...category, image: null };
+      }
+
+      const buffer = Buffer.isBuffer(category.image)
+        ? category.image
+        : Buffer.from(category.image);
+
+      const mimeType = getImageMimeType(buffer);
+
+      return {
+        ...category,
+        image: `data:${mimeType};base64,${buffer.toString("base64")}`,
+      };
+    });
 
     return NextResponse.json(formattedCategories);
   } catch (error) {

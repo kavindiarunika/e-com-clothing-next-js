@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -58,7 +58,7 @@ export default function ProductFormPage() {
   // FETCH CATEGORIES
   // =====================================================
 
-  async function fetchCategories() {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await fetch(
         "/api/admin/categories"
@@ -74,7 +74,9 @@ export default function ProductFormPage() {
       }
 
       setCategories(
-        data.categories || []
+        Array.isArray(data)
+          ? data
+          : data.categories || []
       );
     } catch (err) {
       setError(
@@ -82,13 +84,13 @@ export default function ProductFormPage() {
           "Failed to load categories"
       );
     }
-  }
+  }, []);
 
   // =====================================================
   // FETCH PRODUCT
   // =====================================================
 
-  async function fetchProduct() {
+  const fetchProduct = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
@@ -166,19 +168,23 @@ export default function ProductFormPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [id]);
 
   // =====================================================
   // INITIAL LOAD
   // =====================================================
 
   useEffect(() => {
-    fetchCategories();
+    const frameId = requestAnimationFrame(() => {
+      void fetchCategories();
 
-    if (isEditMode) {
-      fetchProduct();
-    }
-  }, [id]);
+      if (isEditMode) {
+        void fetchProduct();
+      }
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [fetchCategories, fetchProduct, isEditMode]);
 
   // =====================================================
   // INPUT CHANGE

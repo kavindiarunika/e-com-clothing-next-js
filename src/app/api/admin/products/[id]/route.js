@@ -16,6 +16,7 @@ export async function PUT(request, { params }) {
     const sku = formData.get("sku") || null;
     const brand = formData.get("brand") || null;
     const status = formData.get("status") || "active";
+    const isFeatured = formData.get("is_featured") === "true";
     const tagsString = formData.get("tags") || "[]";
 
     const mainImage = formData.get("main_image");
@@ -53,7 +54,8 @@ export async function PUT(request, { params }) {
           sku = ?,
           brand = ?,
           tags = ?,
-          status = ?
+          status = ?,
+          is_featured = ?
         WHERE item_id = ?
         `,
         [
@@ -67,6 +69,7 @@ export async function PUT(request, { params }) {
           brand || null,
           tagsString,
           status,
+          isFeatured,
           id,
         ]
       );
@@ -86,7 +89,8 @@ export async function PUT(request, { params }) {
           sku = ?,
           brand = ?,
           tags = ?,
-          status = ?
+          status = ?,
+          is_featured = ?
         WHERE item_id = ?
         `,
         [
@@ -99,6 +103,7 @@ export async function PUT(request, { params }) {
           brand || null,
           tagsString,
           status,
+          isFeatured,
           id,
         ]
       );

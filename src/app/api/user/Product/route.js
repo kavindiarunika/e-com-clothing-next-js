@@ -1,4 +1,5 @@
 import { getPool } from '@/lib/db';
+import { getImageSource } from '@/lib/productImageSource';
 import { NextResponse } from 'next/server';
 
 const db = getPool();
@@ -28,7 +29,7 @@ export async function GET(req) {
         p.is_best_selling,
         p.created_at,
         p.updated_at,
-        CASE WHEN p.main_image IS NOT NULL THEN 1 ELSE 0 END AS has_main_image
+        p.main_image
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.category_id
       WHERE 1 = 1
@@ -49,16 +50,15 @@ export async function GET(req) {
       query += " AND p.is_featured = TRUE";
     }
 
-    query += " ORDER BY p.item_id DESC";
+    query += " ORDER BY p.created_at DESC, p.item_id DESC";
 
     const [products] = await db.query(query, params);
 
     // Attach a URL to fetch the main image instead of embedding the blob
-    const data = products.map((p) => ({
-      ...p,
-      main_image_url: p.has_main_image
-        ? `/api/products/${p.item_id}/image`
-        : null,
+    const data = products.map((product) => ({
+      ...product,
+      image: getImageSource(product.main_image),
+      main_image: undefined,
     }));
 
     return NextResponse.json(

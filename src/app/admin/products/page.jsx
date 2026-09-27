@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Plus,
   Search,
@@ -33,23 +33,19 @@ export default function ProductsPage() {
     brand: "",
     tags: "",
     status: "active",
+    is_featured: false,
     main_image: null,
     images: [],
   });
 
-  const [mainImagePreview, setMainImagePreview] = useState("");
-  const [imagePreviews, setImagePreviews] = useState([]);
+    const [mainImagePreview, setMainImagePreview] = useState("");
+    const [imagePreviews, setImagePreviews] = useState([]);
 
-  useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-  }, []);
+    /* =====================================================
+      FETCH PRODUCTS
+    ===================================================== */
 
-  /* =====================================================
-     FETCH PRODUCTS
-  ===================================================== */
-
-  const fetchProducts = async () => {
+    const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -67,13 +63,13 @@ export default function ProductsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   /* =====================================================
      FETCH CATEGORIES
   ===================================================== */
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/categories");
 
@@ -83,11 +79,20 @@ export default function ProductsPage() {
 
       const data = await res.json();
 
-      setCategories(data.categories || []);
+      setCategories(Array.isArray(data) ? data : data.categories || []);
     } catch (error) {
       console.error("Fetch categories error:", error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const frameId = requestAnimationFrame(() => {
+      void fetchProducts();
+      void fetchCategories();
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [fetchProducts, fetchCategories]);
 
   /* =====================================================
      RESET FORM
@@ -104,6 +109,7 @@ export default function ProductsPage() {
       brand: "",
       tags: "",
       status: "active",
+      is_featured: false,
       main_image: null,
       images: [],
     });
@@ -141,6 +147,7 @@ export default function ProductsPage() {
         ? product.tags.join(", ")
         : product.tags || "",
       status: product.status || "active",
+      is_featured: Boolean(product.is_featured),
       main_image: null,
       images: [],
     });
@@ -172,11 +179,11 @@ export default function ProductsPage() {
   ===================================================== */
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
 
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -255,6 +262,7 @@ export default function ProductsPage() {
       formData.append("sku", form.sku);
       formData.append("brand", form.brand);
       formData.append("status", form.status);
+      formData.append("is_featured", String(form.is_featured));
 
       formData.append(
         "tags",
@@ -965,6 +973,18 @@ export default function ProductsPage() {
 
                     </select>
 
+                  </div>
+
+                  <div className="form-group full">
+                    <label className="checkbox-option">
+                      <input
+                        type="checkbox"
+                        name="is_featured"
+                        checked={form.is_featured}
+                        onChange={handleChange}
+                      />
+                      <span>Featured product</span>
+                    </label>
                   </div>
 
                   <div className="form-group full">

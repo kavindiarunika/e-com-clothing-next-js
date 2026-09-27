@@ -1,10 +1,57 @@
-import Link from "next/link";
-import ProductCard from "../product/ProductCard";
-import products from "@/data/products";
+"use client";
 
-const newArrivals = products.slice(0, 4);
+import { useEffect, useState } from "react";
+import ProductCard from "../product/ProductCard";
 
 export default function NewArrivals() {
+  const [newArrivals, setNewArrivals] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadNewArrivals() {
+      try {
+        const response = await fetch(
+          "/api/user/Product?status=active",
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to load new arrivals");
+        }
+
+        const result = await response.json();
+        const products = Array.isArray(result.data)
+          ? result.data.slice(0, 4).map((product) => ({
+              id: product.item_id,
+              name: product.title,
+              category: product.category_name,
+              price: product.price,
+              discount: product.discount,
+              image: product.image,
+              images: product.image ? [product.image] : [],
+              variants: [],
+            }))
+          : [];
+
+        setNewArrivals(products);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("New arrivals error:", error);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadNewArrivals();
+
+    return () => controller.abort();
+  }, []);
+
   return (
     <section className="bg-[#EFE9E1] px-[4%] py-20 md:py-24">
       <div className="mx-auto max-w-[1200px]">
@@ -33,6 +80,12 @@ export default function NewArrivals() {
             />
           ))}
         </div>
+
+        {!loading && newArrivals.length === 0 && (
+          <p className="py-8 text-center text-sm text-[#6B625D]">
+            No new products available right now.
+          </p>
+        )}
 
         {/* View All Products Button */}
         <div className="mt-12 text-center">

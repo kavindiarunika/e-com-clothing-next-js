@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 import {
   ArrowRight,
@@ -25,33 +24,6 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
-const slides = [
-  {
-    image: "/images/hero/velora-hero.jpg",
-    label: "New Collection 2026",
-    title: "Timeless Fashion",
-    highlight: "for Modern You.",
-    description:
-      "Discover thoughtfully designed pieces that blend timeless elegance, modern comfort, and effortless style.",
-  },
-  {
-    image: "/images/hero/velora-hero3.jpg",
-    label: "Elegant Essentials",
-    title: "Define Your",
-    highlight: "Signature Style.",
-    description:
-      "Explore premium clothing made for confident, effortless everyday looks.",
-  },
-  {
-    image: "/images/hero/velora-hero7.jpg",
-    label: "Seasonal Edit",
-    title: "Style That",
-    highlight: "Feels Like You.",
-    description:
-      "Refresh your wardrobe with carefully selected pieces for every occasion.",
-  },
-];
-
 const stats = [
   {
     icon: Gem,
@@ -71,8 +43,53 @@ const stats = [
 ];
 
 export default function HeroBanner() {
+  const [slides, setSlides] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef(null);
+
+  useEffect(() => {
+    const loadHeroBanners = async () => {
+      try {
+        const response = await fetch("/api/user/hero_banners");
+
+        if (!response.ok) {
+          setSlides([]);
+          return;
+        }
+
+        const data = await response.json();
+        const banners = Array.isArray(data?.data) ? data.data : [];
+
+        const formattedSlides = banners.map((banner) => {
+          const titleText = banner.title || "";
+          const titleParts = titleText.split(/\s+/).filter(Boolean);
+          const firstLine = titleParts.slice(0, 2).join(" ") || "Velora";
+          const secondLine = titleParts.slice(2).join(" ") || "Collection";
+
+          return {
+            image: banner.image || "",
+            label: banner.subtitle || "New Collection",
+            title: firstLine,
+            highlight: secondLine,
+            description: banner.subtitle || "",
+            button_text: banner.button_text || "Shop Now",
+            button_link: banner.button_link || "/user/shop",
+          };
+        });
+
+        setSlides(formattedSlides.filter((slide) => slide.image));
+      } catch (error) {
+        console.error("Hero banner fetch error:", error);
+        setSlides([]);
+      }
+    };
+
+    loadHeroBanners();
+  }, []);
+
+  if (!slides.length) {
+    return null;
+  }
 
   return (
     <section className="relative min-h-[600px] overflow-hidden bg-[#F3EFEB] text-[#432415] lg:min-h-[560px]">
@@ -115,7 +132,7 @@ export default function HeroBanner() {
         className="h-full"
       >
         {slides.map((slide, index) => (
-          <SwiperSlide key={slide.image}>
+          <SwiperSlide key={`${slide.image}-${index}`}>
             <div className="relative min-h-[600px] lg:min-h-[560px]">
               {/* Main Container */}
               <div className="relative z-10 mx-auto flex min-h-[600px] w-[90%] max-w-[1400px] flex-col lg:min-h-[560px] lg:flex-row lg:items-center">
@@ -173,10 +190,10 @@ export default function HeroBanner() {
                       }`}
                     >
                       <Link
-                        href="/user/shop"
+                        href={slide.button_link || "/user/shop"}
                         className="group inline-flex h-12 items-center justify-center gap-3 overflow-hidden bg-[var(--color-primary)] px-7 text-xs font-semibold uppercase tracking-[1.5px] text-[var(--color-white)] transition-all duration-300 hover:bg-[var(--color-banner)] hover:text-[var(--color-dark)] hover:shadow-[0_8px_24px_-8px_rgba(172,156,141,0.6)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-banner)]"
                       >
-                        Shop Collection
+                        {slide.button_text || "Shop Collection"}
 
                         <ArrowRight
                           size={16}
@@ -247,15 +264,10 @@ export default function HeroBanner() {
                     }`}
                   >
                     {/* Image */}
-                    <Image
+                    <img
                       src={slide.image}
                       alt={`${slide.title} ${slide.highlight}`}
-                      fill
-                      priority={index === 0}
-                      sizes="(max-width: 768px) 78vw, 480px"
-                      quality={75}
-                      unoptimized
-                      className={`object-cover transition-transform duration-[7000ms] ${
+                      className={`h-full w-full object-cover transition-transform duration-[7000ms] ${
                         activeIndex === index
                           ? "scale-105"
                           : "scale-100"

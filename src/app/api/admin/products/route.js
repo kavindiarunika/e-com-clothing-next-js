@@ -84,6 +84,7 @@ export async function POST(request) {
     const sku = formData.get("sku")?.toString().trim() || null;
     const brand = formData.get("brand")?.toString().trim() || null;
     const status = formData.get("status")?.toString() || "active";
+    const isFeatured = formData.get("is_featured") === "true";
 
     const tagsValue = formData.get("tags")?.toString() || "[]";
 
@@ -153,9 +154,10 @@ export async function POST(request) {
           sku,
           brand,
           tags,
-          status
+          status,
+          is_featured
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
         [
           title,
@@ -168,6 +170,7 @@ export async function POST(request) {
           brand || null,
           JSON.stringify(tags),
           status,
+          isFeatured,
         ]
       );
     } catch (dbError) {
@@ -189,6 +192,7 @@ export async function POST(request) {
         sku,
         brand,
         status,
+        isFeatured,
         tags,
         hasMainImage: !!mainImagePath,
         imagePath: mainImagePath,
@@ -262,6 +266,16 @@ export async function POST(request) {
       { status: 201 }
     );
   } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      return NextResponse.json(
+        {
+          error: "SKU already exists.",
+          message: "SKU already exists. Please enter a unique SKU.",
+        },
+        { status: 409 }
+      );
+    }
+
     console.error("=================================");
     console.error("CREATE PRODUCT ERROR");
     console.error("=================================");

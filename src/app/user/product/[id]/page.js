@@ -1,7 +1,8 @@
 "use client";
 
-import { use, useEffect, useMemo, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { notFound, useRouter } from "next/navigation";
+import { Image as ImageIcon } from "lucide-react";
 
 import ProductImageGallery from "@/components/user/product/ProductImageGallery";
 import ProductRating from "@/components/user/product/ProductRating";
@@ -10,35 +11,81 @@ import SizeSelector from "@/components/user/product/SizeSelector";
 import RelatedProducts from "@/components/user/product/RelatedProducts";
 import ReviewSection from "@/components/user/product/ReviewSection";
 
-import products from "@/data/products";
-
 export default function ProductPage({ params }) {
   const router = useRouter();
   const resolvedParams = use(params);
-  const productId = Number(resolvedParams.id);
+  const productId = String(resolvedParams.id);
 
-  const product = useMemo(
-    () => products.find((item) => item.id === productId),
-    [productId]
-  );
-
-  const [selectedColor, setSelectedColor] = useState(
-    product?.colors?.[0] || null
-  );
-
-  const [selectedSize, setSelectedSize] = useState(
-    product?.sizes?.[0] || ""
-  );
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState("");
 
   const [quantity, setQuantity] = useState(1);
 
   // Wishlist state
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  // Product not found
-  if (!product) {
-    notFound();
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadProduct() {
+      try {
+        const response = await fetch(
+          `/api/user/Product/${encodeURIComponent(productId)}`,
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          setProduct(null);
+          return;
+        }
+
+        const result = await response.json();
+        const nextProduct = result.product || null;
+
+        setProduct(nextProduct);
+        setSelectedColor(nextProduct?.colors?.[0] || null);
+        setSelectedSize(nextProduct?.sizes?.[0] || "");
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Product detail error:", error);
+          setProduct(null);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadProduct();
+
+    return () => controller.abort();
+  }, [productId]);
+
+  useEffect(() => {
+    if (!product) return;
+
+    const frameId = requestAnimationFrame(() => {
+      const savedWishlist = JSON.parse(
+        localStorage.getItem("velora-wishlist") || "[]"
+      );
+      setIsWishlisted(savedWishlist.includes(product.id));
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [product]);
+
+  if (loading) {
+    return (
+      <main className="flex min-h-[60vh] items-center justify-center bg-[#EFE9E1] text-sm text-[#6B625D]">
+        Loading product...
+      </main>
+    );
   }
+
+  if (!product) notFound();
 
   /*
   ==========================================
@@ -53,8 +100,8 @@ export default function ProductPage({ params }) {
 
   const selectedVariant = product.variants?.find(
     (variant) =>
-      variant.size === selectedSize &&
-      variant.color === selectedColorName
+      variant.size === (selectedSize || "") &&
+      variant.color === (selectedColorName || "")
   );
 
   const availableStock = Number(
@@ -78,29 +125,6 @@ export default function ProductPage({ params }) {
   CHECK WISHLIST
   ==========================================
   */
-
-  useEffect(() => {
-    if (!product) return;
-
-    const savedWishlist =
-      JSON.parse(
-        localStorage.getItem("velora-wishlist")
-      ) || [];
-
-    setIsWishlisted(
-      savedWishlist.includes(product.id)
-    );
-  }, [product]);
-
-  /*
-  ==========================================
-  RESET QUANTITY WHEN VARIANT CHANGES
-  ==========================================
-  */
-
-  useEffect(() => {
-    setQuantity(1);
-  }, [selectedSize, selectedColor]);
 
   /*
   ==========================================
@@ -178,14 +202,21 @@ export default function ProductPage({ params }) {
   ==========================================
   */
 
-  const originalPrice = Number(product.price) || 0;
+  const originalPrice =
+    Number(selectedVariant?.price) > 0
+      ? Number(selectedVariant.price)
+      : Number(product.price) || 0;
+  const discount =
+    Number(selectedVariant?.discount) > 0
+      ? Number(selectedVariant.discount)
+      : Number(product.discount) || 0;
   const hasDiscount =
-    Number(product.discount) > 0 &&
+    discount > 0 &&
     originalPrice > 0;
 
   const discountedPrice = hasDiscount
     ? originalPrice -
-      (originalPrice * Number(product.discount)) / 100
+      (originalPrice * discount) / 100
     : originalPrice;
 
   /*
@@ -389,11 +420,18 @@ export default function ProductPage({ params }) {
           {/* PRODUCT IMAGES */}
 
           <div>
-            <ProductImageGallery
-              images={product.images}
-              productName={product.name}
-              selectedColor={selectedColor}
-            />
+            {product.images.length > 0 ? (
+              <ProductImageGallery
+                images={product.images}
+                productName={product.name}
+                selectedColor={selectedColor}
+              />
+            ) : (
+              <div className="flex aspect-[4/5] flex-col items-center justify-center gap-3 bg-[#E3DCD1] text-[#6B625D]">
+                <ImageIcon size={32} strokeWidth={1.4} />
+                <span className="text-xs">No product image available</span>
+              </div>
+            )}
           </div>
 
           {/* PRODUCT INFORMATION */}
@@ -442,7 +480,7 @@ export default function ProductPage({ params }) {
 
               {hasDiscount && (
                 <span className="bg-[#72383D] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
-                  {product.discount}% OFF
+                  {discount}% OFF
                 </span>
               )}
 
@@ -458,29 +496,35 @@ export default function ProductPage({ params }) {
 
               {/* COLOR */}
 
-              <ColorSelector
-                colors={product.colors}
-                selectedColor={selectedColor}
-                setSelectedColor={
-                  setSelectedColor
-                }
-                variants={product.variants}
-                selectedSize={selectedSize}
-              />
+              {product.colors.length > 0 && (
+                <ColorSelector
+                  colors={product.colors}
+                  selectedColor={selectedColor}
+                  setSelectedColor={(color) => {
+                    setSelectedColor(color);
+                    setQuantity(1);
+                  }}
+                  variants={product.variants}
+                  selectedSize={selectedSize}
+                />
+              )}
 
               {/* SIZE */}
 
-              <SizeSelector
-                sizes={product.sizes}
-                selectedSize={selectedSize}
-                setSelectedSize={
-                  setSelectedSize
-                }
-                category={product.category}
-                sizeGuide={product.sizeGuide}
-                variants={product.variants}
-                selectedColor={selectedColor}
-              />
+              {product.sizes.length > 0 && (
+                <SizeSelector
+                  sizes={product.sizes}
+                  selectedSize={selectedSize}
+                  setSelectedSize={(size) => {
+                    setSelectedSize(size);
+                    setQuantity(1);
+                  }}
+                  category={product.category}
+                  sizeGuide={product.sizeGuide}
+                  variants={product.variants}
+                  selectedColor={selectedColor}
+                />
+              )}
 
               {/* QUANTITY */}
 
@@ -535,9 +579,10 @@ export default function ProductPage({ params }) {
 
                 <p className="mt-2 text-xs text-[#6B625C]">
 
-                  {!selectedSize ||
-                  !selectedColor ? (
-                    "Select size and color"
+                  {!selectedVariant ? (
+                    product.variants.length === 0
+                      ? "Product stock options are not available"
+                      : "Select an available option"
                   ) : availableStock > 0 ? (
                     <>
                       {availableStock}{" "}
@@ -621,20 +666,10 @@ export default function ProductPage({ params }) {
                 Product Details
               </p>
 
-              <ul className="mt-3 space-y-2 text-m text-[#6B625C]">
-
-                <li>
-                  • Premium quality material
-                </li>
-
-                <li>
-                  • Comfortable everyday fit
-                </li>
-
-                <li>
-                  • Available in selected sizes and colors
-                </li>
-
+              <ul className="mt-3 space-y-2 text-sm text-[#6B625D]">
+                {product.brand && <li>Brand: {product.brand}</li>}
+                {product.sku && <li>SKU: {product.sku}</li>}
+                <li>Category: {product.category || "Uncategorized"}</li>
               </ul>
 
             </div>
@@ -649,7 +684,7 @@ export default function ProductPage({ params }) {
       <section className="mx-auto w-[92%] max-w-[1200px] pb-16">
 
         <RelatedProducts
-          products={products}
+          products={[]}
           currentProduct={product}
         />
 

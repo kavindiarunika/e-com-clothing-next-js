@@ -1,9 +1,57 @@
-import ProductCard from "../product/ProductCard";
-import products from "@/data/products";
+"use client";
 
-const featuredProducts = products.slice(0, 4);
+import { useEffect, useState } from "react";
+import ProductCard from "../product/ProductCard";
 
 export default function FeaturedProducts() {
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadFeaturedProducts() {
+      try {
+        const response = await fetch(
+          "/api/user/Product?status=active&featured=1",
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to load featured products");
+        }
+
+        const result = await response.json();
+        const products = Array.isArray(result.data)
+          ? result.data.slice(0, 4).map((product) => ({
+              id: product.item_id,
+              name: product.title,
+              category: product.category_name,
+              price: product.price,
+              discount: product.discount,
+              image: product.image,
+              images: product.image ? [product.image] : [],
+              variants: [],
+            }))
+          : [];
+
+        setFeaturedProducts(products);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Featured products error:", error);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadFeaturedProducts();
+
+    return () => controller.abort();
+  }, []);
+
   return (
     <section className="bg-[#F8F5F2] px-[4%] py-20 md:py-24">
       <div className="mx-auto max-w-[1200px]">
@@ -35,6 +83,12 @@ export default function FeaturedProducts() {
             />
           ))}
         </div>
+
+        {!loading && featuredProducts.length === 0 && (
+          <p className="py-8 text-center text-sm text-[#6B625D]">
+            No featured products available right now.
+          </p>
+        )}
 
         {/* View All */}
         <div className="mt-12 text-center">
