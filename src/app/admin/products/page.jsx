@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Plus,
   Search,
@@ -8,20 +8,29 @@ import {
   Trash2,
   X,
   Image as ImageIcon,
+  Star,
+  Flame,
+  Package,
+  Upload,
 } from "lucide-react";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [colors, setColors] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
 
   const [showModal, setShowModal] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const [form, setForm] = useState({
     title: "",
@@ -34,71 +43,50 @@ export default function ProductsPage() {
     tags: "",
     status: "active",
     is_featured: false,
-    main_image: null,
-    images: [],
+    is_best_selling: false,
   });
 
-    const [mainImagePreview, setMainImagePreview] = useState("");
-    const [imagePreviews, setImagePreviews] = useState([]);
+  const [variants, setVariants] = useState([]);
 
-    /* =====================================================
-      FETCH PRODUCTS
-    ===================================================== */
+  // --------------------------------------------------
+  // LOAD DATA
+  // --------------------------------------------------
 
-    const fetchProducts = useCallback(async () => {
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  async function loadData() {
     try {
       setLoading(true);
 
-      const res = await fetch("/api/admin/products");
+      const response = await fetch("/api/admin/products");
 
-      if (!res.ok) {
+      if (!response.ok) {
         throw new Error("Failed to load products");
       }
 
-      const data = await res.json();
+      const data = await response.json();
 
       setProducts(data.products || []);
+      setCategories(data.categories || []);
+      setSizes(data.sizes || []);
+      setColors(data.colors || []);
     } catch (error) {
-      console.error("Fetch products error:", error);
+      console.error(error);
+      alert("Failed to load product data");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }
 
-  /* =====================================================
-     FETCH CATEGORIES
-  ===================================================== */
+  // --------------------------------------------------
+  // FORM
+  // --------------------------------------------------
 
-  const fetchCategories = useCallback(async () => {
-    try {
-      const res = await fetch("/api/admin/categories");
+  function openAddModal() {
+    setEditingId(null);
 
-      if (!res.ok) {
-        return;
-      }
-
-      const data = await res.json();
-
-      setCategories(Array.isArray(data) ? data : data.categories || []);
-    } catch (error) {
-      console.error("Fetch categories error:", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    const frameId = requestAnimationFrame(() => {
-      void fetchProducts();
-      void fetchCategories();
-    });
-
-    return () => cancelAnimationFrame(frameId);
-  }, [fetchProducts, fetchCategories]);
-
-  /* =====================================================
-     RESET FORM
-  ===================================================== */
-
-  const resetForm = () => {
     setForm({
       title: "",
       description: "",
@@ -110,139 +98,146 @@ export default function ProductsPage() {
       tags: "",
       status: "active",
       is_featured: false,
-      main_image: null,
-      images: [],
+      is_best_selling: false,
     });
 
-    setMainImagePreview("");
-    setImagePreviews([]);
-    setEditingProduct(null);
-  };
+    setVariants([]);
+    setSelectedImages([]);
 
-  /* =====================================================
-     OPEN ADD MODAL
-  ===================================================== */
-
-  const openAddModal = () => {
-    resetForm();
     setShowModal(true);
-  };
+  }
 
-  /* =====================================================
-     OPEN EDIT MODAL
-  ===================================================== */
+  async function openEditModal(productId) {
+    try {
+      const response = await fetch(
+        `/api/admin/products?id=${productId}`
+      );
 
-  const openEditModal = (product) => {
-    setEditingProduct(product);
+      const data = await response.json();
 
-    setForm({
-      title: product.title || "",
-      description: product.description || "",
-      price: product.price || "",
-      discount: product.discount || "",
-      category_id: product.category_id || "",
-      sku: product.sku || "",
-      brand: product.brand || "",
-      tags: Array.isArray(product.tags)
-        ? product.tags.join(", ")
-        : product.tags || "",
-      status: product.status || "active",
-      is_featured: Boolean(product.is_featured),
-      main_image: null,
-      images: [],
-    });
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to load product");
+      }
 
-    if (product.main_image) {
-      setMainImagePreview(getImageUrl(product));
-    } else {
-      setMainImagePreview("");
+      const product = data.product;
+
+      setEditingId(product.item_id);
+
+      setForm({
+        title: product.title || "",
+        description: product.description || "",
+        price: product.price || "",
+        discount: product.discount || "",
+        category_id: product.category_id || "",
+        sku: product.sku || "",
+        brand: product.brand || "",
+        tags: Array.isArray(product.tags)
+          ? product.tags.join(", ")
+          : "",
+        status: product.status || "active",
+        is_featured: Boolean(product.is_featured),
+        is_best_selling: Boolean(product.is_best_selling),
+      });
+
+      setVariants(
+        (data.variants || []).map((variant) => ({
+          variant_id: variant.variant_id,
+          size_id: variant.size_id || "",
+          color_id: variant.color_id || "",
+          sku: variant.sku || "",
+          price: variant.price || "",
+          discount: variant.discount || "",
+          stock_quantity: variant.stock_quantity || 0,
+          status: variant.status || "active",
+          existing_image: variant.image || null,
+          image: null,
+        }))
+      );
+
+      setSelectedImages([]);
+      setShowModal(true);
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
     }
+  }
 
-    setImagePreviews([]);
-
-    setShowModal(true);
-  };
-
-  /* =====================================================
-     CLOSE MODAL
-  ===================================================== */
-
-  const closeModal = () => {
-    if (saving) return;
-
-    setShowModal(false);
-    resetForm();
-  };
-
-  /* =====================================================
-     HANDLE FORM CHANGE
-  ===================================================== */
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
+  function updateForm(field, value) {
+    setForm((previous) => ({
+      ...previous,
+      [field]: value,
     }));
-  };
+  }
 
-  /* =====================================================
-     MAIN IMAGE
-  ===================================================== */
+  // --------------------------------------------------
+  // IMAGES
+  // --------------------------------------------------
 
-  const handleMainImageChange = (e) => {
-    const file = e.target.files?.[0];
+  function handleImages(event) {
+    const files = Array.from(event.target.files || []);
 
-    if (!file) return;
+    setSelectedImages(files);
+  }
 
-    setForm((prev) => ({
-      ...prev,
-      main_image: file,
-    }));
+  // --------------------------------------------------
+  // VARIANTS
+  // --------------------------------------------------
 
-    const reader = new FileReader();
+  function addVariant() {
+    setVariants((previous) => [
+      ...previous,
+      {
+        variant_id: null,
+        size_id: "",
+        color_id: "",
+        sku: "",
+        price: "",
+        discount: "",
+        stock_quantity: 0,
+        status: "active",
+        image: null,
+        existing_image: null,
+      },
+    ]);
+  }
 
-    reader.onloadend = () => {
-      setMainImagePreview(reader.result);
-    };
-
-    reader.readAsDataURL(file);
-  };
-
-  /* =====================================================
-     ADDITIONAL IMAGES
-  ===================================================== */
-
-  const handleImagesChange = (e) => {
-    const files = Array.from(e.target.files || []);
-
-    setForm((prev) => ({
-      ...prev,
-      images: files,
-    }));
-
-    const previews = files.map((file) =>
-      URL.createObjectURL(file)
+  function removeVariant(index) {
+    setVariants((previous) =>
+      previous.filter((_, variantIndex) => variantIndex !== index)
     );
+  }
 
-    setImagePreviews(previews);
-  };
+  function updateVariant(index, field, value) {
+    setVariants((previous) =>
+      previous.map((variant, variantIndex) =>
+        variantIndex === index
+          ? {
+              ...variant,
+              [field]: value,
+            }
+          : variant
+      )
+    );
+  }
 
-  /* =====================================================
-     SUBMIT FORM
-  ===================================================== */
+  function handleVariantImage(index, file) {
+    updateVariant(index, "image", file);
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // --------------------------------------------------
+  // SAVE PRODUCT
+  // --------------------------------------------------
+
+  async function handleSubmit(event) {
+    event.preventDefault();
 
     if (!form.title.trim()) {
-      alert("Product title is required.");
+      alert("Please enter product name");
       return;
     }
 
     if (!form.price) {
-      alert("Product price is required.");
+      alert("Please enter product price");
       return;
     }
 
@@ -255,209 +250,200 @@ export default function ProductsPage() {
       formData.append("description", form.description);
       formData.append("price", form.price);
       formData.append("discount", form.discount || "0");
-      formData.append(
-        "category_id",
-        form.category_id
-      );
+      formData.append("category_id", form.category_id);
       formData.append("sku", form.sku);
       formData.append("brand", form.brand);
+      formData.append("tags", form.tags);
       formData.append("status", form.status);
-      formData.append("is_featured", String(form.is_featured));
-
       formData.append(
-        "tags",
-        JSON.stringify(
-          form.tags
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter(Boolean)
-        )
+        "is_featured",
+        form.is_featured ? "1" : "0"
+      );
+      formData.append(
+        "is_best_selling",
+        form.is_best_selling ? "1" : "0"
       );
 
-      if (form.main_image) {
-        formData.append(
-          "main_image",
-          form.main_image
-        );
+      if (editingId) {
+        formData.append("item_id", editingId);
       }
 
-      form.images.forEach((image) => {
-        formData.append("images", image);
+      // Product images
+      selectedImages.forEach((file) => {
+        formData.append("images", file);
       });
 
-      const url = editingProduct
-        ? `/api/admin/products/${editingProduct.item_id}`
-        : "/api/admin/products";
+      // Variants
+      const variantData = variants.map((variant) => ({
+        variant_id: variant.variant_id || null,
+        size_id: variant.size_id || null,
+        color_id: variant.color_id || null,
+        sku: variant.sku || "",
+        price: variant.price || form.price,
+        discount: variant.discount || form.discount || 0,
+        stock_quantity: Number(variant.stock_quantity || 0),
+        status: variant.status || "active",
+      }));
 
-      const method = editingProduct ? "PUT" : "POST";
+      formData.append(
+        "variants",
+        JSON.stringify(variantData)
+      );
 
-      const res = await fetch(url, {
-        method,
+      // Variant images
+      variants.forEach((variant, index) => {
+        if (variant.image) {
+          formData.append(
+            `variant_image_${index}`,
+            variant.image
+          );
+        }
+      });
+
+      const response = await fetch("/api/admin/products", {
+        method: editingId ? "PUT" : "POST",
         body: formData,
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (!res.ok) {
+      if (!response.ok) {
         throw new Error(
-          data.message || "Failed to save product"
+          data.error || "Failed to save product"
         );
       }
 
-      await fetchProducts();
+      alert(
+        editingId
+          ? "Product updated successfully"
+          : "Product added successfully"
+      );
 
       setShowModal(false);
-      resetForm();
 
-      alert(
-        editingProduct
-          ? "Product updated successfully."
-          : "Product added successfully."
-      );
+      await loadData();
     } catch (error) {
-      console.error("Save product error:", error);
-
+      console.error(error);
       alert(error.message);
     } finally {
       setSaving(false);
     }
-  };
+  }
 
-  /* =====================================================
-     DELETE PRODUCT
-  ===================================================== */
+  // --------------------------------------------------
+  // DELETE
+  // --------------------------------------------------
 
-  const handleDelete = async (itemId) => {
-    const confirmed = window.confirm(
+  async function deleteProduct(itemId) {
+    const confirmDelete = window.confirm(
       "Are you sure you want to delete this product?"
     );
 
-    if (!confirmed) return;
+    if (!confirmDelete) return;
 
     try {
-      const res = await fetch(
-        `/api/admin/products/${itemId}`,
+      const response = await fetch(
+        `/api/admin/products?id=${itemId}`,
         {
           method: "DELETE",
         }
       );
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (!res.ok) {
+      if (!response.ok) {
         throw new Error(
-          data.message || "Failed to delete product"
+          data.error || "Failed to delete product"
         );
       }
 
-      setProducts((prev) =>
-        prev.filter(
-          (product) => product.item_id !== itemId
-        )
-      );
+      await loadData();
     } catch (error) {
-      console.error("Delete product error:", error);
-
+      console.error(error);
       alert(error.message);
     }
-  };
+  }
 
-  /* =====================================================
-     IMAGE URL
-  ===================================================== */
+  // --------------------------------------------------
+  // FILTER
+  // --------------------------------------------------
 
-  const getImageUrl = (product) => {
-    if (!product.main_image) {
-      return null;
-    }
+  const filteredProducts = products.filter((product) => {
+    const searchText = search.toLowerCase();
 
-    if (
-      product.main_image.startsWith("/") ||
-      product.main_image.startsWith("http") ||
-      product.main_image.startsWith("data:")
-    ) {
-      return product.main_image;
-    }
+    const matchesSearch =
+      product.title?.toLowerCase().includes(searchText) ||
+      product.sku?.toLowerCase().includes(searchText) ||
+      product.brand?.toLowerCase().includes(searchText);
 
-    return `data:image/jpeg;base64,${product.main_image}`;
-  };
+    const matchesStatus =
+      statusFilter === "all" ||
+      product.status === statusFilter;
 
-  /* =====================================================
-     CATEGORY NAME
-  ===================================================== */
-
-  const getCategoryName = (categoryId) => {
-    const category = categories.find(
-      (cat) =>
-        String(cat.category_id) ===
-        String(categoryId)
-    );
+    const matchesCategory =
+      categoryFilter === "all" ||
+      String(product.category_id) === String(categoryFilter);
 
     return (
-      category?.name ||
-      category?.category_name ||
-      "Uncategorized"
+      matchesSearch &&
+      matchesStatus &&
+      matchesCategory
     );
-  };
+  });
 
-  /* =====================================================
-     FILTER PRODUCTS
-  ===================================================== */
+  // --------------------------------------------------
+  // PRICE
+  // --------------------------------------------------
 
-  const filteredProducts = products.filter(
-    (product) => {
-      const searchText = search.toLowerCase();
+  function formatPrice(value) {
+    return Number(value || 0).toLocaleString("en-LK", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
 
-      const matchesSearch =
-        product.title
-          ?.toLowerCase()
-          .includes(searchText) ||
-        product.sku
-          ?.toLowerCase()
-          .includes(searchText) ||
-        product.brand
-          ?.toLowerCase()
-          .includes(searchText);
+  // --------------------------------------------------
+  // IMAGE
+  // --------------------------------------------------
 
-      const matchesStatus =
-        statusFilter === "all" ||
-        product.status === statusFilter;
+  function getProductImage(product) {
+    if (!product.main_image) return null;
 
-      return matchesSearch && matchesStatus;
-    }
-  );
+    return product.main_image;
+  }
 
   return (
     <div className="products-page">
 
-      {/* =================================================
-          HEADER
-      ================================================= */}
+      {/* ============================================
+          PAGE HEADER
+      ============================================ */}
 
       <div className="products-header">
+
         <div>
           <h1>Products</h1>
-
           <p>
-            Manage your VELORA clothing products,
-            pricing and inventory.
+            Manage your clothing products, variants and
+            inventory.
           </p>
         </div>
 
         <button
-          className="primary-button"
+          className="primary-btn"
           onClick={openAddModal}
         >
           <Plus size={18} />
           Add Product
         </button>
+
       </div>
 
-      {/* =================================================
-          SEARCH / FILTER
-      ================================================= */}
+      {/* ============================================
+          FILTERS
+      ============================================ */}
 
-      <div className="products-toolbar">
+      <div className="product-filter-bar">
 
         <div className="product-search">
           <Search size={18} />
@@ -466,43 +452,60 @@ export default function ProductsPage() {
             type="text"
             placeholder="Search products..."
             value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
+            onChange={(event) =>
+              setSearch(event.target.value)
             }
           />
         </div>
 
         <select
-          className="status-filter"
           value={statusFilter}
-          onChange={(e) =>
-            setStatusFilter(e.target.value)
+          onChange={(event) =>
+            setStatusFilter(event.target.value)
           }
         >
-          <option value="all">
-            All Status
-          </option>
-
-          <option value="active">
-            Active
-          </option>
-
-          <option value="inactive">
-            Inactive
-          </option>
-
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
           <option value="out_of_stock">
             Out of Stock
           </option>
         </select>
 
+        <select
+          value={categoryFilter}
+          onChange={(event) =>
+            setCategoryFilter(event.target.value)
+          }
+        >
+          <option value="all">All Categories</option>
+
+          {categories.map((category) => (
+            <option
+              key={category.category_id}
+              value={category.category_id}
+            >
+              {category.name}
+            </option>
+          ))}
+        </select>
+
       </div>
 
-      {/* =================================================
+      {/* ============================================
           PRODUCTS TABLE
-      ================================================= */}
+      ============================================ */}
 
-      <div className="products-table-wrapper">
+      <div className="products-card">
+
+        <div className="products-card-header">
+          <div>
+            <h2>Product List</h2>
+            <span>
+              {filteredProducts.length} products
+            </span>
+          </div>
+        </div>
 
         {loading ? (
           <div className="products-loading">
@@ -510,455 +513,443 @@ export default function ProductsPage() {
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="products-empty">
-
-            <ImageIcon size={40} />
-
-            <h3>
-              No products found
-            </h3>
-
+            <Package size={40} />
+            <h3>No products found</h3>
             <p>
-              Add your first product to start
-              managing your store.
+              Add your first product to your store.
             </p>
-
-            <button
-              className="primary-button"
-              onClick={openAddModal}
-            >
-              <Plus size={18} />
-              Add Product
-            </button>
-
           </div>
         ) : (
-          <table className="products-table">
+          <div className="products-table-wrapper">
 
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>SKU</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+            <table className="products-table">
 
-            <tbody>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Variants</th>
+                  <th>Status</th>
+                  <th>Features</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
 
-              {filteredProducts.map(
-                (product) => (
-                  <tr
-                    key={product.item_id}
-                  >
+              <tbody>
 
-                    {/* PRODUCT */}
+                {filteredProducts.map((product) => {
 
-                    <td>
-                      <div className="product-info">
+                  const image =
+                    getProductImage(product);
 
-                        <div className="product-image">
+                  return (
+                    <tr key={product.item_id}>
 
-                          {getImageUrl(
-                            product
-                          ) ? (
-                            <img
-                              src={getImageUrl(
-                                product
-                              )}
-                              alt={
-                                product.title
-                              }
-                            />
-                          ) : (
-                            <ImageIcon
-                              size={22}
-                            />
-                          )}
+                      {/* PRODUCT */}
+                      <td>
+                        <div className="product-info">
+
+                          <div className="product-image">
+
+                            {image ? (
+                              <img
+                                src={image}
+                                alt={product.title}
+                              />
+                            ) : (
+                              <ImageIcon size={24} />
+                            )}
+
+                          </div>
+
+                          <div>
+                            <strong>
+                              {product.title}
+                            </strong>
+
+                            {product.brand && (
+                              <span>
+                                {product.brand}
+                              </span>
+                            )}
+                          </div>
 
                         </div>
+                      </td>
 
-                        <div>
+                      {/* SKU */}
+                      <td>
+                        <span className="sku">
+                          {product.sku || "-"}
+                        </span>
+                      </td>
 
+                      {/* CATEGORY */}
+                      <td>
+                        {product.category_name || "-"}
+                      </td>
+
+                      {/* PRICE */}
+                      <td>
+
+                        <div className="price-cell">
                           <strong>
-                            {product.title}
+                            Rs.{" "}
+                            {formatPrice(product.price)}
                           </strong>
 
-                          {product.brand && (
+                          {Number(product.discount) > 0 && (
                             <span>
-                              {product.brand}
+                              {product.discount}% OFF
+                            </span>
+                          )}
+                        </div>
+
+                      </td>
+
+                      {/* VARIANTS */}
+                      <td>
+                        <span className="variant-count">
+                          {product.variant_count || 0}
+                        </span>
+                      </td>
+
+                      {/* STATUS */}
+                      <td>
+                        <span
+                          className={`status-badge ${product.status}`}
+                        >
+                          {product.status.replace(
+                            "_",
+                            " "
+                          )}
+                        </span>
+                      </td>
+
+                      {/* FEATURES */}
+                      <td>
+                        <div className="feature-icons">
+
+                          {product.is_featured && (
+                            <span title="Featured">
+                              <Star
+                                size={17}
+                                fill="currentColor"
+                              />
+                            </span>
+                          )}
+
+                          {product.is_best_selling && (
+                            <span title="Best Selling">
+                              <Flame
+                                size={17}
+                                fill="currentColor"
+                              />
                             </span>
                           )}
 
                         </div>
+                      </td>
 
-                      </div>
-                    </td>
+                      {/* ACTIONS */}
+                      <td>
 
-                    {/* SKU */}
+                        <div className="table-actions">
 
-                    <td className="sku-cell">
-                      {product.sku || "-"}
-                    </td>
-
-                    {/* CATEGORY */}
-
-                    <td>
-                      {getCategoryName(
-                        product.category_id
-                      )}
-                    </td>
-
-                    {/* PRICE */}
-
-                    <td>
-
-                      <div className="price-cell">
-
-                        <strong>
-                          Rs.{" "}
-                          {Number(
-                            product.price || 0
-                          ).toLocaleString()}
-                        </strong>
-
-                        {Number(
-                          product.discount || 0
-                        ) > 0 && (
-                          <span>
-                            {
-                              product.discount
+                          <button
+                            className="edit-btn"
+                            onClick={() =>
+                              openEditModal(
+                                product.item_id
+                              )
                             }
-                            % OFF
-                          </span>
-                        )}
+                            title="Edit"
+                          >
+                            <Pencil size={17} />
+                          </button>
 
-                      </div>
+                          <button
+                            className="delete-btn"
+                            onClick={() =>
+                              deleteProduct(
+                                product.item_id
+                              )
+                            }
+                            title="Delete"
+                          >
+                            <Trash2 size={17} />
+                          </button>
 
-                    </td>
+                        </div>
 
-                    {/* STATUS */}
+                      </td>
 
-                    <td>
+                    </tr>
+                  );
+                })}
 
-                      <span
-                        className={`status-badge status-${product.status}`}
-                      >
-                        {product.status ===
-                        "out_of_stock"
-                          ? "Out of Stock"
-                          : product.status}
-                      </span>
+              </tbody>
 
-                    </td>
+            </table>
 
-                    {/* ACTIONS */}
-
-                    <td>
-
-                      <div className="action-buttons">
-
-                        <button
-                          className="icon-button edit"
-                          title="Edit"
-                          onClick={() =>
-                            openEditModal(
-                              product
-                            )
-                          }
-                        >
-                          <Pencil size={17} />
-                        </button>
-
-                        <button
-                          className="icon-button delete"
-                          title="Delete"
-                          onClick={() =>
-                            handleDelete(
-                              product.item_id
-                            )
-                          }
-                        >
-                          <Trash2 size={17} />
-                        </button>
-
-                      </div>
-
-                    </td>
-
-                  </tr>
-                )
-              )}
-
-            </tbody>
-
-          </table>
+          </div>
         )}
 
       </div>
 
-      {/* =================================================
-          ADD / EDIT MODAL
-      ================================================= */}
+      {/* ============================================
+          PRODUCT MODAL
+      ============================================ */}
 
       {showModal && (
-        <div className="product-modal-overlay">
+        <div className="modal-overlay">
 
           <div className="product-modal">
-
-            {/* MODAL HEADER */}
 
             <div className="modal-header">
 
               <div>
-
                 <h2>
-                  {editingProduct
+                  {editingId
                     ? "Edit Product"
                     : "Add Product"}
                 </h2>
 
                 <p>
-                  {editingProduct
-                    ? "Update product information."
-                    : "Add a new product to your store."}
+                  Add product information and variants.
                 </p>
-
               </div>
 
               <button
                 className="modal-close"
-                onClick={closeModal}
+                onClick={() => setShowModal(false)}
               >
                 <X size={21} />
               </button>
 
             </div>
 
-            {/* FORM */}
+            <form onSubmit={handleSubmit}>
 
-            <form
-              className="product-form"
-              onSubmit={handleSubmit}
-            >
-
-              {/* =================================================
+              {/* ======================================
                   BASIC INFORMATION
-              ================================================= */}
+              ====================================== */}
 
               <div className="form-section">
 
-                <h3>
-                  Basic Information
-                </h3>
+                <div className="section-title">
+                  <h3>Basic Information</h3>
+                  <span>Product details</span>
+                </div>
 
                 <div className="form-grid">
 
                   <div className="form-group full">
-
                     <label>
                       Product Name *
                     </label>
 
                     <input
-                      name="title"
+                      type="text"
                       value={form.title}
-                      onChange={
-                        handleChange
+                      onChange={(event) =>
+                        updateForm(
+                          "title",
+                          event.target.value
+                        )
                       }
-                      placeholder="e.g. Premium Oversized T-Shirt"
+                      placeholder="Example: Oversized Cotton T-Shirt"
                       required
                     />
-
                   </div>
 
                   <div className="form-group full">
-
-                    <label>
-                      Description
-                    </label>
+                    <label>Description</label>
 
                     <textarea
-                      name="description"
-                      value={
-                        form.description
-                      }
-                      onChange={
-                        handleChange
+                      rows="4"
+                      value={form.description}
+                      onChange={(event) =>
+                        updateForm(
+                          "description",
+                          event.target.value
+                        )
                       }
                       placeholder="Enter product description..."
-                      rows={4}
                     />
-
                   </div>
 
                   <div className="form-group">
-
-                    <label>
-                      SKU
-                    </label>
+                    <label>SKU</label>
 
                     <input
-                      name="sku"
+                      type="text"
                       value={form.sku}
-                      onChange={
-                        handleChange
+                      onChange={(event) =>
+                        updateForm(
+                          "sku",
+                          event.target.value
+                        )
                       }
                       placeholder="VELORA-TS-001"
                     />
-
                   </div>
 
                   <div className="form-group">
-
-                    <label>
-                      Brand
-                    </label>
+                    <label>Brand</label>
 
                     <input
-                      name="brand"
+                      type="text"
                       value={form.brand}
-                      onChange={
-                        handleChange
+                      onChange={(event) =>
+                        updateForm(
+                          "brand",
+                          event.target.value
+                        )
                       }
                       placeholder="VELORA"
                     />
+                  </div>
 
+                  <div className="form-group">
+                    <label>Tags</label>
+
+                    <input
+                      type="text"
+                      value={form.tags}
+                      onChange={(event) =>
+                        updateForm(
+                          "tags",
+                          event.target.value
+                        )
+                      }
+                      placeholder="cotton, casual, t-shirt"
+                    />
+
+                    <small>
+                      Separate tags using commas.
+                    </small>
                   </div>
 
                 </div>
 
               </div>
 
-              {/* =================================================
+              {/* ======================================
                   PRICING
-              ================================================= */}
+              ====================================== */}
 
               <div className="form-section">
 
-                <h3>
-                  Pricing
-                </h3>
+                <div className="section-title">
+                  <h3>Pricing</h3>
+                  <span>Default product price</span>
+                </div>
 
                 <div className="form-grid">
 
                   <div className="form-group">
+                    <label>Price *</label>
 
-                    <label>
-                      Price *
-                    </label>
+                    <div className="input-prefix">
+                      <span>Rs.</span>
 
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      name="price"
-                      value={form.price}
-                      onChange={
-                        handleChange
-                      }
-                      placeholder="0.00"
-                      required
-                    />
-
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={form.price}
+                        onChange={(event) =>
+                          updateForm(
+                            "price",
+                            event.target.value
+                          )
+                        }
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div className="form-group">
+                    <label>Discount (%)</label>
 
-                    <label>
-                      Discount (%)
-                    </label>
+                    <div className="input-suffix">
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value={form.discount}
+                        onChange={(event) =>
+                          updateForm(
+                            "discount",
+                            event.target.value
+                          )
+                        }
+                      />
 
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      max="100"
-                      name="discount"
-                      value={
-                        form.discount
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      placeholder="0"
-                    />
-
+                      <span>%</span>
+                    </div>
                   </div>
 
                 </div>
 
               </div>
 
-              {/* =================================================
-                  CATEGORY
-              ================================================= */}
+              {/* ======================================
+                  CATEGORY & STATUS
+              ====================================== */}
 
               <div className="form-section">
 
-                <h3>
-                  Category
-                </h3>
+                <div className="section-title">
+                  <h3>Category & Status</h3>
+                  <span>Product organization</span>
+                </div>
 
                 <div className="form-grid">
 
                   <div className="form-group">
-
-                    <label>
-                      Category
-                    </label>
+                    <label>Category</label>
 
                     <select
-                      name="category_id"
-                      value={
-                        form.category_id
-                      }
-                      onChange={
-                        handleChange
+                      value={form.category_id}
+                      onChange={(event) =>
+                        updateForm(
+                          "category_id",
+                          event.target.value
+                        )
                       }
                     >
-
                       <option value="">
                         Select Category
                       </option>
 
-                      {categories.map(
-                        (category) => (
-                          <option
-                            key={
-                              category.category_id
-                            }
-                            value={
-                              category.category_id
-                            }
-                          >
-                            {category.name ||
-                              category.category_name}
-                          </option>
-                        )
-                      )}
-
+                      {categories.map((category) => (
+                        <option
+                          key={category.category_id}
+                          value={category.category_id}
+                        >
+                          {category.name}
+                        </option>
+                      ))}
                     </select>
-
                   </div>
 
                   <div className="form-group">
-
-                    <label>
-                      Status
-                    </label>
+                    <label>Status</label>
 
                     <select
-                      name="status"
-                      value={
-                        form.status
-                      }
-                      onChange={
-                        handleChange
+                      value={form.status}
+                      onChange={(event) =>
+                        updateForm(
+                          "status",
+                          event.target.value
+                        )
                       }
                     >
-
                       <option value="active">
                         Active
                       </option>
@@ -970,176 +961,105 @@ export default function ProductsPage() {
                       <option value="out_of_stock">
                         Out of Stock
                       </option>
-
                     </select>
-
                   </div>
 
-                  <div className="form-group full">
-                    <label className="checkbox-option">
-                      <input
-                        type="checkbox"
-                        name="is_featured"
-                        checked={form.is_featured}
-                        onChange={handleChange}
-                      />
-                      <span>Featured product</span>
-                    </label>
-                  </div>
+                </div>
 
-                  <div className="form-group full">
+                <div className="checkbox-row">
 
-                    <label>
-                      Tags
-                    </label>
+                  <label className="checkbox-label">
 
                     <input
-                      name="tags"
-                      value={form.tags}
-                      onChange={
-                        handleChange
+                      type="checkbox"
+                      checked={form.is_featured}
+                      onChange={(event) =>
+                        updateForm(
+                          "is_featured",
+                          event.target.checked
+                        )
                       }
-                      placeholder="t-shirt, men, casual, cotton"
                     />
 
-                    <small>
-                      Separate tags using
-                      commas.
-                    </small>
+                    <span>
+                      <Star size={16} />
+                      Featured Product
+                    </span>
 
-                  </div>
+                  </label>
 
-                </div>
+                  <label className="checkbox-label">
 
-              </div>
+                    <input
+                      type="checkbox"
+                      checked={form.is_best_selling}
+                      onChange={(event) =>
+                        updateForm(
+                          "is_best_selling",
+                          event.target.checked
+                        )
+                      }
+                    />
 
-              {/* =================================================
-                  MAIN IMAGE
-              ================================================= */}
+                    <span>
+                      <Flame size={16} />
+                      Best Selling
+                    </span>
 
-              <div className="form-section">
-
-                <h3>
-                  Main Product Image
-                </h3>
-
-                <div className="image-upload-area">
-
-                  {mainImagePreview ? (
-                    <div className="main-image-preview">
-
-                      <img
-                        src={
-                          mainImagePreview
-                        }
-                        alt="Main product"
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMainImagePreview(
-                            ""
-                          );
-
-                          setForm(
-                            (prev) => ({
-                              ...prev,
-                              main_image:
-                                null,
-                            })
-                          );
-                        }}
-                      >
-                        <X size={16} />
-                      </button>
-
-                    </div>
-                  ) : (
-                    <label className="upload-box">
-
-                      <ImageIcon
-                        size={30}
-                      />
-
-                      <strong>
-                        Upload Main Image
-                      </strong>
-
-                      <span>
-                        JPG, PNG or WEBP
-                      </span>
-
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={
-                          handleMainImageChange
-                        }
-                      />
-
-                    </label>
-                  )}
+                  </label>
 
                 </div>
 
               </div>
 
-              {/* =================================================
-                  ADDITIONAL IMAGES
-              ================================================= */}
+              {/* ======================================
+                  PRODUCT IMAGES
+              ====================================== */}
 
               <div className="form-section">
 
-                <h3>
-                  Additional Product Images
-                </h3>
+                <div className="section-title">
+                  <h3>Product Images</h3>
+                  <span>
+                    Add multiple product images
+                  </span>
+                </div>
 
-                <label className="upload-box small">
+                <label className="upload-box">
 
-                  <ImageIcon
-                    size={25}
-                  />
+                  <Upload size={24} />
 
                   <strong>
-                    Select Multiple Images
+                    Click to upload images
                   </strong>
 
                   <span>
-                    You can select multiple
-                    images.
+                    JPG, PNG or WEBP
                   </span>
 
                   <input
                     type="file"
                     accept="image/*"
                     multiple
-                    onChange={
-                      handleImagesChange
-                    }
+                    onChange={handleImages}
                   />
 
                 </label>
 
-                {imagePreviews.length >
-                  0 && (
-                  <div className="image-preview-grid">
+                {selectedImages.length > 0 && (
+                  <div className="selected-files">
 
-                    {imagePreviews.map(
-                      (
-                        preview,
-                        index
-                      ) => (
+                    {selectedImages.map(
+                      (file, index) => (
                         <div
-                          className="additional-image"
-                          key={index}
+                          className="selected-file"
+                          key={`${file.name}-${index}`}
                         >
-                          <img
-                            src={preview}
-                            alt={`Product ${
-                              index + 1
-                            }`}
-                          />
+                          <ImageIcon size={16} />
+
+                          <span>
+                            {file.name}
+                          </span>
                         </div>
                       )
                     )}
@@ -1149,16 +1069,328 @@ export default function ProductsPage() {
 
               </div>
 
-              {/* =================================================
-                  ACTIONS
-              ================================================= */}
+              {/* ======================================
+                  PRODUCT VARIANTS
+              ====================================== */}
 
-              <div className="modal-actions">
+              <div className="form-section">
+
+                <div className="variant-section-header">
+
+                  <div className="section-title">
+                    <h3>Product Variants</h3>
+
+                    <span>
+                      Select size and color combinations
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="secondary-btn"
+                    onClick={addVariant}
+                  >
+                    <Plus size={16} />
+                    Add Variant
+                  </button>
+
+                </div>
+
+                {variants.length === 0 ? (
+                  <div className="no-variants">
+
+                    <Package size={30} />
+
+                    <p>
+                      No variants added yet.
+                    </p>
+
+                    <span>
+                      Add variants if this product has
+                      different sizes or colors.
+                    </span>
+
+                  </div>
+                ) : (
+
+                  <div className="variants-list">
+
+                    {variants.map(
+                      (variant, index) => (
+
+                        <div
+                          className="variant-card"
+                          key={
+                            variant.variant_id ||
+                            `new-${index}`
+                          }
+                        >
+
+                          <div className="variant-card-header">
+
+                            <strong>
+                              Variant {index + 1}
+                            </strong>
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                removeVariant(index)
+                              }
+                              className="variant-remove"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+
+                          </div>
+
+                          <div className="variant-grid">
+
+                            {/* SIZE */}
+                            <div className="form-group">
+                              <label>Size</label>
+
+                              <select
+                                value={
+                                  variant.size_id
+                                }
+                                onChange={(event) =>
+                                  updateVariant(
+                                    index,
+                                    "size_id",
+                                    event.target.value
+                                  )
+                                }
+                              >
+                                <option value="">
+                                  Select Size
+                                </option>
+
+                                {sizes
+                                  .filter(
+                                    (size) =>
+                                      size.status ===
+                                      "active"
+                                  )
+                                  .map((size) => (
+                                    <option
+                                      key={
+                                        size.size_id
+                                      }
+                                      value={
+                                        size.size_id
+                                      }
+                                    >
+                                      {size.name}
+                                    </option>
+                                  ))}
+                              </select>
+                            </div>
+
+                            {/* COLOR */}
+                            <div className="form-group">
+                              <label>Color</label>
+
+                              <select
+                                value={
+                                  variant.color_id
+                                }
+                                onChange={(event) =>
+                                  updateVariant(
+                                    index,
+                                    "color_id",
+                                    event.target.value
+                                  )
+                                }
+                              >
+                                <option value="">
+                                  Select Color
+                                </option>
+
+                                {colors
+                                  .filter(
+                                    (color) =>
+                                      color.status ===
+                                      "active"
+                                  )
+                                  .map((color) => (
+                                    <option
+                                      key={
+                                        color.color_id
+                                      }
+                                      value={
+                                        color.color_id
+                                      }
+                                    >
+                                      {color.name}
+                                    </option>
+                                  ))}
+                              </select>
+                            </div>
+
+                            {/* SKU */}
+                            <div className="form-group">
+                              <label>Variant SKU</label>
+
+                              <input
+                                type="text"
+                                value={variant.sku}
+                                onChange={(event) =>
+                                  updateVariant(
+                                    index,
+                                    "sku",
+                                    event.target.value
+                                  )
+                                }
+                                placeholder="TS-BLK-M"
+                              />
+                            </div>
+
+                            {/* PRICE */}
+                            <div className="form-group">
+                              <label>Price</label>
+
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                value={variant.price}
+                                onChange={(event) =>
+                                  updateVariant(
+                                    index,
+                                    "price",
+                                    event.target.value
+                                  )
+                                }
+                                placeholder={
+                                  form.price ||
+                                  "Product price"
+                                }
+                              />
+                            </div>
+
+                            {/* DISCOUNT */}
+                            <div className="form-group">
+                              <label>
+                                Discount (%)
+                              </label>
+
+                              <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                value={
+                                  variant.discount
+                                }
+                                onChange={(event) =>
+                                  updateVariant(
+                                    index,
+                                    "discount",
+                                    event.target.value
+                                  )
+                                }
+                              />
+                            </div>
+
+                            {/* STOCK */}
+                            <div className="form-group">
+                              <label>
+                                Stock Quantity
+                              </label>
+
+                              <input
+                                type="number"
+                                min="0"
+                                value={
+                                  variant.stock_quantity
+                                }
+                                onChange={(event) =>
+                                  updateVariant(
+                                    index,
+                                    "stock_quantity",
+                                    event.target.value
+                                  )
+                                }
+                              />
+                            </div>
+
+                            {/* STATUS */}
+                            <div className="form-group">
+                              <label>Status</label>
+
+                              <select
+                                value={
+                                  variant.status
+                                }
+                                onChange={(event) =>
+                                  updateVariant(
+                                    index,
+                                    "status",
+                                    event.target.value
+                                  )
+                                }
+                              >
+                                <option value="active">
+                                  Active
+                                </option>
+
+                                <option value="inactive">
+                                  Inactive
+                                </option>
+                              </select>
+                            </div>
+
+                            {/* IMAGE */}
+                            <div className="form-group">
+                              <label>
+                                Variant Image
+                              </label>
+
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(event) =>
+                                  handleVariantImage(
+                                    index,
+                                    event.target.files?.[0] ||
+                                      null
+                                  )
+                                }
+                              />
+
+                              {variant.image && (
+                                <small>
+                                  {
+                                    variant.image.name
+                                  }
+                                </small>
+                              )}
+
+                            </div>
+
+                          </div>
+
+                        </div>
+                      )
+                    )}
+
+                  </div>
+                )}
+
+              </div>
+
+              {/* ======================================
+                  MODAL FOOTER
+              ====================================== */}
+
+              <div className="modal-footer">
 
                 <button
                   type="button"
-                  className="secondary-button"
-                  onClick={closeModal}
+                  className="cancel-btn"
+                  onClick={() =>
+                    setShowModal(false)
+                  }
                   disabled={saving}
                 >
                   Cancel
@@ -1166,14 +1398,14 @@ export default function ProductsPage() {
 
                 <button
                   type="submit"
-                  className="primary-button"
+                  className="primary-btn"
                   disabled={saving}
                 >
                   {saving
                     ? "Saving..."
-                    : editingProduct
+                    : editingId
                     ? "Update Product"
-                    : "Add Product"}
+                    : "Save Product"}
                 </button>
 
               </div>

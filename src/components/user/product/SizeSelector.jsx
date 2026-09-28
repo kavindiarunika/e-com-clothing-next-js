@@ -64,35 +64,25 @@ export default function SizeSelector({
         </div>
 
         {/* Sizes */}
-        <div className="flex flex-wrap gap-2">
+        <select
+          aria-label="Select size"
+          value={selectedSize || ""}
+          onChange={(event) => setSelectedSize(event.target.value)}
+          className="w-full max-w-xs border border-[#D8D0C8] bg-white px-4 py-3 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
+        >
+          <option value="" disabled>
+            Select size
+          </option>
           {sizes.map((size) => {
-            const stock = getSizeStock(size);
-            const isOutOfStock = stock <= 0;
+            const isOutOfStock = getSizeStock(size) <= 0;
 
             return (
-              <button
-                key={size}
-                type="button"
-                disabled={isOutOfStock}
-                onClick={() => setSelectedSize(size)}
-                className={`relative min-w-[52px] border px-4 py-3 text-xs transition ${
-                  isOutOfStock
-                    ? "cursor-not-allowed border-[#E5E0DC] bg-[#F5F2EF] text-[#AAA19A]"
-                    : selectedSize === size
-                    ? "border-[#72383D] bg-[#72383D] text-white"
-                    : "border-[#D8D0C8] bg-white text-[#322D29] hover:border-[#72383D]"
-                }`}
-              >
-                {size}
-
-                {/* Diagonal line for unavailable */}
-                {isOutOfStock && (
-                  <span className="pointer-events-none absolute left-1/2 top-1/2 h-px w-[55px] -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#72383D]" />
-                )}
-              </button>
+              <option key={size} value={size} disabled={isOutOfStock}>
+                {size}{isOutOfStock ? " (Unavailable)" : ""}
+              </option>
             );
           })}
-        </div>
+        </select>
 
         {/* Selected Color Info */}
         {selectedColor && (

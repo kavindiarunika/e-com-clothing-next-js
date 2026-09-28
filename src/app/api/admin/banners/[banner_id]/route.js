@@ -85,7 +85,7 @@ export async function GET(
       );
     }
 
-    const bannerId = params.banner_id;
+    const { banner_id: bannerId } = await params;
 
     const pool = getPool();
 
@@ -170,7 +170,7 @@ export async function PUT(
       );
     }
 
-    const bannerId = params.banner_id;
+    const { banner_id: bannerId } = await params;
     const formData = await request.formData();
 
     const title = formData.get("title")?.toString() || "";
@@ -315,7 +315,7 @@ export async function DELETE(
       );
     }
 
-    const bannerId = params.banner_id;
+    const { banner_id: bannerId } = await params;
 
     const pool = getPool();
 

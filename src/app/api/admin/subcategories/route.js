@@ -1,5 +1,7 @@
 import { getPool } from "@/lib/db";
 import { getAdmin } from "@/lib/auth";
+import { getImageSource } from "@/lib/productImageSource";
+import { saveCategoryImage } from "@/lib/productImageStorage";
 
 /* =========================================
    GET SUBCATEGORIES
@@ -45,11 +47,7 @@ export async function GET() {
 
     const formattedSubcategories = subcategories.map((subcategory) => ({
       ...subcategory,
-      image: subcategory.image
-        ? `data:image/jpeg;base64,${Buffer.from(
-            subcategory.image
-          ).toString("base64")}`
-        : null,
+      image: getImageSource(subcategory.image),
     }));
 
     return Response.json({
@@ -132,11 +130,11 @@ export async function POST(request) {
 
     /* Insert */
 
-    const image =
+    const imagePath =
       imageFile &&
       typeof imageFile !== "string" &&
       imageFile.size > 0
-        ? Buffer.from(await imageFile.arrayBuffer())
+        ? await saveCategoryImage(imageFile)
         : null;
 
     const [result] = await pool.query(
@@ -154,7 +152,7 @@ export async function POST(request) {
       [
         name,
         description || null,
-        image || null,
+        imagePath,
         parent_category_id,
         status || "active",
       ]

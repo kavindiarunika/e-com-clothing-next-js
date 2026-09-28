@@ -48,16 +48,16 @@ const menuGroups = [
         href: "/admin/subcategories",
         icon: FolderTree,
       },
-      // {
-      //   name: "Sizes",
-      //   href: "/admin/sizes",
-      //   icon: FolderTree,
-      // },
-      // {
-      //   name: "Colors",
-      //   href: "/admin/colors",
-      //   icon: FolderTree,
-      // },
+       {
+         name: "Sizes",
+       href: "/admin/sizes",
+       icon: FolderTree,
+       },
+       {
+         name: "Colors",
+        href: "/admin/colors",
+         icon: FolderTree,
+      },
     ],
   },
 
@@ -110,11 +110,11 @@ const menuGroups = [
         href: "/admin/reviews",
         icon: Star,
       },
-      // {
-      //   name: "Featured Products",
-      //   href: "/admin/featured-products",
-      //   icon: Star,
-      // },
+       {
+         name: "Featured Products",
+       href: "/admin/featured-products",
+        icon: Star,
+       },
     ],
   },
 

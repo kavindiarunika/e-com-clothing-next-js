@@ -15,7 +15,6 @@ import {
 
 export default function SalesReportPage() {
   const [sales, setSales] = useState([]);
-  const [filteredSales, setFilteredSales] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -28,12 +27,15 @@ export default function SalesReportPage() {
 
   const [selectedSale, setSelectedSale] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [saleDetailsLoading, setSaleDetailsLoading] = useState(false);
 
   const loadSales = async () => {
     try {
       setLoading(true);
 
-      const response = await fetch("/api/admin/reports/sales");
+      const response = await fetch("/api/admin/reports/sales", {
+        cache: "no-store",
+      });
       const data = await response.json();
 
       if (!response.ok) {
@@ -50,73 +52,60 @@ export default function SalesReportPage() {
   };
 
   useEffect(() => {
-    loadSales();
+    let isActive = true;
+
+    async function fetchInitialSales() {
+      try {
+        const response = await fetch("/api/admin/reports/sales", {
+          cache: "no-store",
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load sales report");
+        }
+
+        if (isActive) setSales(data.sales || []);
+      } catch (error) {
+        console.error("Sales Report Error:", error);
+        if (isActive) setSales([]);
+      } finally {
+        if (isActive) setLoading(false);
+      }
+    }
+
+    void fetchInitialSales();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
-  useEffect(() => {
-    let result = [...sales];
+  const filteredSales = sales.filter((sale) => {
+    const searchValue = search.trim().toLowerCase();
+    const matchesSearch = !searchValue || [
+      sale.order_id,
+      sale.user_id,
+      sale.customer_name,
+      sale.customer_email,
+      sale.payment_status,
+      sale.order_status,
+    ].some((value) => String(value || "").toLowerCase().includes(searchValue));
 
-    /* SEARCH */
-    if (search.trim()) {
-      const value = search.toLowerCase();
+    const saleDate = new Date(sale.order_date);
+    const matchesFromDate =
+      !dateFrom || saleDate >= new Date(`${dateFrom}T00:00:00`);
+    const matchesToDate =
+      !dateTo || saleDate <= new Date(`${dateTo}T23:59:59`);
 
-      result = result.filter((sale) => {
-        return (
-          String(sale.order_id).includes(value) ||
-          String(sale.user_id || "").includes(value) ||
-          String(sale.payment_status || "")
-            .toLowerCase()
-            .includes(value) ||
-          String(sale.order_status || "")
-            .toLowerCase()
-            .includes(value)
-        );
-      });
-    }
-
-    /* ORDER STATUS */
-    if (statusFilter !== "all") {
-      result = result.filter(
-        (sale) => sale.order_status === statusFilter
-      );
-    }
-
-    /* PAYMENT STATUS */
-    if (paymentFilter !== "all") {
-      result = result.filter(
-        (sale) => sale.payment_status === paymentFilter
-      );
-    }
-
-    /* DATE FROM */
-    if (dateFrom) {
-      result = result.filter((sale) => {
-        const saleDate = new Date(sale.order_date);
-        const fromDate = new Date(`${dateFrom}T00:00:00`);
-
-        return saleDate >= fromDate;
-      });
-    }
-
-    /* DATE TO */
-    if (dateTo) {
-      result = result.filter((sale) => {
-        const saleDate = new Date(sale.order_date);
-        const toDate = new Date(`${dateTo}T23:59:59`);
-
-        return saleDate <= toDate;
-      });
-    }
-
-    setFilteredSales(result);
-  }, [
-    sales,
-    search,
-    statusFilter,
-    paymentFilter,
-    dateFrom,
-    dateTo,
-  ]);
+    return (
+      matchesSearch &&
+      (statusFilter === "all" || sale.order_status === statusFilter) &&
+      (paymentFilter === "all" || sale.payment_status === paymentFilter) &&
+      matchesFromDate &&
+      matchesToDate
+    );
+  });
 
   /* =========================
      REPORT TOTALS
@@ -180,14 +169,36 @@ export default function SalesReportPage() {
     );
   };
 
-  const openViewModal = (sale) => {
+  const openViewModal = async (sale) => {
     setSelectedSale(sale);
     setShowViewModal(true);
+    setSaleDetailsLoading(true);
+
+    try {
+      const response = await fetch(
+        `/api/admin/orders/${encodeURIComponent(sale.order_id)}`,
+        { cache: "no-store" }
+      );
+
+      if (!response.ok) return;
+
+      const details = await response.json();
+      setSelectedSale((currentSale) =>
+        currentSale?.order_id === sale.order_id
+          ? { ...currentSale, ...details }
+          : currentSale
+      );
+    } catch (error) {
+      console.error("Sales detail error:", error);
+    } finally {
+      setSaleDetailsLoading(false);
+    }
   };
 
   const closeModal = () => {
     setSelectedSale(null);
     setShowViewModal(false);
+    setSaleDetailsLoading(false);
   };
 
   const exportPdf = () => {
@@ -456,8 +467,14 @@ export default function SalesReportPage() {
 
                     <td>
                       <span className="sales-customer">
-                        #{sale.user_id || "Guest"}
+                        {sale.customer_name ||
+                          (sale.user_id ? `Customer #${sale.user_id}` : "Guest")}
                       </span>
+                      {sale.customer_email && (
+                        <small className="sales-customer-email">
+                          {sale.customer_email}
+                        </small>
+                      )}
                     </td>
 
                     <td>
@@ -583,10 +600,18 @@ export default function SalesReportPage() {
               </div>
 
               <div className="sales-detail-item">
-                <span>Customer ID</span>
+                <span>Customer</span>
                 <strong>
-                  #{selectedSale.user_id || "Guest"}
+                  {selectedSale.customer_name ||
+                    (selectedSale.user_id
+                      ? `Customer #${selectedSale.user_id}`
+                      : "Guest")}
                 </strong>
+              </div>
+
+              <div className="sales-detail-item">
+                <span>Email</span>
+                <strong>{selectedSale.customer_email || "-"}</strong>
               </div>
 
               <div className="sales-detail-item">
@@ -636,6 +661,18 @@ export default function SalesReportPage() {
               </div>
 
               <div className="sales-detail-item">
+                <span>Payment Method</span>
+                <strong>
+                  {selectedSale.payment_method?.replaceAll("_", " ") || "-"}
+                </strong>
+              </div>
+
+              <div className="sales-detail-item">
+                <span>Items</span>
+                <strong>{selectedSale.items?.length ?? selectedSale.item_count ?? 0}</strong>
+              </div>
+
+              <div className="sales-detail-item">
                 <span>Order Status</span>
 
                 <strong
@@ -645,6 +682,23 @@ export default function SalesReportPage() {
                 </strong>
               </div>
 
+            </div>
+
+            <div className="sales-details-grid">
+              <div className="sales-detail-item">
+                <span>Products</span>
+                {saleDetailsLoading ? (
+                  <strong>Loading items...</strong>
+                ) : selectedSale.items?.length ? (
+                  selectedSale.items.map((item) => (
+                    <strong key={item.order_item_id}>
+                      {item.product_title || `Product #${item.item_id}`} x {item.qty}
+                    </strong>
+                  ))
+                ) : (
+                  <strong>No item details available</strong>
+                )}
+              </div>
             </div>
 
             <div className="sales-total-box">

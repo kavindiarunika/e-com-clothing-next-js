@@ -1,22 +1,5 @@
 "use client";
 
-const colorClasses = {
-  Black: "bg-black",
-  White: "bg-white border border-[#D8D0C8]",
-  Brown: "bg-[#432415]",
-  Beige: "bg-[#E3DCD1]",
-  Blue: "bg-blue-700",
-  Pink: "bg-pink-300",
-  Red: "bg-red-600",
-  Green: "bg-green-600",
-  Yellow: "bg-yellow-400",
-  Orange: "bg-orange-500",
-  Purple: "bg-purple-600",
-  Grey: "bg-gray-500",
-  Gray: "bg-gray-500",
-  Navy: "bg-[#14213D]",
-};
-
 export default function ColorSelector({
   colors = [],
   selectedColor,
@@ -56,70 +39,34 @@ export default function ColorSelector({
         <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
           Color
         </h3>
-
-        {selectedColor && (
-          <p className="mt-1 text-xs text-[#6B625C]">
-            Selected:{" "}
-            <span className="font-medium text-[#322D29]">
-              {selectedColor.name}
-            </span>
-          </p>
-        )}
       </div>
 
       {/* Colors */}
-      <div className="flex flex-wrap gap-4">
+      <select
+        aria-label="Select color"
+        value={selectedColor?.name || ""}
+        onChange={(event) => {
+          const color = colors.find(
+            (item) => item.name === event.target.value
+          );
+          if (color) setSelectedColor(color);
+        }}
+        className="w-full max-w-xs border border-[#D8D0C8] bg-white px-4 py-3 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
+      >
+        <option value="" disabled>
+          Select color
+        </option>
         {colors.map((color) => {
           const colorName = color.name;
-
-          const stock = getColorStock(colorName);
-
-          const isOutOfStock = stock <= 0;
-
-          const isSelected =
-            selectedColor?.name === colorName;
+          const isOutOfStock = getColorStock(colorName) <= 0;
 
           return (
-            <button
-              key={colorName}
-              type="button"
-              disabled={isOutOfStock}
-              onClick={() => {
-                if (!isOutOfStock) {
-                  setSelectedColor(color);
-                }
-              }}
-              aria-label={
-                isOutOfStock
-                  ? `${colorName} unavailable`
-                  : `Select ${colorName}`
-              }
-              aria-pressed={isSelected}
-              className={`relative flex h-10 w-10 items-center justify-center rounded-full transition ${
-                isOutOfStock
-                  ? "cursor-not-allowed opacity-50"
-                  : isSelected
-                  ? "ring-2 ring-[#72383D] ring-offset-2"
-                  : "hover:ring-1 hover:ring-[#AC9C8D] hover:ring-offset-2"
-              }`}
-            >
-              {/* Color Circle */}
-              <span
-                className={`h-9 w-9 rounded-full ${
-                  colorClasses[colorName] ||
-                  "bg-gray-400"
-                }`}
-                title={colorName}
-              />
-
-              {/* Diagonal unavailable line */}
-              {isOutOfStock && (
-                <span className="pointer-events-none absolute left-1/2 top-1/2 h-px w-9 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#72383D]" />
-              )}
-            </button>
+            <option key={colorName} value={colorName} disabled={isOutOfStock}>
+              {colorName}{isOutOfStock ? " (Unavailable)" : ""}
+            </option>
           );
         })}
-      </div>
+      </select>
 
       {/* Stock message */}
       {selectedSize && (

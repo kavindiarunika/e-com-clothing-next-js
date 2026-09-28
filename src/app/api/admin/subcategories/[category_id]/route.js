@@ -1,5 +1,6 @@
 import { getPool } from "@/lib/db";
 import { getAdmin } from "@/lib/auth";
+import { saveCategoryImage } from "@/lib/productImageStorage";
 
 /* =========================================
    UPDATE SUBCATEGORY
@@ -87,14 +88,14 @@ export async function PUT(request, { params }) {
 
     /* Update */
 
-    const image =
+    const imagePath =
       imageFile &&
       typeof imageFile !== "string" &&
       imageFile.size > 0
-        ? Buffer.from(await imageFile.arrayBuffer())
+        ? await saveCategoryImage(imageFile)
         : null;
 
-    if (image) {
+    if (imagePath) {
       await pool.query(
         `
         UPDATE categories
@@ -102,7 +103,7 @@ export async function PUT(request, { params }) {
             parent_category_id = ?, status = ?
         WHERE category_id = ?
         `,
-        [name, description || null, image, parent_category_id, status, category_id]
+        [name, description || null, imagePath, parent_category_id, status, category_id]
       );
     } else {
       await pool.query(
