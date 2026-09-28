@@ -27,6 +27,7 @@ export default function FeaturedProducts() {
               id: product.item_id,
               name: product.title,
               category: product.category_name,
+              stock_quantity: product.stock_quantity,
               price: product.price,
               discount: product.discount,
               image: product.image,
@@ -53,11 +54,11 @@ export default function FeaturedProducts() {
   }, []);
 
   return (
-    <section className="bg-[#F8F5F2] px-[4%] py-20 md:py-24">
+    <section className="bg-[#F8F5F2] px-[4%] py-12 md:py-14">
       <div className="mx-auto max-w-[1200px]">
 
         {/* Heading */}
-        <div className="mb-10 text-center md:mb-14">
+        <div className="mb-8 text-left md:mb-10">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
             Curated For You
           </p>
@@ -66,12 +67,9 @@ export default function FeaturedProducts() {
             Featured Collection
           </h2>
 
-          <div className="mx-auto mt-5 h-px w-12 bg-[#72383D]" />
+          <div className="mt-5 h-px w-12 bg-[#72383D]" />
 
-          <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-[#6B625D]">
-            Discover our carefully selected pieces, designed to bring
-            effortless elegance to your everyday wardrobe.
-          </p>
+          
         </div>
 
         {/* Products */}

@@ -27,6 +27,7 @@ export default function NewArrivals() {
               id: product.item_id,
               name: product.title,
               category: product.category_name,
+              stock_quantity: product.stock_quantity,
               price: product.price,
               discount: product.discount,
               image: product.image,
@@ -53,11 +54,11 @@ export default function NewArrivals() {
   }, []);
 
   return (
-    <section className="bg-[#EFE9E1] px-[4%] py-20 md:py-24">
+    <section className="bg-[#EFE9E1] px-[4%] py-12 md:py-14">
       <div className="mx-auto max-w-[1200px]">
 
         {/* Heading */}
-        <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end md:mb-14">
+        <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end md:mb-10">
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
               Just In

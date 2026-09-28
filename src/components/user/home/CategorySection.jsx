@@ -48,6 +48,12 @@ const normalizeCategoryImage = (value) => {
   return "";
 };
 
+const categoryPaths = {
+  men: "/user/men",
+  women: "/user/women",
+  kids: "/user/kids",
+};
+
 export default function CategorySection() {
   const [categories, setCategories] = useState([]);
 
@@ -86,9 +92,9 @@ export default function CategorySection() {
   }
 
   return (
-    <section className="bg-[#EFE9E1] px-[4%] py-20 md:py-24">
+    <section className="bg-[#EFE9E1] px-[4%] py-12 md:py-14">
       <div className="mx-auto max-w-[1200px]">
-        <div className="mb-10 text-center md:mb-14">
+        <div className="mb-10 text-left md:mb-14">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
             Explore Our Collection
           </p>
@@ -97,15 +103,15 @@ export default function CategorySection() {
             Shop by Category
           </h2>
 
-          <div className="mx-auto mt-5 h-px w-12 bg-[#72383D]" />
+          <div className="mt-5 h-px w-12 bg-[#72383D]" />
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
           {categories.map((category) => (
             <Link
               key={category.category_id || category.name}
-              href="/user/shop"
-              className="group relative block h-[420px] overflow-hidden bg-[#D8CEC5] sm:h-[450px]"
+              href={categoryPaths[category.name.trim().toLowerCase()] || "/user/shop"}
+              className="group relative block h-80 overflow-hidden bg-[#D8CEC5] sm:h-87.5"
             >
               {category.image ? (
                 <img
