@@ -17,6 +17,7 @@ export default function ProductPage({ params }) {
   const productId = String(resolvedParams.id);
 
   const [product, setProduct] = useState(null);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
@@ -63,6 +64,40 @@ export default function ProductPage({ params }) {
 
     return () => controller.abort();
   }, [productId]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadProducts() {
+      try {
+        const response = await fetch("/api/user/Product?status=active", {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) return;
+
+        const result = await response.json();
+        const catalog = Array.isArray(result.data) ? result.data : [];
+
+        setProducts(
+          catalog.map((item) => ({
+            ...item,
+            id: item.item_id,
+            name: item.title,
+            category: item.category_name || "",
+          }))
+        );
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Related products error:", error);
+        }
+      }
+    }
+
+    void loadProducts();
+
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     if (!product) return;
@@ -684,7 +719,7 @@ export default function ProductPage({ params }) {
       <section className="mx-auto w-[92%] max-w-[1200px] pb-16">
 
         <RelatedProducts
-          products={[]}
+          products={products}
           currentProduct={product}
         />
 

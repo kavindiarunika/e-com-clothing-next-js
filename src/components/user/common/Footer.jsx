@@ -193,7 +193,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/contact"
+                  href="/user/contact"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#AC9C8D]"
                 >
                   Contact Us
@@ -205,7 +205,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/shipping"
+                  href="/user/shipping"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#AC9C8D]"
                 >
                   Shipping & Delivery
@@ -217,7 +217,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/returns"
+                  href="/user/returns"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#AC9C8D]"
                 >
                   Returns & Exchanges
@@ -229,7 +229,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/size-guide"
+                  href="/user/size-guide"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#AC9C8D]"
                 >
                   Size Guide
@@ -241,7 +241,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/faq"
+                  href="/user/faq"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#AC9C8D]"
                 >
                   FAQ
@@ -298,14 +298,14 @@ export default function Footer() {
           <div className="flex items-center gap-5">
 
             <Link
-              href="/privacy"
+              href="/user/privacy"
               className="text-xs text-white/50 transition hover:text-[#AC9C8D]"
             >
               Privacy Policy
             </Link>
 
             <Link
-              href="/terms"
+              href="/user/terms"
               className="text-xs text-white/50 transition hover:text-[#AC9C8D]"
             >
               Terms & Conditions
