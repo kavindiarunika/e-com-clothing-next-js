@@ -3,6 +3,7 @@ import CategorySection from "../../components/user/home/CategorySection";
 import FeaturedProducts from "../../components/user/home/FeaturedProducts";
 import NewArrivals from "../../components/user/home/NewArrivals";
 import PromoBanner from "../../components/user/home/PromoBanner";
+import Newsletter from "../../components/user/home/Newsletter";
 
 
 export default function Home() {
@@ -10,10 +11,14 @@ export default function Home() {
     <main className="min-h-screen bg-[#EFE9E1]">
       <HeroBanner />
       <CategorySection />
+      <PromoBanner />
       <FeaturedProducts />
       <NewArrivals />
-      <PromoBanner />
+      <Newsletter />
+
       
+      
+
 
     </main>
   );

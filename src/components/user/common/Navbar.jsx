@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -18,45 +17,78 @@ import products from "@/data/products";
 
 export default function Navbar() {
   const router = useRouter();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [openCategory, setOpenCategory] = useState(null);
+  const [openCollection, setOpenCollection] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+
+  // =====================================================
+  // CART COUNT
+  // =====================================================
 
   useEffect(() => {
     const updateCartCount = () => {
-      const savedCart = JSON.parse(localStorage.getItem("velora-cart") || "[]");
-      const totalItems = savedCart.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+      const savedCart = JSON.parse(
+        localStorage.getItem("velora-cart") || "[]"
+      );
+
+      const totalItems = savedCart.reduce(
+        (sum, item) => sum + Number(item.quantity || 0),
+        0
+      );
+
       setCartCount(totalItems);
     };
 
     updateCartCount();
+
     window.addEventListener("velora-cart-updated", updateCartCount);
 
     return () => {
-      window.removeEventListener("velora-cart-updated", updateCartCount);
+      window.removeEventListener(
+        "velora-cart-updated",
+        updateCartCount
+      );
     };
   }, []);
 
+  // =====================================================
+  // CLOSE MOBILE MENU
+  // =====================================================
+
   const closeMenu = () => {
     setMobileMenuOpen(false);
-    setOpenCategory(null);
+    setOpenCollection(false);
   };
+
+  // =====================================================
+  // ACCOUNT
+  // =====================================================
 
   const handleAccountClick = (event) => {
     event.preventDefault();
+
     closeMenu();
 
     const isLoggedIn = Boolean(
       localStorage.getItem("velora-user-session")
     );
 
-    router.push(isLoggedIn ? "/user/account" : "/user/login");
+    router.push(
+      isLoggedIn ? "/user/account" : "/user/login"
+    );
   };
 
-  const categories = Object.entries(
+  // =====================================================
+  // CREATE COLLECTIONS FROM PRODUCTS
+  // =====================================================
+
+  const collections = Object.entries(
     products.reduce((acc, product) => {
       const category = product.category;
       const subcategory = product.subcategory;
+
+      if (!category) return acc;
 
       if (!acc[category]) {
         acc[category] = new Set();
@@ -71,7 +103,9 @@ export default function Navbar() {
   ).reduce((acc, [category, subcategories]) => {
     acc[category] = [...subcategories].map((subcategory) => ({
       name: subcategory,
-      href: `/user/${category.toLowerCase()}/${subcategory
+      href: `/user/${category
+        .toLowerCase()
+        .replace(/\s+/g, "-")}/${subcategory
         .toLowerCase()
         .replace(/\s+/g, "-")}`,
     }));
@@ -81,9 +115,17 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#322D29] text-white">
+
+      {/* =====================================================
+          MAIN NAVBAR
+      ===================================================== */}
+
       <div className="mx-auto flex h-19 w-[92%] max-w-300 items-center justify-between">
 
-        {/* Logo */}
+        {/* =====================================================
+            LOGO
+        ===================================================== */}
+
         <Link
           href="/user"
           onClick={closeMenu}
@@ -103,8 +145,13 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-8 md:flex">
+        {/* =====================================================
+            DESKTOP NAVIGATION
+        ===================================================== */}
+
+        <nav className="hidden items-center gap-9 md:flex">
+
+          {/* HOME */}
 
           <Link
             href="/user"
@@ -113,6 +160,8 @@ export default function Navbar() {
             Home
           </Link>
 
+          {/* SHOP */}
+
           <Link
             href="/user/shop"
             className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
@@ -120,130 +169,166 @@ export default function Navbar() {
             Shop
           </Link>
 
-          {/* Men */}
+          {/* =================================================
+              COLLECTION DROPDOWN
+          ================================================= */}
+
           <div
             className="relative"
-            onMouseEnter={() => setOpenCategory("Men")}
-            onMouseLeave={() => setOpenCategory(null)}
+            onMouseEnter={() => setOpenCollection(true)}
+            onMouseLeave={() => setOpenCollection(false)}
           >
+
             <Link
-              href="/user/men"
+              href="/user/shop"
               className="flex items-center gap-1 text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
             >
-              Men
-              <ChevronDown size={14} strokeWidth={1.7} />
+              Collection
+
+              <ChevronDown
+                size={14}
+                strokeWidth={1.7}
+                className={`transition-transform duration-200 ${
+                  openCollection ? "rotate-180" : ""
+                }`}
+              />
             </Link>
 
-            {openCategory === "Men" && (
-              <div className="absolute left-0 top-full w-48 pt-4">
-                <div className="bg-white py-3 text-[#322D29] shadow-lg">
-                  {categories.Men.map((category) => (
-                    <Link
-                      key={category.name}
-                      href={category.href}
-                      className="block px-5 py-2.5 text-sm transition hover:bg-[#EFE9E1] hover:text-[#72383D]"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
+            {openCollection && (
+              <div className="absolute left-1/2 top-full w-72 -translate-x-1/2 pt-4">
+
+                <div className="overflow-hidden rounded-sm bg-white py-4 text-[#322D29] shadow-xl">
+
+                  {/* Dropdown Header */}
+
+                  <div className="border-b border-[#322D29]/10 px-6 pb-3">
+                    <p className="text-[10px] font-medium uppercase tracking-[2px] text-[#AC9C8D]">
+                      Shop Collection
+                    </p>
+
+                    <p className="mt-1 font-serif text-lg">
+                      Explore Velora
+                    </p>
+                  </div>
+
+                  {/* View All */}
+
+                  <Link
+                    href="/user/shop"
+                    onClick={closeMenu}
+                    className="block px-6 py-3 text-sm font-medium transition hover:bg-[#EFE9E1] hover:text-[#72383D]"
+                  >
+                    View All Products
+                  </Link>
+
+                  {/* Collections */}
+
+                  {Object.entries(collections).map(
+                    ([categoryName, items]) => (
+                      <div key={categoryName}>
+
+                        {/* Main Category */}
+
+                        <Link
+                          href={`/user/${categoryName
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")}`}
+                          onClick={closeMenu}
+                          className="block px-6 pt-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                        >
+                          {categoryName}
+                        </Link>
+
+                        {/* Subcategories */}
+
+                        {items.length > 0 && (
+                          <div className="pb-2 pt-1">
+
+                            {items.map((item) => (
+                              <Link
+                                key={item.name}
+                                href={item.href}
+                                onClick={closeMenu}
+                                className="block px-6 py-2 text-sm text-[#322D29]/65 transition hover:bg-[#EFE9E1] hover:text-[#72383D]"
+                              >
+                                {item.name}
+                              </Link>
+                            ))}
+
+                          </div>
+                        )}
+                      </div>
+                    )
+                  )}
+
                 </div>
               </div>
             )}
           </div>
 
-          {/* Women */}
-          <div
-            className="relative"
-            onMouseEnter={() => setOpenCategory("Women")}
-            onMouseLeave={() => setOpenCategory(null)}
+          {/* =================================================
+              NEW ARRIVALS
+          ================================================= */}
+
+          <Link
+            href="/user/shop?sort=newest"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
           >
-            <Link
-              href="/user/women"
-              className="flex items-center gap-1 text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
-            >
-              Women
-              <ChevronDown size={14} strokeWidth={1.7} />
-            </Link>
+            New Arrivals
+          </Link>
 
-            {openCategory === "Women" && (
-              <div className="absolute left-0 top-full w-48 pt-4">
-                <div className="bg-white py-3 text-[#322D29] shadow-lg">
-                  {categories.Women.map((category) => (
-                    <Link
-                      key={category.name}
-                      href={category.href}
-                      className="block px-5 py-2.5 text-sm transition hover:bg-[#EFE9E1] hover:text-[#72383D]"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Kids */}
-          <div
-            className="relative"
-            onMouseEnter={() => setOpenCategory("Kids")}
-            onMouseLeave={() => setOpenCategory(null)}
-          >
-            <Link
-              href="/user/kids"
-              className="flex items-center gap-1 text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
-            >
-              Kids
-              <ChevronDown size={14} strokeWidth={1.7} />
-            </Link>
-
-            {openCategory === "Kids" && (
-              <div className="absolute left-0 top-full w-48 pt-4">
-                <div className="bg-white py-3 text-[#322D29] shadow-lg">
-                  {categories.Kids.map((category) => (
-                    <Link
-                      key={category.name}
-                      href={category.href}
-                      className="block px-5 py-2.5 text-sm transition hover:bg-[#EFE9E1] hover:text-[#72383D]"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
         </nav>
 
-        {/* Desktop Actions */}
+        {/* =====================================================
+            DESKTOP ACTIONS
+        ===================================================== */}
+
         <div className="hidden items-center gap-5 md:flex">
+
+          {/* Search */}
 
           <Link
             href="/user/shop"
             aria-label="Search"
             className="transition hover:text-[#AC9C8D]"
           >
-            <Search size={20} strokeWidth={1.7} />
+            <Search
+              size={20}
+              strokeWidth={1.7}
+            />
           </Link>
+
+          {/* Wishlist */}
 
           <Link
             href="/user/wishlist"
             aria-label="Wishlist"
             className="transition hover:text-[#AC9C8D]"
           >
-            <Heart size={20} strokeWidth={1.7} />
+            <Heart
+              size={20}
+              strokeWidth={1.7}
+            />
           </Link>
+
+          {/* Cart */}
 
           <Link
             href="/user/cart"
             aria-label="Shopping Cart"
             className="relative transition hover:text-[#AC9C8D]"
           >
-            <ShoppingBag size={20} strokeWidth={1.7} />
+            <ShoppingBag
+              size={20}
+              strokeWidth={1.7}
+            />
 
             <span className="absolute -right-2 -top-2 flex h-3.75 w-3.75 items-center justify-center rounded-full bg-[#72383D] text-[9px] font-bold text-white">
-              {cartCount > 0 ? cartCount : 0}
+              {cartCount}
             </span>
           </Link>
+
+          {/* Account */}
 
           <Link
             href="/user/account"
@@ -251,30 +336,51 @@ export default function Navbar() {
             aria-label="Account"
             className="transition hover:text-[#AC9C8D]"
           >
-            <User size={20} strokeWidth={1.7} />
+            <User
+              size={20}
+              strokeWidth={1.7}
+            />
           </Link>
+
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* =====================================================
+            MOBILE MENU BUTTON
+        ===================================================== */}
+
         <button
           type="button"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          onClick={() =>
+            setMobileMenuOpen(!mobileMenuOpen)
+          }
           aria-label="Toggle menu"
           className="flex items-center justify-center md:hidden"
         >
           {mobileMenuOpen ? (
-            <X size={25} strokeWidth={1.7} />
+            <X
+              size={25}
+              strokeWidth={1.7}
+            />
           ) : (
-            <Menu size={25} strokeWidth={1.7} />
+            <Menu
+              size={25}
+              strokeWidth={1.7}
+            />
           )}
         </button>
+
       </div>
 
-      {/* Mobile Menu */}
+      {/* =====================================================
+          MOBILE MENU
+      ===================================================== */}
+
       {mobileMenuOpen && (
         <div className="border-t border-white/10 bg-[#322D29] px-[6%] pb-6 md:hidden">
 
           <nav className="flex flex-col">
+
+            {/* HOME */}
 
             <Link
               href="/user"
@@ -284,6 +390,8 @@ export default function Navbar() {
               Home
             </Link>
 
+            {/* SHOP */}
+
             <Link
               href="/user/shop"
               onClick={closeMenu}
@@ -292,90 +400,156 @@ export default function Navbar() {
               Shop
             </Link>
 
-            {/* Mobile Categories */}
-            {Object.entries(categories).map(([categoryName, items]) => (
-              <div key={categoryName} className="border-b border-white/10">
+            {/* =================================================
+                MOBILE COLLECTION
+            ================================================= */}
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    setOpenCategory(
-                      openCategory === categoryName ? null : categoryName
+            <div className="border-b border-white/10">
+
+              <button
+                type="button"
+                onClick={() =>
+                  setOpenCollection(!openCollection)
+                }
+                className="flex w-full items-center justify-between py-4 text-sm uppercase tracking-[1px]"
+              >
+                Collection
+
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform ${
+                    openCollection
+                      ? "rotate-180"
+                      : ""
+                  }`}
+                />
+              </button>
+
+              {openCollection && (
+                <div className="pb-3 pl-4">
+
+                  {/* View All */}
+
+                  <Link
+                    href="/user/shop"
+                    onClick={closeMenu}
+                    className="block py-2 text-sm font-medium text-[#AC9C8D]"
+                  >
+                    View All Products
+                  </Link>
+
+                  {/* Categories */}
+
+                  {Object.entries(collections).map(
+                    ([categoryName, items]) => (
+                      <div key={categoryName}>
+
+                        <Link
+                          href={`/user/${categoryName
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")}`}
+                          onClick={closeMenu}
+                          className="block py-2 text-sm font-medium text-white"
+                        >
+                          {categoryName}
+                        </Link>
+
+                        {items.map((item) => (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            onClick={closeMenu}
+                            className="block py-1.5 pl-4 text-sm text-white/60 transition hover:text-[#AC9C8D]"
+                          >
+                            {item.name}
+                          </Link>
+                        ))}
+
+                      </div>
                     )
-                  }
-                  className="flex w-full items-center justify-between py-4 text-sm uppercase tracking-[1px]"
-                >
-                  {categoryName}
+                  )}
 
-                  <ChevronDown
-                    size={16}
-                    className={`transition-transform ${
-                      openCategory === categoryName ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
+                </div>
+              )}
 
-                {openCategory === categoryName && (
-                  <div className="pb-3 pl-4">
+            </div>
 
-                    {/* Main Category */}
-                    <Link
-                      href={`/user/${categoryName.toLowerCase()}`}
-                      onClick={closeMenu}
-                      className="block py-2 text-sm font-medium text-[#AC9C8D]"
-                    >
-                      View All {categoryName}
-                    </Link>
+            {/* =================================================
+                NEW ARRIVALS
+            ================================================= */}
 
-                    {items.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        onClick={closeMenu}
-                        className="block py-2 text-sm text-white/75 transition hover:text-[#AC9C8D]"
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+            <Link
+              href="/user/shop?sort=newest"
+              onClick={closeMenu}
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+            >
+              New Arrivals
+            </Link>
+
           </nav>
 
-          {/* Mobile Account Links */}
+          {/* =====================================================
+              MOBILE ACCOUNT LINKS
+          ===================================================== */}
+
           <div className="mt-3 flex flex-col">
+
+            {/* Wishlist */}
 
             <Link
               href="/user/wishlist"
               onClick={closeMenu}
               className="flex items-center gap-3 py-3 text-sm transition hover:text-[#AC9C8D]"
             >
-              <Heart size={18} strokeWidth={1.7} />
+              <Heart
+                size={18}
+                strokeWidth={1.7}
+              />
+
               Wishlist
             </Link>
+
+            {/* Cart */}
 
             <Link
               href="/user/cart"
               onClick={closeMenu}
               className="flex items-center gap-3 py-3 text-sm transition hover:text-[#AC9C8D]"
             >
-              <ShoppingBag size={18} strokeWidth={1.7} />
+              <ShoppingBag
+                size={18}
+                strokeWidth={1.7}
+              />
+
               Cart
+
+              {cartCount > 0 && (
+                <span className="ml-auto rounded-full bg-[#72383D] px-2 py-0.5 text-[10px]">
+                  {cartCount}
+                </span>
+              )}
             </Link>
+
+            {/* Account */}
 
             <Link
               href="/user/account"
-              onClick={closeMenu}
+              onClick={handleAccountClick}
               className="flex items-center gap-3 py-3 text-sm transition hover:text-[#AC9C8D]"
             >
-              <User size={18} strokeWidth={1.7} />
+              <User
+                size={18}
+                strokeWidth={1.7}
+              />
+
               Account
             </Link>
+
           </div>
+
         </div>
       )}
+
     </header>
   );
 }
-
