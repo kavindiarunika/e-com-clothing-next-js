@@ -6,8 +6,8 @@ export default function Footer() {
     <footer className="bg-[#322D29] text-white">
 
       {/* Main Footer */}
-      <div className="mx-auto max-w-[1200px] px-[4%] py-16">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto max-w-[1200px] px-[4%] py-10">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
 
           {/* Brand */}
           <div>
@@ -18,9 +18,9 @@ export default function Footer() {
   <Image
     src="/images/logo/logo.png"
     alt="Velora logo"
-    width={70}
-    height={70}
-    className="h-[70px] w-[70px] object-contain"
+    width={56}
+    height={56}
+    className="h-14 w-14 object-contain"
   />
 
   <span className="font-serif text-2xl font-bold tracking-[4px]">
@@ -28,13 +28,13 @@ export default function Footer() {
   </span>
 </Link>
 
-            <p className="mt-5 max-w-xs text-sm leading-7 text-white/65">
+            <p className="mt-3 max-w-xs text-sm leading-6 text-white/65">
               Discover timeless fashion designed to bring confidence,
               comfort, and elegance to every moment.
             </p>
 
             {/* Social Media */}
-            <div className="mt-7 flex items-center gap-3">
+            <div className="mt-5 flex items-center gap-3">
 
               {/* Instagram */}
               <a
@@ -193,7 +193,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/contact"
+                  href="/user/contact"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#AC9C8D]"
                 >
                   Contact Us
@@ -205,7 +205,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/shipping"
+                  href="/user/shipping"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#AC9C8D]"
                 >
                   Shipping & Delivery
@@ -217,7 +217,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/returns"
+                  href="/user/returns"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#AC9C8D]"
                 >
                   Returns & Exchanges
@@ -229,7 +229,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/size-guide"
+                  href="/user/size-guide"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#AC9C8D]"
                 >
                   Size Guide
@@ -241,7 +241,7 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/faq"
+                  href="/user/faq"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#AC9C8D]"
                 >
                   FAQ
@@ -289,7 +289,7 @@ export default function Footer() {
       {/* Bottom Footer */}
       <div className="border-t border-white/10">
 
-        <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-[4%] py-6 text-center sm:flex-row sm:text-left">
+        <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-[4%] py-4 text-center sm:flex-row sm:text-left">
 
           <p className="text-xs text-white/50">
             © 2026 Velora. All rights reserved.
@@ -298,14 +298,14 @@ export default function Footer() {
           <div className="flex items-center gap-5">
 
             <Link
-              href="/privacy"
+              href="/user/privacy"
               className="text-xs text-white/50 transition hover:text-[#AC9C8D]"
             >
               Privacy Policy
             </Link>
 
             <Link
-              href="/terms"
+              href="/user/terms"
               className="text-xs text-white/50 transition hover:text-[#AC9C8D]"
             >
               Terms & Conditions
