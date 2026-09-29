@@ -12,7 +12,7 @@ import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-const AUTOPLAY_DELAY = 5000;
+const AUTOPLAY_DELAY = 2000;
 
 export default function HeroBanner() {
   const [slides, setSlides] = useState([]);
@@ -77,7 +77,7 @@ export default function HeroBanner() {
         effect="fade"
         fadeEffect={{ crossFade: true }}
         loop={slides.length > 1}
-        speed={1000}
+        speed={700}
         autoplay={{
           delay: AUTOPLAY_DELAY,
           disableOnInteraction: false,

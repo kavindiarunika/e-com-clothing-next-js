@@ -10,8 +10,9 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#EFE9E1]">
       <HeroBanner />
-      <CategorySection />
       <PromoBanner />
+      <CategorySection />
+      
       <FeaturedProducts />
       <NewArrivals />
       <Newsletter />
