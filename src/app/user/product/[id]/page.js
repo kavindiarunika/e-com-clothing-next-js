@@ -533,9 +533,12 @@ export default function ProductPage({ params }) {
 
             {/* DESCRIPTION */}
 
-            <p className="mt-6 text-m leading-7 text-[#6B625C]">
-              {product.description}
-            </p>
+            <div
+              className="product-description mt-6 text-sm leading-7 text-[#6B625C]"
+              dangerouslySetInnerHTML={{
+                __html: product.description || "",
+              }}
+            />
 
             <div className="mt-8 space-y-6">
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { saveProductImage } from "@/lib/productImageStorage";
+import { sanitizeProductDescription } from "@/lib/productDescription";
 
 export async function PUT(request, { params }) {
   try {
@@ -9,7 +10,9 @@ export async function PUT(request, { params }) {
     const formData = await request.formData();
 
     const title = formData.get("title");
-    const description = formData.get("description") || null;
+    const description = sanitizeProductDescription(
+      formData.get("description")
+    ) || null;
     const price = formData.get("price") || 0;
     const discount = formData.get("discount") || 0;
     const categoryId = formData.get("category_id") || null;

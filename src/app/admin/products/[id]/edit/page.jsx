@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -815,16 +816,16 @@ export default function ProductFormPage() {
               Description
             </label>
 
-            <textarea
-              name="description"
+            <RichTextEditor
               value={
                 form.description
               }
-              onChange={
-                handleChange
+              onChange={(value) =>
+                setForm((previous) => ({
+                  ...previous,
+                  description: value,
+                }))
               }
-              placeholder="Enter product description"
-              rows={5}
             />
 
           </div>

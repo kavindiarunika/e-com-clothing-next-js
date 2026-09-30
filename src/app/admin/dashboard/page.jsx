@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   ArrowUpRight,
   Tag,
+  Search,
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -21,6 +22,9 @@ export default function AdminDashboard() {
   const [data, setData] = useState(null);
   const [products, setProducts] = useState([]);
   const [offers, setOffers] = useState([]);
+  const [productSearch, setProductSearch] = useState("");
+  const [productStatus, setProductStatus] = useState("all");
+  const [productCategory, setProductCategory] = useState("all");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -123,13 +127,13 @@ export default function AdminDashboard() {
         // PRODUCTS
         // ============================================
 
-        if (productsResult.success) {
-          setProducts(
-            Array.isArray(productsResult.products)
-              ? productsResult.products.slice(0, 5)
+        setProducts(
+          Array.isArray(productsResult.products)
+            ? productsResult.products
+            : Array.isArray(productsResult.data)
+              ? productsResult.data
               : []
-          );
-        }
+        );
 
         // ============================================
         // OFFERS
@@ -197,6 +201,44 @@ export default function AdminDashboard() {
   // ============================================
 
   const stats = data?.stats || {};
+  const productCategories = Array.from(
+    new Map(
+      products
+        .filter((product) => product.category_name || product.category)
+        .map((product) => {
+          const name = product.category_name || product.category;
+          const value = product.category_id ?? name;
+          return [String(value), name];
+        })
+    )
+  );
+  const searchText = productSearch.trim().toLowerCase();
+  const filteredProducts = products.filter((product) => {
+    const categoryName = product.category_name || product.category || "";
+    const matchesSearch = [
+      product.title,
+      product.name,
+      product.sku,
+      categoryName,
+      product.status,
+    ].some((value) => String(value || "").toLowerCase().includes(searchText));
+    const matchesStatus =
+      productStatus === "all" ||
+      String(product.status || "active").toLowerCase() === productStatus;
+    const categoryValue = String(
+      product.category_id ?? categoryName
+    );
+    const matchesCategory =
+      productCategory === "all" || categoryValue === productCategory;
+
+    return matchesSearch && matchesStatus && matchesCategory;
+  });
+  const hasProductFilters = Boolean(
+    searchText || productStatus !== "all" || productCategory !== "all"
+  );
+  const visibleProducts = hasProductFilters
+    ? filteredProducts
+    : filteredProducts.slice(0, 5);
 
   // ============================================
   // DASHBOARD
@@ -603,7 +645,7 @@ export default function AdminDashboard() {
           <div className="dashboard-panel-right">
 
             <span className="panel-period">
-              {products.length} entries
+              {visibleProducts.length} of {products.length} products
             </span>
 
             <Link href="/admin/products">
@@ -614,6 +656,41 @@ export default function AdminDashboard() {
 
         </div>
 
+
+        <div className="dashboard-product-filters">
+          <label className="dashboard-product-search">
+            <Search size={17} aria-hidden="true" />
+            <input
+              type="search"
+              placeholder="Search products..."
+              value={productSearch}
+              onChange={(event) => setProductSearch(event.target.value)}
+              aria-label="Search products"
+            />
+          </label>
+
+          <select
+            value={productStatus}
+            onChange={(event) => setProductStatus(event.target.value)}
+            aria-label="Filter products by status"
+          >
+            <option value="all">All statuses</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="out_of_stock">Out of stock</option>
+          </select>
+
+          <select
+            value={productCategory}
+            onChange={(event) => setProductCategory(event.target.value)}
+            aria-label="Filter products by category"
+          >
+            <option value="all">All categories</option>
+            {productCategories.map(([value, name]) => (
+              <option key={value} value={value}>{name}</option>
+            ))}
+          </select>
+        </div>
 
         <div className="dashboard-table-wrapper">
 
@@ -650,7 +727,7 @@ export default function AdminDashboard() {
 
             <tbody>
 
-              {products.map((product) => (
+              {visibleProducts.map((product) => (
 
                 <tr
                   key={
@@ -735,7 +812,7 @@ export default function AdminDashboard() {
 
               {/* EMPTY */}
 
-              {products.length === 0 && (
+              {visibleProducts.length === 0 && (
 
                 <tr>
 
@@ -743,7 +820,9 @@ export default function AdminDashboard() {
                     colSpan={5}
                     className="dashboard-table-empty"
                   >
-                    No products found.
+                    {products.length === 0
+                      ? "No products found."
+                      : "No products match these filters."}
                   </td>
 
                 </tr>

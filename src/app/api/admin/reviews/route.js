@@ -33,16 +33,18 @@ export async function GET() {
 
     const [reviews] = await pool.query(`
       SELECT
-        review_id,
-        item_id,
-        user_id,
-        order_id,
-        rating,
-        review_text,
-        status,
-        created_at
-      FROM reviews
-      ORDER BY review_id DESC
+        r.review_id,
+        r.item_id,
+        r.user_id,
+        CONCAT_WS(' ', u.first_name, u.last_name) AS reviewer_name,
+        r.order_id,
+        r.rating,
+        r.review_text,
+        r.status,
+        r.created_at
+      FROM reviews r
+      LEFT JOIN users u ON u.user_id = r.user_id
+      ORDER BY r.review_id DESC
     `);
 
     return Response.json({

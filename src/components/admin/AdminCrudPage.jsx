@@ -19,6 +19,7 @@ export default function AdminCrudPage({
   idKey = "id",
   readOnly = false,
   editOnly = false,
+  pageClassName = "",
 }) {
   const [data, setData] = useState(initialData);
   const [search, setSearch] = useState("");
@@ -142,7 +143,7 @@ export default function AdminCrudPage({
   );
 
   return (
-    <div>
+    <div className={pageClassName}>
       <div className="admin-page-header">
         <div>
           <h1>{title}</h1>

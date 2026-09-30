@@ -34,6 +34,7 @@ export async function GET() {
         o.updated_at,
         CONCAT_WS(' ', u.first_name, u.last_name) AS customer_name,
         u.email AS customer_email,
+        u.phone AS customer_phone,
         (
           SELECT COUNT(*)
           FROM order_items oi
@@ -58,9 +59,34 @@ export async function GET() {
       ORDER BY o.order_date DESC, o.order_id DESC
     `);
 
+    const [items] = await pool.query(`
+      SELECT
+        oi.order_id,
+        oi.order_item_id,
+        oi.item_id,
+        oi.qty,
+        oi.unit_price,
+        p.title AS product_title,
+        p.sku
+      FROM order_items oi
+      LEFT JOIN products p ON p.item_id = oi.item_id
+      ORDER BY oi.order_id, oi.order_item_id
+    `);
+
+    const itemsByOrder = new Map();
+    for (const item of items) {
+      const orderId = String(item.order_id);
+      const orderItems = itemsByOrder.get(orderId) || [];
+      orderItems.push(item);
+      itemsByOrder.set(orderId, orderItems);
+    }
+
     return Response.json({
       success: true,
-      sales,
+      sales: sales.map((sale) => ({
+        ...sale,
+        items: itemsByOrder.get(String(sale.order_id)) || [],
+      })),
     });
   } catch (error) {
     console.error(

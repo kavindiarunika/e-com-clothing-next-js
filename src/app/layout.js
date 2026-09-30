@@ -1,25 +1,4 @@
-import { Inter, Poppins, Prata } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  preload: false,
-});
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  variable: "--font-poppins",
-  weight: ["400", "500", "600", "700"],
-  preload: false,
-});
-
-const prata = Prata({
-  subsets: ["latin"],
-  variable: "--font-prata",
-  weight: "400",
-  preload: false,
-});
 
 export const metadata = {
   title: "Velora Admin",
@@ -28,10 +7,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${poppins.variable} ${prata.variable}`}
-    >
+    <html lang="en">
       <body>{children}</body>
     </html>
   );

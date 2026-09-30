@@ -88,8 +88,13 @@ export default function SalesReportPage() {
       sale.user_id,
       sale.customer_name,
       sale.customer_email,
+      sale.customer_phone,
       sale.payment_status,
       sale.order_status,
+      ...(sale.items || []).flatMap((item) => [
+        item.product_title,
+        item.sku,
+      ]),
     ].some((value) => String(value || "").toLowerCase().includes(searchValue));
 
     const saleDate = new Date(sale.order_date);
@@ -417,6 +422,7 @@ export default function SalesReportPage() {
               <tr>
                 <th>Order</th>
                 <th>Customer</th>
+                <th>Products</th>
                 <th>Date</th>
                 <th>Subtotal</th>
                 <th>Discount</th>
@@ -433,7 +439,7 @@ export default function SalesReportPage() {
               {loading ? (
                 <tr>
                   <td
-                    colSpan="10"
+                    colSpan="11"
                     className="sales-report-empty"
                   >
                     Loading sales report...
@@ -442,7 +448,7 @@ export default function SalesReportPage() {
               ) : filteredSales.length === 0 ? (
                 <tr>
                   <td
-                    colSpan="10"
+                    colSpan="11"
                     className="sales-report-empty"
                   >
                     No sales records found.
@@ -474,6 +480,33 @@ export default function SalesReportPage() {
                         <small className="sales-customer-email">
                           {sale.customer_email}
                         </small>
+                      )}
+                      {sale.customer_phone && (
+                        <small className="sales-customer-email">
+                          {sale.customer_phone}
+                        </small>
+                      )}
+                    </td>
+
+                    <td className="sales-product-cell">
+                      {sale.items?.length ? (
+                        <>
+                          {sale.items.slice(0, 2).map((item) => (
+                            <div className="sales-product-item" key={item.order_item_id}>
+                              <strong>{item.product_title || `Product #${item.item_id}`}</strong>
+                              <small>
+                                SKU: {item.sku || "-"} | Qty: {item.qty}
+                              </small>
+                            </div>
+                          ))}
+                          {sale.items.length > 2 && (
+                            <small className="sales-product-more">
+                              +{sale.items.length - 2} more
+                            </small>
+                          )}
+                        </>
+                      ) : (
+                        <span>-</span>
                       )}
                     </td>
 
