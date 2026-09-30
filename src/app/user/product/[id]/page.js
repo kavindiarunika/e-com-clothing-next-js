@@ -17,6 +17,7 @@ export default function ProductPage({ params }) {
   const productId = String(resolvedParams.id);
 
   const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
@@ -63,6 +64,50 @@ export default function ProductPage({ params }) {
 
     return () => controller.abort();
   }, [productId]);
+
+  useEffect(() => {
+    if (!product?.category_id) return;
+
+    const controller = new AbortController();
+
+    async function loadRelatedProducts() {
+      try {
+        const response = await fetch(
+          `/api/user/Product?status=active&category_id=${encodeURIComponent(product.category_id)}`,
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to load related products");
+        }
+
+        const result = await response.json();
+        const nextProducts = Array.isArray(result.data)
+          ? result.data.map((item) => ({
+              id: item.item_id,
+              name: item.title,
+              category: item.category_name,
+              price: item.price,
+              discount: item.discount,
+              image: item.image,
+              images: item.image ? [item.image] : [],
+              variants: [],
+            }))
+          : [];
+
+        setRelatedProducts(nextProducts);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Related products error:", error);
+          setRelatedProducts([]);
+        }
+      }
+    }
+
+    void loadRelatedProducts();
+
+    return () => controller.abort();
+  }, [product?.category_id]);
 
   useEffect(() => {
     if (!product) return;
@@ -687,7 +732,7 @@ export default function ProductPage({ params }) {
       <section className="mx-auto w-[92%] max-w-[1200px] pb-16">
 
         <RelatedProducts
-          products={[]}
+          products={relatedProducts}
           currentProduct={product}
         />
 

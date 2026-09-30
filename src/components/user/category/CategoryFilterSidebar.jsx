@@ -24,7 +24,7 @@ export default function CategoryFilterSidebar({
 
   return (
     <aside className="hidden w-57.5 shrink-0 lg:block">
-      <div className="sticky top-24 bg-white p-6">
+      <div className="sticky top-28 bg-white p-6">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="font-serif text-lg text-[#322D29]">Filters</h2>
 

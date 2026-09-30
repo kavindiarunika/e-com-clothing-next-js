@@ -6,8 +6,8 @@ export default function Footer() {
     <footer className="bg-[#322D29] text-white">
 
       {/* Main Footer */}
-      <div className="mx-auto max-w-[1200px] px-[4%] py-10">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto max-w-300 px-[4%] py-7 md:py-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-7">
 
           {/* Brand */}
           <div>
@@ -18,23 +18,23 @@ export default function Footer() {
   <Image
     src="/images/logo/logo.png"
     alt="Velora logo"
-    width={56}
-    height={56}
-    className="h-14 w-14 object-contain"
+    width={48}
+    height={48}
+    className="h-12 w-12 object-contain"
   />
 
-  <span className="font-serif text-2xl font-bold tracking-[4px]">
+  <span className="font-serif text-xl font-bold tracking-[4px]">
     VELORA
   </span>
 </Link>
 
-            <p className="mt-3 max-w-xs text-sm leading-6 text-white/65">
+            <p className="mt-2 max-w-xs text-sm leading-5 text-white/65">
               Discover timeless fashion designed to bring confidence,
               comfort, and elegance to every moment.
             </p>
 
             {/* Social Media */}
-            <div className="mt-5 flex items-center gap-3">
+            <div className="mt-4 flex items-center gap-3">
 
               {/* Instagram */}
               <a
@@ -114,11 +114,11 @@ export default function Footer() {
 
           {/* Shop */}
           <div>
-            <h3 className="mb-5 text-sm font-semibold uppercase tracking-[2px]">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-[2px]">
               Shop
             </h3>
 
-            <ul className="space-y-3">
+            <ul className="space-y-2">
 
               <li>
                 <Link
@@ -185,11 +185,11 @@ export default function Footer() {
 
           {/* Customer Care */}
           <div>
-            <h3 className="mb-5 text-sm font-semibold uppercase tracking-[2px]">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-[2px]">
               Customer Care
             </h3>
 
-            <ul className="space-y-3">
+            <ul className="space-y-2">
 
               <li>
                 <Link
@@ -256,26 +256,26 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h3 className="mb-5 text-sm font-semibold uppercase tracking-[2px]">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-[2px]">
               Stay Connected
             </h3>
 
-            <p className="text-sm leading-6 text-white/65">
+            <p className="text-sm leading-5 text-white/65">
               Subscribe to receive updates about new collections,
               exclusive offers, and special events.
             </p>
 
-            <div className="mt-5 flex flex-col gap-2">
+            <div className="mt-4 flex flex-col gap-2">
 
               <input
                 type="email"
                 placeholder="Your email address"
-                className="h-11 w-full border border-white/20 bg-white/5 px-4 text-sm text-white outline-none placeholder:text-white/40 focus:border-[#AC9C8D]"
+                className="h-10 w-full border border-white/20 bg-white/5 px-4 text-sm text-white outline-none placeholder:text-white/40 focus:border-[#AC9C8D]"
               />
 
               <button
                 type="button"
-                className="h-11 w-full bg-[#72383D] px-5 text-sm font-semibold uppercase tracking-wide text-white transition duration-300 hover:bg-[#AC9C8D] hover:text-[#322D29]"
+                className="h-10 w-full bg-[#72383D] px-5 text-sm font-semibold uppercase tracking-wide text-white transition duration-300 hover:bg-[#AC9C8D] hover:text-[#322D29]"
               >
                 Subscribe
               </button>
@@ -289,7 +289,7 @@ export default function Footer() {
       {/* Bottom Footer */}
       <div className="border-t border-white/10">
 
-        <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-[4%] py-4 text-center sm:flex-row sm:text-left">
+        <div className="mx-auto flex max-w-300 flex-col items-center justify-between gap-4 px-[4%] py-4 text-center sm:flex-row sm:text-left">
 
           <p className="text-xs text-white/50">
             © 2026 Velora. All rights reserved.

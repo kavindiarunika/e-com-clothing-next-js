@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { SlidersHorizontal, X } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from "lucide-react";
 
 import SearchBar from "@/components/user/shop/SearchBar";
 import FilterSidebar from "@/components/user/shop/FilterSidebar";
@@ -22,6 +22,10 @@ export default function ShopPage() {
 
   const [sortBy, setSortBy] = useState("featured");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 8;
+  const productGridRef = useRef(null);
 
   // =========================
   // Get Final Price
@@ -210,6 +214,32 @@ export default function ShopPage() {
     sortBy,
   ]);
 
+  const pageCount = Math.max(
+    1,
+    Math.ceil(filteredProducts.length / pageSize)
+  );
+  const activePage = Math.min(currentPage, pageCount);
+  const pageProducts = filteredProducts.slice(
+    (activePage - 1) * pageSize,
+    activePage * pageSize
+  );
+  const firstVisibleProduct =
+    filteredProducts.length === 0
+      ? 0
+      : (activePage - 1) * pageSize + 1;
+  const lastVisibleProduct = Math.min(
+    activePage * pageSize,
+    filteredProducts.length
+  );
+  const changePage = (page) => {
+    setCurrentPage(page);
+    productGridRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+  const paginationItems = [activePage];
+
   // =========================
   // Clear Filters
   // =========================
@@ -219,6 +249,7 @@ export default function ShopPage() {
     setSelectedSizes([]);
     setSelectedAvailability("all");
     setSearchTerm("");
+    setCurrentPage(1);
   };
 
   return (
@@ -226,7 +257,7 @@ export default function ShopPage() {
 
       {/* Header */}
       <section className="border-b border-[#D8D0C8] bg-[#EFE9E1]">
-        <div className="mx-auto w-[92%] max-w-[1200px] py-12 md:py-16">
+        <div className="mx-auto w-[92%] max-w-[1200px] py-8 md:py-8">
 
           <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#72383D]">
             Velora Collection
@@ -251,7 +282,10 @@ export default function ShopPage() {
         <div className="mb-8">
           <SearchBar
             value={searchTerm}
-            onChange={setSearchTerm}
+            onChange={(value) => {
+              setSearchTerm(value);
+              setCurrentPage(1);
+            }}
           />
         </div>
 
@@ -271,16 +305,52 @@ export default function ShopPage() {
 
           <SortDropdown
             sortBy={sortBy}
-            setSortBy={setSortBy}
+            setSortBy={(value) => {
+              setSortBy(value);
+              setCurrentPage(1);
+            }}
           />
 
         </div>
 
+
+        {/* Desktop Toolbar */}
+        <div className="mb-6 hidden items-center justify-between md:flex">
+          <div className="flex items-center gap-5">
+            <button
+              type="button"
+              onClick={() => setDesktopFiltersOpen((isOpen) => !isOpen)}
+              aria-expanded={desktopFiltersOpen}
+              aria-controls="shop-filter-sidebar"
+              className={`flex items-center gap-2 border px-4 py-2.5 text-xs font-semibold uppercase tracking-[1px] transition ${
+                desktopFiltersOpen
+                  ? "border-[#72383D] bg-[#72383D] text-white"
+                  : "border-[#D8D0C8] bg-white text-[#322D29] hover:border-[#72383D] hover:text-[#72383D]"
+              }`}
+            >
+              <SlidersHorizontal size={15} />
+              Filters
+            </button>
+
+            <p className="text-sm text-[#6B625C]">
+              {filteredProducts.length}{" "}
+              {filteredProducts.length === 1 ? "product" : "products"}
+            </p>
+          </div>
+
+          <SortDropdown
+            sortBy={sortBy}
+            setSortBy={(value) => {
+              setSortBy(value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
         <div className="flex gap-8">
 
           {/* Desktop Sidebar */}
-          <aside className="hidden w-[220px] shrink-0 md:block">
-
+          {desktopFiltersOpen && (
+            <aside id="shop-filter-sidebar" className="hidden w-[220px] shrink-0 md:block">
             <div className="sticky top-28 bg-white p-6">
 
               <div className="mb-6 flex items-center justify-between">
@@ -301,51 +371,39 @@ export default function ShopPage() {
 
               <FilterSidebar
                 selectedCategory={selectedCategory}
-                setSelectedCategory={
-                  setSelectedCategory
-                }
+                setSelectedCategory={(value) => {
+                  setSelectedCategory(value);
+                  setCurrentPage(1);
+                }}
 
                 selectedPrice={selectedPrice}
-                setSelectedPrice={
-                  setSelectedPrice
-                }
+                setSelectedPrice={(value) => {
+                  setSelectedPrice(value);
+                  setCurrentPage(1);
+                }}
 
                 selectedSizes={selectedSizes}
-                setSelectedSizes={
-                  setSelectedSizes
-                }
+                setSelectedSizes={(value) => {
+                  setSelectedSizes(value);
+                  setCurrentPage(1);
+                }}
 
                 selectedAvailability={
                   selectedAvailability
                 }
-                setSelectedAvailability={
-                  setSelectedAvailability
-                }
+                setSelectedAvailability={(value) => {
+                  setSelectedAvailability(value);
+                  setCurrentPage(1);
+                }}
               />
 
             </div>
 
-          </aside>
+            </aside>
+          )}
 
           {/* Products */}
           <div className="min-w-0 flex-1">
-
-            {/* Product Toolbar */}
-            <div className="mb-6 hidden items-center justify-between md:flex">
-
-              <p className="text-sm text-[#6B625C]">
-                {filteredProducts.length}{" "}
-                {filteredProducts.length === 1
-                  ? "product"
-                  : "products"}
-              </p>
-
-              <SortDropdown
-                sortBy={sortBy}
-                setSortBy={setSortBy}
-              />
-
-            </div>
 
             {/* Mobile Count */}
             <p className="mb-5 text-sm text-[#6B625C] md:hidden">
@@ -357,9 +415,12 @@ export default function ShopPage() {
 
             {/* Product Grid */}
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div
+                ref={productGridRef}
+                className={`grid scroll-mt-28 grid-cols-2 gap-4 ${desktopFiltersOpen ? "md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "md:grid-cols-3 lg:grid-cols-4"}`}
+              >
 
-                {filteredProducts.map((product) => (
+                {pageProducts.map((product) => (
                   <ProductCard
                     key={product.id}
                     product={product}
@@ -388,6 +449,66 @@ export default function ShopPage() {
                 </button>
 
               </div>
+            )}
+
+            {filteredProducts.length > 0 && (
+              <nav
+                aria-label="Product pagination"
+                className="mt-10 flex flex-col items-center justify-between gap-5 border-t border-[#D8D0C8] pt-6 sm:flex-row"
+              >
+                <p className="text-sm text-[#6B625C]">
+                  Showing <span className="font-semibold text-[#322D29]">{firstVisibleProduct}-{lastVisibleProduct}</span> of {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
+                </p>
+
+                <div className="inline-flex items-center gap-1 border border-[#D8D0C8] bg-white p-1 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => changePage(activePage - 1)}
+                    disabled={activePage === 1}
+                    aria-label="Go to previous page"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#72383D] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                  >
+                    <ChevronLeft size={17} />
+                  </button>
+
+                  {paginationItems.map((item) =>
+                    typeof item === "number" ? (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => changePage(item)}
+                        aria-label={`Go to page ${item}`}
+                        aria-current={activePage === item ? "page" : undefined}
+                        className={`h-9 min-w-9 px-3 text-xs font-semibold transition ${
+                          activePage === item
+                            ? "bg-[#72383D] text-white shadow-sm"
+                            : "text-[#322D29] hover:bg-[#F8F5F2] hover:text-[#72383D]"
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    ) : (
+                      <span
+                        key={item}
+                        aria-hidden="true"
+                        className="flex h-9 w-6 items-center justify-center text-sm text-[#9A928C]"
+                      >
+                        ...
+                      </span>
+                    )
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => changePage(activePage + 1)}
+                    disabled={activePage === pageCount}
+                    aria-label="Go to next page"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#72383D] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                  >
+                    <ChevronRight size={17} />
+                  </button>
+                </div>
+              </nav>
             )}
 
           </div>
@@ -445,26 +566,30 @@ export default function ShopPage() {
 
               <FilterSidebar
                 selectedCategory={selectedCategory}
-                setSelectedCategory={
-                  setSelectedCategory
-                }
+                setSelectedCategory={(value) => {
+                  setSelectedCategory(value);
+                  setCurrentPage(1);
+                }}
 
                 selectedPrice={selectedPrice}
-                setSelectedPrice={
-                  setSelectedPrice
-                }
+                setSelectedPrice={(value) => {
+                  setSelectedPrice(value);
+                  setCurrentPage(1);
+                }}
 
                 selectedSizes={selectedSizes}
-                setSelectedSizes={
-                  setSelectedSizes
-                }
+                setSelectedSizes={(value) => {
+                  setSelectedSizes(value);
+                  setCurrentPage(1);
+                }}
 
                 selectedAvailability={
                   selectedAvailability
                 }
-                setSelectedAvailability={
-                  setSelectedAvailability
-                }
+                setSelectedAvailability={(value) => {
+                  setSelectedAvailability(value);
+                  setCurrentPage(1);
+                }}
               />
 
               {/* Apply */}
