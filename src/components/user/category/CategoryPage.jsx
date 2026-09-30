@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 
 import ProductCard from "@/components/user/product/ProductCard";
 import CategoryFilterSidebar from "@/components/user/category/CategoryFilterSidebar";
@@ -11,10 +11,16 @@ import SortDropdown from "@/components/user/shop/SortDropdown";
 
 import products from "@/data/products";
 
-export default function CategoryPage({
-  category,
-  subcategory,
-}) {
+export default function CategoryPage(props) {
+  return (
+    <CategoryPageContent
+      key={`${props.category}-${props.subcategory || ""}`}
+      {...props}
+    />
+  );
+}
+
+function CategoryPageContent({ category, subcategory }) {
   const [selectedSubcategory, setSelectedSubcategory] =
     useState(subcategory || "All");
 
@@ -31,18 +37,14 @@ export default function CategoryPage({
 
   const [sortBy, setSortBy] = useState("featured");
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 8;
+  const productGridRef = useRef(null);
+
   const [mobileFiltersOpen, setMobileFiltersOpen] =
     useState(false);
-
-  // ---------------------------------------
-  // Update URL subcategory
-  // ---------------------------------------
-
-  useEffect(() => {
-    setSelectedSubcategory(
-      subcategory || "All"
-    );
-  }, [subcategory]);
+  const [desktopFiltersOpen, setDesktopFiltersOpen] =
+    useState(false);
 
   // ---------------------------------------
   // Category Products
@@ -236,6 +238,31 @@ export default function CategoryPage({
     sortBy,
   ]);
 
+  const pageCount = Math.max(
+    1,
+    Math.ceil(filteredProducts.length / pageSize)
+  );
+  const activePage = Math.min(currentPage, pageCount);
+  const pageProducts = filteredProducts.slice(
+    (activePage - 1) * pageSize,
+    activePage * pageSize
+  );
+  const firstVisibleProduct =
+    filteredProducts.length === 0
+      ? 0
+      : (activePage - 1) * pageSize + 1;
+  const lastVisibleProduct = Math.min(
+    activePage * pageSize,
+    filteredProducts.length
+  );
+  const changePage = (page) => {
+    setCurrentPage(page);
+    productGridRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   // ---------------------------------------
   // Clear Filters
   // ---------------------------------------
@@ -247,6 +274,7 @@ export default function CategoryPage({
     setSelectedAvailability("all");
     setSearchTerm("");
     setSortBy("featured");
+    setCurrentPage(1);
   };
 
   const categoryDescription = {
@@ -266,12 +294,9 @@ export default function CategoryPage({
 
       <section className="border-b border-[#D8D0C8] bg-[#EFE9E1]">
 
-        <div className="mx-auto w-[92%] max-w-300 py-12 md:py-16">
+        <div className="mx-auto w-[92%] max-w-300 py-8 md:py-8">
 
-          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#72383D]">
-            Velora Collection
-          </p>
-
+          
           <div className="flex items-center gap-2 text-sm text-[#6B625C]">
 
             <Link
@@ -287,11 +312,11 @@ export default function CategoryPage({
 
           </div>
 
-          <h1 className="mt-4 font-serif text-4xl font-medium text-[#322D29] md:text-5xl">
+          <h1 className="mt-3 font-serif text-3xl font-medium text-[#322D29] md:text-4xl">
             {category}
           </h1>
 
-          <p className="mt-4 max-w-xl text-sm leading-6 text-[#6B625C]">
+          <p className="mt-3 max-w-xl text-sm leading-6 text-[#6B625C]">
             {categoryDescription[category]}
           </p>
 
@@ -303,127 +328,137 @@ export default function CategoryPage({
 
       <section className="mx-auto w-[92%] max-w-300 py-10 md:py-14">
 
-        {/* ================= MOBILE FILTER BUTTON ================= */}
+        {/* ================= SEARCH ================= */}
 
-        <div className="mb-6 lg:hidden">
+        <div className="mb-6 w-full">
+          <SearchBar
+            value={searchTerm}
+            onChange={(value) => {
+              setSearchTerm(value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
 
+        {/* ================= MOBILE FILTER + SORT ================= */}
+
+        <div className="mb-6 flex items-center justify-between gap-3 lg:hidden">
           <button
             type="button"
-            onClick={() =>
-              setMobileFiltersOpen(true)
-            }
-            className="flex w-full items-center justify-center gap-2 border border-[#D8D0C8] bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-[#322D29]"
+            onClick={() => setMobileFiltersOpen(true)}
+            className="flex items-center gap-2 border border-[#D8D0C8] bg-white px-4 py-2.5 text-sm text-[#322D29]"
           >
-            <SlidersHorizontal size={16} />
-
+            <SlidersHorizontal size={17} />
             Filters
           </button>
 
+          <SortDropdown
+            sortBy={sortBy}
+            setSortBy={(value) => {
+              setSortBy(value);
+              setCurrentPage(1);
+            }}
+          />
         </div>
 
-        {/* ================= SEARCH + SORT ================= */}
+        {/* Desktop Toolbar */}
+        <div className="mb-6 hidden items-center justify-between lg:flex">
+          <div className="flex items-center gap-5">
+            <button
+              type="button"
+              onClick={() => setDesktopFiltersOpen((isOpen) => !isOpen)}
+              aria-expanded={desktopFiltersOpen}
+              aria-controls="category-filter-sidebar"
+              className={`flex items-center gap-2 border px-4 py-2.5 text-xs font-semibold uppercase tracking-[1px] transition ${
+                desktopFiltersOpen
+                  ? "border-[#72383D] bg-[#72383D] text-white"
+                  : "border-[#D8D0C8] bg-white text-[#322D29] hover:border-[#72383D] hover:text-[#72383D]"
+              }`}
+            >
+              <SlidersHorizontal size={15} />
+              Filters
+            </button>
 
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="w-full md:max-w-105">
-            <SearchBar value={searchTerm} onChange={setSearchTerm} />
+            <p className="text-sm text-[#6B625C]">
+              {filteredProducts.length}{" "}
+              {filteredProducts.length === 1 ? "product" : "products"}
+            </p>
           </div>
 
-          <div className="flex items-center justify-between gap-3 md:justify-end">
+          <div className="flex items-center gap-3">
             <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[1px] text-[#6B625C]">
               Sort by
             </span>
-
-            <SortDropdown sortBy={sortBy} setSortBy={setSortBy} />
+            <SortDropdown
+              sortBy={sortBy}
+              setSortBy={(value) => {
+                setSortBy(value);
+                setCurrentPage(1);
+              }}
+            />
           </div>
-        </div>
-
-        {/* ================= SUBCATEGORY ================= */}
-
-        <div className="mb-10">
-
-          <div className="mb-5 flex items-center justify-between">
-
-            <h2 className="font-serif text-2xl text-[#322D29]">
-              Shop {category}
-            </h2>
-
-            <span className="text-sm text-[#6B625C]">
-              {filteredProducts.length} products
-            </span>
-
-          </div>
-
-          <div className="flex gap-2 overflow-x-auto pb-2">
-
-            {subcategories.map(
-              (subcategoryItem) => (
-                <button
-                  key={subcategoryItem}
-                  type="button"
-                  onClick={() =>
-                    setSelectedSubcategory(
-                      subcategoryItem
-                    )
-                  }
-                  className={`whitespace-nowrap border px-5 py-2.5 text-xs uppercase tracking-[1px] transition ${
-                    selectedSubcategory ===
-                    subcategoryItem
-                      ? "border-[#72383D] bg-[#72383D] text-white"
-                      : "border-[#D8D0C8] bg-white text-[#322D29] hover:border-[#72383D]"
-                  }`}
-                >
-                  {subcategoryItem}
-                </button>
-              )
-            )}
-
-          </div>
-
         </div>
 
         {/* ================= SIDEBAR + PRODUCTS ================= */}
 
-        <div className="flex items-start gap-8">
+        <div className="flex gap-8">
 
           {/* SIDEBAR */}
 
-          <CategoryFilterSidebar
+          {desktopFiltersOpen && (
+            <div id="category-filter-sidebar">
+              <CategoryFilterSidebar
             subcategories={subcategories}
             selectedSubcategory={
               selectedSubcategory
             }
-            setSelectedSubcategory={
-              setSelectedSubcategory
-            }
+            setSelectedSubcategory={(value) => {
+              setSelectedSubcategory(value);
+              setCurrentPage(1);
+            }}
             selectedPrice={
               selectedPrice
             }
-            setSelectedPrice={
-              setSelectedPrice
-            }
+            setSelectedPrice={(value) => {
+              setSelectedPrice(value);
+              setCurrentPage(1);
+            }}
             selectedSizes={
               selectedSizes
             }
-            setSelectedSizes={
-              setSelectedSizes
-            }
+            setSelectedSizes={(value) => {
+              setSelectedSizes(value);
+              setCurrentPage(1);
+            }}
             selectedAvailability={
               selectedAvailability
             }
-            setSelectedAvailability={
-              setSelectedAvailability
-            }
-            onClear={clearFilters}
-          />
+            setSelectedAvailability={(value) => {
+              setSelectedAvailability(value);
+              setCurrentPage(1);
+            }}
+                onClear={clearFilters}
+              />
+            </div>
+          )}
 
           {/* PRODUCTS */}
 
           <div className="min-w-0 flex-1">
 
-            {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+            {/* Mobile Product Count */}
+            <p className="mb-5 text-sm text-[#6B625C] lg:hidden">
+              {filteredProducts.length}{" "}
+              {filteredProducts.length === 1 ? "product" : "products"}
+            </p>
 
-                {filteredProducts.map(
+            {filteredProducts.length > 0 ? (
+              <div
+                ref={productGridRef}
+                className={`grid scroll-mt-28 grid-cols-2 gap-4 md:grid-cols-3 ${desktopFiltersOpen ? "xl:grid-cols-4" : "lg:grid-cols-4"}`}
+              >
+
+                {pageProducts.map(
                   (product) => (
                     <ProductCard
                       key={product.id}
@@ -458,6 +493,47 @@ export default function CategoryPage({
                 </div>
 
               </div>
+            )}
+
+            {filteredProducts.length > 0 && (
+              <nav
+                aria-label="Product pagination"
+                className="mt-10 flex flex-col items-center justify-between gap-5 border-t border-[#D8D0C8] pt-6 sm:flex-row"
+              >
+                <p className="text-sm text-[#6B625C]">
+                  Showing <span className="font-semibold text-[#322D29]">{firstVisibleProduct}-{lastVisibleProduct}</span> of {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
+                </p>
+
+                <div className="inline-flex items-center gap-1 border border-[#D8D0C8] bg-white p-1 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => changePage(activePage - 1)}
+                    disabled={activePage === 1}
+                    aria-label="Go to previous page"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#72383D] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                  >
+                    <ChevronLeft size={17} />
+                  </button>
+
+                  <span
+                    aria-current="page"
+                    aria-label={`Page ${activePage} of ${pageCount}`}
+                    className="flex h-9 min-w-9 items-center justify-center bg-[#72383D] px-3 text-xs font-semibold text-white shadow-sm"
+                  >
+                    {activePage}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => changePage(activePage + 1)}
+                    disabled={activePage === pageCount}
+                    aria-label="Go to next page"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#72383D] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                  >
+                    <ChevronRight size={17} />
+                  </button>
+                </div>
+              </nav>
             )}
 
           </div>
@@ -511,27 +587,31 @@ export default function CategoryPage({
               selectedSubcategory={
                 selectedSubcategory
               }
-              setSelectedSubcategory={
-                setSelectedSubcategory
-              }
+                setSelectedSubcategory={(value) => {
+                  setSelectedSubcategory(value);
+                  setCurrentPage(1);
+                }}
               selectedPrice={
                 selectedPrice
               }
-              setSelectedPrice={
-                setSelectedPrice
-              }
+                setSelectedPrice={(value) => {
+                  setSelectedPrice(value);
+                  setCurrentPage(1);
+                }}
               selectedSizes={
                 selectedSizes
               }
-              setSelectedSizes={
-                setSelectedSizes
-              }
+                setSelectedSizes={(value) => {
+                  setSelectedSizes(value);
+                  setCurrentPage(1);
+                }}
               selectedAvailability={
                 selectedAvailability
               }
-              setSelectedAvailability={
-                setSelectedAvailability
-              }
+                setSelectedAvailability={(value) => {
+                  setSelectedAvailability(value);
+                  setCurrentPage(1);
+                }}
               onClear={clearFilters}
             />
 
