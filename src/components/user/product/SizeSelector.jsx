@@ -8,7 +8,6 @@ export default function SizeSelector({
   selectedSize,
   setSelectedSize,
   category,
-  sizeGuide,
   variants = [],
   selectedColor,
 }) {
@@ -107,7 +106,6 @@ export default function SizeSelector({
         isOpen={isSizeChartOpen}
         onClose={() => setIsSizeChartOpen(false)}
         category={category}
-        sizeGuide={sizeGuide}
       />
     </>
   );

@@ -11,7 +11,9 @@ export default function SizeChart({
   if (!isOpen) return null;
 
   const getChartData = () => {
-    if (category === "Kids") {
+    const normalizedCategory = category?.trim().toLowerCase();
+
+    if (normalizedCategory === "kids") {
       return {
         title: "Kids Size Guide",
         headers: ["Size", "Age", "Chest"],
@@ -23,7 +25,7 @@ export default function SizeChart({
       };
     }
 
-    if (category === "Women") {
+    if (normalizedCategory === "women") {
       return {
         title: "Women's Size Guide",
         headers: ["Size", "Bust", "Waist", "Hips"],
