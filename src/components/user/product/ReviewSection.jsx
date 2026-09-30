@@ -11,6 +11,7 @@ export default function ReviewSection({ product }) {
   const [rating, setRating] = useState(5);
   const [name, setName] = useState("");
   const [comment, setComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Load customer reviews
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function ReviewSection({ product }) {
     Number(product.reviews || 0) + reviews.length;
 
   // Submit review
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name.trim() || !comment.trim()) {
@@ -57,32 +58,50 @@ export default function ReviewSection({ product }) {
       return;
     }
 
-    const newReview = {
-      id: Date.now(),
-      name: name.trim(),
-      rating: Number(rating),
-      comment: comment.trim(),
-      date: new Date().toLocaleDateString(),
-    };
+    setIsSubmitting(true);
 
-    const updatedReviews = [
-      newReview,
-      ...reviews,
-    ];
+    try {
+      const response = await fetch("/api/user/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          item_id: product.id,
+          reviewer_name: name.trim(),
+          rating: Number(rating),
+          review_text: comment.trim(),
+        }),
+      });
+      const data = await response.json();
 
-    localStorage.setItem(
-      reviewKey,
-      JSON.stringify(updatedReviews)
-    );
+      if (!response.ok || !data.success) {
+        alert(data.message || "Failed to submit your review.");
+        return;
+      }
 
-    setReviews(updatedReviews);
+      const newReview = {
+        id: data.review.review_id,
+        name: name.trim(),
+        rating: Number(rating),
+        comment: comment.trim(),
+        date: new Date(data.review.created_at).toLocaleDateString(),
+      };
 
-    // Reset form
-    setName("");
-    setComment("");
-    setRating(5);
+      const updatedReviews = [newReview, ...reviews];
 
-    alert("Thank you! Your review has been added.");
+      localStorage.setItem(reviewKey, JSON.stringify(updatedReviews));
+      setReviews(updatedReviews);
+
+      setName("");
+      setComment("");
+      setRating(5);
+
+      alert("Thank you! Your review has been submitted for review.");
+    } catch (error) {
+      console.error("Failed to submit review:", error);
+      alert("Failed to submit your review. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -238,9 +257,10 @@ export default function ReviewSection({ product }) {
           {/* SUBMIT */}
           <button
             type="submit"
+            disabled={isSubmitting}
             className="bg-[#72383D] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#322D29]"
           >
-            Submit Review
+            {isSubmitting ? "Submitting..." : "Submit Review"}
           </button>
 
         </form>

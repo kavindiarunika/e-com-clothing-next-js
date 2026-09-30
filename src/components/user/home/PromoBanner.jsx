@@ -101,7 +101,7 @@ export default function PromoBanner() {
           {activeOffers.map((offer, index) => (
             <SwiperSlide key={offer.offer_id}>
               <div
-                className="
+                className={`
                   group
                   relative
                   h-[200px]
@@ -110,7 +110,7 @@ export default function PromoBanner() {
                   rounded-md
                   sm:h-[200px]
                   md:h-[200px]
-                "
+                `}
               >
                 {/* =====================================================
                     BACKGROUND IMAGE
@@ -158,14 +158,14 @@ export default function PromoBanner() {
                         />
 
                         <span
-                          className="
+                          className={`
                             text-[9px]
                             font-semibold
                             uppercase
                             tracking-[2px]
                             text-[var(--color-banner)]
                             sm:text-[10px]
-                          "
+                          `}
                         >
                           Velora Exclusive
                         </span>
@@ -174,7 +174,7 @@ export default function PromoBanner() {
                       {/* Title */}
 
                       <h2
-                        className="
+                        className={`
                           truncate
                           text-sm
                           font-semibold
@@ -182,7 +182,7 @@ export default function PromoBanner() {
                           text-[var(--color-white)]
                           sm:text-base
                           md:text-lg
-                        "
+                        `}
                       >
                         {offer.title}
                       </h2>
@@ -191,7 +191,7 @@ export default function PromoBanner() {
 
                       {offer.description && (
                         <p
-                          className="
+                          className={`
                             mt-0.5
                             hidden
                             max-w-[600px]
@@ -201,7 +201,7 @@ export default function PromoBanner() {
                             text-[var(--color-white)]/75
                             sm:block
                             md:text-xs
-                          "
+                          `}
                         >
                           {offer.description}
                         </p>
@@ -215,7 +215,7 @@ export default function PromoBanner() {
                     {offer.link && (
                       <Link
                         href={offer.link}
-                        className="
+                        className={`
                           group/button
                           inline-flex
                           shrink-0
@@ -239,7 +239,7 @@ export default function PromoBanner() {
                           sm:px-5
                           sm:py-3
                           sm:text-[10px]
-                        "
+                        `}
                       >
                         <span className="hidden sm:inline">
                           Shop Collection
@@ -251,11 +251,11 @@ export default function PromoBanner() {
 
                         <ArrowRight
                           size={13}
-                          className="
+                          className={`
                             transition-transform
                             duration-300
                             group-hover/button:translate-x-1
-                          "
+                          `}
                         />
                       </Link>
                     )}
@@ -267,7 +267,7 @@ export default function PromoBanner() {
                 ===================================================== */}
 
                 <div
-                  className="
+                  className={`
                     absolute
                     left-0
                     right-0
@@ -275,11 +275,11 @@ export default function PromoBanner() {
                     z-20
                     h-px
                     bg-[var(--color-white)]/20
-                  "
+                  `}
                 />
 
                 <div
-                  className="
+                  className={`
                     absolute
                     bottom-0
                     left-0
@@ -287,7 +287,7 @@ export default function PromoBanner() {
                     z-20
                     h-px
                     bg-[var(--color-white)]/10
-                  "
+                  `}
                 />
               </div>
             </SwiperSlide>
@@ -301,7 +301,7 @@ export default function PromoBanner() {
             <button
               type="button"
               aria-label="Previous offer"
-              className="
+              className={`
                 promo-prev
                 absolute
                 left-2
@@ -326,7 +326,7 @@ export default function PromoBanner() {
                 hover:text-[var(--color-dark)]
                 sm:flex
                 md:left-3
-              "
+              `}
             >
               <ArrowLeft
                 size={12}
@@ -343,7 +343,7 @@ export default function PromoBanner() {
             <button
               type="button"
               aria-label="Next offer"
-              className="
+              className={`
                 promo-next
                 absolute
                 right-2
@@ -368,7 +368,7 @@ export default function PromoBanner() {
                 hover:text-[var(--color-dark)]
                 sm:flex
                 md:right-3
-              "
+              `}
             >
               <ArrowRight
                 size={12}

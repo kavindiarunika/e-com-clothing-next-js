@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { getImageSource } from "@/lib/productImageSource";
 import { saveProductImage } from "@/lib/productImageStorage";
+import { sanitizeProductDescription } from "@/lib/productDescription";
 
 /* =====================================================
    GET
@@ -244,7 +245,9 @@ export async function POST(request) {
     const formData = await request.formData();
 
     const title = formData.get("title");
-    const description = formData.get("description");
+    const description = sanitizeProductDescription(
+      formData.get("description")
+    );
     const price = formData.get("price") || 0;
     const discount = formData.get("discount") || 0;
     const category_id =
@@ -300,15 +303,24 @@ export async function POST(request) {
     // -----------------------------------------------
 
     const imageFiles = formData.getAll("images");
+    const hasSeparateMainImage = formData.has("main_image");
+    if (hasSeparateMainImage && imageFiles.length > 4) {
+      return NextResponse.json(
+        { error: "You can upload up to 4 additional images" },
+        { status: 400 }
+      );
+    }
+    const mainImageFile = hasSeparateMainImage
+      ? formData.get("main_image")
+      : imageFiles[0];
 
     let mainImagePath = null;
 
     if (
-      imageFiles.length > 0 &&
-      imageFiles[0] instanceof File &&
-      imageFiles[0].size > 0
+      mainImageFile instanceof File &&
+      mainImageFile.size > 0
     ) {
-      mainImagePath = await saveProductImage(imageFiles[0]);
+      mainImagePath = await saveProductImage(mainImageFile);
     }
 
     connection = await pool.getConnection();
@@ -390,7 +402,7 @@ export async function POST(request) {
           itemId,
           imagePath,
           index,
-          index === 0,
+          !hasSeparateMainImage && index === 0,
         ]
       );
     }
@@ -507,7 +519,9 @@ export async function PUT(request) {
     }
 
     const title = formData.get("title");
-    const description = formData.get("description");
+    const description = sanitizeProductDescription(
+      formData.get("description")
+    );
     const price = formData.get("price") || 0;
     const discount = formData.get("discount") || 0;
     const category_id =
@@ -537,6 +551,16 @@ export async function PUT(request) {
     const tagsJSON = JSON.stringify(tagArray);
 
     const imageFiles = formData.getAll("images");
+    const hasSeparateMainImage = formData.has("main_image");
+    if (hasSeparateMainImage && imageFiles.length > 4) {
+      return NextResponse.json(
+        { error: "You can upload up to 4 additional images" },
+        { status: 400 }
+      );
+    }
+    const mainImageFile = hasSeparateMainImage
+      ? formData.get("main_image")
+      : imageFiles[0];
 
     connection = await pool.getConnection();
 
@@ -610,11 +634,10 @@ export async function PUT(request) {
     // -----------------------------------------------
 
     if (
-      imageFiles.length > 0 &&
-      imageFiles[0] instanceof File &&
-      imageFiles[0].size > 0
+      mainImageFile instanceof File &&
+      mainImageFile.size > 0
     ) {
-      const mainImagePath = await saveProductImage(imageFiles[0]);
+      const mainImagePath = await saveProductImage(mainImageFile);
 
       await connection.execute(
         `
@@ -626,6 +649,11 @@ export async function PUT(request) {
           mainImagePath,
           itemId,
         ]
+      );
+    } else if (formData.get("remove_main_image") === "1") {
+      await connection.execute(
+        "UPDATE products SET main_image = NULL WHERE item_id = ?",
+        [itemId]
       );
     }
 

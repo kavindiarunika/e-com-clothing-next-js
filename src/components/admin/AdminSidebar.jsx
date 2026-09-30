@@ -149,7 +149,7 @@ export default function AdminSidebar() {
         </div>
 
         <div>
-          <strong>Clothing Store</strong>
+          <strong>VELORA</strong>
           <span>ADMIN PANEL</span>
         </div>
       </div>

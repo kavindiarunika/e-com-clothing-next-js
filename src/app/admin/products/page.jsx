@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Plus,
   Search,
@@ -9,10 +9,10 @@ import {
   X,
   Image as ImageIcon,
   Star,
-  Flame,
   Package,
   Upload,
 } from "lucide-react";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -31,6 +31,12 @@ export default function ProductsPage() {
   const [editingId, setEditingId] = useState(null);
 
   const [selectedImages, setSelectedImages] = useState([]);
+  const selectedImagePreviewUrls = useRef([]);
+  const [selectedMainImage, setSelectedMainImage] = useState(null);
+  const [selectedMainImagePreview, setSelectedMainImagePreview] = useState(null);
+  const selectedMainImagePreviewUrl = useRef(null);
+  const [currentMainImage, setCurrentMainImage] = useState(null);
+  const [removeCurrentMainImage, setRemoveCurrentMainImage] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
@@ -54,6 +60,15 @@ export default function ProductsPage() {
 
   useEffect(() => {
     loadData();
+  }, []);
+
+  useEffect(() => () => {
+    selectedImagePreviewUrls.current.forEach((previewUrl) =>
+      URL.revokeObjectURL(previewUrl)
+    );
+    if (selectedMainImagePreviewUrl.current) {
+      URL.revokeObjectURL(selectedMainImagePreviewUrl.current);
+    }
   }, []);
 
   async function loadData() {
@@ -84,6 +99,20 @@ export default function ProductsPage() {
   // FORM
   // --------------------------------------------------
 
+  function clearSelectedImages() {
+    selectedImagePreviewUrls.current.forEach((previewUrl) =>
+      URL.revokeObjectURL(previewUrl)
+    );
+    selectedImagePreviewUrls.current = [];
+    setSelectedImages([]);
+    if (selectedMainImagePreviewUrl.current) {
+      URL.revokeObjectURL(selectedMainImagePreviewUrl.current);
+      selectedMainImagePreviewUrl.current = null;
+    }
+    setSelectedMainImage(null);
+    setSelectedMainImagePreview(null);
+  }
+
   function openAddModal() {
     setEditingId(null);
 
@@ -102,7 +131,9 @@ export default function ProductsPage() {
     });
 
     setVariants([]);
-    setSelectedImages([]);
+    clearSelectedImages();
+    setCurrentMainImage(null);
+    setRemoveCurrentMainImage(false);
 
     setShowModal(true);
   }
@@ -122,6 +153,8 @@ export default function ProductsPage() {
       const product = data.product;
 
       setEditingId(product.item_id);
+      setCurrentMainImage(product.main_image || null);
+      setRemoveCurrentMainImage(false);
 
       setForm({
         title: product.title || "",
@@ -154,7 +187,7 @@ export default function ProductsPage() {
         }))
       );
 
-      setSelectedImages([]);
+      clearSelectedImages();
       setShowModal(true);
     } catch (error) {
       console.error(error);
@@ -175,8 +208,68 @@ export default function ProductsPage() {
 
   function handleImages(event) {
     const files = Array.from(event.target.files || []);
+    const additionalImages = files.slice(0, 4);
 
-    setSelectedImages(files);
+    if (files.length > 4) {
+      alert("You can select up to 4 additional images.");
+    }
+
+    selectedImagePreviewUrls.current.forEach((previewUrl) =>
+      URL.revokeObjectURL(previewUrl)
+    );
+
+    const selectedFiles = additionalImages.map((file) => ({
+      file,
+      previewUrl: URL.createObjectURL(file),
+    }));
+
+    selectedImagePreviewUrls.current = selectedFiles.map(
+      (image) => image.previewUrl
+    );
+    setSelectedImages(selectedFiles);
+    event.target.value = "";
+  }
+
+  function removeAdditionalImage(index) {
+    const image = selectedImages[index];
+
+    if (!image) return;
+
+    URL.revokeObjectURL(image.previewUrl);
+    selectedImagePreviewUrls.current =
+      selectedImagePreviewUrls.current.filter(
+        (previewUrl) => previewUrl !== image.previewUrl
+      );
+    setSelectedImages((currentImages) =>
+      currentImages.filter((_, imageIndex) => imageIndex !== index)
+    );
+  }
+
+  function handleMainImage(event) {
+    const file = event.target.files?.[0] || null;
+
+    if (selectedMainImagePreviewUrl.current) {
+      URL.revokeObjectURL(selectedMainImagePreviewUrl.current);
+      selectedMainImagePreviewUrl.current = null;
+    }
+
+    const previewUrl = file ? URL.createObjectURL(file) : null;
+
+    setSelectedMainImage(file);
+    setSelectedMainImagePreview(previewUrl);
+    selectedMainImagePreviewUrl.current = previewUrl;
+    setRemoveCurrentMainImage(false);
+    event.target.value = "";
+  }
+
+  function removeSelectedMainImage() {
+    if (selectedMainImagePreviewUrl.current) {
+      URL.revokeObjectURL(selectedMainImagePreviewUrl.current);
+      selectedMainImagePreviewUrl.current = null;
+    }
+
+    setSelectedMainImage(null);
+    setSelectedMainImagePreview(null);
   }
 
   // --------------------------------------------------
@@ -263,13 +356,18 @@ export default function ProductsPage() {
         "is_best_selling",
         form.is_best_selling ? "1" : "0"
       );
+      formData.append("main_image", selectedMainImage || "");
+      formData.append(
+        "remove_main_image",
+        removeCurrentMainImage ? "1" : "0"
+      );
 
       if (editingId) {
         formData.append("item_id", editingId);
       }
 
       // Product images
-      selectedImages.forEach((file) => {
+      selectedImages.forEach(({ file }) => {
         formData.append("images", file);
       });
 
@@ -291,6 +389,7 @@ export default function ProductsPage() {
       );
 
       // Variant images
+      /*
       variants.forEach((variant, index) => {
         if (variant.image) {
           formData.append(
@@ -298,7 +397,7 @@ export default function ProductsPage() {
             variant.image
           );
         }
-      });
+      });*/
 
       const response = await fetch("/api/admin/products", {
         method: editingId ? "PUT" : "POST",
@@ -641,15 +740,6 @@ export default function ProductsPage() {
                             </span>
                           )}
 
-                          {product.is_best_selling && (
-                            <span title="Best Selling">
-                              <Flame
-                                size={17}
-                                fill="currentColor"
-                              />
-                            </span>
-                          )}
-
                         </div>
                       </td>
 
@@ -768,16 +858,11 @@ export default function ProductsPage() {
                   <div className="form-group full">
                     <label>Description</label>
 
-                    <textarea
-                      rows="4"
+                    <RichTextEditor
                       value={form.description}
-                      onChange={(event) =>
-                        updateForm(
-                          "description",
-                          event.target.value
-                        )
+                      onChange={(value) =>
+                        updateForm("description", value)
                       }
-                      placeholder="Enter product description..."
                     />
                   </div>
 
@@ -988,26 +1073,7 @@ export default function ProductsPage() {
 
                   </label>
 
-                  <label className="checkbox-label">
-
-                    <input
-                      type="checkbox"
-                      checked={form.is_best_selling}
-                      onChange={(event) =>
-                        updateForm(
-                          "is_best_selling",
-                          event.target.checked
-                        )
-                      }
-                    />
-
-                    <span>
-                      <Flame size={16} />
-                      Best Selling
-                    </span>
-
-                  </label>
-
+            
                 </div>
 
               </div>
@@ -1019,9 +1085,9 @@ export default function ProductsPage() {
               <div className="form-section">
 
                 <div className="section-title">
-                  <h3>Product Images</h3>
+                  <h3>Main Image</h3>
                   <span>
-                    Add multiple product images
+                    Choose the primary image shown for this product
                   </span>
                 </div>
 
@@ -1030,7 +1096,71 @@ export default function ProductsPage() {
                   <Upload size={24} />
 
                   <strong>
-                    Click to upload images
+                    Click to upload a main image
+                  </strong>
+
+                  <span>
+                    JPG, PNG or WEBP
+                  </span>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleMainImage}
+                  />
+
+                </label>
+
+                {(selectedMainImagePreview || currentMainImage) &&
+                  !removeCurrentMainImage && (
+                    <div className="product-image-previews">
+                      <div className="product-image-preview">
+                        <img
+                          src={selectedMainImagePreview || currentMainImage}
+                          alt={selectedMainImage?.name || "Main product image"}
+                        />
+                        <span className="product-image-label">Main image</span>
+                        <button
+                          type="button"
+                          aria-label="Remove main image"
+                          title="Remove main image"
+                          onClick={() => {
+                            if (selectedMainImage) {
+                              removeSelectedMainImage();
+                            } else {
+                              setRemoveCurrentMainImage(true);
+                            }
+                          }}
+                        >
+                          <X size={13} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                {removeCurrentMainImage && (
+                  <button
+                    type="button"
+                    className="restore-main-image-button"
+                    onClick={() => setRemoveCurrentMainImage(false)}
+                  >
+                    Undo main image removal
+                  </button>
+                )}
+
+                <div className="section-title">
+                  <h3>Additional Images</h3>
+                  <span>
+                    Add up to 4 images to the product gallery
+                  </span>
+                </div>
+
+                <label className="upload-box">
+
+                  <Upload size={24} />
+
+                  <strong>
+                    Click to upload additional images
                   </strong>
 
                   <span>
@@ -1047,23 +1177,28 @@ export default function ProductsPage() {
                 </label>
 
                 {selectedImages.length > 0 && (
-                  <div className="selected-files">
-
+                  <div className="product-image-previews">
                     {selectedImages.map(
-                      (file, index) => (
+                      ({ file, previewUrl }, index) => (
                         <div
-                          className="selected-file"
+                          className="product-image-preview"
                           key={`${file.name}-${index}`}
                         >
-                          <ImageIcon size={16} />
-
-                          <span>
-                            {file.name}
-                          </span>
+                          <img
+                            src={previewUrl}
+                            alt={file.name}
+                          />
+                          <button
+                            type="button"
+                            aria-label={`Remove ${file.name}`}
+                            title="Remove image"
+                            onClick={() => removeAdditionalImage(index)}
+                          >
+                            <X size={13} />
+                          </button>
                         </div>
                       )
                     )}
-
                   </div>
                 )}
 
@@ -1340,7 +1475,9 @@ export default function ProductsPage() {
                               </select>
                             </div>
 
+
                             {/* IMAGE */}
+                            
                             <div className="form-group">
                               <label>
                                 Variant Image

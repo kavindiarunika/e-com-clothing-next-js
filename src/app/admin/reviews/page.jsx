@@ -132,6 +132,9 @@ export default function ReviewsPage() {
       String(review.user_id || "")
         .toLowerCase()
         .includes(searchValue) ||
+      String(review.reviewer_name || "")
+        .toLowerCase()
+        .includes(searchValue) ||
       String(review.order_id || "")
         .toLowerCase()
         .includes(searchValue) ||
@@ -489,7 +492,7 @@ export default function ReviewsPage() {
               <tr>
                 <th>Review</th>
                 <th>Product</th>
-                <th>User</th>
+                <th>Reviewer</th>
                 <th>Order</th>
                 <th>Rating</th>
                 <th>Status</th>
@@ -566,7 +569,7 @@ export default function ReviewsPage() {
 
                     <td>
                       <span className="review-id">
-                        #{review.user_id}
+                        {review.reviewer_name || (review.user_id ? `#${review.user_id}` : "Guest")}
                       </span>
                     </td>
 
@@ -752,9 +755,9 @@ export default function ReviewsPage() {
               </div>
 
               <div className="review-detail-item">
-                <span>User ID</span>
+                <span>Reviewer</span>
                 <strong>
-                  #{selectedReview.user_id}
+                  {selectedReview.reviewer_name || (selectedReview.user_id ? `#${selectedReview.user_id}` : "Guest")}
                 </strong>
               </div>
 

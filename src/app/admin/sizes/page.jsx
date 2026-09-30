@@ -8,6 +8,7 @@ export default function SizesPage() {
       title="Sizes"
       description="Manage clothing sizes."
       addLabel="Add Size"
+      pageClassName="product-style-crud-page"
       fields={[
         {
           key: "name",

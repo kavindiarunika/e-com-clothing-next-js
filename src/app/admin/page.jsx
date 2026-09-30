@@ -46,9 +46,13 @@ export default function AdminDashboard() {
           setData(dashboardResult.data);
         }
 
-        if (productsResult.success) {
-          setProducts((productsResult.data || []).slice(0, 5));
-        }
+        const productList = Array.isArray(productsResult.products)
+          ? productsResult.products
+          : Array.isArray(productsResult.data)
+            ? productsResult.data
+            : [];
+
+        setProducts(productList.slice(0, 5));
       } catch (error) {
         console.error("Dashboard data error:", error);
       }
@@ -210,7 +214,10 @@ export default function AdminDashboard() {
             <p className="dashboard-empty">No products to display yet.</p>
           ) : (
             products.map((product) => (
-              <div className="recent-product" key={product.product_id}>
+              <div
+                className="recent-product"
+                key={product.item_id || product.product_id || product.id}
+              >
                 <div className="product-mark">
                   <Package size={18} />
                 </div>

@@ -8,6 +8,7 @@ export default function ColorsPage() {
       title="Colors"
       description="Manage available product colors."
       addLabel="Add Color"
+      pageClassName="product-style-crud-page"
       fields={[
         {
           key: "name",
