@@ -61,7 +61,9 @@ export async function GET(_request, { params }) {
       `
       SELECT
         s.name AS size,
+        c.color_id AS color_id,
         c.name AS color,
+        c.hex_code AS color_hex,
         v.stock_quantity AS stock,
         v.price,
         v.discount,
@@ -78,6 +80,8 @@ export async function GET(_request, { params }) {
     const variants = variantRows.map((variant) => ({
       size: variant.size || "",
       color: variant.color || "",
+      color_id: variant.color_id,
+      color_hex: variant.color_hex || "",
       stock: Number(variant.stock) || 0,
       price: Number(variant.price) || 0,
       discount: Number(variant.discount) || 0,
@@ -94,9 +98,11 @@ export async function GET(_request, { params }) {
         variants
           .filter((variant) => variant.color)
           .map((variant) => [
-            variant.color,
+            variant.color_id || variant.color,
             {
+              color_id: variant.color_id || variant.color,
               name: variant.color,
+              hex_code: variant.color_hex,
               image:
                 variant.image ||
                 variants.find((item) => item.color === variant.color)?.image ||

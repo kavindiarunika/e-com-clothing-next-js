@@ -64,25 +64,30 @@ export default function SizeSelector({
         </div>
 
         {/* Sizes */}
-        <select
-          aria-label="Select size"
-          value={selectedSize || ""}
-          onChange={(event) => setSelectedSize(event.target.value)}
-          className="w-full max-w-xs border border-[#D8D0C8] bg-white px-4 py-3 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
-        >
-          <option value="" disabled>
-            Select size
-          </option>
+        <div role="group" aria-label="Select size" className="flex flex-wrap gap-2">
           {sizes.map((size) => {
             const isOutOfStock = getSizeStock(size) <= 0;
+            const isSelected = selectedSize === size;
 
             return (
-              <option key={size} value={size} disabled={isOutOfStock}>
-                {size}{isOutOfStock ? " (Unavailable)" : ""}
-              </option>
+              <button
+                key={size}
+                type="button"
+                onClick={() => setSelectedSize(size)}
+                disabled={isOutOfStock}
+                aria-pressed={isSelected}
+                aria-label={`${size}${isOutOfStock ? ", unavailable" : ""}`}
+                className={`relative flex h-11 min-w-11 items-center justify-center border px-3 text-sm font-medium transition ${
+                  isSelected
+                    ? "border-[#72383D] bg-[#72383D] text-white"
+                    : "border-[#D8D0C8] bg-white text-[#322D29] hover:border-[#72383D]"
+                } disabled:cursor-not-allowed disabled:border-[#E4DED7] disabled:bg-[#F3F0EC] disabled:text-[#B7AFA7] disabled:before:absolute disabled:before:inset-x-1 disabled:before:top-1/2 disabled:before:h-px disabled:before:rotate-[-35deg] disabled:before:bg-[#B7AFA7]`}
+              >
+                {String(size).toUpperCase()}
+              </button>
             );
           })}
-        </select>
+        </div>
 
         {/* Selected Color Info */}
         {selectedColor && (
