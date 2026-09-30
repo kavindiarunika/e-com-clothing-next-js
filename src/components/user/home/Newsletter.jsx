@@ -24,11 +24,11 @@ export default function Newsletter() {
 
   return (
     <section className="w-full bg-[var(--color-white)] py-10 sm:py-14">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-360 px-4 sm:px-6 lg:px-8">
         <div className="grid overflow-hidden rounded-xl bg-[var(--color-bg)] md:grid-cols-2">
 
           {/* ================= IMAGE ================= */}
-          <div className="relative min-h-[260px] sm:min-h-[320px] md:min-h-[350px]">
+          <div className="relative min-h-[240px] sm:min-h-[300px] md:min-h-[330px]">
             <Image
               src="/images/newsletter/promo2.jpg"
               alt="Velora Fashion"
