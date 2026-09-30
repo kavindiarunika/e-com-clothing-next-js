@@ -23,7 +23,7 @@ export default function FeaturedProducts() {
 
         const result = await response.json();
         const products = Array.isArray(result.data)
-          ? result.data.slice(0, 4).map((product) => ({
+          ? result.data.slice(0, 5).map((product) => ({
               id: product.item_id,
               name: product.title,
               category: product.category_name,
@@ -54,16 +54,16 @@ export default function FeaturedProducts() {
   }, []);
 
   return (
-    <section className="bg-[#F8F5F2] px-[4%] py-12 md:py-14">
-      <div className="mx-auto max-w-[1200px]">
+    <section className="bg-[#F8F5F2] px-4 py-10 sm:px-6 md:py-12 lg:px-8">
+      <div className="mx-auto max-w-[1400px]">
 
         {/* Heading */}
         <div className="mb-8 text-left md:mb-10">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
             Curated For You
           </p>
 
-          <h2 className="font-serif text-3xl font-medium tracking-wide text-[#322D29] sm:text-4xl md:text-5xl">
+          <h2 className="font-serif text-3xl font-medium tracking-wide text-[#322D29] sm:text-4xl">
             Featured Collection
           </h2>
 
@@ -73,7 +73,7 @@ export default function FeaturedProducts() {
         </div>
 
         {/* Products */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:gap-4">
           {featuredProducts.map((product) => (
             <ProductCard
               key={product.id}
