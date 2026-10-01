@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from "lucide-react";
 
 import SearchBar from "@/components/user/shop/SearchBar";
@@ -8,9 +8,10 @@ import FilterSidebar from "@/components/user/shop/FilterSidebar";
 import SortDropdown from "@/components/user/shop/SortDropdown";
 import ProductCard from "@/components/user/product/ProductCard";
 
-import products from "@/data/products";
-
 export default function ShopPage() {
+  const [products, setProducts] = useState([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [productLoadError, setProductLoadError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedPrice, setSelectedPrice] = useState("");
@@ -20,12 +21,61 @@ export default function ShopPage() {
   const [selectedAvailability, setSelectedAvailability] =
     useState("all");
 
-  const [sortBy, setSortBy] = useState("featured");
+  const [sortBy, setSortBy] = useState("newest");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
   const productGridRef = useRef(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadProducts() {
+      try {
+        const response = await fetch("/api/user/Product?status=active", {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Failed to load products");
+        }
+
+        const apiProducts = Array.isArray(result.data) ? result.data : [];
+        setProducts(
+          apiProducts.map((product) => ({
+            id: product.item_id,
+            name: product.title,
+            category: product.category_name || "",
+            subcategory: "",
+            price: product.price,
+            discount: product.discount,
+            image: product.image,
+            images: product.image ? [product.image] : [],
+            variants: [],
+            sizes: [],
+            createdAt: product.created_at,
+          }))
+        );
+        setProductLoadError("");
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Shop products error:", error);
+          setProductLoadError("Products could not be loaded. Please try again.");
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoadingProducts(false);
+        }
+      }
+    }
+
+    void loadProducts();
+
+    return () => controller.abort();
+  }, []);
 
   // =========================
   // Get Final Price
@@ -168,6 +218,12 @@ export default function ShopPage() {
     // Sorting
     // =========================
 
+    if (sortBy === "newest") {
+      result.sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    }
+
     // Low to High - FINAL PRICE
     if (sortBy === "price-low") {
       result.sort(
@@ -206,6 +262,7 @@ export default function ShopPage() {
 
     return result;
   }, [
+    products,
     searchTerm,
     selectedCategory,
     selectedPrice,
@@ -414,7 +471,15 @@ export default function ShopPage() {
             </p>
 
             {/* Product Grid */}
-            {filteredProducts.length > 0 ? (
+            {isLoadingProducts ? (
+              <div className="flex min-h-[350px] items-center justify-center bg-white">
+                <p className="text-sm text-[#6B625C]">Loading products...</p>
+              </div>
+            ) : productLoadError ? (
+              <div className="flex min-h-[350px] items-center justify-center bg-white px-6 text-center">
+                <p className="text-sm text-[#72383D]">{productLoadError}</p>
+              </div>
+            ) : filteredProducts.length > 0 ? (
               <div
                 ref={productGridRef}
                 className={`grid scroll-mt-28 grid-cols-2 gap-4 ${desktopFiltersOpen ? "md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "md:grid-cols-3 lg:grid-cols-4"}`}

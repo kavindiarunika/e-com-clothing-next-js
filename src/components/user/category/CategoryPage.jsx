@@ -9,8 +9,6 @@ import CategoryFilterSidebar from "@/components/user/category/CategoryFilterSide
 import SearchBar from "@/components/user/shop/SearchBar";
 import SortDropdown from "@/components/user/shop/SortDropdown";
 
-import products from "@/data/products";
-
 export default function CategoryPage(props) {
   return (
     <CategoryPageContent
@@ -21,6 +19,8 @@ export default function CategoryPage(props) {
 }
 
 function CategoryPageContent({ category, subcategory }) {
+  const [categoryProducts, setCategoryProducts] = useState([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [selectedSubcategory, setSelectedSubcategory] =
     useState(subcategory || "All");
 
@@ -41,6 +41,98 @@ function CategoryPageContent({ category, subcategory }) {
   const pageSize = 8;
   const productGridRef = useRef(null);
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadCategoryProducts() {
+      try {
+        const [categoriesResponse, productsResponse] = await Promise.all([
+          fetch("/api/admin/categories", { signal: controller.signal }),
+          fetch("/api/user/Product?status=active", {
+            signal: controller.signal,
+          }),
+        ]);
+
+        if (!categoriesResponse.ok || !productsResponse.ok) {
+          throw new Error("Failed to load category products");
+        }
+
+        const [allCategories, productsResult] = await Promise.all([
+          categoriesResponse.json(),
+          productsResponse.json(),
+        ]);
+        const activeCategories = Array.isArray(allCategories)
+          ? allCategories.filter((item) => item.status === "active")
+          : [];
+        const rootCategory = activeCategories.find(
+          (item) =>
+            !item.parent_category_id &&
+            item.name?.trim().toLowerCase() === category.toLowerCase()
+        );
+
+        if (!rootCategory) {
+          setCategoryProducts([]);
+          return;
+        }
+
+        const rootCategoryId = Number(rootCategory.category_id);
+        const categoryById = new Map(
+          activeCategories.map((item) => [Number(item.category_id), item])
+        );
+        const visibleCategoryIds = new Set(
+          activeCategories
+            .filter(
+              (item) =>
+                Number(item.category_id) === rootCategoryId ||
+                Number(item.parent_category_id) === rootCategoryId
+            )
+            .map((item) => Number(item.category_id))
+        );
+        const categoryProducts = (Array.isArray(productsResult.data)
+          ? productsResult.data
+          : []
+        )
+          .filter((item) => visibleCategoryIds.has(Number(item.category_id)))
+          .map((item) => {
+            const assignedCategory = categoryById.get(
+              Number(item.category_id)
+            );
+
+            return {
+              id: item.item_id,
+              name: item.title,
+              category,
+              subcategory:
+                Number(item.category_id) === rootCategoryId
+                  ? ""
+                  : assignedCategory?.name || "",
+              price: item.price,
+              discount: item.discount,
+              image: item.image,
+              images: item.image ? [item.image] : [],
+              variants: [],
+              sizes: [],
+            };
+          });
+
+        setCategoryProducts(categoryProducts);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Category products error:", error);
+          setCategoryProducts([]);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoadingProducts(false);
+        }
+      }
+    }
+
+    void loadCategoryProducts();
+
+    return () => controller.abort();
+  }, [category]);
+
   const [mobileFiltersOpen, setMobileFiltersOpen] =
     useState(false);
   const [desktopFiltersOpen, setDesktopFiltersOpen] =
@@ -49,13 +141,6 @@ function CategoryPageContent({ category, subcategory }) {
   // ---------------------------------------
   // Category Products
   // ---------------------------------------
-
-  const categoryProducts = useMemo(() => {
-    return products.filter(
-      (product) =>
-        product.category === category
-    );
-  }, [category]);
 
   // ---------------------------------------
   // Subcategories
@@ -452,7 +537,11 @@ function CategoryPageContent({ category, subcategory }) {
               {filteredProducts.length === 1 ? "product" : "products"}
             </p>
 
-            {filteredProducts.length > 0 ? (
+            {isLoadingProducts ? (
+              <div className="flex min-h-75 items-center justify-center bg-white">
+                <p className="text-sm text-[#6B625C]">Loading products...</p>
+              </div>
+            ) : filteredProducts.length > 0 ? (
               <div
                 ref={productGridRef}
                 className={`grid scroll-mt-28 grid-cols-2 gap-4 md:grid-cols-3 ${desktopFiltersOpen ? "xl:grid-cols-4" : "lg:grid-cols-4"}`}

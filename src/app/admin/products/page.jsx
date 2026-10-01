@@ -100,6 +100,28 @@ export default function ProductsPage() {
     }
   }
 
+  async function loadVariantOptions() {
+    const [sizesResponse, colorsResponse] = await Promise.all([
+      fetch("/api/admin/sizes"),
+      fetch("/api/admin/colors"),
+    ]);
+    const [sizesResult, colorsResult] = await Promise.all([
+      sizesResponse.json(),
+      colorsResponse.json(),
+    ]);
+
+    if (!sizesResponse.ok || !sizesResult.success) {
+      throw new Error(sizesResult.message || "Failed to load sizes");
+    }
+
+    if (!colorsResponse.ok || !colorsResult.success) {
+      throw new Error(colorsResult.message || "Failed to load colors");
+    }
+
+    setSizes(Array.isArray(sizesResult.sizes) ? sizesResult.sizes : []);
+    setColors(Array.isArray(colorsResult.colors) ? colorsResult.colors : []);
+  }
+
   // --------------------------------------------------
   // FORM
   // --------------------------------------------------
@@ -123,6 +145,10 @@ export default function ProductsPage() {
   }
 
   function openAddModal() {
+    void loadVariantOptions().catch((error) => {
+      console.error("Failed to refresh variant options:", error);
+    });
+
     setEditingId(null);
 
     setForm({
@@ -148,6 +174,10 @@ export default function ProductsPage() {
   }
 
   async function openEditModal(productId) {
+    void loadVariantOptions().catch((error) => {
+      console.error("Failed to refresh variant options:", error);
+    });
+
     try {
       const response = await fetch(
         `/api/admin/products?id=${productId}`
@@ -186,6 +216,8 @@ export default function ProductsPage() {
           variant_id: variant.variant_id,
           size_id: variant.size_id || "",
           color_id: variant.color_id || "",
+          color_mode: "catalog",
+          custom_color: "",
           sku: variant.sku || "",
           price: variant.price || "",
           discount: variant.discount || "",
@@ -293,6 +325,8 @@ export default function ProductsPage() {
         variant_id: null,
         size_id: "",
         color_id: "",
+        color_mode: "catalog",
+        custom_color: "",
         sku: "",
         price: "",
         discount: "",
@@ -405,10 +439,63 @@ export default function ProductsPage() {
       });
 
       // Variants
+      const colorIdByHex = new Map(
+        colors
+          .filter((color) => color.hex_code)
+          .map((color) => [
+            color.hex_code.toUpperCase(),
+            color.color_id,
+          ])
+      );
+      const customHexCodes = new Set(
+        variants
+          .filter((variant) => variant.color_mode === "picker")
+          .map((variant) => String(variant.custom_color || "").toUpperCase())
+      );
+
+      for (const hexCode of customHexCodes) {
+        if (!/^#[0-9A-F]{6}$/.test(hexCode)) {
+          throw new Error("Choose a valid color for each picked variant.");
+        }
+
+        if (colorIdByHex.has(hexCode)) continue;
+
+        const colorResponse = await fetch("/api/admin/colors", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: hexCode,
+            hex_code: hexCode,
+            status: "active",
+          }),
+        });
+        const colorResult = await colorResponse.json();
+
+        if (!colorResponse.ok || !colorResult.success) {
+          throw new Error(
+            colorResult.message || "Failed to save the picked color"
+          );
+        }
+
+        colorIdByHex.set(hexCode, colorResult.color_id);
+        setColors((currentColors) => [
+          ...currentColors,
+          {
+            color_id: colorResult.color_id,
+            name: hexCode,
+            hex_code: hexCode,
+            status: "active",
+          },
+        ]);
+      }
+
       const variantData = variants.map((variant) => ({
         variant_id: variant.variant_id || null,
         size_id: variant.size_id || null,
-        color_id: variant.color_id || null,
+        color_id:
+          variant.color_mode === "picker"
+            ? colorIdByHex.get(String(variant.custom_color).toUpperCase())
+            : variant.color_id || null,
         sku: variant.sku || "",
         price: variant.price || form.price,
         discount: variant.discount || form.discount || 0,
@@ -1335,7 +1422,7 @@ export default function ProductsPage() {
                                 {sizes
                                   .filter(
                                     (size) =>
-                                      size.status ===
+                                      String(size.status).toLowerCase() ===
                                       "active"
                                   )
                                   .map((size) => (
@@ -1354,44 +1441,73 @@ export default function ProductsPage() {
                             </div>
 
                             {/* COLOR */}
-                            <div className="form-group">
+                            <div className="form-group variant-color-group">
                               <label>Color</label>
 
-                              <select
-                                value={
-                                  variant.color_id
-                                }
-                                onChange={(event) =>
-                                  updateVariant(
-                                    index,
-                                    "color_id",
-                                    event.target.value
-                                  )
-                                }
-                              >
-                                <option value="">
-                                  Select Color
-                                </option>
+                              <div className="flex items-center gap-2">
+                                <select
+                                  aria-label={`Saved color for variant ${index + 1}`}
+                                  value={variant.color_id}
+                                  onChange={(event) => {
+                                    updateVariant(index, "color_id", event.target.value);
+                                    updateVariant(index, "color_mode", "catalog");
+                                  }}
+                                  style={{ flex: 1, minWidth: 0 }}
+                                >
+                                  <option value="">Select saved color</option>
 
-                                {colors
-                                  .filter(
-                                    (color) =>
-                                      color.status ===
-                                      "active"
-                                  )
-                                  .map((color) => (
-                                    <option
-                                      key={
-                                        color.color_id
-                                      }
-                                      value={
-                                        color.color_id
-                                      }
-                                    >
-                                      {color.name}
-                                    </option>
-                                  ))}
-                              </select>
+                                  {colors
+                                    .filter(
+                                      (color) =>
+                                        String(color.status).toLowerCase() ===
+                                        "active"
+                                    )
+                                    .map((color) => (
+                                      <option
+                                        key={color.color_id}
+                                        value={color.color_id}
+                                      >
+                                        {color.name}
+                                        {color.hex_code ? ` (${color.hex_code})` : ""}
+                                      </option>
+                                    ))}
+                                </select>
+
+                                <input
+                                  type="color"
+                                  aria-label={`Pick color for variant ${index + 1}`}
+                                  title="Choose a custom color"
+                                  value={
+                                    variant.color_mode === "picker"
+                                      ? variant.custom_color || "#000000"
+                                      : colors.find(
+                                          (color) =>
+                                            String(color.color_id) ===
+                                            String(variant.color_id)
+                                        )?.hex_code || "#000000"
+                                  }
+                                  onChange={(event) => {
+                                    updateVariant(index, "custom_color", event.target.value);
+                                    updateVariant(index, "color_mode", "picker");
+                                    updateVariant(index, "color_id", "");
+                                  }}
+                                  style={{
+                                    width: "3.25rem",
+                                    minWidth: "3.25rem",
+                                    height: "2.75rem",
+                                    padding: "4px",
+                                  }}
+                                />
+                                <span className="min-w-16 text-xs font-mono text-[#5D554F]">
+                                  {variant.color_mode === "picker"
+                                    ? variant.custom_color || "#000000"
+                                    : colors.find(
+                                        (color) =>
+                                          String(color.color_id) ===
+                                          String(variant.color_id)
+                                      )?.hex_code || "#000000"}
+                                </span>
+                              </div>
                             </div>
 
                             {/* SKU */}

@@ -17,6 +17,7 @@ export default function ColorsPage() {
         {
           key: "hex_code",
           label: "Color Code",
+          type: "color",
         },
         {
           key: "status",

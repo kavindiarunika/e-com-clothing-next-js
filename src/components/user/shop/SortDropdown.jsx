@@ -10,6 +10,7 @@ export default function SortDropdown({ sortBy, setSortBy }) {
         onChange={(e) => setSortBy(e.target.value)}
         className="appearance-none border border-[#D8D0C8] bg-white py-2.5 pl-4 pr-10 text-sm text-[#322D29] outline-none focus:border-[#72383D]"
       >
+        <option value="newest">Newest</option>
         <option value="featured">Featured</option>
         <option value="price-low">Price: Low to High</option>
         <option value="price-high">Price: High to Low</option>

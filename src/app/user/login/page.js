@@ -36,7 +36,7 @@ export default function LoginPage() {
         ========================= */}
         <div className="relative hidden overflow-hidden lg:block">
           <img
-            src="/images/auth/login.jpg"
+            src="/images/login/login.jpg"
             alt="Velora fashion"
             className="absolute inset-0 h-full w-full object-cover"
           />
