@@ -775,7 +775,7 @@ export default function RegisterPage() {
           <div className="relative hidden overflow-hidden lg:block">
 
             <img
-              src="/images/auth/register.jpg"
+              src="/images/login/register.jpg"
               alt="Velora fashion collection"
               className="absolute inset-0 h-full w-full object-cover"
             />
