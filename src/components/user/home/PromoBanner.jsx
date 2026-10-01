@@ -7,46 +7,18 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
 import "swiper/css";
+import { useEffect, useState } from "react";
 
 const AUTOPLAY_DELAY = 3500;
-
-// =====================================================
-// DEMO OFFERS
-// Later replace this with API data
-// =====================================================
-
-const offers = [
-  {
-    offer_id: 1,
-    title: "New Season Collection",
-    description: "Discover timeless styles made for your everyday look.",
-    banner_image: "/images/banners/banner1.jpg",
-    link: "/user/shop",
-    start_date: "2026-09-01 00:00:00",
-    end_date: "2026-12-31 23:59:59",
-    status: "active",
-  },
-  {
-    offer_id: 2,
-    title: "Women's Collection",
-    description: "Elegant pieces designed to elevate your wardrobe.",
-    banner_image: "/images/banners/banner2.jpg",
-    link: "/user/women",
-    start_date: "2026-09-01 00:00:00",
-    end_date: "2026-12-31 23:59:59",
-    status: "active",
-  },
-  {
-    offer_id: 3,
-    title: "Men's Collection",
-    description: "Modern essentials with a refined Velora touch.",
-    banner_image: "/images/banners/banner3.jpg",
-    link: "/user/men",
-    start_date: "2026-09-01 00:00:00",
-    end_date: "2026-12-31 23:59:59",
-    status: "active",
-  },
+const PROMO_BANNER_IMAGES = [
+  "/images/banners/banner1.jpg",
+  "/images/banners/banner2.jpg",
+  "/images/banners/banner3.jpg",
 ];
+
+function normalizeClassName(className) {
+  return className.trim().replace(/\s+/g, " ");
+}
 
 // =====================================================
 // CHECK OFFER STATUS
@@ -81,6 +53,47 @@ function isOfferActive(offer) {
 // =====================================================
 
 export default function PromoBanner() {
+  const [offers, setOffers] = useState([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadOffers() {
+      try {
+        const response = await fetch("/api/user/offers", {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Failed to load offers");
+        }
+
+        const offerData = Array.isArray(result.data) ? result.data : [];
+        setOffers(
+          offerData
+            .map((offer, index) => ({
+              ...offer,
+              banner_image:
+                PROMO_BANNER_IMAGES[index % PROMO_BANNER_IMAGES.length],
+              link: offer.link || "/user/shop",
+            }))
+            .filter(isOfferActive)
+        );
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Promo offers error:", error);
+          setOffers([]);
+        }
+      }
+    }
+
+    void loadOffers();
+
+    return () => controller.abort();
+  }, []);
+
   const activeOffers = offers.filter(isOfferActive);
 
   if (activeOffers.length === 0) {
@@ -108,14 +121,14 @@ export default function PromoBanner() {
           <SwiperSlide key={offer.offer_id}>
 
             <div
-              className="
+              className={normalizeClassName(`
                 group
                 relative
                 h-[50px]
                 w-full
                 overflow-hidden
                 bg-[var(--color-dark)]
-              "
+              `)}
             >
 
               {/* =====================================================
@@ -126,7 +139,7 @@ export default function PromoBanner() {
                 src={offer.banner_image}
                 alt=""
                 aria-hidden="true"
-                className="
+                className={normalizeClassName(`
                   absolute
                   inset-0
                   h-full
@@ -135,7 +148,7 @@ export default function PromoBanner() {
                   transition-transform
                   duration-[4000ms]
                   group-hover:scale-[1.03]
-                "
+                `)}
               />
 
               {/* =====================================================
@@ -175,7 +188,7 @@ export default function PromoBanner() {
                   {/* Title */}
 
                   <p
-                    className="
+                    className={normalizeClassName(`
                       min-w-0
                       truncate
                       text-center
@@ -185,7 +198,7 @@ export default function PromoBanner() {
                       text-white
                       sm:text-xs
                       md:text-sm
-                    "
+                    `)}
                   >
                     {offer.title}
                   </p>
@@ -197,14 +210,14 @@ export default function PromoBanner() {
                       <span className="hidden h-3 w-px bg-white/25 md:block" />
 
                       <p
-                        className="
+                        className={normalizeClassName(`
                           hidden
                           max-w-md
                           truncate
                           text-[11px]
                           text-white/70
                           lg:block
-                        "
+                        `)}
                       >
                         {offer.description}
                       </p>
@@ -216,7 +229,7 @@ export default function PromoBanner() {
                   {offer.link && (
                     <Link
                       href={offer.link}
-                      className="
+                      className={normalizeClassName(`
                         group/button
                         ml-1
                         inline-flex
@@ -236,7 +249,7 @@ export default function PromoBanner() {
                         hover:border-[var(--color-banner)]
                         hover:text-[var(--color-banner)]
                         sm:text-[10px]
-                      "
+                      `)}
                     >
                       <span className="hidden sm:inline">
                         Shop Now
@@ -249,11 +262,11 @@ export default function PromoBanner() {
                       <ArrowRight
                         size={12}
                         strokeWidth={1.8}
-                        className="
+                        className={normalizeClassName(`
                           transition-transform
                           duration-300
                           group-hover/button:translate-x-1
-                        "
+                        `)}
                       />
                     </Link>
                   )}
@@ -268,12 +281,12 @@ export default function PromoBanner() {
 
               <div className="absolute bottom-0 left-0 z-20 h-[2px] w-full bg-white/10">
                 <div
-                  className="
+                  className={normalizeClassName(`
                     h-full
                     w-1/3
                     bg-[var(--color-banner)]
                     opacity-80
-                  "
+                  `)}
                 />
               </div>
 

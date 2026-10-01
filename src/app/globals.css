@@ -14874,6 +14874,10 @@ product image */
   gap: 14px;
 }
 
+.variant-color-group {
+  grid-column: span 2;
+}
+
 /* =====================================================
    MODAL FOOTER
 ===================================================== */
@@ -14909,6 +14913,10 @@ product image */
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
   }
+
+  .variant-color-group {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 700px) {
@@ -14936,6 +14944,10 @@ product image */
 
   .variant-grid {
     grid-template-columns: 1fr;
+  }
+
+  .variant-color-group {
+    grid-column: auto;
   }
 
   .variant-section-header {

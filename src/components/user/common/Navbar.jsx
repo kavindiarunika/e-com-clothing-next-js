@@ -13,7 +13,6 @@ import {
   ChevronDown,
 } from "lucide-react";
 import Image from "next/image";
-import products from "@/data/products";
 
 export default function Navbar() {
   const router = useRouter();
@@ -21,6 +20,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openCollection, setOpenCollection] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [categories, setCategories] = useState([]);
 
   // =====================================================
   // CART COUNT
@@ -52,6 +52,30 @@ export default function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadCategories = async () => {
+      try {
+        const response = await fetch("/api/admin/categories", {
+          signal: controller.signal,
+        });
+        if (!response.ok) return;
+
+        const data = await response.json();
+        setCategories(Array.isArray(data) ? data : []);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Failed to load collection categories:", error);
+        }
+      }
+    };
+
+    void loadCategories();
+
+    return () => controller.abort();
+  }, []);
+
   // =====================================================
   // CLOSE MOBILE MENU
   // =====================================================
@@ -80,38 +104,25 @@ export default function Navbar() {
   };
 
   // =====================================================
-  // CREATE COLLECTIONS FROM PRODUCTS
+  // CREATE COLLECTIONS FROM ADMIN CATEGORIES
   // =====================================================
 
-  const collections = Object.entries(
-    products.reduce((acc, product) => {
-      const category = product.category;
-      const subcategory = product.subcategory;
-
-      if (!category) return acc;
-
-      if (!acc[category]) {
-        acc[category] = new Set();
-      }
-
-      if (subcategory) {
-        acc[category].add(subcategory);
-      }
-
-      return acc;
-    }, {})
-  ).reduce((acc, [category, subcategories]) => {
-    acc[category] = [...subcategories].map((subcategory) => ({
-      name: subcategory,
-      href: `/user/${category
+  const activeCategories = categories.filter(
+    (category) => category.status === "active"
+  );
+  const collections = activeCategories
+    .filter((category) => !category.parent_category_id)
+    .map((category) => {
+      const categorySlug = category.name
         .toLowerCase()
-        .replace(/\s+/g, "-")}/${subcategory
-        .toLowerCase()
-        .replace(/\s+/g, "-")}`,
-    }));
+        .replace(/\s+/g, "-");
 
-    return acc;
-  }, {});
+      return {
+        id: category.category_id,
+        name: category.name,
+        href: `/user/${categorySlug}`,
+      };
+    });
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#322D29] text-white">
@@ -198,65 +209,18 @@ export default function Navbar() {
               <div className="absolute left-1/2 top-full w-72 -translate-x-1/2 pt-4">
 
                 <div className="overflow-hidden rounded-sm bg-white py-4 text-[#322D29] shadow-xl">
-
-                  {/* Dropdown Header */}
-
-                  <div className="border-b border-[#322D29]/10 px-6 pb-3">
-                    <p className="text-[10px] font-medium uppercase tracking-[2px] text-[#AC9C8D]">
-                      Shop Collection
-                    </p>
-
-                    <p className="mt-1 font-serif text-lg">
-                      Explore Velora
-                    </p>
-                  </div>
-
-                  {/* View All */}
-
-                  <Link
-                    href="/user/shop"
-                    onClick={closeMenu}
-                    className="block px-6 py-3 text-sm font-medium transition hover:bg-[#EFE9E1] hover:text-[#72383D]"
-                  >
-                    View All Products
-                  </Link>
-
-                  {/* Collections */}
-
-                  {Object.entries(collections).map(
-                    ([categoryName, items]) => (
-                      <div key={categoryName}>
+                  {collections.map(({ id, name, href }) => (
+                      <div key={id}>
 
                         {/* Main Category */}
 
                         <Link
-                          href={`/user/${categoryName
-                            .toLowerCase()
-                            .replace(/\s+/g, "-")}`}
+                          href={href}
                           onClick={closeMenu}
                           className="block px-6 pt-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
                         >
-                          {categoryName}
+                          {name}
                         </Link>
-
-                        {/* Subcategories */}
-
-                        {items.length > 0 && (
-                          <div className="pb-2 pt-1">
-
-                            {items.map((item) => (
-                              <Link
-                                key={item.name}
-                                href={item.href}
-                                onClick={closeMenu}
-                                className="block px-6 py-2 text-sm text-[#322D29]/65 transition hover:bg-[#EFE9E1] hover:text-[#72383D]"
-                              >
-                                {item.name}
-                              </Link>
-                            ))}
-
-                          </div>
-                        )}
                       </div>
                     )
                   )}
@@ -427,43 +391,16 @@ export default function Navbar() {
 
               {openCollection && (
                 <div className="pb-3 pl-4">
-
-                  {/* View All */}
-
-                  <Link
-                    href="/user/shop"
-                    onClick={closeMenu}
-                    className="block py-2 text-sm font-medium text-[#AC9C8D]"
-                  >
-                    View All Products
-                  </Link>
-
-                  {/* Categories */}
-
-                  {Object.entries(collections).map(
-                    ([categoryName, items]) => (
-                      <div key={categoryName}>
+                  {collections.map(({ id, name, href }) => (
+                      <div key={id}>
 
                         <Link
-                          href={`/user/${categoryName
-                            .toLowerCase()
-                            .replace(/\s+/g, "-")}`}
+                          href={href}
                           onClick={closeMenu}
                           className="block py-2 text-sm font-medium text-white"
                         >
-                          {categoryName}
+                          {name}
                         </Link>
-
-                        {items.map((item) => (
-                          <Link
-                            key={item.name}
-                            href={item.href}
-                            onClick={closeMenu}
-                            className="block py-1.5 pl-4 text-sm text-white/60 transition hover:text-[#AC9C8D]"
-                          >
-                            {item.name}
-                          </Link>
-                        ))}
 
                       </div>
                     )

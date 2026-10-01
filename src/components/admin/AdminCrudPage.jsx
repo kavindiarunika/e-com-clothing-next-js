@@ -178,7 +178,37 @@ export default function AdminCrudPage({
                 >
                   <label>{field.label}</label>
 
-                  {field.type === "textarea" ? (
+                  {field.type === "color" ? (
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="color"
+                        aria-label={`Choose ${field.label.toLowerCase()}`}
+                        value={
+                          /^#[0-9a-f]{6}$/i.test(form[field.key] || "")
+                            ? form[field.key]
+                            : "#000000"
+                        }
+                        onChange={(e) =>
+                          changeField(field.key, e.target.value)
+                        }
+                        style={{
+                          width: "3.25rem",
+                          minWidth: "3.25rem",
+                          height: "2.75rem",
+                          padding: "4px",
+                        }}
+                      />
+                      <input
+                        type="text"
+                        value={form[field.key] || ""}
+                        placeholder={field.placeholder || "#000000"}
+                        onChange={(e) =>
+                          changeField(field.key, e.target.value)
+                        }
+                        style={{ flex: 1, minWidth: 0 }}
+                      />
+                    </div>
+                  ) : field.type === "textarea" ? (
                     <textarea
                       rows="4"
                       value={form[field.key] || ""}
