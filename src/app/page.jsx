@@ -10,10 +10,10 @@ export default function Home() {
     <main className="min-h-screen bg-[#EFE9E1]">
       <Navbar />
       <HeroBanner />
+      <PromoBanner />
       <CategorySection />
       <FeaturedProducts />
       <NewArrivals />
-      <PromoBanner />
       <Footer />
 
     </main>

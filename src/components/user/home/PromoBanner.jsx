@@ -77,7 +77,9 @@ export default function PromoBanner() {
             .map((offer, index) => ({
               ...offer,
               banner_image:
-                PROMO_BANNER_IMAGES[index % PROMO_BANNER_IMAGES.length],
+                typeof offer.banner_image === "string" && offer.banner_image
+                  ? offer.banner_image
+                  : PROMO_BANNER_IMAGES[index % PROMO_BANNER_IMAGES.length],
               link: offer.link || "/user/shop",
             }))
             .filter(isOfferActive)

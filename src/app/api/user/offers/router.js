@@ -8,6 +8,7 @@ export async function GET() {
         offer_id,
         title,
         description,
+        banner_image,
         link,
         start_date,
         end_date,
@@ -17,10 +18,16 @@ export async function GET() {
       WHERE status = 'active'
       ORDER BY offer_id DESC
     `);
+    const formattedOffers = offers.map((offer) => ({
+      ...offer,
+      banner_image: Buffer.isBuffer(offer.banner_image)
+        ? offer.banner_image.toString("utf8")
+        : offer.banner_image,
+    }));
 
     return NextResponse.json({
       success: true,
-      data: offers,
+      data: formattedOffers,
     });
 
   } catch (error) {
