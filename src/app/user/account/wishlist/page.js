@@ -87,9 +87,13 @@ export default function WishlistPage() {
                 <div className="relative aspect-[3/4] overflow-hidden bg-[#E3DCD1]">
 
                   <img
-                    src={product.images?.[0] || "/images/products/placeholder.webp"}
+                    src={product.images?.[0] || "/images/products/shirt1.webp"}
                     alt={product.name}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = "/images/products/shirt1.webp";
+                    }}
                   />
 
                   <button

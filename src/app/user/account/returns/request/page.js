@@ -25,8 +25,8 @@ function ReturnExchangeRequestContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const orderId = searchParams.get("orderId") || "1001";
-  const orderItemId = searchParams.get("orderItemId") || "1";
+  const orderId = searchParams.get("orderId") || "";
+  const orderItemId = searchParams.get("orderItemId") || "";
 
   const initialType =
     searchParams.get("type") === "exchange"
@@ -49,7 +49,7 @@ function ReturnExchangeRequestContent() {
     "Other",
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!reason) {
@@ -57,39 +57,40 @@ function ReturnExchangeRequestContent() {
       return;
     }
 
-    /*
-      FRONTEND DEMO
+    if (!/^\d+$/.test(orderId) || !/^\d+$/.test(orderItemId)) {
+      alert("Open this request from an item in an existing delivered order.");
+      return;
+    }
 
-      Later send this data to your backend:
+    const userId = Number(localStorage.getItem("velora-user-id") || 1);
 
-      {
-        order_id: orderId,
-        order_item_id: orderItemId,
-        user_id: loggedInUserId,
-        request_type: requestType,
-        reason: reason,
-        description: description
+    try {
+      const response = await fetch("/api/user/returns", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          order_id: Number(orderId),
+          order_item_id: Number(orderItemId),
+          user_id: userId,
+          request_type: requestType,
+          reason,
+          description,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to submit request.");
       }
 
-      The database should create:
-
-      status = "pending"
-
-      requested_at = current timestamp
-    */
-
-    const requestData = {
-      order_id: Number(orderId),
-      order_item_id: Number(orderItemId),
-      request_type: requestType,
-      reason,
-      description,
-      status: "pending",
-    };
-
-    console.log("Return / Exchange Request:", requestData);
-
-    setSubmitted(true);
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Submit return request error:", error);
+      alert(error.message || "Failed to submit request.");
+    }
   };
 
   if (submitted) {

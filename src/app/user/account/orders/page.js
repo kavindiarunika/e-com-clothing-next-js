@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Package,
@@ -12,24 +13,62 @@ import {
 } from "lucide-react";
 
 export default function OrdersPage() {
-  const orders = [
-    {
-      id: "1001",
-      date: "September 22, 2026",
-      total: "Rs. 12,500",
-      status: "Shipped",
-      statusType: "shipped",
-      items: 2,
-    },
-    {
-      id: "1000",
-      date: "September 15, 2026",
-      total: "Rs. 8,900",
-      status: "Delivered",
-      statusType: "delivered",
-      items: 1,
-    },
-  ];
+  const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadOrders = async () => {
+      try {
+        const savedOrders = JSON.parse(
+          localStorage.getItem("velora-orders") || "[]"
+        );
+        const savedById = new Map(
+          savedOrders.map((order) => [
+            String(order.id).replace(/^VELORA-/, ""),
+            order,
+          ])
+        );
+        const orderIds = [...new Set(savedById.keys())].filter((id) => /^\d+$/.test(id));
+
+        const loadedOrders = await Promise.all(
+          orderIds.map(async (id) => {
+            const [orderResponse, itemsResponse] = await Promise.all([
+              fetch(`/api/user/orders/${id}`),
+              fetch(`/api/user/order-items?order_id=${id}`),
+            ]);
+
+            if (!orderResponse.ok) return null;
+
+            const orderPayload = await orderResponse.json();
+            const itemsPayload = itemsResponse.ok
+              ? await itemsResponse.json()
+              : { data: [] };
+            const order = orderPayload.data;
+            const status = String(order.order_status || "pending").toLowerCase();
+
+            return {
+              id: String(order.order_id),
+              date: new Date(order.order_date || order.created_at).toLocaleDateString(),
+              total: `Rs. ${Number(order.total_amount || 0).toLocaleString()}`,
+              status: status.charAt(0).toUpperCase() + status.slice(1),
+              statusType: status,
+              items: Array.isArray(itemsPayload.data) ? itemsPayload.data.length : 0,
+              savedOrder: savedById.get(id),
+            };
+          })
+        );
+
+        setOrders(loadedOrders.filter(Boolean));
+      } catch (error) {
+        console.error("Load customer orders error:", error);
+        setOrders([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadOrders();
+  }, []);
 
   return (
     <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
@@ -80,6 +119,12 @@ export default function OrdersPage() {
 
         {/* ORDERS */}
         <div className="space-y-5">
+
+          {isLoading && (
+            <p className="py-8 text-center text-sm text-[#6B625C]">
+              Loading your orders...
+            </p>
+          )}
 
           {orders.map((order) => (
 
@@ -228,7 +273,7 @@ export default function OrdersPage() {
         </div>
 
         {/* EMPTY STATE - OPTIONAL */}
-        {orders.length === 0 && (
+        {!isLoading && orders.length === 0 && (
           <div className="border border-[#D8D0C8] bg-[#F8F5F1] px-6 py-16 text-center">
 
             <Package

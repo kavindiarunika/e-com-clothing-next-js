@@ -10,6 +10,7 @@ export default function CheckoutPage() {
 
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -56,7 +57,7 @@ export default function CheckoutPage() {
   const total = subtotal + (cart.length > 0 ? shippingCost : 0);
 
   // Place order
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
     if (cart.length === 0) {
@@ -64,7 +65,6 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Basic validation
     if (
       !formData.firstName ||
       !formData.lastName ||
@@ -78,39 +78,83 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Create frontend order
-    const order = {
-      id: `VELORA-${Date.now()}`,
-      customer: formData,
-      items: cart,
-      delivery: "Standard Delivery",
-      shippingCost,
-      paymentMethod: "Cash on Delivery",
-      subtotal,
-      total,
-      status: "Pending",
-      createdAt: new Date().toISOString(),
-    };
+    setIsSubmitting(true);
 
-    // Save order locally for now
-    const existingOrders =
-      JSON.parse(localStorage.getItem("velora-orders")) || [];
+    try {
+      const response = await fetch("/api/user/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: cart,
+          subtotal,
+          discount: 0,
+          shippingFee: shippingCost,
+          paymentMethod: "Cash on Delivery",
+          paymentStatus: "pending",
+          orderStatus: "pending",
+          shippingAddress: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            district: formData.district,
+            postalCode: formData.postalCode,
+          },
+          billingAddress: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            district: formData.district,
+            postalCode: formData.postalCode,
+          },
+        }),
+      });
 
-    localStorage.setItem(
-      "velora-orders",
-      JSON.stringify([...existingOrders, order])
-    );
+      const data = await response.json();
 
-    // Clear cart
-    localStorage.removeItem("velora-cart");
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to place order.");
+      }
 
-    // Success message
-    alert(
-      `Order placed successfully!\n\nOrder ID: ${order.id}\nPayment: Cash on Delivery`
-    );
+      const order = {
+        id: String(data.orderId),
+        customer: formData,
+        items: cart,
+        delivery: "Standard Delivery",
+        shippingCost,
+        paymentMethod: "Cash on Delivery",
+        subtotal,
+        total,
+        status: "Pending",
+        createdAt: new Date().toISOString(),
+      };
 
-    // Go to home
-    router.push("/user");
+      const existingOrders =
+        JSON.parse(localStorage.getItem("velora-orders")) || [];
+
+      localStorage.setItem(
+        "velora-orders",
+        JSON.stringify([...existingOrders, order])
+      );
+
+      localStorage.removeItem("velora-cart");
+
+      alert(
+        `Order placed successfully!\n\nOrder ID: ${order.id}\nPayment: Cash on Delivery`
+      );
+
+      router.push("/user/account/orders");
+    } catch (error) {
+      console.error("Place order error:", error);
+      alert(error.message || "Failed to place order.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isLoading) {

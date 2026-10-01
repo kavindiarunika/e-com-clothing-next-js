@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import {
   ArrowLeft,
@@ -14,55 +15,33 @@ import {
 } from "lucide-react";
 
 export default function ReturnsPage() {
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Demo data
-  // Later replace this with API data.
-  const requests = [
-    {
-      return_id: 1,
-      order_id: 1001,
-      order_item_id: 1,
-      request_type: "return",
-      reason: "Wrong size",
-      description: "The shirt is too large for me.",
-      status: "pending",
-      requested_at: "September 24, 2026",
-      processed_at: null,
-    },
-    {
-      return_id: 2,
-      order_id: 1000,
-      order_item_id: 3,
-      request_type: "exchange",
-      reason: "Wrong color",
-      description: "I would like to exchange this item for another color.",
-      status: "approved",
-      requested_at: "September 20, 2026",
-      processed_at: "September 21, 2026",
-    },
-    {
-      return_id: 3,
-      order_id: 998,
-      order_item_id: 2,
-      request_type: "return",
-      reason: "Damaged item",
-      description: "The product arrived damaged.",
-      status: "completed",
-      requested_at: "September 10, 2026",
-      processed_at: "September 13, 2026",
-    },
-    {
-      return_id: 4,
-      order_id: 997,
-      order_item_id: 4,
-      request_type: "exchange",
-      reason: "Wrong size",
-      description: "Requested a different size.",
-      status: "rejected",
-      requested_at: "September 8, 2026",
-      processed_at: "September 9, 2026",
-    },
-  ];
+  useEffect(() => {
+    const userId = Number(localStorage.getItem("velora-user-id") || 1);
+
+    const loadRequests = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/user/returns?user_id=${userId}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load return requests");
+        }
+
+        setRequests(Array.isArray(data.returns) ? data.returns : []);
+      } catch (error) {
+        console.error("Load user returns error:", error);
+        setRequests([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRequests();
+  }, []);
 
   const getStatusStyle = (status) => {
 
@@ -176,7 +155,11 @@ export default function ReturnsPage() {
         {/* REQUESTS */}
         <div className="space-y-5">
 
-          {requests.length === 0 ? (
+          {loading ? (
+            <div className="border border-[#D8D0C8] bg-[#F8F5F1] p-12 text-center">
+              <p className="text-sm text-[#6B625C]">Loading your return requests...</p>
+            </div>
+          ) : requests.length === 0 ? (
 
             <div className="border border-[#D8D0C8] bg-[#F8F5F1] p-12 text-center">
 

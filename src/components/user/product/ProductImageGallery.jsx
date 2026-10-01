@@ -9,6 +9,8 @@ export default function ProductImageGallery({
   selectedColor,
 }) {
   const [selectedImage, setSelectedImage] = useState(0);
+  const fallbackImage = "/images/products/shirt1.webp";
+  const displayImages = images?.length ? images : [fallbackImage];
 
   // Change image when color changes
   useEffect(() => {
@@ -28,7 +30,7 @@ export default function ProductImageGallery({
 
       {/* Thumbnail Images */}
       <div className="flex gap-3 overflow-x-auto md:w-[90px] md:flex-col">
-        {images.map((image, index) => (
+        {displayImages.map((image, index) => (
           <button
             key={index}
             type="button"
@@ -45,6 +47,10 @@ export default function ProductImageGallery({
               fill
               sizes="80px"
               className="object-cover"
+              onError={(event) => {
+                event.currentTarget.onerror = null;
+                event.currentTarget.src = fallbackImage;
+              }}
             />
           </button>
         ))}
@@ -53,12 +59,16 @@ export default function ProductImageGallery({
       {/* Main Image */}
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-white md:flex-1">
         <Image
-          src={images[selectedImage]}
+          src={displayImages[selectedImage] || displayImages[0]}
           alt={productName}
           fill
           priority
           sizes="(max-width: 768px) 100vw, 50vw"
           className="cursor-zoom-in object-cover transition duration-500 hover:scale-110"
+          onError={(event) => {
+            event.currentTarget.onerror = null;
+            event.currentTarget.src = fallbackImage;
+          }}
         />
       </div>
 

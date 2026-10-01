@@ -9,6 +9,8 @@ export default function CartItem({
   onDecrease,
   onRemove,
 }) {
+  const fallbackImage = "/images/products/shirt1.webp";
+
   // Safely get color name
   const colorName =
     typeof item.color === "object"
@@ -20,11 +22,15 @@ export default function CartItem({
       {/* Image */}
       <div className="relative h-28 w-24 shrink-0 overflow-hidden bg-white sm:h-32 sm:w-28">
         <Image
-          src={item.image}
+          src={item.image || fallbackImage}
           alt={item.name || "Product"}
           fill
           sizes="112px"
           className="object-cover"
+          onError={(event) => {
+            event.currentTarget.onerror = null;
+            event.currentTarget.src = fallbackImage;
+          }}
         />
       </div>
 
