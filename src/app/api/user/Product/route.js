@@ -11,6 +11,11 @@ export async function GET(req) {
     const status = searchParams.get('status'); // optional filter: active/inactive/out_of_stock
     const category_id = searchParams.get('category_id'); // optional filter
     const featured = searchParams.get('featured'); // optional: "1" or "0"
+    const [productColumnRows] = await db.query("SHOW COLUMNS FROM products");
+    const productColumns = new Set(productColumnRows.map((column) => column.Field));
+    const productSizeId = productColumns.has("size_id") ? "p.size_id" : "NULL";
+    const productColorId = productColumns.has("color_id") ? "p.color_id" : "NULL";
+    const productQty = productColumns.has("qty") ? "p.qty" : "0";
 
     let query = `
       SELECT
@@ -20,12 +25,12 @@ export async function GET(req) {
         p.price,
         p.discount,
         p.category_id,
-        p.qty,
-        p.size_id,
-        p.color_id,
-        default_size.name AS default_size,
-        default_color.name AS default_color,
-        default_color.hex_code AS default_color_hex,
+        ${productSizeId} AS size_id,
+        ${productColorId} AS color_id,
+        ${productQty} AS product_qty,
+        ${productColumns.has("size_id") ? "default_size.name" : "NULL"} AS default_size,
+        ${productColumns.has("color_id") ? "default_color.name" : "NULL"} AS default_color,
+        ${productColumns.has("color_id") ? "default_color.hex_code" : "NULL"} AS default_color_hex,
         c.name AS category_name,
         p.sku,
         p.brand,
@@ -38,8 +43,8 @@ export async function GET(req) {
         p.main_image
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.category_id
-      LEFT JOIN sizes default_size ON p.size_id = default_size.size_id
-      LEFT JOIN colors default_color ON p.color_id = default_color.color_id
+      ${productColumns.has("size_id") ? "LEFT JOIN sizes default_size ON p.size_id = default_size.size_id" : ""}
+      ${productColumns.has("color_id") ? "LEFT JOIN colors default_color ON p.color_id = default_color.color_id" : ""}
       WHERE 1 = 1
     `;
     const params = [];
@@ -101,8 +106,11 @@ export async function GET(req) {
     // Attach a URL to fetch the main image instead of embedding the blob
     const data = products.map((product) => {
       const variants = variantsByProduct.get(product.item_id) || [];
+      const totalStock = variants.reduce((total, variant) => total + variant.stock, 0);
+      const { product_qty: fallbackQty, ...productData } = product;
       return {
-        ...product,
+        ...productData,
+        qty: variants.length ? totalStock : Number(fallbackQty) || 0,
         image: getImageSource(product.main_image),
         main_image: undefined,
         variants,
@@ -126,9 +134,7 @@ export async function GET(req) {
             ]
           ).values(),
         ],
-        total_stock: variants.length > 0
-          ? variants.reduce((total, variant) => total + variant.stock, 0)
-          : Number(product.qty) || 0,
+        total_stock: variants.length ? totalStock : Number(fallbackQty) || 0,
       };
     });
 

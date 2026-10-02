@@ -4,6 +4,11 @@ import { getImageSource } from "@/lib/productImageSource";
 import { saveProductImage } from "@/lib/productImageStorage";
 import { sanitizeProductDescription } from "@/lib/productDescription";
 
+async function getProductColumns(db = pool) {
+  const [columns] = await db.query("SHOW COLUMNS FROM products");
+  return new Set(columns.map((column) => column.Field));
+}
+
 /* =====================================================
    GET
 ===================================================== */
@@ -12,6 +17,7 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    const productColumns = await getProductColumns();
 
     // -----------------------------------------------
     // GET SINGLE PRODUCT
@@ -70,6 +76,18 @@ export async function GET(request) {
       const product = products[0];
 
       product.main_image = getImageSource(product.main_image);
+      for (const column of ["offer_id", "size_id", "color_id"]) {
+        product[column] ??= null;
+      }
+      const activeVariants = variants.filter(
+        (variant) => variant.status === "active"
+      );
+      product.qty = activeVariants.length
+        ? activeVariants.reduce(
+            (total, variant) => total + (Number(variant.stock_quantity) || 0),
+            0
+          )
+        : Number(product.qty) || 0;
 
       const convertedVariants = variants.map(
         (variant) => ({
@@ -103,6 +121,19 @@ export async function GET(request) {
     // GET ALL PRODUCTS
     // -----------------------------------------------
 
+    const activeVariantCount =
+      "COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END)";
+    const activeVariantStock =
+      "COALESCE(SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END), 0)";
+    const totalStock = productColumns.has("qty")
+      ? `CASE WHEN ${activeVariantCount} > 0 THEN ${activeVariantStock} ELSE p.qty END`
+      : activeVariantStock;
+    const optionalProductFields = ["offer_id", "size_id", "color_id"]
+      .map((column) =>
+        `${productColumns.has(column) ? `p.${column}` : "NULL"} AS ${column}`
+      )
+      .join(",\n        ");
+
     const [products] = await pool.query(
       `
       SELECT
@@ -115,10 +146,8 @@ export async function GET(request) {
         p.category_id,
         p.sku,
         p.brand,
-        p.qty,
-        p.offer_id,
-        p.size_id,
-        p.color_id,
+        ${totalStock} AS qty,
+        ${optionalProductFields},
         p.tags,
         p.status,
         p.is_featured,
@@ -131,23 +160,11 @@ export async function GET(request) {
         COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END)
           AS variant_count,
 
-        CASE
-          WHEN COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END) > 0
-            THEN COALESCE(SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END), 0)
-          ELSE p.qty
-        END AS total_stock,
+        ${totalStock} AS total_stock,
 
-        CASE
-          WHEN COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END) > 0
-            THEN COALESCE(SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END), 0)
-          ELSE p.qty
-        END AS stock,
+        ${totalStock} AS stock,
 
-        CASE
-          WHEN COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END) > 0
-            THEN COALESCE(SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END), 0)
-          ELSE p.qty
-        END AS stock_quantity
+        ${totalStock} AS stock_quantity
 
       FROM products p
 
@@ -359,48 +376,31 @@ export async function POST(request) {
     // INSERT PRODUCT
     // -----------------------------------------------
 
-    const [productResult] =
-      await connection.execute(
-        `
-        INSERT INTO products (
-          title,
-          description,
-          main_image,
-          price,
-          discount,
-          category_id,
-          sku,
-          brand,
-          qty,
-          tags,
-          offer_id,
-          size_id,
-          color_id,
-          status,
-          is_featured,
-          is_best_selling
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `,
-        [
-          title.trim(),
-          description || null,
-          mainImagePath,
-          Number(price),
-          Number(discount),
-          category_id || null,
-          sku || null,
-          brand || null,
-          qty,
-          tagsJSON,
-          offerId,
-          sizeId,
-          colorId,
-          status,
-          is_featured,
-          is_best_selling,
-        ]
-      );
+    const productColumns = await getProductColumns(connection);
+    const productFields = [
+      ["title", title.trim()],
+      ["description", description || null],
+      ["main_image", mainImagePath],
+      ["price", Number(price)],
+      ["discount", Number(discount)],
+      ["category_id", category_id || null],
+      ["sku", sku || null],
+      ["brand", brand || null],
+      ["qty", qty],
+      ["tags", tagsJSON],
+      ["offer_id", offerId],
+      ["size_id", sizeId],
+      ["color_id", colorId],
+      ["status", status],
+      ["is_featured", is_featured],
+      ["is_best_selling", is_best_selling],
+    ].filter(([column]) => productColumns.has(column));
+
+    const [productResult] = await connection.execute(
+      `INSERT INTO products (${productFields.map(([column]) => column).join(", ")})
+       VALUES (${productFields.map(() => "?").join(", ")})`,
+      productFields.map(([, value]) => value)
+    );
 
     const itemId = productResult.insertId;
 
@@ -643,45 +643,30 @@ export async function PUT(request) {
     // UPDATE PRODUCT
     // -----------------------------------------------
 
+    const productColumns = await getProductColumns(connection);
+    const productFields = [
+      ["title", title.trim()],
+      ["description", description || null],
+      ["price", Number(price)],
+      ["discount", Number(discount)],
+      ["category_id", category_id || null],
+      ["sku", sku || null],
+      ["brand", brand || null],
+      ["qty", qty],
+      ["tags", tagsJSON],
+      ["offer_id", offerId],
+      ["size_id", sizeId],
+      ["color_id", colorId],
+      ["status", status],
+      ["is_featured", is_featured],
+      ["is_best_selling", is_best_selling],
+    ].filter(([column]) => productColumns.has(column));
+
     await connection.execute(
-      `
-      UPDATE products
-      SET
-        title = ?,
-        description = ?,
-        price = ?,
-        discount = ?,
-        category_id = ?,
-        sku = ?,
-        brand = ?,
-        qty = ?,
-        tags = ?,
-        offer_id = ?,
-        size_id = ?,
-        color_id = ?,
-        status = ?,
-        is_featured = ?,
-        is_best_selling = ?
-      WHERE item_id = ?
-      `,
-      [
-        title.trim(),
-        description || null,
-        Number(price),
-        Number(discount),
-        category_id || null,
-        sku || null,
-        brand || null,
-        qty,
-        tagsJSON,
-        offerId,
-        sizeId,
-        colorId,
-        status,
-        is_featured,
-        is_best_selling,
-        itemId,
-      ]
+      `UPDATE products
+       SET ${productFields.map(([column]) => `${column} = ?`).join(", ")}
+       WHERE item_id = ?`,
+      [...productFields.map(([, value]) => value), itemId]
     );
 
     // -----------------------------------------------

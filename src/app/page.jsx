@@ -6,11 +6,6 @@ import Newsletter from "../components/user/home/Newsletter";
 import PromoBanner from "../components/user/home/PromoBanner";
 import Navbar from "../components/user/common/Navbar";
 import Footer from "../components/user/common/Footer";
-<<<<<<< HEAD
-import Newsletter from "../components/user/home/Newsletter";
-=======
-
->>>>>>> e6c10af13d312fa6054369bd5412885338f96e73
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#EFE9E1]">

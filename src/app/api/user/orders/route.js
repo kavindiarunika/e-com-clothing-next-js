@@ -178,7 +178,7 @@ export async function POST(request) {
 
       if (!variantId) {
         const [simpleProducts] = await connection.execute(
-          `SELECT p.item_id, p.qty, p.price, p.discount
+          `SELECT p.item_id, 0 AS qty, p.price, p.discount
            FROM products p
            WHERE p.item_id = ?
              AND p.status = 'active'
@@ -227,19 +227,6 @@ export async function POST(request) {
           lineTotal,
           stockAfter: stock - item.quantity,
         });
-
-        const [updateResult] = await connection.execute(
-          `UPDATE products SET qty = qty - ?
-           WHERE item_id = ? AND qty >= ?`,
-          [item.quantity, item.productId, item.quantity]
-        );
-        if (updateResult.affectedRows !== 1) {
-          await connection.rollback();
-          return NextResponse.json(
-            { success: false, message: "Stock changed while placing your order. Please try again." },
-            { status: 409 }
-          );
-        }
 
         continue;
       }

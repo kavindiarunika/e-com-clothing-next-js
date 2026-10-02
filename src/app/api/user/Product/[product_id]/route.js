@@ -16,6 +16,9 @@ export async function GET(_request, { params }) {
       );
     }
 
+    const [productColumnRows] = await db.query("SHOW COLUMNS FROM products");
+    const productColumns = new Set(productColumnRows.map((column) => column.Field));
+
     const [products] = await db.query(
       `
       SELECT
@@ -26,12 +29,12 @@ export async function GET(_request, { params }) {
         p.price,
         p.discount,
         p.category_id,
-        p.qty,
-        p.size_id,
-        p.color_id,
-        default_size.name AS default_size,
-        default_color.name AS default_color,
-        default_color.hex_code AS default_color_hex,
+        ${productColumns.has("size_id") ? "p.size_id" : "NULL"} AS size_id,
+        ${productColumns.has("color_id") ? "p.color_id" : "NULL"} AS color_id,
+        ${productColumns.has("qty") ? "p.qty" : "0"} AS product_qty,
+        ${productColumns.has("size_id") ? "default_size.name" : "NULL"} AS default_size,
+        ${productColumns.has("color_id") ? "default_color.name" : "NULL"} AS default_color,
+        ${productColumns.has("color_id") ? "default_color.hex_code" : "NULL"} AS default_color_hex,
         c.name AS category_name,
         p.sku,
         p.brand,
@@ -40,8 +43,8 @@ export async function GET(_request, { params }) {
         p.is_featured
       FROM products p
       LEFT JOIN categories c ON c.category_id = p.category_id
-      LEFT JOIN sizes default_size ON p.size_id = default_size.size_id
-      LEFT JOIN colors default_color ON p.color_id = default_color.color_id
+      ${productColumns.has("size_id") ? "LEFT JOIN sizes default_size ON p.size_id = default_size.size_id" : ""}
+      ${productColumns.has("color_id") ? "LEFT JOIN colors default_color ON p.color_id = default_color.color_id" : ""}
       WHERE p.item_id = ? AND p.status = 'active'
       LIMIT 1
       `,
@@ -133,11 +136,17 @@ export async function GET(_request, { params }) {
       ...variants.map((variant) => variant.size),
       product.default_size,
     ].filter(Boolean))];
+    const variantStock = variants.reduce(
+      (total, variant) => total + variant.stock,
+      0
+    );
+    const { product_qty: fallbackQty, ...productData } = product;
 
     return NextResponse.json({
       success: true,
       product: {
-        ...product,
+        ...productData,
+        qty: variants.length ? variantStock : Number(fallbackQty) || 0,
         description: sanitizeProductDescription(product.description),
         id: product.item_id,
         name: product.title,
