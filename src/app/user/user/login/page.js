@@ -16,8 +16,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +58,7 @@ export default function LoginPage() {
         ========================= */}
         <div className="relative hidden overflow-hidden lg:block">
           <img
-            src="/images/login/login.jpg"
+            src="/images/auth/login.jpg"
             alt="Velora fashion"
             className="absolute inset-0 h-full w-full object-cover"
           />

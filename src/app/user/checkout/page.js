@@ -11,6 +11,10 @@ export default function CheckoutPage() {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+<<<<<<< HEAD
+  const [orderError, setOrderError] = useState("");
+=======
+>>>>>>> f33283f0dc11ce512ed80d94b046891c1b66d125
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -30,11 +34,19 @@ export default function CheckoutPage() {
 
   // Load cart
   useEffect(() => {
-    const savedCart =
-      JSON.parse(localStorage.getItem("velora-cart")) || [];
+    const timeoutId = window.setTimeout(() => {
+      let savedCart = [];
+      try {
+        savedCart = JSON.parse(localStorage.getItem("velora-cart") || "[]");
+      } catch {
+        savedCart = [];
+      }
 
-    setCart(savedCart);
-    setIsLoading(false);
+      setCart(Array.isArray(savedCart) ? savedCart : []);
+      setIsLoading(false);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, []);
 
   // Handle form changes
@@ -59,6 +71,7 @@ export default function CheckoutPage() {
   // Place order
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
+    setOrderError("");
 
     if (cart.length === 0) {
       alert("Your cart is empty.");
@@ -83,6 +96,28 @@ export default function CheckoutPage() {
     try {
       const response = await fetch("/api/user/orders", {
         method: "POST",
+<<<<<<< HEAD
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: cart,
+          shippingAddress: formData,
+        }),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to place your order.");
+      }
+
+      localStorage.removeItem("velora-cart");
+      window.dispatchEvent(new Event("velora-cart-updated"));
+      alert(
+        `Order placed successfully!\n\nOrder ID: ${result.data.order_id}\nPayment: Cash on Delivery`
+      );
+      router.push("/user");
+    } catch (error) {
+      setOrderError(error.message || "Unable to place your order.");
+=======
         headers: {
           "Content-Type": "application/json",
         },
@@ -152,6 +187,7 @@ export default function CheckoutPage() {
     } catch (error) {
       console.error("Place order error:", error);
       alert(error.message || "Failed to place order.");
+>>>>>>> f33283f0dc11ce512ed80d94b046891c1b66d125
     } finally {
       setIsSubmitting(false);
     }
@@ -230,6 +266,15 @@ export default function CheckoutPage() {
         onSubmit={handlePlaceOrder}
         className="mx-auto w-[92%] max-w-300 py-10 md:py-16"
       >
+        {orderError && (
+          <p
+            role="alert"
+            className="mb-6 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          >
+            {orderError}
+          </p>
+        )}
+
         <div className="grid gap-8 lg:grid-cols-[1.4fr_0.8fr]">
           {/* LEFT SIDE */}
           <div className="space-y-8">
@@ -644,14 +689,15 @@ export default function CheckoutPage() {
               {/* Place Order */}
               <button
                 type="submit"
-                className="mt-7 w-full bg-[#72383D] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2E33]"
+                disabled={isSubmitting}
+                className="mt-7 w-full bg-[#72383D] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2E33] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Place Order
+                {isSubmitting ? "Placing Order..." : "Place Order"}
               </button>
 
               {/* Secure Checkout */}
               <p className="mt-4 text-center text-[11px] leading-5 text-[#6B625C]">
-                By placing your order, you agree to Velora's
+                By placing your order, you agree to Velora&apos;s
                 terms and conditions.
               </p>
             </section>

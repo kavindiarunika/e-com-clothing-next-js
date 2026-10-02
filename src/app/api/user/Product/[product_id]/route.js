@@ -60,6 +60,7 @@ export async function GET(_request, { params }) {
     const [variantRows] = await db.query(
       `
       SELECT
+        v.variant_id,
         s.name AS size,
         c.color_id AS color_id,
         c.name AS color,

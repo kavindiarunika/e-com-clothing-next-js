@@ -54,12 +54,61 @@ export async function GET(req) {
 
     const [products] = await db.query(query, params);
 
+    let variantRows = [];
+    if (products.length > 0) {
+      const productIds = products.map((product) => product.item_id);
+      [variantRows] = await db.query(
+        `SELECT
+           pv.variant_id,
+           pv.item_id,
+           pv.stock_quantity AS stock,
+           pv.price,
+           pv.discount,
+           s.name AS size,
+           c.color_id,
+           c.name AS color,
+           c.hex_code AS color_hex
+         FROM product_variants pv
+         LEFT JOIN sizes s ON s.size_id = pv.size_id
+         LEFT JOIN colors c ON c.color_id = pv.color_id
+         WHERE pv.status = 'active'
+           AND pv.item_id IN (${productIds.map(() => "?").join(", ")})
+         ORDER BY pv.item_id, pv.variant_id`,
+        productIds
+      );
+    }
+
+    const variantsByProduct = new Map();
+    for (const variant of variantRows) {
+      const productVariants = variantsByProduct.get(variant.item_id) || [];
+      productVariants.push({
+        ...variant,
+        stock: Number(variant.stock) || 0,
+        price: Number(variant.price) || 0,
+        discount: Number(variant.discount) || 0,
+      });
+      variantsByProduct.set(variant.item_id, productVariants);
+    }
+
     // Attach a URL to fetch the main image instead of embedding the blob
-    const data = products.map((product) => ({
-      ...product,
-      image: getImageSource(product.main_image),
-      main_image: undefined,
-    }));
+    const data = products.map((product) => {
+      const variants = variantsByProduct.get(product.item_id) || [];
+      return {
+        ...product,
+        image: getImageSource(product.main_image),
+        main_image: undefined,
+        variants,
+        sizes: [...new Set(variants.map((variant) => variant.size).filter(Boolean))],
+        colors: [
+          ...new Map(
+            variants
+              .filter((variant) => variant.color)
+              .map((variant) => [variant.color_id || variant.color, { name: variant.color }])
+          ).values(),
+        ],
+        total_stock: variants.reduce((total, variant) => total + variant.stock, 0),
+      };
+    });
 
     return NextResponse.json(
       {

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { sanitizeProductDescription } from "@/lib/productDescription";
 
@@ -16,6 +17,24 @@ const PROMO_BANNER_IMAGES = [
   "/images/banners/banner2.jpg",
   "/images/banners/banner3.jpg",
 ];
+const DEFAULT_PROMO = {
+  offer_id: "default-promo",
+  title: "Explore the latest collection",
+  banner_image: PROMO_BANNER_IMAGES[2],
+  link: "/user/shop",
+};
+
+function formatOfferDate(dateValue) {
+  if (!dateValue) return null;
+
+  const date = new Date(dateValue);
+  if (Number.isNaN(date.getTime())) return null;
+
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+  });
+}
 
 function normalizeClassName(className) {
   return className.trim().replace(/\s+/g, " ");
@@ -54,7 +73,7 @@ function isOfferActive(offer) {
 // =====================================================
 
 export default function PromoBanner() {
-  const [offers, setOffers] = useState([]);
+  const [offers, setOffers] = useState([DEFAULT_PROMO]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -72,22 +91,19 @@ export default function PromoBanner() {
         }
 
         const offerData = Array.isArray(result.data) ? result.data : [];
-        setOffers(
-          offerData
-            .map((offer, index) => ({
-              ...offer,
-              banner_image:
-                typeof offer.banner_image === "string" && offer.banner_image
-                  ? offer.banner_image
-                  : PROMO_BANNER_IMAGES[index % PROMO_BANNER_IMAGES.length],
-              link: offer.link || "/user/shop",
-            }))
-            .filter(isOfferActive)
-        );
+        const activeOffers = offerData
+          .map((offer, index) => ({
+            ...offer,
+            banner_image: PROMO_BANNER_IMAGES[index % PROMO_BANNER_IMAGES.length],
+            link: offer.link || "/user/shop",
+          }))
+          .filter(isOfferActive);
+
+        setOffers(activeOffers.length > 0 ? activeOffers : [DEFAULT_PROMO]);
       } catch (error) {
         if (!controller.signal.aborted) {
           console.error("Promo offers error:", error);
-          setOffers([]);
+          setOffers([DEFAULT_PROMO]);
         }
       }
     }
@@ -99,16 +115,14 @@ export default function PromoBanner() {
 
   const activeOffers = offers.filter(isOfferActive);
 
-  if (activeOffers.length === 0) {
-    return null;
-  }
+  const visibleOffers = activeOffers.length > 0 ? activeOffers : [DEFAULT_PROMO];
 
   return (
     <section className="w-full">
 
       <Swiper
         modules={[Autoplay]}
-        loop={activeOffers.length > 1}
+        loop={visibleOffers.length > 1}
         slidesPerView={1}
         spaceBetween={0}
         speed={700}
@@ -120,17 +134,18 @@ export default function PromoBanner() {
         className="w-full"
       >
 
-        {activeOffers.map((offer, index) => (
+        {visibleOffers.map((offer) => (
           <SwiperSlide key={offer.offer_id}>
-
             <div
               className={normalizeClassName(`
                 group
                 relative
-                h-[50px]
+                min-h-[118px]
                 w-full
                 overflow-hidden
                 bg-[var(--color-dark)]
+                py-4
+                md:min-h-[104px]
               `)}
             >
 
@@ -138,10 +153,12 @@ export default function PromoBanner() {
                   BACKGROUND IMAGE
               ===================================================== */}
 
-              <img
+              <Image
                 src={offer.banner_image}
                 alt=""
                 aria-hidden="true"
+                fill
+                sizes="100vw"
                 className={normalizeClassName(`
                   absolute
                   inset-0
@@ -166,81 +183,45 @@ export default function PromoBanner() {
                   CONTENT
               ===================================================== */}
 
-              <div className="relative z-10 flex h-full w-full items-center justify-center px-3 sm:px-6">
-
-                <div className="flex w-full max-w-7xl items-center justify-center gap-2 sm:gap-4">
-
-                  {/* Sparkle */}
-
+                  <div className="relative z-10 flex min-h-[86px] w-full items-center justify-center px-4 sm:px-6 md:min-h-[72px]">
+                    <div className="flex w-full max-w-7xl flex-col items-center justify-center gap-2 sm:flex-row sm:gap-4">
                   <Sparkles
                     size={13}
                     strokeWidth={1.8}
-                    className="hidden shrink-0 text-[var(--color-banner)] sm:block"
+                        className="hidden shrink-0 text-[var(--color-banner)] md:block"
                   />
 
-                  {/* Offer label */}
-
-                  <span className="hidden text-[9px] font-semibold uppercase tracking-[1.8px] text-[var(--color-banner)] sm:block">
+                      <span className="hidden shrink-0 text-[9px] font-semibold uppercase tracking-[1.8px] text-[var(--color-banner)] md:block">
                     Velora Exclusive
                   </span>
 
-                  {/* Separator */}
+                      <div className="min-w-0 flex-1 text-center sm:text-left">
+                        <p className="truncate text-xs font-semibold tracking-wide text-white sm:text-sm">
+                          {offer.title}
+                        </p>
+                        {offer.description && (
+                          <div
+                            className="mx-auto mt-1 line-clamp-2 max-w-3xl text-[11px] leading-snug text-white/75 sm:mx-0"
+                            dangerouslySetInnerHTML={{
+                              __html: sanitizeProductDescription(offer.description),
+                            }}
+                          />
+                        )}
+                      </div>
 
-                  <span className="hidden h-3 w-px bg-white/30 sm:block" />
-
-                  {/* Title */}
-
-                  <p
-                    className={normalizeClassName(`
-                      min-w-0
-                      truncate
-                      text-center
-                      text-[11px]
-                      font-semibold
-                      tracking-wide
-                      text-white
-                      sm:text-xs
-                      md:text-sm
-                    `)}
-                  >
-                    {offer.title}
-                  </p>
-
-                  {/* Description */}
-
-                  {offer.description && (
-                    <>
-                      <span className="hidden h-3 w-px bg-white/25 md:block" />
-
-                      <p
-                        className={normalizeClassName(`
-                          hidden
-                          max-w-md
-                          truncate
-                          text-[11px]
-                          text-white/70
-                          lg:block
-                        `)}
-                      >
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: sanitizeProductDescription(
-                              offer.description
-                            ),
-                          }}
-                        />
-                      </p>
-                    </>
-                  )}
-
-                  {/* CTA */}
+                      {(formatOfferDate(offer.start_date) || formatOfferDate(offer.end_date)) && (
+                        <p className="shrink-0 text-[10px] font-medium text-white/80">
+                          {formatOfferDate(offer.start_date) && formatOfferDate(offer.end_date)
+                            ? `Valid ${formatOfferDate(offer.start_date)} - ${formatOfferDate(offer.end_date)}`
+                            : `Valid ${formatOfferDate(offer.start_date || offer.end_date)}`}
+                        </p>
+                      )}
 
                   {offer.link && (
                     <Link
                       href={offer.link}
                       className={normalizeClassName(`
                         group/button
-                        ml-1
                         inline-flex
                         shrink-0
                         items-center
@@ -260,13 +241,7 @@ export default function PromoBanner() {
                         sm:text-[10px]
                       `)}
                     >
-                      <span className="hidden sm:inline">
-                        Shop Now
-                      </span>
-
-                      <span className="sm:hidden">
-                        Shop
-                      </span>
+                      <span>Get Offer</span>
 
                       <ArrowRight
                         size={12}
@@ -279,9 +254,7 @@ export default function PromoBanner() {
                       />
                     </Link>
                   )}
-
                 </div>
-
               </div>
 
               {/* =====================================================

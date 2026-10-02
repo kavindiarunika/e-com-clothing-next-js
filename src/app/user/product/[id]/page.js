@@ -91,7 +91,9 @@ export default function ProductPage({ params }) {
               discount: item.discount,
               image: item.image,
               images: item.image ? [item.image] : [],
-              variants: [],
+              variants: item.variants || [],
+              sizes: item.sizes || [],
+              colors: item.colors || [],
             }))
           : [];
 
@@ -152,6 +154,7 @@ export default function ProductPage({ params }) {
   const availableStock = Number(
     selectedVariant?.stock || 0
   );
+  const quantityLimit = availableStock;
 
   /*
   ==========================================
@@ -191,10 +194,7 @@ export default function ProductPage({ params }) {
 
   const increaseQuantity = () => {
     setQuantity((current) =>
-      Math.min(
-        availableStock,
-        current + 1
-      )
+      Math.min(availableStock, current + 1)
     );
   };
 
@@ -273,6 +273,7 @@ export default function ProductPage({ params }) {
   const createCartItem = () => {
     return {
       productId: product.id,
+      variantId: selectedVariant?.variant_id,
       name: product.name,
 
       price: Math.round(discountedPrice),
@@ -348,11 +349,13 @@ export default function ProductPage({ params }) {
       const newQuantity =
         existingQuantity + quantity;
 
+      if (newQuantity > availableStock) {
+        alert(`Only ${availableStock} items are available for this option.`);
+        return;
+      }
+
       savedCart[existingItemIndex].quantity =
-        Math.min(
-          newQuantity,
-          availableStock
-        );
+        newQuantity;
 
       savedCart[existingItemIndex].stock =
         availableStock;
@@ -364,8 +367,12 @@ export default function ProductPage({ params }) {
       "velora-cart",
       JSON.stringify(savedCart)
     );
-
-    alert("Product added to cart!");
+    sessionStorage.setItem(
+      "velora-cart-message",
+      `${product.name} added to your cart.`
+    );
+    window.dispatchEvent(new Event("velora-cart-updated"));
+    router.push("/user/cart");
   };
 
   /*
@@ -589,10 +596,7 @@ export default function ProductPage({ params }) {
                   <button
                     type="button"
                     onClick={decreaseQuantity}
-                    disabled={
-                      quantity <= 1 ||
-                      availableStock <= 0
-                    }
+                    disabled={quantity <= 1 || availableStock <= 0}
                     aria-label="Decrease quantity"
                     className="flex h-11 w-11 items-center justify-center text-xl text-[#322D29] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
                   >
@@ -612,8 +616,8 @@ export default function ProductPage({ params }) {
                     onClick={increaseQuantity}
                     disabled={
                       !selectedVariant ||
-                      availableStock <= 0 ||
-                      quantity >= availableStock
+                      quantity >= quantityLimit ||
+                      availableStock <= 0
                     }
                     aria-label="Increase quantity"
                     className="flex h-11 w-11 items-center justify-center text-xl text-[#322D29] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"

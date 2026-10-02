@@ -47,31 +47,6 @@ CREATE TABLE categories (
 -- =====================================================
 -- 3. PRODUCTS / ITEMS
 -- =====================================================
-CREATE TABLE products (
-    item_id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-
-    -- Main product image
-    main_image LONGBLOB,
-
-    price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    discount DECIMAL(10,2) DEFAULT 0.00,
-    category_id INT,
-    sku VARCHAR(100) UNIQUE,
-    brand VARCHAR(100),
-    tags JSON,
-    status ENUM('active', 'inactive', 'out_of_stock') DEFAULT 'active',
-    is_featured BOOLEAN DEFAULT FALSE,
-    is_best_selling BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (category_id)
-        REFERENCES categories(category_id)
-        ON DELETE SET NULL
-);
 
 
 -- =====================================================
@@ -463,6 +438,41 @@ CREATE TABLE offers (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
+CREATE TABLE products (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+
+    -- Main product image
+    main_image LONGBLOB,
+
+    price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    discount DECIMAL(10,2) DEFAULT 0.00,
+    category_id INT,
+    sku VARCHAR(100) UNIQUE,
+    brand VARCHAR(100),
+
+    qty INT NOT NULL DEFAULT 0,          -- NEW: product quantity
+    tags JSON,
+
+    offer_id INT NULL,                   -- NEW: linked to offers table
+
+    status ENUM('active', 'inactive', 'out_of_stock') DEFAULT 'active',
+    is_featured BOOLEAN DEFAULT FALSE,
+    is_best_selling BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (category_id)
+        REFERENCES categories(category_id)
+        ON DELETE SET NULL,
+
+    FOREIGN KEY (offer_id)
+        REFERENCES offers(offer_id)
+        ON DELETE SET NULL
+);
 
 -- =====================================================
 -- 20. HERO BANNERS

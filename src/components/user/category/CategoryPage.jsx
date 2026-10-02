@@ -110,8 +110,9 @@ function CategoryPageContent({ category, subcategory }) {
               discount: item.discount,
               image: item.image,
               images: item.image ? [item.image] : [],
-              variants: [],
-              sizes: [],
+              variants: item.variants || [],
+              sizes: item.sizes || [],
+              colors: item.colors || [],
             };
           });
 

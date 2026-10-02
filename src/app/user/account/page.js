@@ -1,7 +1,8 @@
-
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   User,
   Package,
@@ -10,35 +11,9 @@ import {
   RotateCcw,
   Bell,
   LogOut,
-  ChevronRight,
-  Truck,
-  Clock,
-  CheckCircle,
+  Save,
+  Loader2,
 } from "lucide-react";
-
-const orders = [
-  {
-    order_id: 1001,
-    total_amount: 12500,
-    order_status: "shipped",
-    payment_status: "pending",
-  },
-  {
-    order_id: 1000,
-    total_amount: 8900,
-    order_status: "delivered",
-    payment_status: "successful",
-  },
-];
-
-const returns = [
-  {
-    return_id: 1001,
-    order_id: 1001,
-    request_type: "return",
-    status: "approved",
-  },
-];
 
 const notifications = [
   {
@@ -49,32 +24,97 @@ const notifications = [
   },
 ];
 
-const statusLabel = {
-  pending: "Pending",
-  processing: "Processing",
-  shipped: "Shipped",
-  delivered: "Delivered",
-  cancelled: "Cancelled",
-};
-
-const statusStyle = {
-  pending: "bg-amber-100 text-amber-800",
-  processing: "bg-blue-100 text-blue-800",
-  shipped: "bg-purple-100 text-purple-800",
-  delivered: "bg-green-100 text-green-800",
-  cancelled: "bg-red-100 text-red-800",
-};
-
 export default function AccountPage() {
-  const pendingOrders = orders.filter(
-    (order) =>
-      order.order_status === "pending" ||
-      order.order_status === "processing"
-  ).length;
+  const router = useRouter();
+  const [profile, setProfile] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    whatsapp_number: "",
+    postal_code: "",
+    address_line1: "",
+    address_line2: "",
+    city: "",
+    district: "",
+  });
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileError, setProfileError] = useState("");
+  const [profileMessage, setProfileMessage] = useState("");
 
-  const shippedOrders = orders.filter(
-    (order) => order.order_status === "shipped"
-  ).length;
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadProfile() {
+      try {
+        const response = await fetch("/api/auth/profile", {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          if (response.status === 401) {
+            localStorage.removeItem("velora-user-session");
+            router.replace("/user/login");
+          }
+          throw new Error(result.message || "Unable to load your profile.");
+        }
+
+        setProfile((current) => ({ ...current, ...result.data }));
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          setProfileError(error.message || "Unable to load your profile.");
+        }
+      } finally {
+        if (!controller.signal.aborted) setProfileLoading(false);
+      }
+    }
+
+    void loadProfile();
+    return () => controller.abort();
+  }, [router]);
+
+  const handleLogout = () => {
+    void fetch("/api/auth/logout", { method: "POST" });
+    localStorage.removeItem("velora-user-session");
+    router.replace("/user/login");
+  };
+
+  const handleProfileChange = (event) => {
+    const { name, value } = event.target;
+    setProfile((current) => ({ ...current, [name]: value }));
+    setProfileError("");
+    setProfileMessage("");
+  };
+
+  const handleProfileSave = async (event) => {
+    event.preventDefault();
+    setProfileSaving(true);
+    setProfileError("");
+    setProfileMessage("");
+
+    try {
+      const response = await fetch("/api/auth/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profile),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to save your profile.");
+      }
+
+      setProfile((current) => ({ ...current, ...result.data }));
+      setProfileMessage(result.message);
+    } catch (error) {
+      setProfileError(error.message || "Unable to save your profile.");
+    } finally {
+      setProfileSaving(false);
+    }
+  };
 
   const unreadNotifications = notifications.filter(
     (notification) => !notification.is_read
@@ -110,11 +150,11 @@ export default function AccountPage() {
             </p>
 
             <h2 className="mt-2 text-xl font-semibold">
-              Chathuni Imasha
+              {[profile.first_name, profile.last_name].filter(Boolean).join(" ") || "Your account"}
             </h2>
 
             <p className="mt-1 text-sm text-[#322D29]/60">
-              customer@example.com
+              {profile.email}
             </p>
           </div>
 
@@ -138,11 +178,7 @@ export default function AccountPage() {
               label="Wishlist"
             />
 
-            <AccountLink
-              href="/user/account/addresses"
-              icon={<MapPin size={18} />}
-              label="Addresses"
-            />
+        
 
             <AccountLink
               href="/user/account/returns"
@@ -158,7 +194,7 @@ export default function AccountPage() {
             />
 
             <button
-              onClick={() => console.log("Logout")}
+              onClick={handleLogout}
               className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-600 transition hover:bg-red-50"
             >
               <LogOut size={18} />
@@ -175,7 +211,7 @@ export default function AccountPage() {
             </p>
 
             <h1 className="mt-2 text-4xl font-semibold">
-              Welcome back, Chathuni
+              Welcome back{profile.first_name ? `, ${profile.first_name}` : ""}
             </h1>
 
             <p className="mt-2 text-[#322D29]/60">
@@ -183,159 +219,54 @@ export default function AccountPage() {
             </p>
           </div>
 
-          {/* Statistics */}
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard
-              icon={<Package size={21} />}
-              title="Total Orders"
-              value={orders.length}
-            />
-
-            <StatCard
-              icon={<Clock size={21} />}
-              title="Pending"
-              value={pendingOrders}
-            />
-
-            <StatCard
-              icon={<Truck size={21} />}
-              title="Shipped"
-              value={shippedOrders}
-            />
-
-            <StatCard
-              icon={<RotateCcw size={21} />}
-              title="Returns"
-              value={returns.length}
-            />
-          </div>
-
-          {/* Recent Orders */}
-          <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm">
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold">Recent Orders</h2>
-                <p className="mt-1 text-sm text-[#322D29]/60">
-                  Your latest orders
-                </p>
-              </div>
-
-              <Link
-                href="/user/account/orders"
-                className="text-sm font-medium text-[#72383D] hover:underline"
-              >
-                View All
-              </Link>
-            </div>
-
-            <div className="space-y-3">
-              {orders.map((order) => (
-                <div
-                  key={order.order_id}
-                  className="flex flex-col gap-4 rounded-2xl border border-[#322D29]/10 p-4 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div>
-                    <p className="font-semibold">
-                      Order #{order.order_id}
-                    </p>
-
-                    <p className="mt-1 text-sm text-[#322D29]/60">
-                      Rs. {order.total_amount.toLocaleString()}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        statusStyle[order.order_status]
-                      }`}
-                    >
-                      {statusLabel[order.order_status]}
-                    </span>
-
-                    <Link
-                      href={`/user/account/orders/${order.order_id}`}
-                      className="text-[#72383D]"
-                    >
-                      <ChevronRight size={20} />
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Return */}
-          <div className="mt-6 rounded-3xl bg-white p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold">
-                  Returns & Exchanges
-                </h2>
-
-                <p className="mt-1 text-sm text-[#322D29]/60">
-                  Track your return and exchange requests.
-                </p>
-              </div>
-
-              <Link
-                href="/user/account/returns"
-                className="rounded-full bg-[#72383D] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#432415]"
-              >
-                View Returns
-              </Link>
-            </div>
-
-            {returns.length > 0 && (
-              <div className="mt-5 rounded-2xl border border-[#322D29]/10 p-4">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="font-medium">
-                      Return #{returns[0].return_id}
-                    </p>
-
-                    <p className="mt-1 text-sm text-[#322D29]/60">
-                      Order #{returns[0].order_id}
-                    </p>
-                  </div>
-
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
-                      returns[0].status === "approved"
-                        ? "bg-green-100 text-green-700"
-                        : returns[0].status === "rejected"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-amber-100 text-amber-700"
-                    }`}
-                  >
-                    {returns[0].status.toUpperCase()}
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-
           {/* Profile */}
-          <div className="mt-6 rounded-3xl bg-white p-6 shadow-sm">
+          <div className="rounded-3xl bg-white p-6 shadow-sm">
             <div className="mb-6">
               <h2 className="text-xl font-semibold">Profile</h2>
               <p className="mt-1 text-sm text-[#322D29]/60">
-                Your personal information
+                Update your personal and contact information.
               </p>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2">
-              <ProfileField label="First Name" value="Chathuni" />
-              <ProfileField label="Last Name" value="Imasha" />
-              <ProfileField
-                label="Email"
-                value="customer@example.com"
-              />
-              <ProfileField
-                label="Phone"
-                value="+94 77 123 4567"
-              />
-            </div>
+            {profileError && (
+              <p role="alert" className="mb-5 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {profileError}
+              </p>
+            )}
+
+            {profileMessage && (
+              <p role="status" className="mb-5 border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+                {profileMessage}
+              </p>
+            )}
+
+            {profileLoading ? (
+              <p className="py-4 text-sm text-[#322D29]/60">Loading profile...</p>
+            ) : (
+              <form onSubmit={handleProfileSave} className="space-y-6">
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <ProfileInput label="First name" name="first_name" value={profile.first_name} onChange={handleProfileChange} required maxLength={100} />
+                  <ProfileInput label="Last name" name="last_name" value={profile.last_name} onChange={handleProfileChange} maxLength={100} />
+                  <ProfileInput label="Email" name="email" type="email" value={profile.email} onChange={handleProfileChange} required maxLength={150} />
+                  <ProfileInput label="Phone" name="phone" type="tel" value={profile.phone} onChange={handleProfileChange} maxLength={20} />
+                  <ProfileInput label="WhatsApp number" name="whatsapp_number" type="tel" value={profile.whatsapp_number} onChange={handleProfileChange} maxLength={20} />
+                  <ProfileInput label="Postal code" name="postal_code" value={profile.postal_code} onChange={handleProfileChange} maxLength={20} />
+                  <ProfileInput label="Address line 1" name="address_line1" value={profile.address_line1} onChange={handleProfileChange} maxLength={255} />
+                  <ProfileInput label="Address line 2" name="address_line2" value={profile.address_line2} onChange={handleProfileChange} maxLength={255} />
+                  <ProfileInput label="City" name="city" value={profile.city} onChange={handleProfileChange} maxLength={100} />
+                  <ProfileInput label="District" name="district" value={profile.district} onChange={handleProfileChange} maxLength={100} />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={profileSaving}
+                  className="inline-flex h-11 items-center justify-center gap-2 bg-[#322D29] px-5 text-sm font-medium text-white transition hover:bg-[#72383D] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {profileSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                  {profileSaving ? "Saving..." : "Save profile"}
+                </button>
+              </form>
+            )}
           </div>
         </section>
       </div>
@@ -367,31 +298,21 @@ function AccountLink({ href, icon, label, active, badge }) {
   );
 }
 
-function StatCard({ icon, title, value }) {
-  return (
-    <div className="rounded-3xl bg-white p-5 shadow-sm">
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EFE9E1] text-[#72383D]">
-        {icon}
-      </div>
-
-      <p className="mt-4 text-sm text-[#322D29]/60">{title}</p>
-
-      <p className="mt-1 text-3xl font-semibold">{value}</p>
-    </div>
-  );
-}
-
-function ProfileField({ label, value }) {
+function ProfileInput({ label, name, value, onChange, type = "text", ...inputProps }) {
   return (
     <div>
-      <p className="mb-2 text-xs uppercase tracking-wider text-[#322D29]/50">
+      <label htmlFor={name} className="mb-2 block text-xs font-medium uppercase tracking-wider text-[#322D29]/60">
         {label}
-      </p>
-
-      <div className="rounded-xl bg-[#EFE9E1] px-4 py-3 text-sm">
-        {value}
-      </div>
+      </label>
+      <input
+        id={name}
+        name={name}
+        type={type}
+        value={value || ""}
+        onChange={onChange}
+        className="h-11 w-full border border-[#D8D0C8] bg-white px-3 text-sm text-[#322D29] outline-none focus:border-[#72383D]"
+        {...inputProps}
+      />
     </div>
   );
 }
-

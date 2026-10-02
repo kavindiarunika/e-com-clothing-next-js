@@ -59,7 +59,8 @@ export default function CartItem({
             <button
               type="button"
               onClick={() => onDecrease(item)}
-              disabled={item.quantity <= 1}
+              disabled={Number(item.quantity) <= 1}
+              aria-label={`Decrease quantity of ${item.name || "item"}`}
               className="flex h-9 w-9 items-center justify-center text-[#322D29] transition hover:text-[#72383D] disabled:cursor-not-allowed disabled:opacity-30"
             >
               <Minus size={14} />
@@ -72,7 +73,11 @@ export default function CartItem({
             <button
               type="button"
               onClick={() => onIncrease(item)}
-              disabled={item.quantity >= item.stock}
+              disabled={
+                item.stock != null &&
+                Number(item.quantity) >= Number(item.stock)
+              }
+              aria-label={`Increase quantity of ${item.name || "item"}`}
               className="flex h-9 w-9 items-center justify-center text-[#322D29] transition hover:text-[#72383D] disabled:cursor-not-allowed disabled:opacity-30"
             >
               <Plus size={14} />

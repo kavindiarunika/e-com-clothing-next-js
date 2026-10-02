@@ -45,24 +45,29 @@ export default function ProductCard({ product }) {
   // SOLD OUT
   // ---------------------------------------
   const isSoldOut =
-    product.variants?.length > 0 &&
+    !product.variants?.length ||
     product.variants.every(
-      (variant) =>
-        Number(variant.stock || 0) <= 0
+      (variant) => Number(variant.stock || 0) <= 0
     );
 
   // ---------------------------------------
   // Load Wishlist
   // ---------------------------------------
   useEffect(() => {
-    const savedWishlist =
-      JSON.parse(
-        localStorage.getItem("velora-wishlist") || "[]"
-      );
+    const timeoutId = window.setTimeout(() => {
+      let savedWishlist = [];
+      try {
+        savedWishlist = JSON.parse(
+          localStorage.getItem("velora-wishlist") || "[]"
+        );
+      } catch {
+        savedWishlist = [];
+      }
 
-    setIsWishlisted(
-      savedWishlist.includes(product.id)
-    );
+      setIsWishlisted(savedWishlist.includes(product.id));
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [product.id]);
 
   // ---------------------------------------
@@ -219,6 +224,7 @@ export default function ProductCard({ product }) {
         "",
 
       quantity: 1,
+      variantId: availableVariant?.variant_id,
 
       stock: Number(
         availableVariant?.stock || 0
@@ -242,12 +248,14 @@ export default function ProductCard({ product }) {
             .quantity
         ) || 0;
 
+      if (existingQuantity + 1 > cartItem.stock) {
+        alert(`Only ${cartItem.stock} items are available for this product.`);
+        return;
+      }
+
       savedCart[
         existingItemIndex
-      ].quantity = Math.min(
-        existingQuantity + 1,
-        cartItem.stock
-      );
+      ].quantity = existingQuantity + 1;
 
       savedCart[
         existingItemIndex

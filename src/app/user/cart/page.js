@@ -11,6 +11,7 @@ export default function CartPage() {
   const [cart, setCart] = useState([]);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [hasLoadedCart, setHasLoadedCart] = useState(false);
+  const [cartMessage, setCartMessage] = useState("");
 
   // Get color name safely
   const getColorName = (color) => {
@@ -59,8 +60,6 @@ export default function CartPage() {
 
   // Load cart
   useEffect(() => {
-    syncCartFromStorage();
-
     const handleCartUpdate = () => {
       syncCartFromStorage();
     };
@@ -70,7 +69,18 @@ export default function CartPage() {
       handleCartUpdate
     );
 
+    const timeoutId = window.setTimeout(() => {
+      syncCartFromStorage();
+
+      const message = sessionStorage.getItem("velora-cart-message");
+      if (message) {
+        setCartMessage(message);
+        sessionStorage.removeItem("velora-cart-message");
+      }
+    });
+
     return () => {
+      window.clearTimeout(timeoutId);
       window.removeEventListener(
         "velora-cart-updated",
         handleCartUpdate
@@ -95,12 +105,22 @@ export default function CartPage() {
     setCart((currentCart) =>
       currentCart.map((cartItem) => {
         if (isSameCartItem(cartItem, item)) {
+          const currentQuantity = Math.max(
+            1,
+            Number(cartItem.quantity) || 1
+          );
+          const stockLimit =
+            cartItem.stock == null
+              ? Number.POSITIVE_INFINITY
+              : Number(cartItem.stock);
+
+          if (stockLimit <= currentQuantity) {
+            return cartItem;
+          }
+
           return {
             ...cartItem,
-            quantity: Math.min(
-              Number(cartItem.quantity || 1) + 1,
-              Number(cartItem.stock || 1)
-            ),
+            quantity: Math.min(currentQuantity + 1, stockLimit),
           };
         }
 
@@ -223,6 +243,15 @@ export default function CartPage() {
           <h1 className="mt-2 font-serif text-4xl text-[#322D29] md:text-5xl">
             Shopping Cart
           </h1>
+
+          {cartMessage && (
+            <p
+              role="status"
+              className="mt-4 border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
+            >
+              {cartMessage}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-10 lg:grid-cols-[1.4fr_0.6fr]">

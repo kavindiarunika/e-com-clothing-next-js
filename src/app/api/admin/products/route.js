@@ -124,13 +124,23 @@ export async function GET(request) {
 
         c.name AS category_name,
 
-        COUNT(DISTINCT pv.variant_id)
+        COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END)
           AS variant_count,
 
         COALESCE(
-          SUM(pv.stock_quantity),
+          SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END),
           0
-        ) AS total_stock
+        ) AS total_stock,
+
+        COALESCE(
+          SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END),
+          0
+        ) AS stock,
+
+        COALESCE(
+          SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END),
+          0
+        ) AS stock_quantity
 
       FROM products p
 
