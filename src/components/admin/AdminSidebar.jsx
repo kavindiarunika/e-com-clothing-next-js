@@ -145,8 +145,7 @@ export default function AdminSidebar() {
   return (
     <aside className="admin-sidebar">
       <div className="sidebar-brand">
-        <div className="brand-logo">
-        </div>
+       
 
         <div>
           <strong>VELORA</strong>

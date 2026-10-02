@@ -22,10 +22,11 @@ export default function ProductCard({ product }) {
   // ---------------------------------------
   // Product Image
   // ---------------------------------------
+  const fallbackImage = "/images/products/shirt1.webp";
   const productImage =
     product.image ||
     product.images?.[0] ||
-    "/images/products/placeholder.webp";
+    fallbackImage;
 
   // ---------------------------------------
   // Discount
@@ -293,6 +294,10 @@ export default function ProductCard({ product }) {
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="object-cover object-center transition duration-700 ease-out group-hover:scale-105"
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = fallbackImage;
+            }}
           />
         </Link>
 

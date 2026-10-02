@@ -11,7 +11,10 @@ export default function CheckoutPage() {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+<<<<<<< HEAD
   const [orderError, setOrderError] = useState("");
+=======
+>>>>>>> f33283f0dc11ce512ed80d94b046891c1b66d125
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -75,7 +78,6 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Basic validation
     if (
       !formData.firstName ||
       !formData.lastName ||
@@ -94,6 +96,7 @@ export default function CheckoutPage() {
     try {
       const response = await fetch("/api/user/orders", {
         method: "POST",
+<<<<<<< HEAD
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: cart,
@@ -114,6 +117,77 @@ export default function CheckoutPage() {
       router.push("/user");
     } catch (error) {
       setOrderError(error.message || "Unable to place your order.");
+=======
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: cart,
+          subtotal,
+          discount: 0,
+          shippingFee: shippingCost,
+          paymentMethod: "Cash on Delivery",
+          paymentStatus: "pending",
+          orderStatus: "pending",
+          shippingAddress: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            district: formData.district,
+            postalCode: formData.postalCode,
+          },
+          billingAddress: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            district: formData.district,
+            postalCode: formData.postalCode,
+          },
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to place order.");
+      }
+
+      const order = {
+        id: String(data.orderId),
+        customer: formData,
+        items: cart,
+        delivery: "Standard Delivery",
+        shippingCost,
+        paymentMethod: "Cash on Delivery",
+        subtotal,
+        total,
+        status: "Pending",
+        createdAt: new Date().toISOString(),
+      };
+
+      const existingOrders =
+        JSON.parse(localStorage.getItem("velora-orders")) || [];
+
+      localStorage.setItem(
+        "velora-orders",
+        JSON.stringify([...existingOrders, order])
+      );
+
+      localStorage.removeItem("velora-cart");
+
+      alert(
+        `Order placed successfully!\n\nOrder ID: ${order.id}\nPayment: Cash on Delivery`
+      );
+
+      router.push("/user/account/orders");
+    } catch (error) {
+      console.error("Place order error:", error);
+      alert(error.message || "Failed to place order.");
+>>>>>>> f33283f0dc11ce512ed80d94b046891c1b66d125
     } finally {
       setIsSubmitting(false);
     }

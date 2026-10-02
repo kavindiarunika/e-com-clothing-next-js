@@ -2,8 +2,21 @@ import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 
 // GET - Get all order items
-export async function GET() {
+export async function GET(request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const orderId = searchParams.get("order_id");
+
+    if (orderId && (!/^\d+$/.test(orderId) || Number(orderId) < 1)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "A valid order id is required.",
+        },
+        { status: 400 }
+      );
+    }
+
     const orderItems = await query(`
       SELECT
         oi.order_item_id,
@@ -17,8 +30,8 @@ export async function GET() {
 
         p.title AS product_title,
 
-        pv.size,
-        pv.color
+        s.name AS size,
+        c.name AS color
 
       FROM order_items oi
 
@@ -28,8 +41,16 @@ export async function GET() {
       LEFT JOIN product_variants pv
         ON oi.variant_id = pv.variant_id
 
+      LEFT JOIN sizes s
+        ON pv.size_id = s.size_id
+
+      LEFT JOIN colors c
+        ON pv.color_id = c.color_id
+
+      ${orderId ? "WHERE oi.order_id = ?" : ""}
+
       ORDER BY oi.order_item_id DESC
-    `);
+    `, orderId ? [Number(orderId)] : []);
 
     return NextResponse.json({
       success: true,

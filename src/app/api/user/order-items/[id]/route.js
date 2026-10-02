@@ -20,8 +20,8 @@ export async function GET(request, { params }) {
 
         p.title AS product_title,
 
-        pv.size,
-        pv.color
+        s.name AS size,
+        c.name AS color
 
       FROM order_items oi
 
@@ -30,6 +30,12 @@ export async function GET(request, { params }) {
 
       LEFT JOIN product_variants pv
         ON oi.variant_id = pv.variant_id
+
+      LEFT JOIN sizes s
+        ON pv.size_id = s.size_id
+
+      LEFT JOIN colors c
+        ON pv.color_id = c.color_id
 
       WHERE oi.order_item_id = ?
 

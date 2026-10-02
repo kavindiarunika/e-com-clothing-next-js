@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import {
   ArrowLeft,
@@ -18,53 +19,92 @@ import {
 
 export default function OrderDetailsPage() {
   const params = useParams();
+  const orderId = params?.id;
+  const [order, setOrder] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
-  const orderId = params?.id || "1001";
+  useEffect(() => {
+    if (!orderId) return;
 
-  // Demo order
-  // Later replace this with API data.
-  const order = {
-    id: orderId,
-    date: "September 22, 2026",
+    const loadOrder = async () => {
+      try {
+        const [orderResponse, itemsResponse] = await Promise.all([
+          fetch(`/api/user/orders/${orderId}`),
+          fetch(`/api/user/order-items?order_id=${orderId}`),
+        ]);
+        const orderPayload = await orderResponse.json();
 
-    status: orderId === "1000" ? "Delivered" : "Shipped",
+        if (!orderResponse.ok) {
+          throw new Error(orderPayload.message || "Order not found.");
+        }
 
-    total: "Rs. 12,500",
-    subtotal: "Rs. 12,000",
-    shipping: "Rs. 500",
+        const itemsPayload = itemsResponse.ok
+          ? await itemsResponse.json()
+          : { data: [] };
+        const record = orderPayload.data;
+        const address = (() => {
+          try {
+            return typeof record.shipping_address === "string"
+              ? JSON.parse(record.shipping_address)
+              : record.shipping_address || {};
+          } catch {
+            return { address: record.shipping_address || "" };
+          }
+        })();
+        const status = String(record.order_status || "pending");
+        const formatAmount = (amount) => `Rs. ${Number(amount || 0).toLocaleString()}`;
 
-    items: [
-      {
-        id: 1,
-        name: "Premium Linen Shirt",
-        size: "M",
-        color: "Beige",
-        quantity: 1,
-        price: "Rs. 6,500",
-        image: "/images/products/dress1.webp",
-      },
-      {
-        id: 2,
-        name: "Classic Wide Leg Trousers",
-        size: "S",
-        color: "Brown",
-        quantity: 1,
-        price: "Rs. 5,500",
-        image: "/images/products/dress2.webp",
-      },
-    ],
+        setOrder({
+          id: String(record.order_id),
+          date: new Date(record.order_date || record.created_at).toLocaleDateString(),
+          status: status.charAt(0).toUpperCase() + status.slice(1),
+          total: formatAmount(record.total_amount),
+          subtotal: formatAmount(record.subtotal),
+          shipping: formatAmount(record.shipping_fee),
+          items: (Array.isArray(itemsPayload.data) ? itemsPayload.data : []).map((item) => ({
+            id: item.order_item_id,
+            name: item.product_title || `Product #${item.item_id}`,
+            size: item.size || "-",
+            color: item.color || "-",
+            quantity: item.qty,
+            price: formatAmount(item.total_price),
+            image: "/images/products/dress1.webp",
+          })),
+          address: {
+            name: [address.firstName, address.lastName].filter(Boolean).join(" ") || `${record.first_name || ""} ${record.last_name || ""}`.trim(),
+            phone: address.phone || record.phone || "",
+            address: address.address || "",
+            city: address.city || "",
+            district: address.district || "",
+            postalCode: address.postalCode || "",
+          },
+          payment: "Cash on Delivery",
+        });
+      } catch (error) {
+        console.error("Load order details error:", error);
+        setLoadError(error.message || "Failed to load this order.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    address: {
-      name: "Chathuni Imasha",
-      phone: "+94 77 123 4567",
-      address: "123 Main Street",
-      city: "Colombo",
-      district: "Western Province",
-      postalCode: "00100",
-    },
+    loadOrder();
+  }, [orderId]);
 
-    payment: "Cash on Delivery",
-  };
+  if (isLoading) {
+    return <main className="min-h-screen bg-[#EFE9E1] px-6 py-20 text-center text-sm text-[#6B625C]">Loading order...</main>;
+  }
+
+  if (!order) {
+    return (
+      <main className="min-h-screen bg-[#EFE9E1] px-6 py-20 text-center text-[#322D29]">
+        <h1 className="font-serif text-3xl">Unable to load order</h1>
+        <p className="mt-3 text-sm text-[#6B625C]">{loadError || "This order could not be found."}</p>
+        <Link href="/user/account/orders" className="mt-6 inline-flex border border-[#322D29] px-5 py-3 text-xs font-semibold uppercase tracking-[1px]">Back to orders</Link>
+      </main>
+    );
+  }
 
   const currentStatus = order.status.toLowerCase();
 
