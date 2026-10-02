@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "../../components/user/common/Navbar";
 import Footer from "../../components/user/common/Footer";
+import FloatingWhatsApp from "../../components/user/common/FloatingWhatsApp";
 
 export const metadata = {
   title: "Velora | Premium Fashion",
@@ -14,6 +15,7 @@ export default function RootLayout({ children }) {
 
       <main>{children}</main>
 
+      <FloatingWhatsApp />
       <Footer />
     </>
   );
