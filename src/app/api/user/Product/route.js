@@ -20,6 +20,12 @@ export async function GET(req) {
         p.price,
         p.discount,
         p.category_id,
+        p.qty,
+        p.size_id,
+        p.color_id,
+        default_size.name AS default_size,
+        default_color.name AS default_color,
+        default_color.hex_code AS default_color_hex,
         c.name AS category_name,
         p.sku,
         p.brand,
@@ -32,6 +38,8 @@ export async function GET(req) {
         p.main_image
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.category_id
+      LEFT JOIN sizes default_size ON p.size_id = default_size.size_id
+      LEFT JOIN colors default_color ON p.color_id = default_color.color_id
       WHERE 1 = 1
     `;
     const params = [];
@@ -98,15 +106,29 @@ export async function GET(req) {
         image: getImageSource(product.main_image),
         main_image: undefined,
         variants,
-        sizes: [...new Set(variants.map((variant) => variant.size).filter(Boolean))],
+        sizes: [...new Set([
+          ...variants.map((variant) => variant.size),
+          product.default_size,
+        ].filter(Boolean))],
         colors: [
           ...new Map(
-            variants
-              .filter((variant) => variant.color)
-              .map((variant) => [variant.color_id || variant.color, { name: variant.color }])
+            [
+              ...variants
+                .filter((variant) => variant.color)
+                .map((variant) => [variant.color_id || variant.color, { name: variant.color }]),
+              ...(product.default_color
+                ? [[product.color_id || product.default_color, {
+                    color_id: product.color_id,
+                    name: product.default_color,
+                    hex_code: product.default_color_hex,
+                  }]]
+                : []),
+            ]
           ).values(),
         ],
-        total_stock: variants.reduce((total, variant) => total + variant.stock, 0),
+        total_stock: variants.length > 0
+          ? variants.reduce((total, variant) => total + variant.stock, 0)
+          : Number(product.qty) || 0,
       };
     });
 

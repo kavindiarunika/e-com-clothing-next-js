@@ -45,12 +45,98 @@ CREATE TABLE categories (
 
 
 -- =====================================================
--- 3. PRODUCTS / ITEMS
+-- 3. OFFERS (moved up: products links to it)
 -- =====================================================
+CREATE TABLE offers (
+    offer_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+
+    -- Offer banner image
+    banner_image LONGBLOB,
+
+    link VARCHAR(500),
+    start_date DATETIME,
+    end_date DATETIME,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 
 -- =====================================================
--- 4. PRODUCT IMAGES
+-- 4. SIZES (moved up: products links to it)
+-- =====================================================
+CREATE TABLE sizes (
+    size_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- =====================================================
+-- 5. COLORS (moved up: products links to it)
+-- =====================================================
+CREATE TABLE colors (
+    color_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    hex_code VARCHAR(10),
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- =====================================================
+-- 6. PRODUCTS / ITEMS
+-- =====================================================
+CREATE TABLE products (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+
+    -- Main product image
+    main_image LONGBLOB,
+
+    price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    discount DECIMAL(10,2) DEFAULT 0.00,
+    category_id INT,
+    sku VARCHAR(100) UNIQUE,
+    brand VARCHAR(100),
+
+    qty INT NOT NULL DEFAULT 0,          -- NEW: product quantity
+    tags JSON,
+
+    offer_id INT NULL,                   -- NEW: linked to offers table
+    size_id INT NULL,                    -- NEW: linked to sizes table
+    color_id INT NULL,                   -- NEW: linked to colors table
+
+    status ENUM('active', 'inactive', 'out_of_stock') DEFAULT 'active',
+    is_featured BOOLEAN DEFAULT FALSE,
+    is_best_selling BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (category_id)
+        REFERENCES categories(category_id)
+        ON DELETE SET NULL,
+
+    FOREIGN KEY (offer_id)
+        REFERENCES offers(offer_id)
+        ON DELETE SET NULL,
+
+    FOREIGN KEY (size_id)
+        REFERENCES sizes(size_id)
+        ON DELETE SET NULL,
+
+    FOREIGN KEY (color_id)
+        REFERENCES colors(color_id)
+        ON DELETE SET NULL
+);
+
+
+-- =====================================================
+-- 7. PRODUCT IMAGES
 -- =====================================================
 CREATE TABLE product_images (
     image_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,30 +156,7 @@ CREATE TABLE product_images (
 
 
 -- =====================================================
--- 5. SIZES
--- =====================================================
-CREATE TABLE sizes (
-    size_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE,
-    status ENUM('active', 'inactive') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
--- =====================================================
--- 6. COLORS
--- =====================================================
-CREATE TABLE colors (
-    color_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE,
-    hex_code VARCHAR(10),
-    status ENUM('active', 'inactive') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
--- =====================================================
--- 7. PRODUCT VARIANTS
+-- 8. PRODUCT VARIANTS
 -- =====================================================
 CREATE TABLE product_variants (
     variant_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -128,7 +191,7 @@ CREATE TABLE product_variants (
 
 
 -- =====================================================
--- 8. INVENTORY
+-- 9. INVENTORY
 -- =====================================================
 CREATE TABLE inventory (
     inventory_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -146,7 +209,7 @@ CREATE TABLE inventory (
 
 
 -- =====================================================
--- 9. INVENTORY TRANSACTIONS
+-- 10. INVENTORY TRANSACTIONS
 -- =====================================================
 CREATE TABLE inventory_transactions (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -171,7 +234,7 @@ CREATE TABLE inventory_transactions (
 
 
 -- =====================================================
--- 10. CUSTOMER ADDRESSES
+-- 11. CUSTOMER ADDRESSES
 -- =====================================================
 CREATE TABLE addresses (
     address_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -195,7 +258,7 @@ CREATE TABLE addresses (
 
 
 -- =====================================================
--- 11. CARTS
+-- 12. CARTS
 -- =====================================================
 CREATE TABLE carts (
     cart_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -212,7 +275,7 @@ CREATE TABLE carts (
 
 
 -- =====================================================
--- 12. CART ITEMS
+-- 13. CART ITEMS
 -- =====================================================
 CREATE TABLE cart_items (
     cart_item_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -237,7 +300,7 @@ CREATE TABLE cart_items (
 
 
 -- =====================================================
--- 13. WISHLIST
+-- 14. WISHLIST
 -- =====================================================
 CREATE TABLE wishlists (
     wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -258,7 +321,7 @@ CREATE TABLE wishlists (
 
 
 -- =====================================================
--- 14. COUPONS
+-- 15. COUPONS
 -- =====================================================
 CREATE TABLE coupons (
     coupon_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -279,7 +342,7 @@ CREATE TABLE coupons (
 
 
 -- =====================================================
--- 15. ORDERS
+-- 16. ORDERS
 -- =====================================================
 CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -326,7 +389,7 @@ CREATE TABLE orders (
 
 
 -- =====================================================
--- 16. ORDER ITEMS
+-- 17. ORDER ITEMS
 -- =====================================================
 CREATE TABLE order_items (
     order_item_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -353,7 +416,7 @@ CREATE TABLE order_items (
 
 
 -- =====================================================
--- 17. PAYMENTS
+-- 18. PAYMENTS
 -- =====================================================
 CREATE TABLE payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -386,7 +449,7 @@ CREATE TABLE payments (
 
 
 -- =====================================================
--- 18. PRODUCT REVIEWS
+-- 19. PRODUCT REVIEWS
 -- =====================================================
 CREATE TABLE reviews (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -419,60 +482,6 @@ CREATE TABLE reviews (
     CHECK (rating >= 1 AND rating <= 5)
 );
 
-
--- =====================================================
--- 19. OFFERS
--- =====================================================
-CREATE TABLE offers (
-    offer_id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-
-    -- Offer banner image
-    banner_image LONGBLOB,
-
-    link VARCHAR(500),
-    start_date DATETIME,
-    end_date DATETIME,
-    status ENUM('active', 'inactive') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
-CREATE TABLE products (
-    item_id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-
-    -- Main product image
-    main_image LONGBLOB,
-
-    price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    discount DECIMAL(10,2) DEFAULT 0.00,
-    category_id INT,
-    sku VARCHAR(100) UNIQUE,
-    brand VARCHAR(100),
-
-    qty INT NOT NULL DEFAULT 0,          -- NEW: product quantity
-    tags JSON,
-
-    offer_id INT NULL,                   -- NEW: linked to offers table
-
-    status ENUM('active', 'inactive', 'out_of_stock') DEFAULT 'active',
-    is_featured BOOLEAN DEFAULT FALSE,
-    is_best_selling BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (category_id)
-        REFERENCES categories(category_id)
-        ON DELETE SET NULL,
-
-    FOREIGN KEY (offer_id)
-        REFERENCES offers(offer_id)
-        ON DELETE SET NULL
-);
 
 -- =====================================================
 -- 20. HERO BANNERS
@@ -557,3 +566,18 @@ CREATE TABLE notifications (
         REFERENCES orders(order_id)
         ON DELETE SET NULL
 );
+
+
+-- =====================================================
+-- OPTIONAL: product with offer, size and color names
+-- =====================================================
+CREATE VIEW products_full AS
+SELECT p.*,
+       o.title    AS offer_title,
+       s.name     AS size_name,
+       c.name     AS color_name,
+       c.hex_code AS color_hex
+FROM products p
+LEFT JOIN offers o ON o.offer_id = p.offer_id
+LEFT JOIN sizes  s ON s.size_id  = p.size_id
+LEFT JOIN colors c ON c.color_id = p.color_id;

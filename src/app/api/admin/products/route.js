@@ -115,6 +115,10 @@ export async function GET(request) {
         p.category_id,
         p.sku,
         p.brand,
+        p.qty,
+        p.offer_id,
+        p.size_id,
+        p.color_id,
         p.tags,
         p.status,
         p.is_featured,
@@ -127,20 +131,23 @@ export async function GET(request) {
         COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END)
           AS variant_count,
 
-        COALESCE(
-          SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END),
-          0
-        ) AS total_stock,
+        CASE
+          WHEN COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END) > 0
+            THEN COALESCE(SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END), 0)
+          ELSE p.qty
+        END AS total_stock,
 
-        COALESCE(
-          SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END),
-          0
-        ) AS stock,
+        CASE
+          WHEN COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END) > 0
+            THEN COALESCE(SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END), 0)
+          ELSE p.qty
+        END AS stock,
 
-        COALESCE(
-          SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END),
-          0
-        ) AS stock_quantity
+        CASE
+          WHEN COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END) > 0
+            THEN COALESCE(SUM(CASE WHEN pv.status = 'active' THEN pv.stock_quantity ELSE 0 END), 0)
+          ELSE p.qty
+        END AS stock_quantity
 
       FROM products p
 
@@ -264,6 +271,10 @@ export async function POST(request) {
       formData.get("category_id") || null;
     const sku = formData.get("sku") || null;
     const brand = formData.get("brand") || null;
+    const qty = Number(formData.get("qty") || 0);
+    const offerId = formData.get("offer_id") || null;
+    const sizeId = formData.get("size_id") || null;
+    const colorId = formData.get("color_id") || null;
     const tags = formData.get("tags") || "";
     const status =
       formData.get("status") || "active";
@@ -293,6 +304,13 @@ export async function POST(request) {
         {
           error: "Price cannot be negative",
         },
+        { status: 400 }
+      );
+    }
+
+    if (!Number.isInteger(qty) || qty < 0) {
+      return NextResponse.json(
+        { error: "Quantity must be a non-negative whole number" },
         { status: 400 }
       );
     }
@@ -353,12 +371,16 @@ export async function POST(request) {
           category_id,
           sku,
           brand,
+          qty,
           tags,
+          offer_id,
+          size_id,
+          color_id,
           status,
           is_featured,
           is_best_selling
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
         [
           title.trim(),
@@ -369,7 +391,11 @@ export async function POST(request) {
           category_id || null,
           sku || null,
           brand || null,
+          qty,
           tagsJSON,
+          offerId,
+          sizeId,
+          colorId,
           status,
           is_featured,
           is_best_selling,
@@ -538,6 +564,10 @@ export async function PUT(request) {
       formData.get("category_id") || null;
     const sku = formData.get("sku") || null;
     const brand = formData.get("brand") || null;
+    const qty = Number(formData.get("qty") || 0);
+    const offerId = formData.get("offer_id") || null;
+    const sizeId = formData.get("size_id") || null;
+    const colorId = formData.get("color_id") || null;
     const tags = formData.get("tags") || "";
     const status =
       formData.get("status") || "active";
@@ -552,6 +582,13 @@ export async function PUT(request) {
       formData.get("variants") || "[]";
 
     const variants = JSON.parse(variantsText);
+
+    if (!Number.isInteger(qty) || qty < 0) {
+      return NextResponse.json(
+        { error: "Quantity must be a non-negative whole number" },
+        { status: 400 }
+      );
+    }
 
     const tagArray = tags
       .split(",")
@@ -617,7 +654,11 @@ export async function PUT(request) {
         category_id = ?,
         sku = ?,
         brand = ?,
+        qty = ?,
         tags = ?,
+        offer_id = ?,
+        size_id = ?,
+        color_id = ?,
         status = ?,
         is_featured = ?,
         is_best_selling = ?
@@ -631,7 +672,11 @@ export async function PUT(request) {
         category_id || null,
         sku || null,
         brand || null,
+        qty,
         tagsJSON,
+        offerId,
+        sizeId,
+        colorId,
         status,
         is_featured,
         is_best_selling,

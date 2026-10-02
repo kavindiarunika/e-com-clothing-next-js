@@ -113,6 +113,7 @@ function CategoryPageContent({ category, subcategory }) {
               variants: item.variants || [],
               sizes: item.sizes || [],
               colors: item.colors || [],
+              stock: Number(item.total_stock) || 0,
             };
           });
 

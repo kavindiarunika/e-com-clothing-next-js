@@ -94,6 +94,8 @@ export default function ProductPage({ params }) {
               variants: item.variants || [],
               sizes: item.sizes || [],
               colors: item.colors || [],
+              qty: Number(item.qty) || 0,
+              stock: Number(item.total_stock) || 0,
             }))
           : [];
 
@@ -151,9 +153,11 @@ export default function ProductPage({ params }) {
       variant.color === (selectedColorName || "")
   );
 
-  const availableStock = Number(
-    selectedVariant?.stock || 0
-  );
+  const availableStock = selectedVariant
+    ? Number(selectedVariant.stock) || 0
+    : product.variants.length === 0
+      ? Number(product.qty) || 0
+      : 0;
   const quantityLimit = availableStock;
 
   /*
@@ -301,7 +305,7 @@ export default function ProductPage({ params }) {
     if (!product) return;
 
     // Check variant
-    if (!selectedVariant) {
+    if (product.variants.length > 0 && !selectedVariant) {
       alert(
         "Please select an available size and color."
       );
@@ -385,7 +389,7 @@ export default function ProductPage({ params }) {
     if (!product) return;
 
     // Check variant
-    if (!selectedVariant) {
+    if (product.variants.length > 0 && !selectedVariant) {
       alert(
         "Please select an available size and color."
       );

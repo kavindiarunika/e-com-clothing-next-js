@@ -19,6 +19,7 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState([]);
   const [sizes, setSizes] = useState([]);
   const [colors, setColors] = useState([]);
+  const [offers, setOffers] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -47,6 +48,10 @@ export default function ProductsPage() {
     category_id: "",
     sku: "",
     brand: "",
+    qty: "0",
+    offer_id: "",
+    size_id: "",
+    color_id: "",
     tags: "",
     status: "active",
     is_featured: false,
@@ -81,17 +86,22 @@ export default function ProductsPage() {
       setLoading(true);
 
       const response = await fetch("/api/admin/products");
+      const offersResponse = await fetch("/api/admin/offers");
 
       if (!response.ok) {
         throw new Error("Failed to load products");
       }
 
       const data = await response.json();
+      const offersData = offersResponse.ok
+        ? await offersResponse.json()
+        : { offers: [] };
 
       setProducts(data.products || []);
       setCategories(data.categories || []);
       setSizes(data.sizes || []);
       setColors(data.colors || []);
+      setOffers(offersData.offers || []);
     } catch (error) {
       console.error(error);
       alert("Failed to load product data");
@@ -159,6 +169,10 @@ export default function ProductsPage() {
       category_id: "",
       sku: "",
       brand: "",
+      qty: "0",
+      offer_id: "",
+      size_id: "",
+      color_id: "",
       tags: "",
       status: "active",
       is_featured: false,
@@ -203,6 +217,10 @@ export default function ProductsPage() {
         category_id: product.category_id || "",
         sku: product.sku || "",
         brand: product.brand || "",
+        qty: product.qty ?? "0",
+        offer_id: product.offer_id || "",
+        size_id: product.size_id || "",
+        color_id: product.color_id || "",
         tags: Array.isArray(product.tags)
           ? product.tags.join(", ")
           : "",
@@ -413,6 +431,10 @@ export default function ProductsPage() {
       formData.append("category_id", form.category_id);
       formData.append("sku", form.sku);
       formData.append("brand", form.brand);
+      formData.append("qty", String(form.qty || 0));
+      formData.append("offer_id", form.offer_id);
+      formData.append("size_id", form.size_id);
+      formData.append("color_id", form.color_id);
       formData.append("tags", form.tags);
       formData.append("status", form.status);
       formData.append(
@@ -748,6 +770,7 @@ export default function ProductsPage() {
                   <th>Category</th>
                   <th>Price</th>
                   <th>Variants</th>
+                  <th>Available Qty</th>
                   <th>Status</th>
                   <th>Features</th>
                   <th>Actions</th>
@@ -832,6 +855,8 @@ export default function ProductsPage() {
                           {product.variant_count || 0}
                         </span>
                       </td>
+
+                      <td>{Number(product.total_stock ?? product.qty ?? 0)}</td>
 
                       {/* STATUS */}
                       <td>
@@ -1142,6 +1167,24 @@ export default function ProductsPage() {
                   </div>
 
                   <div className="form-group">
+                    <label>Offer</label>
+
+                    <select
+                      value={form.offer_id}
+                      onChange={(event) =>
+                        updateForm("offer_id", event.target.value)
+                      }
+                    >
+                      <option value="">No offer</option>
+                      {offers.map((offer) => (
+                        <option key={offer.offer_id} value={offer.offer_id}>
+                          {offer.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
                     <label>Status</label>
 
                     <select
@@ -1167,6 +1210,66 @@ export default function ProductsPage() {
                     </select>
                   </div>
 
+                </div>
+
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label>Quantity</label>
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={
+                        variants.length > 0
+                          ? variants.reduce(
+                              (total, variant) => total + Number(variant.stock_quantity || 0),
+                              0
+                            )
+                          : form.qty
+                      }
+                      disabled={variants.length > 0}
+                      onChange={(event) => updateForm("qty", event.target.value)}
+                    />
+                    <small>
+                      {variants.length > 0
+                        ? "Calculated from the variant quantities below."
+                        : "Used for products without size/color variants."}
+                    </small>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Default Size</label>
+                    <select
+                      value={form.size_id}
+                      onChange={(event) => updateForm("size_id", event.target.value)}
+                    >
+                      <option value="">No default size</option>
+                      {sizes
+                        .filter((size) => size.status === "active")
+                        .map((size) => (
+                          <option key={size.size_id} value={size.size_id}>
+                            {size.name}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Default Color</label>
+                    <select
+                      value={form.color_id}
+                      onChange={(event) => updateForm("color_id", event.target.value)}
+                    >
+                      <option value="">No default color</option>
+                      {colors
+                        .filter((color) => color.status === "active")
+                        .map((color) => (
+                          <option key={color.color_id} value={color.color_id}>
+                            {color.name}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div className="checkbox-row">

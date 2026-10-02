@@ -35,6 +35,7 @@ export default function FeaturedProducts() {
               variants: product.variants || [],
               sizes: product.sizes || [],
               colors: product.colors || [],
+              stock: Number(product.total_stock) || 0,
             }))
           : [];
 

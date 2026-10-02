@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
 import { getPool, query } from "@/lib/db";
-<<<<<<< HEAD
 import {
   CUSTOMER_COOKIE_NAME,
   verifyCustomerToken,
 } from "@/lib/auth";
-=======
->>>>>>> f33283f0dc11ce512ed80d94b046891c1b66d125
 
 // GET - Get all orders
 export async function GET() {
@@ -59,7 +56,6 @@ export async function GET() {
   }
 }
 
-<<<<<<< HEAD
 export async function POST(request) {
   let connection;
 
@@ -93,25 +89,10 @@ export async function POST(request) {
     ) {
       return NextResponse.json(
         { success: false, message: "Complete all shipping details before ordering." },
-=======
-// POST - Create new order
-export async function POST(request) {
-  try {
-    const body = await request.json();
-    const cartItems = Array.isArray(body.items) ? body.items : [];
-
-    if (!cartItems.length) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Cart is empty.",
-        },
->>>>>>> f33283f0dc11ce512ed80d94b046891c1b66d125
         { status: 400 }
       );
     }
 
-<<<<<<< HEAD
     if (!Array.isArray(body.items) || body.items.length === 0) {
       return NextResponse.json(
         { success: false, message: "Your cart is empty." },
@@ -174,12 +155,95 @@ export async function POST(request) {
     const orderLines = [];
 
     for (const item of items) {
-      const variantFilter = item.variantId
-        ? "AND pv.variant_id = ?"
-        : "AND COALESCE(s.name, '') = ? AND COALESCE(c.name, '') = ?";
-      const variantParams = item.variantId
-        ? [item.productId, item.variantId]
-        : [item.productId, item.size, item.color];
+      let variantId = item.variantId;
+
+      if (!variantId) {
+        const [matchingVariants] = await connection.execute(
+          `SELECT pv.variant_id
+           FROM product_variants pv
+           INNER JOIN products p ON p.item_id = pv.item_id
+           LEFT JOIN sizes s ON s.size_id = pv.size_id
+           LEFT JOIN colors c ON c.color_id = pv.color_id
+           WHERE pv.item_id = ?
+             AND pv.status = 'active'
+             AND p.status = 'active'
+             AND COALESCE(s.name, '') = ?
+             AND COALESCE(c.name, '') = ?
+           LIMIT 1
+           FOR UPDATE`,
+          [item.productId, item.size, item.color]
+        );
+        variantId = matchingVariants[0]?.variant_id || null;
+      }
+
+      if (!variantId) {
+        const [simpleProducts] = await connection.execute(
+          `SELECT p.item_id, p.qty, p.price, p.discount
+           FROM products p
+           WHERE p.item_id = ?
+             AND p.status = 'active'
+             AND NOT EXISTS (
+               SELECT 1 FROM product_variants pv
+               WHERE pv.item_id = p.item_id AND pv.status = 'active'
+             )
+           LIMIT 1
+           FOR UPDATE`,
+          [item.productId]
+        );
+        const product = simpleProducts[0];
+
+        if (!product) {
+          await connection.rollback();
+          return NextResponse.json(
+            { success: false, message: "A product option in your cart is no longer available." },
+            { status: 409 }
+          );
+        }
+
+        const stock = Number(product.qty) || 0;
+        if (stock < item.quantity) {
+          await connection.rollback();
+          return NextResponse.json(
+            {
+              success: false,
+              message: `Only ${stock} item${stock === 1 ? "" : "s"} remain for a product in your cart. Update the quantity and try again.`,
+            },
+            { status: 409 }
+          );
+        }
+
+        const unitPrice = Number(product.price) || 0;
+        const discountPercent = Number(product.discount) || 0;
+        const discountAmount = unitPrice * item.quantity * discountPercent / 100;
+        const lineTotal = unitPrice * item.quantity - discountAmount;
+
+        subtotal += unitPrice * item.quantity;
+        discountTotal += discountAmount;
+        orderLines.push({
+          ...item,
+          variantId: null,
+          unitPrice,
+          discountPercent,
+          lineTotal,
+          stockAfter: stock - item.quantity,
+        });
+
+        const [updateResult] = await connection.execute(
+          `UPDATE products SET qty = qty - ?
+           WHERE item_id = ? AND qty >= ?`,
+          [item.quantity, item.productId, item.quantity]
+        );
+        if (updateResult.affectedRows !== 1) {
+          await connection.rollback();
+          return NextResponse.json(
+            { success: false, message: "Stock changed while placing your order. Please try again." },
+            { status: 409 }
+          );
+        }
+
+        continue;
+      }
+
       const [variants] = await connection.execute(
         `SELECT
            pv.variant_id,
@@ -195,10 +259,10 @@ export async function POST(request) {
          WHERE pv.item_id = ?
            AND pv.status = 'active'
            AND p.status = 'active'
-           ${variantFilter}
+           AND pv.variant_id = ?
          LIMIT 1
          FOR UPDATE`,
-        variantParams
+        [item.productId, variantId]
       );
 
       const variant = variants[0];
@@ -302,14 +366,15 @@ export async function POST(request) {
         ]
       );
 
-      await connection.execute(
+      if (item.variantId) {
+        await connection.execute(
         `INSERT INTO inventory_transactions (
            variant_id, transaction_type, quantity, reference_id, note
          ) VALUES (?, 'sale', ?, ?, ?)`,
         [item.variantId, item.quantity, orderId, `Order ${orderId}`]
       );
 
-      await connection.execute(
+        await connection.execute(
         `INSERT INTO inventory (
            variant_id, quantity, reserved_quantity, available_quantity
          ) VALUES (?, ?, 0, ?)
@@ -318,6 +383,7 @@ export async function POST(request) {
            available_quantity = VALUES(available_quantity)`,
         [item.variantId, item.stockAfter, item.stockAfter]
       );
+      }
     }
 
     await connection.commit();
@@ -346,119 +412,5 @@ export async function POST(request) {
     );
   } finally {
     connection?.release();
-=======
-    const subtotal = cartItems.reduce(
-      (sum, item) =>
-        sum + Number(item.price || 0) * Number(item.quantity || 1),
-      0
-    );
-
-    const shippingFee = Number(body.shippingFee || 0);
-    const discount = Number(body.discount || 0);
-    const totalAmount = Math.max(subtotal + shippingFee - discount, 0);
-
-    const shippingAddress = body.shippingAddress ? JSON.stringify(body.shippingAddress) : "";
-    const billingAddress = body.billingAddress ? JSON.stringify(body.billingAddress) : shippingAddress;
-
-    const pool = getPool();
-
-    const [orderResult] = await pool.execute(
-      `
-        INSERT INTO orders (
-          user_id,
-          subtotal,
-          discount,
-          shipping_fee,
-          total_amount,
-          payment_status,
-          order_status,
-          shipping_address,
-          billing_address
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `,
-      [
-        body.user_id ?? null,
-        Number(subtotal).toFixed(2),
-        Number(discount).toFixed(2),
-        Number(shippingFee).toFixed(2),
-        Number(totalAmount).toFixed(2),
-        body.paymentStatus || "pending",
-        body.orderStatus || "pending",
-        shippingAddress,
-        billingAddress,
-      ]
-    );
-
-    const orderId = orderResult.insertId;
-
-    for (const item of cartItems) {
-      const itemId = Number(item.productId ?? item.item_id ?? item.id ?? 0);
-      const qty = Number(item.quantity || 1);
-      const unitPrice = Number(item.price || 0);
-      const itemTotal = unitPrice * qty;
-
-      if (!itemId || qty <= 0) continue;
-
-      await pool.execute(
-        `
-          INSERT INTO order_items (
-            order_id,
-            item_id,
-            qty,
-            unit_price,
-            discount,
-            total_price
-          ) VALUES (?, ?, ?, ?, ?, ?)
-        `,
-        [
-          orderId,
-          itemId,
-          qty,
-          Number(unitPrice).toFixed(2),
-          0,
-          Number(itemTotal).toFixed(2),
-        ]
-      );
-    }
-
-    if (body.paymentMethod) {
-      await pool.execute(
-        `
-          INSERT INTO payments (
-            order_id,
-            payment_method,
-            transaction_id,
-            amount,
-            payment_status,
-            paid_at
-          ) VALUES (?, ?, ?, ?, ?, NOW())
-        `,
-        [
-          orderId,
-          body.paymentMethod === "Cash on Delivery" ? "cash_on_delivery" : body.paymentMethod,
-          body.transactionId || null,
-          Number(totalAmount).toFixed(2),
-          "pending",
-        ]
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      orderId,
-      message: "Order created successfully.",
-    });
-  } catch (error) {
-    console.error("Create order error:", error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to create order.",
-        details: error.message,
-      },
-      { status: 500 }
-    );
->>>>>>> f33283f0dc11ce512ed80d94b046891c1b66d125
   }
 }

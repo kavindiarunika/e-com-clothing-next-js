@@ -26,6 +26,12 @@ export async function GET(_request, { params }) {
         p.price,
         p.discount,
         p.category_id,
+        p.qty,
+        p.size_id,
+        p.color_id,
+        default_size.name AS default_size,
+        default_color.name AS default_color,
+        default_color.hex_code AS default_color_hex,
         c.name AS category_name,
         p.sku,
         p.brand,
@@ -34,6 +40,8 @@ export async function GET(_request, { params }) {
         p.is_featured
       FROM products p
       LEFT JOIN categories c ON c.category_id = p.category_id
+      LEFT JOIN sizes default_size ON p.size_id = default_size.size_id
+      LEFT JOIN colors default_color ON p.color_id = default_color.color_id
       WHERE p.item_id = ? AND p.status = 'active'
       LIMIT 1
       `,
@@ -79,6 +87,7 @@ export async function GET(_request, { params }) {
     );
 
     const variants = variantRows.map((variant) => ({
+      variant_id: variant.variant_id,
       size: variant.size || "",
       color: variant.color || "",
       color_id: variant.color_id,
@@ -112,7 +121,18 @@ export async function GET(_request, { params }) {
           ])
       ).values(),
     ];
-    const sizes = [...new Set(variants.map((variant) => variant.size).filter(Boolean))];
+    if (product.default_color && !colors.some((color) => color.name === product.default_color)) {
+      colors.push({
+        color_id: product.color_id,
+        name: product.default_color,
+        hex_code: product.default_color_hex || "",
+        image: images[0] || null,
+      });
+    }
+    const sizes = [...new Set([
+      ...variants.map((variant) => variant.size),
+      product.default_size,
+    ].filter(Boolean))];
 
     return NextResponse.json({
       success: true,
