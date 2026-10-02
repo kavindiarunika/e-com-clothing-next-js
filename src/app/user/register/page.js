@@ -90,41 +90,30 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      /*
-      ==========================================
-      BACKEND API WILL BE CONNECTED HERE
-      ==========================================
-
-      const response = await fetch("/api/auth/send-otp", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
           email: formData.email,
+          phone: formData.phone,
+          password: formData.password,
         }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message);
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Unable to create your account.");
       }
-      */
 
-      // Temporary frontend testing
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000)
-      );
-
-      setSuccess(
-        `Verification code sent to ${formData.email}`
-      );
-
-      setStep("otp");
+      setStep("created");
     } catch (err) {
       setError(
-        err.message || "Unable to send verification code."
+        err.message || "Unable to create your account."
       );
     } finally {
       setLoading(false);
@@ -524,11 +513,6 @@ export default function RegisterPage() {
                     "
                   />
 
-                  <p className="mt-2 text-xs text-[#8B817A]">
-                    A verification code will be sent to
-                    this email.
-                  </p>
-
                 </div>
 
                 {/* PHONE */}
@@ -731,11 +715,11 @@ export default function RegisterPage() {
                         size={17}
                         className="animate-spin"
                       />
-                      Sending Code
+                      Creating Account
                     </>
                   ) : (
                     <>
-                      Continue
+                      Create Account
                       <ArrowRight
                         size={16}
                         className="transition-transform duration-300 group-hover:translate-x-1"
@@ -856,7 +840,7 @@ export default function RegisterPage() {
               </h1>
 
               <p className="mt-4 text-sm leading-6 text-[#6B625C]">
-                We've sent a 6-digit verification code
+                We&apos;ve sent a 6-digit verification code
                 to
               </p>
 
@@ -973,7 +957,7 @@ export default function RegisterPage() {
                   <div className="mt-6 text-center">
 
                 <p className="text-sm text-[#6B625C]">
-                  Didn't receive the code?
+                  Didn&apos;t receive the code?
                 </p>
 
                 <button
@@ -1074,7 +1058,7 @@ export default function RegisterPage() {
 
               <p className="mx-auto mt-4 max-w-sm text-sm leading-6 text-[#6B625C]">
                 Your email address has been successfully
-                verified. You're one step away from joining
+                verified. You&apos;re one step away from joining
                 Velora.
               </p>
 

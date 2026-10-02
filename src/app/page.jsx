@@ -5,7 +5,7 @@ import NewArrivals from "../components/user/home/NewArrivals";
 import PromoBanner from "../components/user/home/PromoBanner";
 import Navbar from "../components/user/common/Navbar";
 import Footer from "../components/user/common/Footer";
-import Newsletter from "../../components/user/home/Newsletter";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#EFE9E1]">
@@ -15,7 +15,6 @@ export default function Home() {
       <CategorySection />
       <FeaturedProducts />
       <NewArrivals />
-      <PromoBanner />
       <Footer />
 
     </main>

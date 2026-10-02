@@ -27,12 +27,14 @@ export default function NewArrivals() {
               id: product.item_id,
               name: product.title,
               category: product.category_name,
-              stock_quantity: product.stock_quantity,
+              stock_quantity: product.total_stock,
               price: product.price,
               discount: product.discount,
               image: product.image,
               images: product.image ? [product.image] : [],
-              variants: [],
+              variants: product.variants || [],
+              sizes: product.sizes || [],
+              colors: product.colors || [],
             }))
           : [];
 

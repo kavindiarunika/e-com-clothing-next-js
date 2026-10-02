@@ -30,6 +30,7 @@ export async function GET() {
 
         pv.item_id,
         pv.sku,
+        pv.stock_quantity AS stock_quantity,
         pv.size_id,
         pv.color_id,
 

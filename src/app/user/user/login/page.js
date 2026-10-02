@@ -14,17 +14,39 @@ import {
 export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    localStorage.setItem("velora-user-session", "true");
-    router.push("/user");
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to sign in.");
+      }
+
+      localStorage.setItem("velora-user-session", "true");
+      router.replace("/user/account");
+    } catch (loginError) {
+      setError(loginError.message || "Unable to sign in right now.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
-    localStorage.setItem("velora-user-session", "true");
-    router.push("/user");
+    setError("Google sign-in is not configured yet. Use your email and password.");
   };
 
   return (
@@ -164,6 +186,15 @@ export default function LoginPage() {
               onSubmit={handleSubmit}
               className="space-y-4"
             >
+              {error && (
+                <p
+                  role="alert"
+                  className="border border-[#C98B8B] bg-[#F8EAEA] px-4 py-3 text-sm text-[#8B3A3A]"
+                >
+                  {error}
+                </p>
+              )}
+
               {/* EMAIL */}
               <div>
                 <label
@@ -177,6 +208,11 @@ export default function LoginPage() {
                   <input
                     id="email"
                     type="email"
+                    value={email}
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                      setError("");
+                    }}
                     placeholder="Enter your email"
                     required
                     className="
@@ -227,6 +263,11 @@ export default function LoginPage() {
                     type={
                       showPassword ? "text" : "password"
                     }
+                    value={password}
+                    onChange={(event) => {
+                      setPassword(event.target.value);
+                      setError("");
+                    }}
                     placeholder="Enter your password"
                     required
                     className="
@@ -278,6 +319,7 @@ export default function LoginPage() {
               {/* LOGIN BUTTON */}
               <button
                 type="submit"
+                disabled={loading}
                 className="
                   group
                   flex
@@ -295,25 +337,29 @@ export default function LoginPage() {
                   transition
                   duration-300
                   hover:bg-[#72383D]
+                  disabled:cursor-not-allowed
+                  disabled:opacity-60
                 "
               >
-                Login
+                {loading ? "Signing In..." : "Login"}
 
-                <ArrowRight
-                  size={16}
-                  className="
-                    transition-transform
-                    duration-300
-                    group-hover:translate-x-1
-                  "
-                />
+                {!loading && (
+                  <ArrowRight
+                    size={16}
+                    className="
+                      transition-transform
+                      duration-300
+                      group-hover:translate-x-1
+                    "
+                  />
+                )}
               </button>
             </form>
 
             {/* REGISTER */}
             <div className="mt-6 border-t border-[#D8D0C8] pt-5 text-center">
               <p className="text-sm text-[#6B625C]">
-                Don't have an account?
+                Don&apos;t have an account?
               </p>
 
               <Link

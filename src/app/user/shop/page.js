@@ -54,8 +54,10 @@ export default function ShopPage() {
             discount: product.discount,
             image: product.image,
             images: product.image ? [product.image] : [],
-            variants: [],
-            sizes: [],
+            variants: product.variants || [],
+            sizes: product.sizes || [],
+            colors: product.colors || [],
+            stock: Number(product.total_stock) || 0,
             createdAt: product.created_at,
           }))
         );
@@ -102,13 +104,11 @@ export default function ShopPage() {
   // Check Product Sold Out
   // =========================
   const isProductSoldOut = (product) => {
-    // If product has no variants,
-    // don't consider it sold out
     if (
       !product.variants ||
       product.variants.length === 0
     ) {
-      return false;
+      return true;
     }
 
     // Product is sold out only when
