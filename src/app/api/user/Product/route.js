@@ -108,9 +108,14 @@ export async function GET(req) {
       const variants = variantsByProduct.get(product.item_id) || [];
       const totalStock = variants.reduce((total, variant) => total + variant.stock, 0);
       const { product_qty: fallbackQty, ...productData } = product;
+      const availableStock = totalStock > 0
+        ? totalStock
+        : Number(fallbackQty) || 0;
+
       return {
         ...productData,
-        qty: variants.length ? totalStock : Number(fallbackQty) || 0,
+        qty: availableStock,
+        stock: availableStock,
         image: getImageSource(product.main_image),
         main_image: undefined,
         variants,
@@ -134,9 +139,9 @@ export async function GET(req) {
             ]
           ).values(),
         ],
-        total_stock: variants.length ? totalStock : Number(fallbackQty) || 0,
+        total_stock: availableStock,
       };
-    });
+    }).filter((product) => product.total_stock > 0);
 
     return NextResponse.json(
       {

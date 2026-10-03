@@ -1,29 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 export default function ProductImageGallery({
   images,
   productName,
   selectedColor,
+  selectedSize,
+  selectedVariantImage,
 }) {
   const [selectedImage, setSelectedImage] = useState(0);
   const fallbackImage = "/images/products/shirt1.webp";
-  const displayImages = images?.length ? images : [fallbackImage];
-
-  // Change image when color changes
-  useEffect(() => {
-    if (!selectedColor?.image || !images) return;
-
-    const colorImageIndex = images.findIndex(
-      (image) => image === selectedColor.image
-    );
-
-    if (colorImageIndex !== -1) {
-      setSelectedImage(colorImageIndex);
-    }
-  }, [selectedColor, images]);
+  const priorityImage = selectedVariantImage || selectedColor?.image || null;
+  const selectionContext = selectedSize
+    ? `${selectedSize}-${selectedColor?.name || "color"}`
+    : selectedColor?.name || "default";
+  const displayImages = images?.length
+    ? priorityImage
+      ? [priorityImage, ...images.filter((image) => image !== priorityImage)]
+      : images
+    : [fallbackImage];
 
   return (
     <div className="flex flex-col-reverse gap-4 md:flex-row">
@@ -60,7 +57,7 @@ export default function ProductImageGallery({
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-white md:flex-1">
         <Image
           src={displayImages[selectedImage] || displayImages[0]}
-          alt={productName}
+          alt={`${productName} ${selectionContext}`}
           fill
           priority
           sizes="(max-width: 768px) 100vw, 50vw"

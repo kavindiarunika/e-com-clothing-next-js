@@ -141,12 +141,23 @@ export async function GET(_request, { params }) {
       0
     );
     const { product_qty: fallbackQty, ...productData } = product;
+    const availableStock = variantStock > 0
+      ? variantStock
+      : Number(fallbackQty) || 0;
+
+    if (availableStock <= 0) {
+      return NextResponse.json(
+        { success: false, message: "Product not found." },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       product: {
         ...productData,
-        qty: variants.length ? variantStock : Number(fallbackQty) || 0,
+        qty: availableStock,
+        product_qty: Number(fallbackQty) || 0,
         description: sanitizeProductDescription(product.description),
         id: product.item_id,
         name: product.title,

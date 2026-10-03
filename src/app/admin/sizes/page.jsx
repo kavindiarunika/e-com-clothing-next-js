@@ -14,41 +14,32 @@ export default function SizesPage() {
           key: "name",
           label: "Size",
         },
-        {
-          key: "status",
-          label: "Status",
-        },
       ]}
       initialData={[
         {
           id: 1,
           name: "XS",
           description: "Extra Small",
-          status: "Active",
         },
         {
           id: 2,
           name: "S",
           description: "Small",
-          status: "Active",
         },
         {
           id: 3,
           name: "M",
           description: "Medium",
-          status: "Active",
         },
         {
           id: 4,
           name: "L",
           description: "Large",
-          status: "Active",
         },
         {
           id: 5,
           name: "XL",
           description: "Extra Large",
-          status: "Active",
         },
       ]}
       endpoint="/api/admin/sizes"

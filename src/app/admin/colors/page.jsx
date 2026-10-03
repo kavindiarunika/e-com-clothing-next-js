@@ -38,35 +38,27 @@ export default function ColorsPage() {
             );
           },
         },
-        {
-          key: "status",
-          label: "Status",
-        },
       ]}
       initialData={[
         {
           id: 1,
           name: "Black",
           code: "#000000",
-          status: "Active",
         },
         {
           id: 2,
           name: "White",
           code: "#FFFFFF",
-          status: "Active",
         },
         {
           id: 3,
           name: "Red",
           code: "#B42318",
-          status: "Active",
         },
         {
           id: 4,
           name: "Blue",
           code: "#2563EB",
-          status: "Active",
         },
       ]}
       endpoint="/api/admin/colors"

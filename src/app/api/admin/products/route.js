@@ -54,7 +54,6 @@ export async function GET(request) {
           pv.item_id,
           pv.size_id,
           pv.color_id,
-          pv.sku,
           pv.price,
           pv.discount,
           pv.stock_quantity,
@@ -156,9 +155,16 @@ export async function GET(request) {
         p.updated_at,
 
         c.name AS category_name,
+        ${productColumns.has("size_id") ? "default_size.name" : "NULL"} AS default_size_name,
 
         COUNT(DISTINCT CASE WHEN pv.status = 'active' THEN pv.variant_id END)
           AS variant_count,
+
+        GROUP_CONCAT(
+          DISTINCT CASE WHEN pv.status = 'active' THEN s.name END
+          ORDER BY s.name
+          SEPARATOR ', '
+        ) AS variant_sizes,
 
         ${totalStock} AS total_stock,
 
@@ -171,8 +177,13 @@ export async function GET(request) {
       LEFT JOIN categories c
         ON p.category_id = c.category_id
 
+      ${productColumns.has("size_id") ? "LEFT JOIN sizes default_size ON p.size_id = default_size.size_id" : ""}
+
       LEFT JOIN product_variants pv
         ON p.item_id = pv.item_id
+
+      LEFT JOIN sizes s
+        ON pv.size_id = s.size_id
 
       GROUP BY
         p.item_id
@@ -226,8 +237,7 @@ export async function GET(request) {
       `
       SELECT
         size_id,
-        name,
-        status
+        name
       FROM sizes
       ORDER BY name ASC
       `
@@ -242,8 +252,7 @@ export async function GET(request) {
       SELECT
         color_id,
         name,
-        hex_code,
-        status
+        hex_code
       FROM colors
       ORDER BY name ASC
       `
@@ -473,25 +482,19 @@ export async function POST(request) {
           item_id,
           size_id,
           color_id,
-          sku,
           price,
-          discount,
           stock_quantity,
           image,
           status
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         `,
         [
           itemId,
           variant.size_id || null,
           variant.color_id || null,
-          variant.sku || null,
           Number(
             variant.price || price
-          ),
-          Number(
-            variant.discount || discount || 0
           ),
           Number(
             variant.stock_quantity || 0
@@ -825,9 +828,7 @@ export async function PUT(request) {
             SET
               size_id = ?,
               color_id = ?,
-              sku = ?,
               price = ?,
-              discount = ?,
               stock_quantity = ?,
               image = ?,
               status = ?
@@ -837,14 +838,8 @@ export async function PUT(request) {
             [
               variant.size_id || null,
               variant.color_id || null,
-              variant.sku || null,
               Number(
                 variant.price || price
-              ),
-              Number(
-                variant.discount ||
-                  discount ||
-                  0
               ),
               Number(
                 variant.stock_quantity ||
@@ -864,9 +859,7 @@ export async function PUT(request) {
             SET
               size_id = ?,
               color_id = ?,
-              sku = ?,
               price = ?,
-              discount = ?,
               stock_quantity = ?,
               status = ?
             WHERE variant_id = ?
@@ -875,14 +868,8 @@ export async function PUT(request) {
             [
               variant.size_id || null,
               variant.color_id || null,
-              variant.sku || null,
               Number(
                 variant.price || price
-              ),
-              Number(
-                variant.discount ||
-                  discount ||
-                  0
               ),
               Number(
                 variant.stock_quantity ||
@@ -908,27 +895,19 @@ export async function PUT(request) {
             item_id,
             size_id,
             color_id,
-            sku,
             price,
-            discount,
             stock_quantity,
             image,
             status
           )
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
           `,
           [
             itemId,
             variant.size_id || null,
             variant.color_id || null,
-            variant.sku || null,
             Number(
               variant.price || price
-            ),
-            Number(
-              variant.discount ||
-                discount ||
-                0
             ),
             Number(
               variant.stock_quantity ||

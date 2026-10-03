@@ -147,30 +147,42 @@ export default function ProductPage({ params }) {
       ? selectedColor?.name
       : selectedColor;
 
+  const normalizeText = (value) =>
+    String(value ?? "").trim().toLowerCase();
+
+  const selectedColorId =
+    selectedColor && typeof selectedColor === "object"
+      ? selectedColor.color_id
+      : null;
   const selectedVariant = product.variants?.find(
     (variant) =>
-      variant.size === (selectedSize || "") &&
-      variant.color === (selectedColorName || "")
+      normalizeText(variant.size) === normalizeText(selectedSize || "") &&
+      selectedColorId != null &&
+      variant.color_id != null &&
+      String(variant.color_id) === String(selectedColorId)
+  ) || product.variants?.find(
+    (variant) =>
+      normalizeText(variant.size) === normalizeText(selectedSize || "") &&
+      normalizeText(variant.color) === normalizeText(selectedColorName || "")
+  ) || product.variants?.find(
+    (variant) =>
+      normalizeText(variant.size) === normalizeText(selectedSize || "") &&
+      variant.color_id == null &&
+      !normalizeText(variant.color)
   );
 
-  const availableStock = selectedVariant
-    ? Number(selectedVariant.stock) || 0
-    : product.variants.length === 0
-      ? Number(product.qty) || 0
-      : 0;
+  const totalVariantStock = (product.variants || []).reduce(
+    (total, variant) => total + (Number(variant.stock) || 0),
+    0
+  );
+  const availableStock = totalVariantStock > 0
+    ? selectedVariant
+      ? Number(selectedVariant.stock) || 0
+      : normalizeText(selectedSize) === normalizeText(product.default_size)
+        ? Number(product.product_qty) || 0
+        : 0
+    : Number(product.qty) || 0;
   const quantityLimit = availableStock;
-
-  /*
-  ==========================================
-  PRODUCT SOLD OUT
-  ==========================================
-  */
-
-  const isSoldOut =
-    product.variants?.length > 0 &&
-    product.variants.every(
-      (variant) => Number(variant.stock || 0) <= 0
-    );
 
   /*
   ==========================================
@@ -277,7 +289,9 @@ export default function ProductPage({ params }) {
   const createCartItem = () => {
     return {
       productId: product.id,
-      variantId: selectedVariant?.variant_id,
+      variantId: totalVariantStock > 0
+        ? selectedVariant?.variant_id
+        : null,
       name: product.name,
 
       price: Math.round(discountedPrice),
@@ -478,9 +492,12 @@ export default function ProductPage({ params }) {
           <div>
             {product.images.length > 0 ? (
               <ProductImageGallery
+                key={`${selectedColor?.color_id || selectedColor?.name || "default"}-${selectedSize || "default"}`}
                 images={product.images}
                 productName={product.name}
                 selectedColor={selectedColor}
+                selectedSize={selectedSize}
+                selectedVariantImage={selectedVariant?.image || selectedColor?.image || null}
               />
             ) : (
               <div className="flex aspect-[4/5] flex-col items-center justify-center gap-3 bg-[#E3DCD1] text-[#6B625D]">
@@ -582,6 +599,10 @@ export default function ProductPage({ params }) {
                   sizeGuide={product.sizeGuide}
                   variants={product.variants}
                   selectedColor={selectedColor}
+                  productQty={
+                    Number(product.product_qty ?? product.qty) || 0
+                  }
+                  defaultSize={product.default_size || ""}
                 />
               )}
 
@@ -619,7 +640,7 @@ export default function ProductPage({ params }) {
                     type="button"
                     onClick={increaseQuantity}
                     disabled={
-                      !selectedVariant ||
+                      (product.variants.length > 0 && !selectedVariant) ||
                       quantity >= quantityLimit ||
                       availableStock <= 0
                     }
@@ -635,10 +656,8 @@ export default function ProductPage({ params }) {
 
                 <p className="mt-2 text-xs text-[#6B625C]">
 
-                  {!selectedVariant ? (
-                    product.variants.length === 0
-                      ? "Product stock options are not available"
-                      : "Select an available option"
+                  {product.variants.length > 0 && !selectedVariant ? (
+                    "Select an available option"
                   ) : availableStock > 0 ? (
                     <>
                       {availableStock}{" "}
@@ -666,7 +685,7 @@ export default function ProductPage({ params }) {
                 type="button"
                 onClick={handleBuyNow}
                 disabled={
-                  !selectedVariant ||
+                  (product.variants.length > 0 && !selectedVariant) ||
                   availableStock <= 0
                 }
                 className="bg-[#72383D] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition duration-300 hover:bg-[#322D29] disabled:cursor-not-allowed disabled:opacity-50"
@@ -680,7 +699,7 @@ export default function ProductPage({ params }) {
                 type="button"
                 onClick={handleAddToCart}
                 disabled={
-                  !selectedVariant ||
+                  (product.variants.length > 0 && !selectedVariant) ||
                   availableStock <= 0
                 }
                 className="border border-[#72383D] bg-white px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#72383D] transition duration-300 hover:bg-[#72383D] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"

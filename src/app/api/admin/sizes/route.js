@@ -5,10 +5,9 @@ const handlers = createCrudHandlers({
 	resultKey: "sizes",
 	table: "sizes",
 	idField: "size_id",
-	select: "SELECT size_id, name, status, created_at FROM sizes ORDER BY name",
+	select: "SELECT size_id, name, created_at FROM sizes ORDER BY name",
 	fields: [
 		{ key: "name", column: "name", type: "string" },
-		{ key: "status", column: "status", type: "string" },
 	],
 });
 

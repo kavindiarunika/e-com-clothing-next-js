@@ -44,10 +44,14 @@ export default function ProductCard({ product }) {
   // ---------------------------------------
   // SOLD OUT
   // ---------------------------------------
-  const hasVariants = Boolean(product.variants?.length);
-  const isSoldOut = hasVariants
-    ? product.variants.every((variant) => Number(variant.stock || 0) <= 0)
-    : Number(product.stock ?? product.qty ?? 0) <= 0;
+  const variantStock = (product.variants || []).reduce(
+    (total, variant) => total + (Number(variant.stock) || 0),
+    0
+  );
+  const availableStock = variantStock > 0
+    ? variantStock
+    : Number(product.stock ?? product.qty ?? 0);
+  const isSoldOut = availableStock <= 0;
 
   // ---------------------------------------
   // Load Wishlist
@@ -142,6 +146,8 @@ export default function ProductCard({ product }) {
     product.rating,
     product.reviews,
   ]);
+
+  if (isSoldOut) return null;
 
   // ---------------------------------------
   // Wishlist

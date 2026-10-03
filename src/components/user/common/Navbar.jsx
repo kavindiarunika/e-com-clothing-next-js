@@ -180,6 +180,13 @@ export default function Navbar() {
             Shop
           </Link>
 
+          <Link
+            href="/user/offers"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+          >
+            Offers
+          </Link>
+
           {/* =================================================
               COLLECTION DROPDOWN
           ================================================= */}
@@ -362,6 +369,14 @@ export default function Navbar() {
               className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
             >
               Shop
+            </Link>
+
+            <Link
+              href="/user/offers"
+              onClick={closeMenu}
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+            >
+              Offers
             </Link>
 
             {/* =================================================

@@ -166,6 +166,7 @@ export async function POST(request) {
            LEFT JOIN colors c ON c.color_id = pv.color_id
            WHERE pv.item_id = ?
              AND pv.status = 'active'
+             AND pv.stock_quantity > 0
              AND p.status = 'active'
              AND COALESCE(s.name, '') = ?
              AND COALESCE(c.name, '') = ?
@@ -178,17 +179,37 @@ export async function POST(request) {
 
       if (!variantId) {
         const [simpleProducts] = await connection.execute(
-          `SELECT p.item_id, 0 AS qty, p.price, p.discount
+          `SELECT p.item_id, p.qty, p.price, p.discount
            FROM products p
+           LEFT JOIN sizes default_size ON default_size.size_id = p.size_id
+           LEFT JOIN colors default_color ON default_color.color_id = p.color_id
            WHERE p.item_id = ?
              AND p.status = 'active'
-             AND NOT EXISTS (
-               SELECT 1 FROM product_variants pv
-               WHERE pv.item_id = p.item_id AND pv.status = 'active'
+             AND (
+               NOT EXISTS (
+                 SELECT 1 FROM product_variants pv
+                 WHERE pv.item_id = p.item_id
+                   AND pv.status = 'active'
+                   AND pv.stock_quantity > 0
+               )
+               OR (
+                 COALESCE(default_size.name, '') = ?
+                 AND COALESCE(default_color.name, '') = ?
+                 AND NOT EXISTS (
+                   SELECT 1
+                   FROM product_variants pv
+                   LEFT JOIN sizes variant_size ON variant_size.size_id = pv.size_id
+                   LEFT JOIN colors variant_color ON variant_color.color_id = pv.color_id
+                   WHERE pv.item_id = p.item_id
+                     AND pv.status = 'active'
+                     AND COALESCE(variant_size.name, '') = ?
+                     AND COALESCE(variant_color.name, '') = ?
+                 )
+               )
              )
            LIMIT 1
            FOR UPDATE`,
-          [item.productId]
+          [item.productId, item.size, item.color, item.size, item.color]
         );
         const product = simpleProducts[0];
 
@@ -216,6 +237,20 @@ export async function POST(request) {
         const discountPercent = Number(product.discount) || 0;
         const discountAmount = unitPrice * item.quantity * discountPercent / 100;
         const lineTotal = unitPrice * item.quantity - discountAmount;
+
+        const [updateResult] = await connection.execute(
+          `UPDATE products
+           SET qty = qty - ?
+           WHERE item_id = ? AND qty >= ?`,
+          [item.quantity, product.item_id, item.quantity]
+        );
+        if (updateResult.affectedRows !== 1) {
+          await connection.rollback();
+          return NextResponse.json(
+            { success: false, message: "Stock changed while placing your order. Please try again." },
+            { status: 409 }
+          );
+        }
 
         subtotal += unitPrice * item.quantity;
         discountTotal += discountAmount;

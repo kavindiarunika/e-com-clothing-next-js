@@ -293,9 +293,7 @@ export default function ProductsPage() {
           color_id: variant.color_id || "",
           color_mode: "catalog",
           custom_color: "",
-          sku: variant.sku || "",
           price: variant.price || "",
-          discount: variant.discount || "",
           stock_quantity: variant.stock_quantity || 0,
           status: variant.status || "active",
           existing_image: variant.image || null,
@@ -402,9 +400,7 @@ export default function ProductsPage() {
         color_id: "",
         color_mode: "catalog",
         custom_color: "",
-        sku: "",
         price: "",
-        discount: "",
         stock_quantity: 0,
         status: "active",
         image: null,
@@ -614,9 +610,8 @@ export default function ProductsPage() {
           variant.color_mode === "picker"
             ? colorIdByHex.get(String(variant.custom_color).toUpperCase())
             : variant.color_id || null,
-        sku: variant.sku || "",
         price: variant.price || form.price,
-        discount: variant.discount || form.discount || 0,
+        discount: 0,
         stock_quantity: Number(variant.stock_quantity || 0),
         status: variant.status || "active",
       }));
@@ -865,6 +860,7 @@ export default function ProductsPage() {
                   <th>SKU</th>
                   <th>Category</th>
                   <th>Price</th>
+                  <th>Sizes</th>
                   <th>Variants</th>
                   <th>Available Qty</th>
                   <th>Status</th>
@@ -943,6 +939,11 @@ export default function ProductsPage() {
                           )}
                         </div>
 
+                      </td>
+
+                      {/* SIZES */}
+                      <td>
+                        {product.variant_sizes || product.default_size_name || "-"}
                       </td>
 
                       {/* VARIANTS */}
@@ -1339,13 +1340,11 @@ export default function ProductsPage() {
                       onChange={(event) => updateForm("size_id", event.target.value)}
                     >
                       <option value="">No default size</option>
-                      {sizes
-                        .filter((size) => size.status === "active")
-                        .map((size) => (
-                          <option key={size.size_id} value={size.size_id}>
-                            {size.name}
-                          </option>
-                        ))}
+                      {sizes.map((size) => (
+                        <option key={size.size_id} value={size.size_id}>
+                          {size.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -1365,14 +1364,12 @@ export default function ProductsPage() {
                         style={{ flex: 1, minWidth: 0 }}
                       >
                         <option value="">No default color</option>
-                        {colors
-                          .filter((color) => color.status === "active")
-                          .map((color) => (
-                            <option key={color.color_id} value={color.color_id}>
-                              {color.name}
-                              {color.hex_code ? ` (${color.hex_code})` : ""}
-                            </option>
-                          ))}
+                        {colors.map((color) => (
+                          <option key={color.color_id} value={color.color_id}>
+                            {color.name}
+                            {color.hex_code ? ` (${color.hex_code})` : ""}
+                          </option>
+                        ))}
                       </select>
 
                       <input
@@ -1668,11 +1665,6 @@ export default function ProductsPage() {
                                 </option>
 
                                 {sizes
-                                  .filter(
-                                    (size) =>
-                                      String(size.status).toLowerCase() ===
-                                      "active"
-                                  )
                                   .map((size) => (
                                     <option
                                       key={
@@ -1704,21 +1696,15 @@ export default function ProductsPage() {
                                 >
                                   <option value="">Select saved color</option>
 
-                                  {colors
-                                    .filter(
-                                      (color) =>
-                                        String(color.status).toLowerCase() ===
-                                        "active"
-                                    )
-                                    .map((color) => (
-                                      <option
-                                        key={color.color_id}
-                                        value={color.color_id}
-                                      >
-                                        {color.name}
-                                        {color.hex_code ? ` (${color.hex_code})` : ""}
-                                      </option>
-                                    ))}
+                                  {colors.map((color) => (
+                                    <option
+                                      key={color.color_id}
+                                      value={color.color_id}
+                                    >
+                                      {color.name}
+                                      {color.hex_code ? ` (${color.hex_code})` : ""}
+                                    </option>
+                                  ))}
                                 </select>
 
                                 <input
@@ -1758,24 +1744,6 @@ export default function ProductsPage() {
                               </div>
                             </div>
 
-                            {/* SKU */}
-                            <div className="form-group">
-                              <label>Variant SKU</label>
-
-                              <input
-                                type="text"
-                                value={variant.sku}
-                                onChange={(event) =>
-                                  updateVariant(
-                                    index,
-                                    "sku",
-                                    event.target.value
-                                  )
-                                }
-                                placeholder="TS-BLK-M"
-                              />
-                            </div>
-
                             {/* PRICE */}
                             <div className="form-group">
                               <label>Price</label>
@@ -1795,29 +1763,6 @@ export default function ProductsPage() {
                                 placeholder={
                                   form.price ||
                                   "Product price"
-                                }
-                              />
-                            </div>
-
-                            {/* DISCOUNT */}
-                            <div className="form-group">
-                              <label>
-                                Discount (%)
-                              </label>
-
-                              <input
-                                type="number"
-                                min="0"
-                                max="100"
-                                value={
-                                  variant.discount
-                                }
-                                onChange={(event) =>
-                                  updateVariant(
-                                    index,
-                                    "discount",
-                                    event.target.value
-                                  )
                                 }
                               />
                             </div>

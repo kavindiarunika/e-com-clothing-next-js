@@ -7,6 +7,7 @@ import SearchBar from "@/components/user/shop/SearchBar";
 import FilterSidebar from "@/components/user/shop/FilterSidebar";
 import SortDropdown from "@/components/user/shop/SortDropdown";
 import ProductCard from "@/components/user/product/ProductCard";
+import ShopOfferHero from "@/components/user/shop/ShopOfferHero";
 
 export default function ShopPage() {
   const [products, setProducts] = useState([]);
@@ -104,19 +105,15 @@ export default function ShopPage() {
   // Check Product Sold Out
   // =========================
   const isProductSoldOut = (product) => {
-    if (
-      !product.variants ||
-      product.variants.length === 0
-    ) {
-      return true;
-    }
-
-    // Product is sold out only when
-    // ALL variants have 0 stock
-    return product.variants.every(
-      (variant) =>
-        Number(variant.stock || 0) <= 0
+    const variantStock = (product.variants || []).reduce(
+      (total, variant) => total + (Number(variant.stock) || 0),
+      0
     );
+    const availableStock = variantStock > 0
+      ? variantStock
+      : Number(product.stock ?? product.qty ?? 0);
+
+    return availableStock <= 0;
   };
 
   // =========================
@@ -312,25 +309,7 @@ export default function ShopPage() {
   return (
     <main className="min-h-screen bg-[#EFE9E1]">
 
-      {/* Header */}
-      <section className="border-b border-[#D8D0C8] bg-[#EFE9E1]">
-        <div className="mx-auto w-[92%] max-w-[1200px] py-8 md:py-8">
-
-          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#72383D]">
-            Velora Collection
-          </p>
-
-          <h1 className="font-serif text-4xl font-medium text-[#322D29] md:text-5xl">
-            Shop
-          </h1>
-
-          <p className="mt-3 max-w-xl text-sm leading-6 text-[#6B625C]">
-            Discover timeless styles, premium fabrics and
-            carefully selected pieces for every occasion.
-          </p>
-
-        </div>
-      </section>
+      <ShopOfferHero />
 
       {/* Main */}
       <section className="mx-auto w-[92%] max-w-[1200px] py-8 md:py-12">

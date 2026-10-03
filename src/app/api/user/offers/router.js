@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { getImageSource } from "@/lib/productImageSource";
 
 export async function GET() {
   try {
@@ -20,9 +21,7 @@ export async function GET() {
     `);
     const formattedOffers = offers.map((offer) => ({
       ...offer,
-      banner_image: Buffer.isBuffer(offer.banner_image)
-        ? offer.banner_image.toString("utf8")
-        : offer.banner_image,
+      banner_image: getImageSource(offer.banner_image),
     }));
 
     return NextResponse.json({
