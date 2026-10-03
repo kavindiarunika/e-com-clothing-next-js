@@ -18,6 +18,25 @@ export default function ColorsPage() {
           key: "hex_code",
           label: "Color Code",
           type: "color",
+          render: (color) => {
+            const isValidHex = /^#[0-9a-f]{6}$/i.test(color.hex_code || "");
+
+            return (
+              <span className="admin-color-code-preview">
+                <span
+                  className="admin-color-code-preview-swatch"
+                  role="img"
+                  aria-label={`Color preview for ${color.name}`}
+                  style={{
+                    backgroundColor: isValidHex ? color.hex_code : "#FFFFFF",
+                  }}
+                />
+                <span className="admin-color-code-preview-value">
+                  {color.hex_code || "—"}
+                </span>
+              </span>
+            );
+          },
         },
         {
           key: "status",

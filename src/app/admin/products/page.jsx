@@ -14,6 +14,57 @@ import {
 } from "lucide-react";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 
+function distributeActiveVariantQuantity(variants, requestedQuantity) {
+  const targetQuantity = Math.max(
+    0,
+    Math.floor(Number(requestedQuantity) || 0)
+  );
+  const activeVariants = variants.filter(
+    (variant) => String(variant.status || "active").toLowerCase() === "active"
+  );
+
+  if (activeVariants.length === 0) return variants;
+
+  const currentTotal = activeVariants.reduce(
+    (total, variant) => total + Math.max(0, Number(variant.stock_quantity) || 0),
+    0
+  );
+  const allocations = activeVariants.map((variant, index) => {
+    const exactQuantity = currentTotal > 0
+      ? targetQuantity * Math.max(0, Number(variant.stock_quantity) || 0) / currentTotal
+      : targetQuantity / activeVariants.length;
+    const quantity = Math.floor(exactQuantity);
+
+    return {
+      index,
+      quantity,
+      remainder: exactQuantity - quantity,
+    };
+  });
+  const remainingQuantity = targetQuantity - allocations.reduce(
+    (total, allocation) => total + allocation.quantity,
+    0
+  );
+
+  [...allocations]
+    .sort((first, second) => second.remainder - first.remainder || first.index - second.index)
+    .slice(0, remainingQuantity)
+    .forEach((allocation) => {
+      allocation.quantity += 1;
+    });
+
+  let activeIndex = 0;
+  return variants.map((variant) => {
+    if (String(variant.status || "active").toLowerCase() !== "active") {
+      return variant;
+    }
+
+    const allocation = allocations[activeIndex];
+    activeIndex += 1;
+    return { ...variant, stock_quantity: allocation.quantity };
+  });
+}
+
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -52,6 +103,8 @@ export default function ProductsPage() {
     offer_id: "",
     size_id: "",
     color_id: "",
+    color_mode: "catalog",
+    custom_color: "",
     tags: "",
     status: "active",
     is_featured: false,
@@ -173,6 +226,8 @@ export default function ProductsPage() {
       offer_id: "",
       size_id: "",
       color_id: "",
+      color_mode: "catalog",
+      custom_color: "",
       tags: "",
       status: "active",
       is_featured: false,
@@ -221,6 +276,8 @@ export default function ProductsPage() {
         offer_id: product.offer_id || "",
         size_id: product.size_id || "",
         color_id: product.color_id || "",
+        color_mode: "catalog",
+        custom_color: "",
         tags: Array.isArray(product.tags)
           ? product.tags.join(", ")
           : "",
@@ -363,22 +420,45 @@ export default function ProductsPage() {
       variantImagePreviewUrls.current.delete(previewUrl);
     }
 
-    setVariants((previous) =>
-      previous.filter((_, variantIndex) => variantIndex !== index)
+    const updatedVariants = variants.filter(
+      (_, variantIndex) => variantIndex !== index
+    );
+    setVariants(updatedVariants);
+    updateForm(
+      "qty",
+      String(
+        updatedVariants.reduce(
+          (total, variant) =>
+            String(variant.status || "active").toLowerCase() === "active"
+              ? total + (Number(variant.stock_quantity) || 0)
+              : total,
+          0
+        )
+      )
     );
   }
 
   function updateVariant(index, field, value) {
-    setVariants((previous) =>
-      previous.map((variant, variantIndex) =>
-        variantIndex === index
-          ? {
-              ...variant,
-              [field]: value,
-            }
-          : variant
-      )
+    const updatedVariants = variants.map((variant, variantIndex) =>
+      variantIndex === index
+        ? {
+            ...variant,
+            [field]: value,
+          }
+        : variant
     );
+    setVariants(updatedVariants);
+
+    if (field === "stock_quantity" || field === "status") {
+      const activeQuantity = updatedVariants.reduce(
+        (total, variant) =>
+          String(variant.status || "active").toLowerCase() === "active"
+            ? total + (Number(variant.stock_quantity) || 0)
+            : total,
+        0
+      );
+      updateForm("qty", String(activeQuantity));
+    }
   }
 
   function handleVariantImage(index, file) {
@@ -419,6 +499,11 @@ export default function ProductsPage() {
       return;
     }
 
+    const variantsForSave = distributeActiveVariantQuantity(
+      variants,
+      form.qty
+    );
+
     try {
       setSaving(true);
 
@@ -434,7 +519,6 @@ export default function ProductsPage() {
       formData.append("qty", String(form.qty || 0));
       formData.append("offer_id", form.offer_id);
       formData.append("size_id", form.size_id);
-      formData.append("color_id", form.color_id);
       formData.append("tags", form.tags);
       formData.append("status", form.status);
       formData.append(
@@ -469,15 +553,20 @@ export default function ProductsPage() {
             color.color_id,
           ])
       );
-      const customHexCodes = new Set(
-        variants
+      const customHexCodes = new Set([
+        ...(form.color_mode === "picker"
+          ? [String(form.custom_color || "").toUpperCase()]
+          : []),
+        ...(
+        variantsForSave
           .filter((variant) => variant.color_mode === "picker")
           .map((variant) => String(variant.custom_color || "").toUpperCase())
-      );
+        ),
+      ]);
 
       for (const hexCode of customHexCodes) {
         if (!/^#[0-9A-F]{6}$/.test(hexCode)) {
-          throw new Error("Choose a valid color for each picked variant.");
+          throw new Error("Choose a valid color for each picked product or variant.");
         }
 
         if (colorIdByHex.has(hexCode)) continue;
@@ -511,7 +600,14 @@ export default function ProductsPage() {
         ]);
       }
 
-      const variantData = variants.map((variant) => ({
+      formData.append(
+        "color_id",
+        form.color_mode === "picker"
+          ? colorIdByHex.get(String(form.custom_color).toUpperCase()) || ""
+          : form.color_id
+      );
+
+      const variantData = variantsForSave.map((variant) => ({
         variant_id: variant.variant_id || null,
         size_id: variant.size_id || null,
         color_id:
@@ -530,7 +626,7 @@ export default function ProductsPage() {
         JSON.stringify(variantData)
       );
 
-      variants.forEach((variant, index) => {
+      variantsForSave.forEach((variant, index) => {
         if (variant.image) {
           formData.append(
             `variant_image_${index}`,
@@ -1219,20 +1315,19 @@ export default function ProductsPage() {
                       type="number"
                       min="0"
                       step="1"
-                      value={
-                        variants.length > 0
-                          ? variants.reduce(
-                              (total, variant) => total + Number(variant.stock_quantity || 0),
-                              0
-                            )
-                          : form.qty
-                      }
-                      disabled={variants.length > 0}
+                      value={form.qty}
                       onChange={(event) => updateForm("qty", event.target.value)}
+                      onBlur={() => {
+                        if (variants.length > 0) {
+                          setVariants(
+                            distributeActiveVariantQuantity(variants, form.qty)
+                          );
+                        }
+                      }}
                     />
                     <small>
                       {variants.length > 0
-                        ? "Calculated from the variant quantities below."
+                        ? "Total quantity is distributed proportionally across active variants."
                         : "Used for products without size/color variants."}
                     </small>
                   </div>
@@ -1256,19 +1351,69 @@ export default function ProductsPage() {
 
                   <div className="form-group">
                     <label>Default Color</label>
-                    <select
-                      value={form.color_id}
-                      onChange={(event) => updateForm("color_id", event.target.value)}
-                    >
-                      <option value="">No default color</option>
-                      {colors
-                        .filter((color) => color.status === "active")
-                        .map((color) => (
-                          <option key={color.color_id} value={color.color_id}>
-                            {color.name}
-                          </option>
-                        ))}
-                    </select>
+                    <div className="flex items-center gap-2">
+                      <select
+                        value={form.color_id}
+                        onChange={(event) =>
+                          setForm((previous) => ({
+                            ...previous,
+                            color_id: event.target.value,
+                            color_mode: "catalog",
+                            custom_color: "",
+                          }))
+                        }
+                        style={{ flex: 1, minWidth: 0 }}
+                      >
+                        <option value="">No default color</option>
+                        {colors
+                          .filter((color) => color.status === "active")
+                          .map((color) => (
+                            <option key={color.color_id} value={color.color_id}>
+                              {color.name}
+                              {color.hex_code ? ` (${color.hex_code})` : ""}
+                            </option>
+                          ))}
+                      </select>
+
+                      <input
+                        type="color"
+                        aria-label="Pick product default color"
+                        title="Choose a custom product color"
+                        value={
+                          form.color_mode === "picker"
+                            ? form.custom_color || "#000000"
+                            : colors.find(
+                                (color) =>
+                                  String(color.color_id) ===
+                                  String(form.color_id)
+                              )?.hex_code || "#000000"
+                        }
+                        onChange={(event) =>
+                          setForm((previous) => ({
+                            ...previous,
+                            color_id: "",
+                            color_mode: "picker",
+                            custom_color: event.target.value,
+                          }))
+                        }
+                        style={{
+                          width: "3.25rem",
+                          minWidth: "3.25rem",
+                          height: "2.75rem",
+                          padding: "4px",
+                        }}
+                      />
+
+                      <span className="min-w-16 text-xs font-mono text-[#5D554F]">
+                        {form.color_mode === "picker"
+                          ? form.custom_color || "#000000"
+                          : colors.find(
+                              (color) =>
+                                String(color.color_id) ===
+                                String(form.color_id)
+                            )?.hex_code || "#000000"}
+                      </span>
+                    </div>
                   </div>
                 </div>
 

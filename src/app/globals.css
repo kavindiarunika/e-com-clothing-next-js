@@ -14876,6 +14876,24 @@ margin: 0;
   grid-column: span 2;
 }
 
+.admin-color-code-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-color-code-preview-swatch {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  border: 1px solid #b9b2ab;
+  border-radius: 4px;
+}
+
+.admin-color-code-preview-value {
+  font-family: monospace;
+}
+
 /* =====================================================
    MODAL FOOTER
 ===================================================== */
