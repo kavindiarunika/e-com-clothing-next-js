@@ -10,11 +10,13 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status'); // optional filter: active/inactive/out_of_stock
     const category_id = searchParams.get('category_id'); // optional filter
+    const offer_id = searchParams.get('offer_id'); // optional filter
     const featured = searchParams.get('featured'); // optional: "1" or "0"
     const [productColumnRows] = await db.query("SHOW COLUMNS FROM products");
     const productColumns = new Set(productColumnRows.map((column) => column.Field));
     const productSizeId = productColumns.has("size_id") ? "p.size_id" : "NULL";
     const productColorId = productColumns.has("color_id") ? "p.color_id" : "NULL";
+    const productOfferId = productColumns.has("offer_id") ? "p.offer_id" : "NULL";
     const productQty = productColumns.has("qty") ? "p.qty" : "0";
 
     let query = `
@@ -25,6 +27,7 @@ export async function GET(req) {
         p.price,
         p.discount,
         p.category_id,
+        ${productOfferId} AS offer_id,
         ${productSizeId} AS size_id,
         ${productColorId} AS color_id,
         ${productQty} AS product_qty,
@@ -57,6 +60,11 @@ export async function GET(req) {
     if (category_id) {
       query += " AND p.category_id = ?";
       params.push(category_id);
+    }
+
+    if (offer_id && productColumns.has("offer_id")) {
+      query += " AND p.offer_id = ?";
+      params.push(offer_id);
     }
 
     if (featured === "1") {

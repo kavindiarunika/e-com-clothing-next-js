@@ -76,7 +76,11 @@ export default function ShopOfferHero() {
             />
           )}
           <Link
-            href={offer.link || "/user/shop"}
+            href={
+              offer.offer_id
+                ? `/user/offers/${offer.offer_id}`
+                : offer.link || "/user/shop"
+            }
             className="mt-6 inline-flex w-fit items-center gap-2 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29] transition hover:bg-[#E3DCD1]"
           >
             Explore Offer

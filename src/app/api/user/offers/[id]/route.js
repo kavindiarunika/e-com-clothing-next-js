@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { getImageSource } from "@/lib/productImageSource";
 
 // GET - Get single offer
 export async function GET(request, { params }) {
@@ -12,6 +13,7 @@ export async function GET(request, { params }) {
         offer_id,
         title,
         description,
+        banner_image,
         link,
         start_date,
         end_date,
@@ -36,7 +38,10 @@ export async function GET(request, { params }) {
 
     return NextResponse.json({
       success: true,
-      data: offers[0],
+      data: {
+        ...offers[0],
+        banner_image: getImageSource(offers[0].banner_image),
+      },
     });
   } catch (error) {
     console.error("Get offer error:", error);
