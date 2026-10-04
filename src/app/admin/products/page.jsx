@@ -435,17 +435,21 @@ export default function ProductsPage() {
   }
 
   function updateVariant(index, field, value) {
+    updateVariantFields(index, { [field]: value });
+  }
+
+  function updateVariantFields(index, changes) {
     const updatedVariants = variants.map((variant, variantIndex) =>
       variantIndex === index
         ? {
             ...variant,
-            [field]: value,
+            ...changes,
           }
         : variant
     );
     setVariants(updatedVariants);
 
-    if (field === "stock_quantity" || field === "status") {
+    if ("stock_quantity" in changes || "status" in changes) {
       const activeQuantity = updatedVariants.reduce(
         (total, variant) =>
           String(variant.status || "active").toLowerCase() === "active"
@@ -1689,8 +1693,10 @@ export default function ProductsPage() {
                                   aria-label={`Saved color for variant ${index + 1}`}
                                   value={variant.color_id}
                                   onChange={(event) => {
-                                    updateVariant(index, "color_id", event.target.value);
-                                    updateVariant(index, "color_mode", "catalog");
+                                    updateVariantFields(index, {
+                                      color_id: event.target.value,
+                                      color_mode: "catalog",
+                                    });
                                   }}
                                   style={{ flex: 1, minWidth: 0 }}
                                 >
@@ -1721,9 +1727,11 @@ export default function ProductsPage() {
                                         )?.hex_code || "#000000"
                                   }
                                   onChange={(event) => {
-                                    updateVariant(index, "custom_color", event.target.value);
-                                    updateVariant(index, "color_mode", "picker");
-                                    updateVariant(index, "color_id", "");
+                                    updateVariantFields(index, {
+                                      custom_color: event.target.value,
+                                      color_mode: "picker",
+                                      color_id: "",
+                                    });
                                   }}
                                   style={{
                                     width: "3.25rem",
