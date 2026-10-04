@@ -15,6 +15,7 @@
     "@tiptap/react": "^3.31.3",
     "@tiptap/starter-kit": "^3.31.3",
     "bcryptjs": "^3.0.3",
+    "jose": "^4.15.9",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.47.0",
     "mysql2": "^3.24.4",

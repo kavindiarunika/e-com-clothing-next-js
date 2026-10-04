@@ -21,7 +21,7 @@ const DEFAULT_PROMO = {
   offer_id: "default-promo",
   title: "Explore the latest collection",
   banner_image: PROMO_BANNER_IMAGES[2],
-  link: "/user/shop",
+  link: "/user/offers",
 };
 
 function formatOfferDate(dateValue) {
@@ -95,7 +95,7 @@ export default function PromoBanner() {
           .map((offer, index) => ({
             ...offer,
             banner_image: PROMO_BANNER_IMAGES[index % PROMO_BANNER_IMAGES.length],
-            link: offer.link || "/user/shop",
+            link: `/user/offers/${encodeURIComponent(String(offer.offer_id))}`,
           }))
           .filter(isOfferActive);
 

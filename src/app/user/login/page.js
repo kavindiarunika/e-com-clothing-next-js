@@ -1,14 +1,13 @@
 
 "use client";
 
-import { useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   Eye,
   EyeOff,
-  Mail,
 } from "lucide-react";
 
 export default function LoginPage() {
@@ -17,7 +16,21 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const googleStatus = new URLSearchParams(window.location.search).get("google");
+
+    if (googleStatus === "success") {
+      localStorage.setItem("velora-user-session", "true");
+      router.replace("/user");
+    } else if (googleStatus === "unavailable") {
+      startTransition(() => setError("Google sign-in is not configured yet."));
+    } else if (googleStatus === "error") {
+      startTransition(() => setError("Google sign-in failed. Please try again."));
+    }
+  }, [router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +50,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("velora-user-session", "true");
-      router.replace("/user/account");
+      router.replace("/user");
     } catch (loginError) {
       setError(loginError.message || "Unable to sign in right now.");
     } finally {
@@ -46,7 +59,9 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => {
-    setError("Google sign-in is not configured yet. Use your email and password.");
+    setError("");
+    setGoogleLoading(true);
+    window.location.assign("/api/auth/google");
   };
 
   return (
@@ -121,6 +136,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={handleGoogleLogin}
+              disabled={googleLoading}
               className="
                 flex
                 h-11
@@ -140,6 +156,8 @@ export default function LoginPage() {
                 duration-300
                 hover:border-[#322D29]
                 hover:bg-[#F8F5F1]
+                disabled:cursor-not-allowed
+                disabled:opacity-60
               "
             >
               {/* Google Icon */}
@@ -167,7 +185,7 @@ export default function LoginPage() {
                 />
               </svg>
 
-              Continue with Google
+              {googleLoading ? "Redirecting..." : "Continue with Google"}
             </button>
 
             {/* DIVIDER */}

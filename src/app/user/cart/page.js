@@ -9,6 +9,7 @@ import CartSummary from "@/components/user/cart/CartSummary";
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [hasLoadedCart, setHasLoadedCart] = useState(false);
   const [cartMessage, setCartMessage] = useState("");
@@ -100,6 +101,18 @@ export default function CartPage() {
     );
   }, [cart, hasLoadedCart]);
 
+  useEffect(() => {
+    if (!cart.length) {
+      setSelectedItems([]);
+      return;
+    }
+
+    const validKeys = new Set(cart.map((item) => getCartItemKey(item)));
+    setSelectedItems((current) =>
+      current.filter((key) => validKeys.has(key))
+    );
+  }, [cart]);
+
   // Increase quantity
   const increaseQuantity = (item) => {
     setCart((currentCart) =>
@@ -157,16 +170,29 @@ export default function CartPage() {
     );
   };
 
+  const selectedCart = useMemo(() => {
+    return cart.filter((item) =>
+      selectedItems.includes(getCartItemKey(item))
+    );
+  }, [cart, selectedItems]);
+
+  const selectedCount = useMemo(() => {
+    return selectedCart.reduce(
+      (total, item) => total + Number(item.quantity || 0),
+      0
+    );
+  }, [selectedCart]);
+
   // Subtotal
   const subtotal = useMemo(() => {
-    return cart.reduce((total, item) => {
+    return selectedCart.reduce((total, item) => {
       return (
         total +
         Number(item.price || 0) *
           Number(item.quantity || 0)
       );
     }, 0);
-  }, [cart]);
+  }, [selectedCart]);
 
   // Shipping
   const shipping = subtotal > 0 ? 500 : 0;
@@ -176,6 +202,33 @@ export default function CartPage() {
     0,
     subtotal - couponDiscount + shipping
   );
+
+  const allSelected =
+    cart.length > 0 &&
+    cart.every((item) =>
+      selectedItems.includes(getCartItemKey(item))
+    );
+
+  const toggleSelectItem = (item) => {
+    const key = getCartItemKey(item);
+
+    setSelectedItems((current) => {
+      if (current.includes(key)) {
+        return current.filter((value) => value !== key);
+      }
+
+      return [...current, key];
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedItems([]);
+      return;
+    }
+
+    setSelectedItems(cart.map((item) => getCartItemKey(item)));
+  };
 
   // Coupon
   const applyCoupon = (coupon) => {
@@ -232,7 +285,7 @@ export default function CartPage() {
 
   return (
     <main className="min-h-screen bg-[#EFE9E1] py-10 md:py-16">
-      <div className="mx-auto w-[92%] max-w-300">
+      <div className="mx-auto w-[92%] max-w-[1280px]">
 
         {/* Header */}
         <div className="mb-10">
@@ -254,34 +307,51 @@ export default function CartPage() {
           )}
         </div>
 
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_0.6fr]">
+        <div className="grid gap-6 md:gap-8 lg:grid-cols-[1.8fr_0.9fr] lg:items-start lg:gap-12">
 
           {/* Cart Items */}
-          <section className="bg-white px-5 md:px-7">
+          <section className="bg-white px-4 md:px-6 lg:px-8">
+            <div className="flex items-center justify-between border-b border-[#D8D0C8] py-3 text-[10px] font-semibold uppercase tracking-[1.8px] text-[#6B625C] md:py-4 md:text-[11px]">
+              <label className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleSelectAll}
+                  className="h-4 w-4 accent-[#72383D]"
+                />
+                <span>Select all</span>
+              </label>
 
-            {/* Desktop Header */}
-            <div className="hidden border-b border-[#D8D0C8] py-4 text-xs font-semibold uppercase tracking-[1px] text-[#6B625C] sm:grid sm:grid-cols-[1fr_100px_120px]">
-              <span>Product</span>
-
-              <span className="text-center">
-                Qty
-              </span>
-
-              <span className="text-right">
-                Price
-              </span>
+              <span>{selectedCount} item selected</span>
             </div>
 
-            {/* Cart Items */}
-            {cart.map((item) => (
-              <CartItem
-                key={getCartItemKey(item)}
-                item={item}
-                onIncrease={increaseQuantity}
-                onDecrease={decreaseQuantity}
-                onRemove={removeItem}
-              />
-            ))}
+            <div className="max-h-[72vh] overflow-y-auto pr-1 md:pr-2">
+              {/* Desktop Header */}
+              <div className="hidden border-b border-[#D8D0C8] py-4 text-[10px] font-semibold uppercase tracking-[2px] text-[#6B625C] sm:grid sm:grid-cols-[minmax(0,1fr)_110px_160px] md:text-[11px]">
+                <span>Product</span>
+
+                <span className="text-center">
+                  Qty
+                </span>
+
+                <span className="text-right">
+                  Price
+                </span>
+              </div>
+
+              {/* Cart Items */}
+              {cart.map((item) => (
+                <CartItem
+                  key={getCartItemKey(item)}
+                  item={item}
+                  isSelected={selectedItems.includes(getCartItemKey(item))}
+                  onToggleSelect={toggleSelectItem}
+                  onIncrease={increaseQuantity}
+                  onDecrease={decreaseQuantity}
+                  onRemove={removeItem}
+                />
+              ))}
+            </div>
 
             {/* Continue Shopping */}
             <Link
@@ -294,12 +364,13 @@ export default function CartPage() {
           </section>
 
           {/* Summary */}
-          <section>
+          <section className="lg:sticky lg:top-24">
             <CartSummary
               subtotal={subtotal}
               discount={couponDiscount}
               shipping={shipping}
               total={total}
+              selectedCount={selectedCount}
               onApplyCoupon={applyCoupon}
             />
           </section>

@@ -287,6 +287,12 @@ export default function ProductPage({ params }) {
   */
 
   const createCartItem = () => {
+    const selectedImage =
+      selectedVariant?.image ||
+      selectedColor?.image ||
+      product.images?.[0] ||
+      "";
+
     return {
       productId: product.id,
       variantId: totalVariantStock > 0
@@ -296,7 +302,7 @@ export default function ProductPage({ params }) {
 
       price: Math.round(discountedPrice),
 
-      image: product.images?.[0],
+      image: selectedImage,
 
       size: selectedSize,
 
