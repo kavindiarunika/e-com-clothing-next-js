@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -22,8 +23,9 @@ export default function FeaturedProducts() {
         }
 
         const result = await response.json();
+
         const products = Array.isArray(result.data)
-          ? result.data.slice(0, 5).map((product) => ({
+          ? result.data.slice(0, 4).map((product) => ({
               id: product.item_id,
               name: product.title,
               category: product.category_name,
@@ -71,20 +73,35 @@ export default function FeaturedProducts() {
           </h2>
 
           <div className="mt-5 h-px w-12 bg-[#72383D]" />
-
-          
         </div>
 
-        {/* Products */}
-        <div className="grid grid-cols-2 gap-x-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:gap-4">
-          {featuredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
-          ))}
-        </div>
+        {/* Products - 4 Cards Horizontal */}
+        {!loading && featuredProducts.length > 0 && (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {featuredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="shadow-[0_4px_15px_rgba(50,45,41,0.10)]"
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+        )}
 
+        {/* Loading */}
+        {loading && (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {[1, 2, 3, 4].map((n) => (
+              <div
+                key={n}
+                className="h-[450px] w-full animate-pulse rounded-tr-[2.5rem] rounded-bl-[2.5rem] bg-[#EFECE6]"
+              />
+            ))}
+          </div>
+        )}
+
+        {/* No Products */}
         {!loading && featuredProducts.length === 0 && (
           <p className="py-8 text-center text-sm text-[#6B625D]">
             No featured products available right now.
