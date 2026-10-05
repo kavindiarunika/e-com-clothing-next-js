@@ -22,61 +22,99 @@ export default function ForgotPasswordPage() {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState(false);
 
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   /* =========================
      SEND OTP
   ========================= */
-  const handleSendOtp = (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
 
     setError("");
+    setMessage("");
 
     if (!email) {
       setError("Please enter your email address.");
       return;
     }
 
-    // OTP API will be connected later
-    console.log("OTP sent to:", email);
+    setLoading(true);
 
-    setStep(2);
+    try {
+      const response = await fetch("/api/auth/password-reset/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to send a reset code.");
+      }
+
+      setMessage(result.message);
+      setStep(2);
+    } catch (requestError) {
+      setError(requestError.message || "Unable to send a reset code.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   /* =========================
      VERIFY OTP
   ========================= */
-  const handleVerifyOtp = (e) => {
+  const handleVerifyOtp = async (e) => {
     e.preventDefault();
 
     setError("");
+    setMessage("");
 
     if (otp.length !== 6) {
       setError("Please enter the 6-digit OTP.");
       return;
     }
 
-    // OTP verification API will be connected later
-    console.log("OTP verified:", otp);
+    setLoading(true);
 
-    setStep(3);
+    try {
+      const response = await fetch("/api/auth/password-reset/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code: otp }),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to verify the code.");
+      }
+
+      setStep(3);
+    } catch (verifyError) {
+      setError(verifyError.message || "Unable to verify the code.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   /* =========================
      RESET PASSWORD
   ========================= */
-  const handleResetPassword = (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
 
     setError("");
+    setMessage("");
 
-    if (password.length < 6) {
-      setError("Password must contain at least 6 characters.");
+    if (password.length < 8) {
+      setError("Password must contain at least 8 characters.");
       return;
     }
 
@@ -85,10 +123,51 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    // Password reset API will be connected later
-    console.log("Password reset successfully");
+    setLoading(true);
 
-    setStep(4);
+    try {
+      const response = await fetch("/api/auth/password-reset/reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to reset your password.");
+      }
+
+      setStep(4);
+    } catch (resetError) {
+      setError(resetError.message || "Unable to reset your password.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setError("");
+    setMessage("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/password-reset/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to resend the code.");
+      }
+
+      setMessage(result.message);
+    } catch (requestError) {
+      setError(requestError.message || "Unable to resend the code.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -237,7 +316,7 @@ export default function ForgotPasswordPage() {
                       text-[#6B625C]
                     "
                   >
-                    Enter your email address and we'll send you
+                    Enter your email address and we&apos;ll send you
                     a verification code.
                   </p>
                 </div>
@@ -289,9 +368,11 @@ export default function ForgotPasswordPage() {
                   </div>
 
                   {error && <ErrorMessage message={error} />}
+                  {message && <p role="status" className="text-xs text-[#547454]">{message}</p>}
 
                   <button
                     type="submit"
+                    disabled={loading}
                     className="
                       group
                       flex
@@ -309,9 +390,11 @@ export default function ForgotPasswordPage() {
                       transition
                       duration-300
                       hover:bg-[#72383D]
+                      disabled:cursor-not-allowed
+                      disabled:opacity-60
                     "
                   >
-                    Send OTP
+                    {loading ? "Sending..." : "Send OTP"}
 
                     <ArrowRight
                       size={16}
@@ -387,8 +470,7 @@ export default function ForgotPasswordPage() {
                       text-[#6B625C]
                     "
                   >
-                    We've sent a 6-digit verification code to
-                    your email.
+                    If an active account exists for this email, a code is on its way.
                   </p>
 
                   <p className="mt-2 text-xs font-medium text-[#72383D]">
@@ -454,9 +536,11 @@ export default function ForgotPasswordPage() {
                   </div>
 
                   {error && <ErrorMessage message={error} />}
+                  {message && <p role="status" className="text-xs text-[#547454]">{message}</p>}
 
                   <button
                     type="submit"
+                    disabled={loading}
                     className="
                       group
                       flex
@@ -474,9 +558,11 @@ export default function ForgotPasswordPage() {
                       transition
                       duration-300
                       hover:bg-[#72383D]
+                      disabled:cursor-not-allowed
+                      disabled:opacity-60
                     "
                   >
-                    Verify OTP
+                    {loading ? "Verifying..." : "Verify OTP"}
 
                     <ArrowRight
                       size={16}
@@ -492,7 +578,13 @@ export default function ForgotPasswordPage() {
                 <div className="mt-6 text-center">
                   <button
                     type="button"
-                    onClick={() => setStep(1)}
+                    onClick={() => {
+                      setStep(1);
+                      setOtp("");
+                      setError("");
+                      setMessage("");
+                    }}
+                    disabled={loading}
                     className="
                       text-xs
                       font-medium
@@ -509,14 +601,15 @@ export default function ForgotPasswordPage() {
 
                   <button
                     type="button"
-                    onClick={() => {
-                      console.log("OTP resent");
-                    }}
+                    onClick={handleResendOtp}
+                    disabled={loading}
                     className="
                       text-xs
                       font-medium
                       text-[#72383D]
                       hover:text-[#432415]
+                      disabled:cursor-not-allowed
+                      disabled:opacity-60
                     "
                   >
                     Resend OTP
@@ -755,7 +848,7 @@ export default function ForgotPasswordPage() {
                     "
                   >
                     <p className="text-[11px] leading-5 text-[#6B625C]">
-                      Password must contain at least 6
+                      Password must contain at least 8
                       characters.
                     </p>
                   </div>
@@ -764,6 +857,7 @@ export default function ForgotPasswordPage() {
 
                   <button
                     type="submit"
+                    disabled={loading}
                     className="
                       group
                       flex
@@ -781,9 +875,11 @@ export default function ForgotPasswordPage() {
                       transition
                       duration-300
                       hover:bg-[#72383D]
+                      disabled:cursor-not-allowed
+                      disabled:opacity-60
                     "
                   >
-                    Reset Password
+                    {loading ? "Updating..." : "Reset Password"}
 
                     <ArrowRight
                       size={16}

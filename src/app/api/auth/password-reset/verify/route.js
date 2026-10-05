@@ -3,10 +3,10 @@ import {
   createVerifiedEmailToken,
   emailCookieOptions,
   emailOtpMatches,
-  EMAIL_OTP_COOKIE,
+  PASSWORD_RESET_OTP_COOKIE,
+  PASSWORD_RESET_VERIFIED_COOKIE,
   readEmailOtpToken,
   updateEmailOtpAttempts,
-  VERIFIED_EMAIL_COOKIE,
 } from "@/lib/emailOtp";
 
 const MAX_ATTEMPTS = 5;
@@ -15,7 +15,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const runtime = "nodejs";
 
 export async function POST(request) {
-  const otpCookie = request.cookies.get(EMAIL_OTP_COOKIE)?.value;
+  const otpCookie = request.cookies.get(PASSWORD_RESET_OTP_COOKIE)?.value;
 
   try {
     const body = await request.json();
@@ -45,9 +45,9 @@ export async function POST(request) {
         { status: 400 }
       );
       response.cookies.set(
-        EMAIL_OTP_COOKIE,
+        PASSWORD_RESET_OTP_COOKIE,
         "",
-        emailCookieOptions("/api/auth/email-otp", 0)
+        emailCookieOptions("/api/auth/password-reset", 0)
       );
       return response;
     }
@@ -55,10 +55,10 @@ export async function POST(request) {
     if (
       typeof state === "string" ||
       state.email !== email ||
-      state.purpose !== "signup"
+      state.purpose !== "password-reset"
     ) {
       return NextResponse.json(
-        { success: false, message: "Request a verification code for this email address." },
+        { success: false, message: "Request a reset code for this email address." },
         { status: 400 }
       );
     }
@@ -69,14 +69,14 @@ export async function POST(request) {
         { status: 429 }
       );
       response.cookies.set(
-        EMAIL_OTP_COOKIE,
+        PASSWORD_RESET_OTP_COOKIE,
         "",
-        emailCookieOptions("/api/auth/email-otp", 0)
+        emailCookieOptions("/api/auth/password-reset", 0)
       );
       return response;
     }
 
-    if (!emailOtpMatches(email, code, state.codeHash, "signup")) {
+    if (!emailOtpMatches(email, code, state.codeHash, "password-reset")) {
       const attempts = state.attempts + 1;
       const response = NextResponse.json(
         {
@@ -90,40 +90,37 @@ export async function POST(request) {
 
       if (attempts >= MAX_ATTEMPTS) {
         response.cookies.set(
-          EMAIL_OTP_COOKIE,
+          PASSWORD_RESET_OTP_COOKIE,
           "",
-          emailCookieOptions("/api/auth/email-otp", 0)
+          emailCookieOptions("/api/auth/password-reset", 0)
         );
       } else {
         const expiresIn = Math.max(0, state.exp - Math.floor(Date.now() / 1000));
         response.cookies.set(
-          EMAIL_OTP_COOKIE,
+          PASSWORD_RESET_OTP_COOKIE,
           updateEmailOtpAttempts(state, attempts),
-          emailCookieOptions("/api/auth/email-otp", expiresIn)
+          emailCookieOptions("/api/auth/password-reset", expiresIn)
         );
       }
 
       return response;
     }
 
-    const response = NextResponse.json({
-      success: true,
-      message: "Email verified. You can now create your account.",
-    });
+    const response = NextResponse.json({ success: true, message: "Code verified." });
     response.cookies.set(
-      VERIFIED_EMAIL_COOKIE,
-      createVerifiedEmailToken(email),
-      emailCookieOptions("/api/auth/register", 10 * 60)
+      PASSWORD_RESET_VERIFIED_COOKIE,
+      createVerifiedEmailToken(email, "password-reset"),
+      emailCookieOptions("/api/auth/password-reset/reset", 10 * 60)
     );
     response.cookies.set(
-      EMAIL_OTP_COOKIE,
+      PASSWORD_RESET_OTP_COOKIE,
       "",
-      emailCookieOptions("/api/auth/email-otp", 0)
+      emailCookieOptions("/api/auth/password-reset", 0)
     );
 
     return response;
   } catch (error) {
-    console.error("Email OTP verification error:", error);
+    console.error("Password reset OTP verification error:", error);
     return NextResponse.json(
       { success: false, message: "Unable to verify the code right now." },
       { status: 500 }
