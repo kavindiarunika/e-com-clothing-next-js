@@ -1,6 +1,11 @@
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import {
+  emailCookieOptions,
+  isEmailVerified,
+  VERIFIED_EMAIL_COOKIE,
+} from "@/lib/emailOtp";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -41,6 +46,14 @@ export async function POST(request) {
       );
     }
 
+    const verifiedEmailToken = request.cookies.get(VERIFIED_EMAIL_COOKIE)?.value;
+    if (!isEmailVerified(email, verifiedEmailToken)) {
+      return NextResponse.json(
+        { success: false, message: "Please verify your email before creating an account." },
+        { status: 403 }
+      );
+    }
+
     const existingUsers = await query(
       "SELECT user_id FROM users WHERE email = ? LIMIT 1",
       [email]
@@ -60,7 +73,7 @@ export async function POST(request) {
       [firstName, lastName, email, hashedPassword, phone]
     );
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         success: true,
         message: "Your account has been created.",
@@ -73,6 +86,13 @@ export async function POST(request) {
       },
       { status: 201 }
     );
+    response.cookies.set(
+      VERIFIED_EMAIL_COOKIE,
+      "",
+      emailCookieOptions("/api/auth/register", 0)
+    );
+
+    return response;
   } catch (error) {
     if (error.code === "ER_DUP_ENTRY") {
       return NextResponse.json(

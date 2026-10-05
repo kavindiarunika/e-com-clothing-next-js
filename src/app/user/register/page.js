@@ -91,18 +91,12 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("/api/auth/email-otp/request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          password: formData.password,
-        }),
+        body: JSON.stringify({ email: formData.email }),
       });
 
       const data = await response.json();
@@ -111,7 +105,9 @@ export default function RegisterPage() {
         throw new Error(data.message || "Unable to create your account.");
       }
 
-      setStep("created");
+      setOtp("");
+      setStep("otp");
+      setSuccess(data.message || "A verification code has been sent to your email.");
     } catch (err) {
       setError(
         err.message || "Unable to create your account."
@@ -139,34 +135,24 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      /*
-      ==========================================
-      BACKEND API WILL BE CONNECTED HERE
-      ==========================================
-
-      const response = await fetch("/api/auth/verify-otp", {
+      const response = await fetch("/api/auth/email-otp/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: formData.email,
-          otp: otp,
+          code: otp,
         }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message);
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Invalid verification code.");
       }
-      */
 
-      // Temporary frontend testing
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000)
-      );
-
+      setSuccess(data.message || "Email verified.");
       setStep("verified");
     } catch (err) {
       setError(
@@ -187,19 +173,20 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      /*
-      POST /api/auth/send-otp
-      */
+      const response = await fetch("/api/auth/email-otp/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email }),
+      });
+      const data = await response.json();
 
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000)
-      );
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Unable to send a new code.");
+      }
 
-      setSuccess(
-        `A new code has been sent to ${formData.email}.`
-      );
+      setSuccess(data.message || `A new code has been sent to ${formData.email}.`);
     } catch (err) {
-      setError("Unable to resend verification code.");
+      setError(err.message || "Unable to resend verification code.");
     } finally {
       setLoading(false);
     }
@@ -214,11 +201,6 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      /*
-      ==========================================
-      BACKEND API WILL BE CONNECTED HERE
-      ==========================================
-
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -235,15 +217,9 @@ export default function RegisterPage() {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message);
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Unable to create your account.");
       }
-      */
-
-      // Temporary frontend testing
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000)
-      );
 
       setStep("created");
     } catch (err) {

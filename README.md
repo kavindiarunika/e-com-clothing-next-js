@@ -18,6 +18,21 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 The development command starts the custom Node.js server that hosts both Next.js and the authenticated Socket.IO connection.
 
+## Email verification
+
+Registration sends a six-digit verification code by SMTP. Add these values to the root `.env.local` file before testing email registration:
+
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_USER=your-sender@gmail.com
+SMTP_PASSWORD=your-provider-app-password
+EMAIL_FROM=Velora <your-sender@gmail.com>
+EMAIL_OTP_SECRET=replace-with-a-random-secret-at-least-32-characters-long
+```
+
+For Gmail, use a Google App Password for `SMTP_PASSWORD`, not your account password. Generate a strong OTP secret with `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"`. Restart the app after changing environment variables. The code expires after 10 minutes, allows five verification attempts, and resend requests are limited to once per minute.
+
 ## Production
 
 Build and run the app with:
