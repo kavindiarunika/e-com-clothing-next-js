@@ -21,6 +21,7 @@ export default function RegisterPage() {
     useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -259,15 +260,9 @@ export default function RegisterPage() {
   // ==========================================
 
   const handleGoogleLogin = () => {
-    /*
-      Later connect this button to Auth.js:
-
-      signIn("google", {
-        callbackUrl: "/",
-      });
-    */
-
-    console.log("Continue with Google");
+    setError("");
+    setGoogleLoading(true);
+    window.location.assign("/api/auth/google");
   };
 
   // ==========================================
@@ -324,6 +319,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={handleGoogleLogin}
+                disabled={googleLoading}
                 className="
                   flex
                   h-11
@@ -341,6 +337,8 @@ export default function RegisterPage() {
                   duration-300
                   hover:border-[#72383D]
                   hover:bg-[#FAF8F5]
+                  disabled:cursor-not-allowed
+                  disabled:opacity-60
                 "
               >
 
@@ -373,7 +371,7 @@ export default function RegisterPage() {
 
                 </svg>
 
-                Continue with Google
+                {googleLoading ? "Redirecting..." : "Continue with Google"}
 
               </button>
 

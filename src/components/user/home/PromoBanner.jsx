@@ -92,9 +92,9 @@ export default function PromoBanner() {
 
         const offerData = Array.isArray(result.data) ? result.data : [];
         const activeOffers = offerData
-          .map((offer, index) => ({
+          .map((offer) => ({
             ...offer,
-            banner_image: PROMO_BANNER_IMAGES[index % PROMO_BANNER_IMAGES.length],
+            banner_image: offer.banner_image || PROMO_BANNER_IMAGES[0],
             link: `/user/offers/${encodeURIComponent(String(offer.offer_id))}`,
           }))
           .filter(isOfferActive);
