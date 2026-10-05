@@ -226,6 +226,9 @@ export default function AccountPage() {
               <p className="mt-1 text-sm text-[#322D29]/60">
                 Update your personal and contact information.
               </p>
+              <p className="mt-2 text-sm text-[#322D29]/60">
+                Your name, phone, and saved address details will be filled in automatically at checkout.
+              </p>
             </div>
 
             {profileError && (

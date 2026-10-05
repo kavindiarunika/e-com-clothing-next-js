@@ -29,19 +29,24 @@ export default function OrderDetailsPage() {
 
     const loadOrder = async () => {
       try {
+        const encodedOrderId = encodeURIComponent(orderId);
         const [orderResponse, itemsResponse] = await Promise.all([
-          fetch(`/api/user/orders/${orderId}`),
-          fetch(`/api/user/order-items?order_id=${orderId}`),
+          fetch(`/api/user/orders/${encodedOrderId}`, { cache: "no-store" }),
+          fetch(`/api/user/order-items?order_id=${encodedOrderId}`, { cache: "no-store" }),
         ]);
-        const orderPayload = await orderResponse.json();
+        const [orderPayload, itemsPayload] = await Promise.all([
+          orderResponse.json(),
+          itemsResponse.json(),
+        ]);
 
-        if (!orderResponse.ok) {
+        if (!orderResponse.ok || !orderPayload.success) {
           throw new Error(orderPayload.message || "Order not found.");
         }
 
-        const itemsPayload = itemsResponse.ok
-          ? await itemsResponse.json()
-          : { data: [] };
+        if (!itemsResponse.ok || !itemsPayload.success) {
+          throw new Error(itemsPayload.message || "Unable to load order items.");
+        }
+
         const record = orderPayload.data;
         const address = (() => {
           try {
@@ -69,17 +74,23 @@ export default function OrderDetailsPage() {
             color: item.color || "-",
             quantity: item.qty,
             price: formatAmount(item.total_price),
-            image: "/images/products/dress1.webp",
+            image: item.image || "",
           })),
           address: {
-            name: [address.firstName, address.lastName].filter(Boolean).join(" ") || `${record.first_name || ""} ${record.last_name || ""}`.trim(),
+            name: [
+              address.firstName || address.first_name,
+              address.lastName || address.last_name,
+            ].filter(Boolean).join(" ") || `${record.first_name || ""} ${record.last_name || ""}`.trim(),
             phone: address.phone || record.phone || "",
-            address: address.address || "",
+            address: address.address || address.address_line1 || "",
             city: address.city || "",
             district: address.district || "",
-            postalCode: address.postalCode || "",
+            postalCode: address.postalCode || address.postal_code || "",
           },
-          payment: "Cash on Delivery",
+          payment: record.payment_method
+            ? record.payment_method.replaceAll("_", " ")
+            : "Payment method not recorded",
+          paymentStatus: String(record.payment_status || "pending").toLowerCase(),
         });
       } catch (error) {
         console.error("Load order details error:", error);
@@ -341,11 +352,17 @@ export default function OrderDetailsPage() {
                     {/* IMAGE */}
                     <div className="h-28 w-24 flex-shrink-0 overflow-hidden bg-[#E3DCD1] sm:h-32 sm:w-28">
 
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="h-full w-full object-cover"
-                      />
+                      {item.image ? (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xs text-[#8B817A]">
+                          No image
+                        </div>
+                      )}
 
                     </div>
 
@@ -593,16 +610,17 @@ export default function OrderDetailsPage() {
 
               </div>
 
-              <p className="mt-4 text-sm text-[#6B625C]">
+              <p className="mt-4 text-sm capitalize text-[#6B625C]">
                 {order.payment}
               </p>
 
-              <div className="mt-3 flex items-center gap-2 text-xs text-[#547454]">
-
+              <div className={`mt-3 flex items-center gap-2 text-xs ${
+                order.paymentStatus === "paid" || order.paymentStatus === "successful"
+                  ? "text-[#547454]"
+                  : "text-[#8B817A]"
+              }`}>
                 <CheckCircle2 size={14} />
-
-                Payment confirmed
-
+                Payment {order.paymentStatus}
               </div>
 
             </div>
@@ -641,4 +659,3 @@ export default function OrderDetailsPage() {
     </main>
   );
 }
-

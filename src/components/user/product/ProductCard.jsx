@@ -216,6 +216,7 @@ export default function ProductCard({ product }) {
       productId: product.id,
       name: product.name,
       price: Math.round(discountedPrice),
+      originalPrice: Math.round(originalPrice),
       image: productImage,
 
       variantId: availableVariant?.variant_id || null,

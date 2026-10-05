@@ -6,15 +6,30 @@ import { query } from "@/lib/db";
 import { createCustomerToken, CUSTOMER_COOKIE_NAME } from "@/lib/auth";
 
 const STATE_COOKIE_NAME = "velora_google_oauth_state";
+const NEXT_COOKIE_NAME = "velora_google_oauth_next";
 const GOOGLE_JWKS = createRemoteJWKSet(
   new URL("https://www.googleapis.com/oauth2/v3/certs")
 );
 
 function loginRedirect(request, status) {
-  const response = NextResponse.redirect(
-    new URL(`/user/login?google=${status}`, request.url)
-  );
+  const nextPath = request.cookies.get(NEXT_COOKIE_NAME)?.value;
+  const loginUrl = new URL("/user/login", request.url);
+  loginUrl.searchParams.set("google", status);
+  if (
+    nextPath?.startsWith("/user/") &&
+    !nextPath.startsWith("/user/login")
+  ) {
+    loginUrl.searchParams.set("next", nextPath);
+  }
+  const response = NextResponse.redirect(loginUrl);
   response.cookies.set(STATE_COOKIE_NAME, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/api/auth/google/callback",
+    maxAge: 0,
+  });
+  response.cookies.set(NEXT_COOKIE_NAME, "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

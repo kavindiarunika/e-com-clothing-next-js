@@ -9,9 +9,11 @@ export default function CheckoutPage() {
   const router = useRouter();
 
   const [cart, setCart] = useState([]);
+  const [isBuyNowCheckout, setIsBuyNowCheckout] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderError, setOrderError] = useState("");
+  const [profileError, setProfileError] = useState("");
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -29,22 +31,99 @@ export default function CheckoutPage() {
 
   const shippingCost = 500;
 
-  // Load cart
+  // Load the cart and saved profile before allowing checkout edits.
   useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
+    const controller = new AbortController();
+
+    async function loadCheckout() {
       let savedCart = [];
+      let buyNowItem = null;
       try {
-        savedCart = JSON.parse(localStorage.getItem("velora-cart") || "[]");
-      } catch {
-        savedCart = [];
+        const storedBuyNowItem = sessionStorage.getItem("velora-buy-now-item");
+        if (storedBuyNowItem) {
+          const parsedItem = JSON.parse(storedBuyNowItem);
+          if (
+            !parsedItem ||
+            typeof parsedItem !== "object" ||
+            !Number.isInteger(Number(parsedItem.productId)) ||
+            Number(parsedItem.productId) <= 0 ||
+            !Number.isInteger(Number(parsedItem.quantity)) ||
+            Number(parsedItem.quantity) <= 0
+          ) {
+            throw new Error("The Buy Now item is invalid. Please select the product again.");
+          }
+          buyNowItem = parsedItem;
+        } else {
+          savedCart = JSON.parse(localStorage.getItem("velora-cart") || "[]");
+        }
+      } catch (error) {
+        console.error("Unable to load checkout items:", error);
+        setOrderError("Unable to load your checkout items. Please return to your cart and try again.");
+        setIsLoading(false);
+        return;
       }
 
-      setCart(Array.isArray(savedCart) ? savedCart : []);
-      setIsLoading(false);
-    }, 0);
+      const isBuyNow = buyNowItem && typeof buyNowItem === "object";
+      const checkoutCart = isBuyNow
+        ? [buyNowItem]
+        : Array.isArray(savedCart)
+          ? savedCart
+          : [];
+      setIsBuyNowCheckout(Boolean(isBuyNow));
+      setCart(checkoutCart);
 
-    return () => window.clearTimeout(timeoutId);
-  }, []);
+      if (checkoutCart.length === 0) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/auth/profile", {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+        const result = await response.json();
+
+        if (response.status === 401) {
+          localStorage.removeItem("velora-user-session");
+          router.replace(
+            `/user/login?next=${encodeURIComponent("/user/checkout")}`
+          );
+          return;
+        }
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Unable to load your saved profile.");
+        }
+
+        const profile = result.data;
+        setFormData((current) => ({
+          ...current,
+          firstName: profile.first_name || "",
+          lastName: profile.last_name || "",
+          phone: profile.phone || "",
+          address: [profile.address_line1, profile.address_line2]
+            .filter(Boolean)
+            .join("\n"),
+          city: profile.city || "",
+          district: profile.district || "",
+          postalCode: profile.postal_code || "",
+        }));
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Checkout profile error:", error);
+          setProfileError(
+            error.message || "Unable to load your saved profile. You can enter your shipping details manually."
+          );
+        }
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
+      }
+    }
+
+    void loadCheckout();
+    return () => controller.abort();
+  }, [router]);
 
   // Handle form changes
   const handleChange = (e) => {
@@ -105,8 +184,12 @@ export default function CheckoutPage() {
         throw new Error(result.message || "Unable to place your order.");
       }
 
-      localStorage.removeItem("velora-cart");
-      window.dispatchEvent(new Event("velora-cart-updated"));
+      if (isBuyNowCheckout) {
+        sessionStorage.removeItem("velora-buy-now-item");
+      } else {
+        localStorage.removeItem("velora-cart");
+        window.dispatchEvent(new Event("velora-cart-updated"));
+      }
       alert(
         `Order placed successfully!\n\nOrder ID: ${result.data.order_id}\nPayment: Cash on Delivery`
       );
@@ -197,6 +280,14 @@ export default function CheckoutPage() {
             className="mb-6 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
           >
             {orderError}
+          </p>
+        )}
+        {profileError && (
+          <p
+            role="status"
+            className="mb-6 border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+          >
+            {profileError}
           </p>
         )}
 
@@ -355,53 +446,16 @@ export default function CheckoutPage() {
                     District
                   </label>
 
-                  <select
+                  <input
                     id="district"
                     name="district"
+                    type="text"
                     value={formData.district}
                     onChange={handleChange}
+                    placeholder="Enter district"
                     className="w-full border border-[#D8D0C8] bg-[#FAF8F5] px-4 py-3 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
                     required
-                  >
-                    <option value="">
-                      Select district
-                    </option>
-                    <option value="Colombo">Colombo</option>
-                    <option value="Gampaha">Gampaha</option>
-                    <option value="Kalutara">Kalutara</option>
-                    <option value="Kandy">Kandy</option>
-                    <option value="Galle">Galle</option>
-                    <option value="Matara">Matara</option>
-                    <option value="Jaffna">Jaffna</option>
-                    <option value="Kurunegala">Kurunegala</option>
-                    <option value="Anuradhapura">
-                      Anuradhapura
-                    </option>
-                    <option value="Ratnapura">Ratnapura</option>
-                    <option value="Badulla">Badulla</option>
-                    <option value="Nuwara Eliya">
-                      Nuwara Eliya
-                    </option>
-                    <option value="Matale">Matale</option>
-                    <option value="Kegalle">Kegalle</option>
-                    <option value="Puttalam">Puttalam</option>
-                    <option value="Hambantota">Hambantota</option>
-                    <option value="Monaragala">Monaragala</option>
-                    <option value="Polonnaruwa">
-                      Polonnaruwa
-                    </option>
-                    <option value="Ampara">Ampara</option>
-                    <option value="Batticaloa">Batticaloa</option>
-                    <option value="Trincomalee">
-                      Trincomalee
-                    </option>
-                    <option value="Vavuniya">Vavuniya</option>
-                    <option value="Mannar">Mannar</option>
-                    <option value="Mullaitivu">Mullaitivu</option>
-                    <option value="Kilinochchi">
-                      Kilinochchi
-                    </option>
-                  </select>
+                  />
                 </div>
               </div>
             </section>

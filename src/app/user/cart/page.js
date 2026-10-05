@@ -1,36 +1,27 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
 
 import CartItem from "@/components/user/cart/CartItem";
 import CartSummary from "@/components/user/cart/CartSummary";
 
+function getColorName(color) {
+  if (!color) return "";
+  return typeof color === "object" ? color.name || "" : color;
+}
+
+function getCartItemKey(item) {
+  return `${item.productId}-${item.size}-${getColorName(item.color)}`;
+}
+
 export default function CartPage() {
   const [cart, setCart] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [couponDiscount, setCouponDiscount] = useState(0);
   const [hasLoadedCart, setHasLoadedCart] = useState(false);
   const [cartMessage, setCartMessage] = useState("");
-
-  // Get color name safely
-  const getColorName = (color) => {
-    if (!color) return "";
-
-    if (typeof color === "object") {
-      return color.name || "";
-    }
-
-    return color;
-  };
-
-  // Create a unique cart item key
-  const getCartItemKey = (item) => {
-    const colorName = getColorName(item.color);
-
-    return `${item.productId}-${item.size}-${colorName}`;
-  };
+  const hasInitializedSelection = useRef(false);
 
   // Check whether two cart items are the same
   const isSameCartItem = (cartItem, item) => {
@@ -42,7 +33,7 @@ export default function CartPage() {
   };
 
   // Sync cart from localStorage
-  const syncCartFromStorage = () => {
+  const syncCartFromStorage = useCallback(() => {
     if (typeof window === "undefined") return;
 
     try {
@@ -50,14 +41,20 @@ export default function CartPage() {
         localStorage.getItem("velora-cart") || "[]"
       );
 
-      setCart(Array.isArray(savedCart) ? savedCart : []);
+      const nextCart = Array.isArray(savedCart) ? savedCart : [];
+      setCart(nextCart);
+
+      if (!hasInitializedSelection.current) {
+        setSelectedItems(nextCart.map((item) => getCartItemKey(item)));
+        hasInitializedSelection.current = true;
+      }
     } catch (error) {
       console.error("Failed to load cart:", error);
       setCart([]);
     }
 
     setHasLoadedCart(true);
-  };
+  }, []);
 
   // Load cart
   useEffect(() => {
@@ -87,7 +84,7 @@ export default function CartPage() {
         handleCartUpdate
       );
     };
-  }, []);
+  }, [syncCartFromStorage]);
 
   // Save cart
   useEffect(() => {
@@ -100,18 +97,6 @@ export default function CartPage() {
       JSON.stringify(cart)
     );
   }, [cart, hasLoadedCart]);
-
-  useEffect(() => {
-    if (!cart.length) {
-      setSelectedItems([]);
-      return;
-    }
-
-    const validKeys = new Set(cart.map((item) => getCartItemKey(item)));
-    setSelectedItems((current) =>
-      current.filter((key) => validKeys.has(key))
-    );
-  }, [cart]);
 
   // Increase quantity
   const increaseQuantity = (item) => {
@@ -163,10 +148,14 @@ export default function CartPage() {
 
   // Remove product
   const removeItem = (item) => {
+    const removedKey = getCartItemKey(item);
     setCart((currentCart) =>
       currentCart.filter(
         (cartItem) => !isSameCartItem(cartItem, item)
       )
+    );
+    setSelectedItems((current) =>
+      current.filter((key) => key !== removedKey)
     );
   };
 
@@ -183,25 +172,43 @@ export default function CartPage() {
     );
   }, [selectedCart]);
 
-  // Subtotal
+  // Subtotal is calculated before product and coupon discounts.
   const subtotal = useMemo(() => {
-    return selectedCart.reduce((total, item) => {
-      return (
+    return selectedCart.reduce(
+      (total, item) =>
         total +
-        Number(item.price || 0) *
-          Number(item.quantity || 0)
-      );
-    }, 0);
+        Number(item.originalPrice ?? item.price ?? 0) *
+          Number(item.quantity || 0),
+      0
+    );
   }, [selectedCart]);
 
-  // Shipping
-  const shipping = subtotal > 0 ? 500 : 0;
-
-  // Total
-  const total = Math.max(
-    0,
-    subtotal - couponDiscount + shipping
+  const productDiscount = useMemo(
+    () =>
+      selectedCart.reduce(
+        (total, item) =>
+          total +
+          Math.max(
+            0,
+            Number(item.originalPrice ?? item.price ?? 0) -
+              Number(item.price || 0)
+          ) *
+            Number(item.quantity || 0),
+        0
+      ),
+    [selectedCart]
   );
+
+  const [couponApplied, setCouponApplied] = useState(false);
+  const couponDiscount = couponApplied
+    ? Math.round((subtotal - productDiscount) * 0.1)
+    : 0;
+  const discount = productDiscount + couponDiscount;
+
+  // Shipping is charged once whenever at least one item is selected.
+  const shipping = selectedCart.length > 0 ? 500 : 0;
+
+  const total = Math.max(0, subtotal - discount + shipping);
 
   const allSelected =
     cart.length > 0 &&
@@ -235,15 +242,12 @@ export default function CartPage() {
     const code = coupon.trim().toUpperCase();
 
     if (code === "VELORA10") {
-      const discount = Math.round(subtotal * 0.1);
-
-      setCouponDiscount(discount);
-
+      setCouponApplied(true);
       alert("Coupon applied! 10% discount.");
     } else if (code === "") {
-      setCouponDiscount(0);
+      setCouponApplied(false);
     } else {
-      setCouponDiscount(0);
+      setCouponApplied(false);
 
       alert("Invalid coupon code.");
     }
@@ -367,7 +371,7 @@ export default function CartPage() {
           <section className="lg:sticky lg:top-24">
             <CartSummary
               subtotal={subtotal}
-              discount={couponDiscount}
+              discount={discount}
               shipping={shipping}
               total={total}
               selectedCount={selectedCount}

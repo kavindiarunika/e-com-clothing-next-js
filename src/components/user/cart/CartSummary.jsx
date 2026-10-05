@@ -65,6 +65,7 @@ export default function CartSummary({
       {/* Checkout */}
       <Link
         href="/user/checkout"
+        onClick={() => sessionStorage.removeItem("velora-buy-now-item")}
         className="mt-7 block w-full bg-[#72383D] px-6 py-4 text-center text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2E33]"
       >
         Proceed to Checkout

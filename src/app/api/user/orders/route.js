@@ -5,13 +5,21 @@ import {
   verifyCustomerToken,
 } from "@/lib/auth";
 
-// GET - Get all orders
-export async function GET() {
+export async function GET(request) {
+  const token = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
+  const customer = token ? verifyCustomerToken(token) : null;
+
+  if (!customer) {
+    return NextResponse.json(
+      { success: false, message: "Please sign in to view your orders." },
+      { status: 401 }
+    );
+  }
+
   try {
     const orders = await query(`
       SELECT
         o.order_id,
-        o.user_id,
         o.order_date,
         o.subtotal,
         o.discount,
@@ -24,19 +32,15 @@ export async function GET() {
         o.billing_address,
         o.created_at,
         o.updated_at,
-
-        u.first_name,
-        u.last_name,
-        u.email,
-        u.phone
-
+        (
+          SELECT COUNT(*)
+          FROM order_items oi
+          WHERE oi.order_id = o.order_id
+        ) AS item_count
       FROM orders o
-
-      LEFT JOIN users u
-        ON o.user_id = u.user_id
-
+      WHERE o.user_id = ?
       ORDER BY o.order_id DESC
-    `);
+    `, [customer.user_id]);
 
     return NextResponse.json({
       success: true,
@@ -44,7 +48,7 @@ export async function GET() {
     });
 
   } catch (error) {
-    console.error("Get orders error:", error);
+    console.error("Get customer orders error:", error);
 
     return NextResponse.json(
       {
@@ -371,6 +375,13 @@ export async function POST(request) {
       ]
     );
     const orderId = orderResult.insertId;
+
+    await connection.execute(
+      `INSERT INTO payments (
+         order_id, payment_method, amount, payment_status
+       ) VALUES (?, 'cash_on_delivery', ?, 'pending')`,
+      [orderId, totalAmount]
+    );
 
     for (const item of orderLines) {
       await connection.execute(

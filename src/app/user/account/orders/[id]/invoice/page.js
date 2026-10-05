@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Download,
@@ -12,102 +13,102 @@ import {
   Mail,
 } from "lucide-react";
 
-// Demo order data
-// Later this data will come from your backend/MySQL database
-const orders = {
-  1001: {
-    order_id: 1001,
-    order_date: "September 22, 2026",
-
-    subtotal: 12000,
-    discount: 0,
-    shipping_fee: 500,
-    total_amount: 12500,
-
-    payment_status: "pending",
-    order_status: "shipped",
-
-    payment_method: "Cash on Delivery",
-
-    shipping_address: {
-      name: "Chathuni Imasha",
-      address: "123 Main Street",
-      city: "Colombo",
-      province: "Western Province",
-      postal_code: "00100",
-      phone: "+94 77 123 4567",
-    },
-
-    items: [
-      {
-        order_item_id: 1,
-        item_id: 101,
-        product_name: "Premium Linen Shirt",
-        variant: "M / Beige",
-        qty: 1,
-        unit_price: 6500,
-        discount: 0,
-        total_price: 6500,
-      },
-      {
-        order_item_id: 2,
-        item_id: 102,
-        product_name: "Classic Wide Leg Trousers",
-        variant: "S / Brown",
-        qty: 1,
-        unit_price: 5500,
-        discount: 0,
-        total_price: 5500,
-      },
-    ],
-  },
-
-  1000: {
-    order_id: 1000,
-    order_date: "September 15, 2026",
-
-    subtotal: 8400,
-    discount: 0,
-    shipping_fee: 500,
-    total_amount: 8900,
-
-    payment_status: "successful",
-    order_status: "delivered",
-
-    payment_method: "Cash on Delivery",
-
-    shipping_address: {
-      name: "Chathuni Imasha",
-      address: "123 Main Street",
-      city: "Colombo",
-      province: "Western Province",
-      postal_code: "00100",
-      phone: "+94 77 123 4567",
-    },
-
-    items: [
-      {
-        order_item_id: 3,
-        item_id: 103,
-        product_name: "Classic Cotton Shirt",
-        variant: "M / White",
-        qty: 1,
-        unit_price: 8400,
-        discount: 0,
-        total_price: 8400,
-      },
-    ],
-  },
-};
-
 export default function InvoicePage() {
   const params = useParams();
-
   const orderId = params?.id;
+  const [order, setOrder] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
-  const order = orders[orderId];
+  useEffect(() => {
+    if (!orderId) return;
 
-  // If order does not exist
+    const controller = new AbortController();
+
+    async function loadOrder() {
+      try {
+        const [orderResponse, itemsResponse] = await Promise.all([
+          fetch(`/api/user/orders/${encodeURIComponent(orderId)}`, {
+            signal: controller.signal,
+            cache: "no-store",
+          }),
+          fetch(`/api/user/order-items?order_id=${encodeURIComponent(orderId)}`, {
+            signal: controller.signal,
+            cache: "no-store",
+          }),
+        ]);
+        const orderResult = await orderResponse.json();
+
+        if (!orderResponse.ok || !orderResult.success) {
+          throw new Error(orderResult.message || "Unable to load this order.");
+        }
+
+        const itemsResult = await itemsResponse.json();
+        if (!itemsResponse.ok || !itemsResult.success) {
+          throw new Error(itemsResult.message || "Unable to load order items.");
+        }
+
+        const record = orderResult.data;
+        const address = typeof record.shipping_address === "string"
+          ? JSON.parse(record.shipping_address)
+          : record.shipping_address || {};
+
+        setOrder({
+          ...record,
+          order_date: new Date(record.order_date || record.created_at).toLocaleDateString(),
+          subtotal: Number(record.subtotal) || 0,
+          discount: Number(record.discount) || 0,
+          shipping_fee: Number(record.shipping_fee) || 0,
+          total_amount: Number(record.total_amount) || 0,
+          payment_method: record.payment_method
+            ? record.payment_method.replaceAll("_", " ")
+            : "Payment method not recorded",
+          shipping_address: {
+            name: [
+              address.firstName || address.first_name,
+              address.lastName || address.last_name,
+            ].filter(Boolean).join(" ") ||
+              `${record.first_name || ""} ${record.last_name || ""}`.trim(),
+            address: [
+              address.address || address.address_line1,
+              address.address_line2,
+            ].filter(Boolean).join(", "),
+            city: address.city || "",
+            district: address.district || "",
+            postal_code: address.postalCode || address.postal_code || "",
+            phone: address.phone || record.phone || "",
+          },
+          items: (Array.isArray(itemsResult.data) ? itemsResult.data : []).map((item) => ({
+            ...item,
+            product_name: item.product_title || `Product #${item.item_id}`,
+            variant: [item.size, item.color].filter(Boolean).join(" / ") || "-",
+            qty: Number(item.qty) || 0,
+            unit_price: Number(item.unit_price) || 0,
+            total_price: Number(item.total_price) || 0,
+          })),
+        });
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Load invoice error:", error);
+          setLoadError(error.message || "Unable to load this invoice.");
+        }
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
+      }
+    }
+
+    void loadOrder();
+    return () => controller.abort();
+  }, [orderId]);
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#EFE9E1] px-5 text-sm text-[#322D29]/60">
+        Loading invoice...
+      </main>
+    );
+  }
+
   if (!order) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#EFE9E1] px-5">
@@ -117,7 +118,7 @@ export default function InvoicePage() {
           </h1>
 
           <p className="mt-3 text-sm text-[#322D29]/60">
-            We couldn't find the invoice for this order.
+            {loadError || "We couldn't find the invoice for this order."}
           </p>
 
           <Link
@@ -260,7 +261,7 @@ export default function InvoicePage() {
                       {order.shipping_address.address}
                       <br />
                       {order.shipping_address.city},{" "}
-                      {order.shipping_address.province}
+                      {order.shipping_address.district}
                       <br />
                       {order.shipping_address.postal_code}
                     </span>
@@ -513,4 +514,3 @@ function SummaryRow({ label, value, negative = false }) {
     </div>
   );
 }
-

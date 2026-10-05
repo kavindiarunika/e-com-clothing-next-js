@@ -2,6 +2,13 @@ import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 
 const STATE_COOKIE_NAME = "velora_google_oauth_state";
+const NEXT_COOKIE_NAME = "velora_google_oauth_next";
+
+function getSafeNextPath(value) {
+  return value?.startsWith("/user/") && !value.startsWith("/user/login")
+    ? value
+    : "";
+}
 
 export async function GET(request) {
   const clientId = process.env.GOOGLE_CLIENT_ID;
@@ -35,6 +42,17 @@ export async function GET(request) {
     path: "/api/auth/google/callback",
     maxAge: 600,
   });
+  response.cookies.set(
+    NEXT_COOKIE_NAME,
+    getSafeNextPath(request.nextUrl.searchParams.get("next")),
+    {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/api/auth/google/callback",
+      maxAge: 600,
+    }
+  );
 
   return response;
 }

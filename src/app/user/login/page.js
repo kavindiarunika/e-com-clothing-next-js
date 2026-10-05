@@ -19,12 +19,20 @@ export default function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const getPostLoginPath = () => {
+    const requestedPath = new URLSearchParams(window.location.search).get("next");
+    return requestedPath?.startsWith("/user/") &&
+      !requestedPath.startsWith("/user/login")
+      ? requestedPath
+      : "/user";
+  };
+
   useEffect(() => {
     const googleStatus = new URLSearchParams(window.location.search).get("google");
 
     if (googleStatus === "success") {
       localStorage.setItem("velora-user-session", "true");
-      router.replace("/user");
+      router.replace(getPostLoginPath());
     } else if (googleStatus === "unavailable") {
       startTransition(() => setError("Google sign-in is not configured yet."));
     } else if (googleStatus === "error") {
@@ -50,7 +58,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("velora-user-session", "true");
-      router.replace("/user");
+      router.replace(getPostLoginPath());
     } catch (loginError) {
       setError(loginError.message || "Unable to sign in right now.");
     } finally {
@@ -61,7 +69,9 @@ export default function LoginPage() {
   const handleGoogleLogin = () => {
     setError("");
     setGoogleLoading(true);
-    window.location.assign("/api/auth/google");
+    const googleUrl = new URL("/api/auth/google", window.location.origin);
+    googleUrl.searchParams.set("next", getPostLoginPath());
+    window.location.assign(googleUrl);
   };
 
   return (
@@ -402,4 +412,3 @@ export default function LoginPage() {
     </main>
   );
 }
-

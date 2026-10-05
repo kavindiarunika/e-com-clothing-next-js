@@ -228,6 +228,7 @@ export default function OfferDetailPage() {
       productId: product.item_id,
       name: product.title,
       price: Math.round(getDiscountedPrice(product)),
+      originalPrice: Math.round(Number(product.price) || 0),
       image: product.image || product.main_image || "/images/products/shirt1.webp",
       size: product.sizes?.[0] || "",
       color: product.colors?.[0]?.name || "",

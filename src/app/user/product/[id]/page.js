@@ -19,6 +19,7 @@ export default function ProductPage({ params }) {
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
 
@@ -31,6 +32,8 @@ export default function ProductPage({ params }) {
     const controller = new AbortController();
 
     async function loadProduct() {
+      setLoadError(false);
+
       try {
         const response = await fetch(
           `/api/user/Product/${encodeURIComponent(productId)}`,
@@ -38,6 +41,10 @@ export default function ProductPage({ params }) {
         );
 
         if (!response.ok) {
+          if (response.status !== 404) {
+            throw new Error(`Product request failed with status ${response.status}`);
+          }
+
           setProduct(null);
           return;
         }
@@ -52,6 +59,7 @@ export default function ProductPage({ params }) {
         if (!controller.signal.aborted) {
           console.error("Product detail error:", error);
           setProduct(null);
+          setLoadError(true);
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -134,6 +142,14 @@ export default function ProductPage({ params }) {
     );
   }
 
+  if (loadError) {
+    return (
+      <main className="flex min-h-[60vh] items-center justify-center bg-[#EFE9E1] px-6 text-center text-sm text-[#6B625D]">
+        We couldn&apos;t load this product. Please try again later.
+      </main>
+    );
+  }
+
   if (!product) notFound();
 
   /*
@@ -183,6 +199,13 @@ export default function ProductPage({ params }) {
         : 0
     : Number(product.qty) || 0;
   const quantityLimit = availableStock;
+  const hasSelectedOption =
+    product.variants.length === 0 ||
+    Boolean(selectedVariant) ||
+    (
+      normalizeText(selectedSize) === normalizeText(product.default_size) &&
+      availableStock > 0
+    );
 
   /*
   ==========================================
@@ -301,6 +324,7 @@ export default function ProductPage({ params }) {
       name: product.name,
 
       price: Math.round(discountedPrice),
+      originalPrice: Math.round(originalPrice),
 
       image: selectedImage,
 
@@ -321,11 +345,11 @@ export default function ProductPage({ params }) {
   ==========================================
   */
 
-  const handleAddToCart = () => {
+  const addSelectedProductToCart = () => {
     if (!product) return;
 
     // Check variant
-    if (product.variants.length > 0 && !selectedVariant) {
+    if (!hasSelectedOption) {
       alert(
         "Please select an available size and color."
       );
@@ -348,21 +372,26 @@ export default function ProductPage({ params }) {
       return;
     }
 
-    const savedCart =
-      JSON.parse(
-        localStorage.getItem("velora-cart")
-      ) || [];
+    let savedCart;
+    try {
+      const storedCart = JSON.parse(
+        localStorage.getItem("velora-cart") || "[]"
+      );
+      savedCart = Array.isArray(storedCart) ? storedCart : [];
+    } catch (error) {
+      console.error("Unable to read shopping cart:", error);
+      alert("Unable to update your cart. Please refresh the page and try again.");
+      return;
+    }
 
     const cartItem = createCartItem();
 
-    const existingItemIndex =
-      savedCart.findIndex(
-        (item) =>
-          item.productId ===
-            cartItem.productId &&
-          item.size === cartItem.size &&
-          item.color === cartItem.color
-      );
+    const existingItemIndex = savedCart.findIndex((item) => (
+      String(item.productId) === String(cartItem.productId) &&
+      String(item.variantId || "") === String(cartItem.variantId || "") &&
+      item.size === cartItem.size &&
+      (typeof item.color === "object" ? item.color?.name : item.color) === cartItem.color
+    ));
 
     if (existingItemIndex !== -1) {
       const existingQuantity =
@@ -375,7 +404,7 @@ export default function ProductPage({ params }) {
 
       if (newQuantity > availableStock) {
         alert(`Only ${availableStock} items are available for this option.`);
-        return;
+        return false;
       }
 
       savedCart[existingItemIndex].quantity =
@@ -391,11 +420,17 @@ export default function ProductPage({ params }) {
       "velora-cart",
       JSON.stringify(savedCart)
     );
+    window.dispatchEvent(new Event("velora-cart-updated"));
+    return true;
+  };
+
+  const handleAddToCart = () => {
+    if (!addSelectedProductToCart()) return;
+
     sessionStorage.setItem(
       "velora-cart-message",
       `${product.name} added to your cart.`
     );
-    window.dispatchEvent(new Event("velora-cart-updated"));
     router.push("/user/cart");
   };
 
@@ -408,74 +443,26 @@ export default function ProductPage({ params }) {
   const handleBuyNow = () => {
     if (!product) return;
 
-    // Check variant
-    if (product.variants.length > 0 && !selectedVariant) {
-      alert(
-        "Please select an available size and color."
-      );
+    if (!hasSelectedOption) {
+      alert("Please select an available size and color.");
       return;
     }
 
-    // Check stock
-    if (availableStock <= 0) {
-      alert(
-        "This size and color combination is sold out."
-      );
+    if (availableStock <= 0 || quantity > availableStock) {
+      alert(`Only ${availableStock} items are available.`);
       return;
     }
 
-    // Check quantity
-    if (quantity > availableStock) {
-      alert(
-        `Only ${availableStock} items are available.`
+    try {
+      sessionStorage.setItem(
+        "velora-buy-now-item",
+        JSON.stringify(createCartItem())
       );
-      return;
+      router.push("/user/checkout");
+    } catch (error) {
+      console.error("Unable to start Buy Now checkout:", error);
+      alert("Unable to start checkout. Please try again.");
     }
-
-    const savedCart =
-      JSON.parse(
-        localStorage.getItem("velora-cart")
-      ) || [];
-
-    const cartItem = createCartItem();
-
-    const existingItemIndex =
-      savedCart.findIndex(
-        (item) =>
-          item.productId ===
-            cartItem.productId &&
-          item.size === cartItem.size &&
-          item.color === cartItem.color
-      );
-
-    if (existingItemIndex !== -1) {
-      const existingQuantity =
-        Number(
-          savedCart[existingItemIndex].quantity
-        ) || 0;
-
-      const newQuantity =
-        existingQuantity + quantity;
-
-      savedCart[existingItemIndex].quantity =
-        Math.min(
-          newQuantity,
-          availableStock
-        );
-
-      savedCart[existingItemIndex].stock =
-        availableStock;
-    } else {
-      savedCart.push(cartItem);
-    }
-
-    localStorage.setItem(
-      "velora-cart",
-      JSON.stringify(savedCart)
-    );
-
-    // Go directly to checkout
-    router.push("/user/checkout");
   };
 
   /*
@@ -646,7 +633,7 @@ export default function ProductPage({ params }) {
                     type="button"
                     onClick={increaseQuantity}
                     disabled={
-                      (product.variants.length > 0 && !selectedVariant) ||
+                      !hasSelectedOption ||
                       quantity >= quantityLimit ||
                       availableStock <= 0
                     }
@@ -662,7 +649,7 @@ export default function ProductPage({ params }) {
 
                 <p className="mt-2 text-xs text-[#6B625C]">
 
-                  {product.variants.length > 0 && !selectedVariant ? (
+                  {!hasSelectedOption ? (
                     "Select an available option"
                   ) : availableStock > 0 ? (
                     <>
@@ -691,7 +678,7 @@ export default function ProductPage({ params }) {
                 type="button"
                 onClick={handleBuyNow}
                 disabled={
-                  (product.variants.length > 0 && !selectedVariant) ||
+                  !hasSelectedOption ||
                   availableStock <= 0
                 }
                 className="bg-[#72383D] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition duration-300 hover:bg-[#322D29] disabled:cursor-not-allowed disabled:opacity-50"
@@ -705,7 +692,7 @@ export default function ProductPage({ params }) {
                 type="button"
                 onClick={handleAddToCart}
                 disabled={
-                  (product.variants.length > 0 && !selectedVariant) ||
+                  !hasSelectedOption ||
                   availableStock <= 0
                 }
                 className="border border-[#72383D] bg-white px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#72383D] transition duration-300 hover:bg-[#72383D] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
