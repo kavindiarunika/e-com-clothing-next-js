@@ -446,11 +446,21 @@ export async function POST(request) {
       { status: 201 }
     );
   } catch (error) {
-    if (connection) await connection.rollback();
+    if (connection) {
+      try {
+        await connection.rollback();
+      } catch (rollbackError) {
+        console.error("Order rollback error:", rollbackError);
+      }
+    }
 
     console.error("Create order error:", error);
+    const message = process.env.NODE_ENV === "development"
+      ? `Unable to place your order: ${error.code || "ERROR"} - ${error.sqlMessage || error.message}`
+      : "Unable to place your order right now.";
+
     return NextResponse.json(
-      { success: false, message: "Unable to place your order right now." },
+      { success: false, message },
       { status: 500 }
     );
   } finally {

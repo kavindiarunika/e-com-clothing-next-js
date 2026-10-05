@@ -20,6 +20,7 @@ export default function CartSummary({
   shipping,
   total,
   selectedCount,
+  selectedItems = [],
   onApplyCoupon,
 }) {
   return (
@@ -65,8 +66,24 @@ export default function CartSummary({
       {/* Checkout */}
       <Link
         href="/user/checkout"
-        onClick={() => sessionStorage.removeItem("velora-buy-now-item")}
-        className="mt-7 block w-full bg-[#72383D] px-6 py-4 text-center text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2E33]"
+        aria-disabled={selectedItems.length === 0}
+        onClick={(event) => {
+          if (selectedItems.length === 0) {
+            event.preventDefault();
+            return;
+          }
+
+          sessionStorage.removeItem("velora-buy-now-item");
+          sessionStorage.setItem(
+            "velora-checkout-items",
+            JSON.stringify(selectedItems)
+          );
+        }}
+        className={`mt-7 block w-full px-6 py-4 text-center text-xs font-semibold uppercase tracking-[1.5px] text-white transition ${
+          selectedItems.length === 0
+            ? "cursor-not-allowed bg-[#8B817A]"
+            : "bg-[#72383D] hover:bg-[#5E2E33]"
+        }`}
       >
         Proceed to Checkout
       </Link>

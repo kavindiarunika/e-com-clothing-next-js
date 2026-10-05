@@ -5,6 +5,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, ArrowLeft, ShoppingBag } from "lucide-react";
 
+function getCartItemKey(item) {
+  const colorName = typeof item.color === "object"
+    ? item.color?.name || ""
+    : item.color || "";
+
+  return `${item.productId}-${item.size}-${colorName}`;
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
 
@@ -54,7 +62,10 @@ export default function CheckoutPage() {
           }
           buyNowItem = parsedItem;
         } else {
-          savedCart = JSON.parse(localStorage.getItem("velora-cart") || "[]");
+          const selectedCheckoutItems = sessionStorage.getItem("velora-checkout-items");
+          savedCart = selectedCheckoutItems
+            ? JSON.parse(selectedCheckoutItems)
+            : JSON.parse(localStorage.getItem("velora-cart") || "[]");
         }
       } catch (error) {
         console.error("Unable to load checkout items:", error);
@@ -187,7 +198,20 @@ export default function CheckoutPage() {
       if (isBuyNowCheckout) {
         sessionStorage.removeItem("velora-buy-now-item");
       } else {
-        localStorage.removeItem("velora-cart");
+        try {
+          const currentCart = JSON.parse(localStorage.getItem("velora-cart") || "[]");
+          const orderedItemKeys = new Set(cart.map(getCartItemKey));
+          const remainingCart = Array.isArray(currentCart)
+            ? currentCart.filter((item) => !orderedItemKeys.has(getCartItemKey(item)))
+            : [];
+
+          localStorage.setItem("velora-cart", JSON.stringify(remainingCart));
+        } catch (storageError) {
+          console.error("Unable to update cart after order:", storageError);
+          localStorage.removeItem("velora-cart");
+        }
+
+        sessionStorage.removeItem("velora-checkout-items");
         window.dispatchEvent(new Event("velora-cart-updated"));
       }
       alert(

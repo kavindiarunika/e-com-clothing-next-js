@@ -375,6 +375,7 @@ export default function CartPage() {
               shipping={shipping}
               total={total}
               selectedCount={selectedCount}
+              selectedItems={selectedCart}
               onApplyCoupon={applyCoupon}
             />
           </section>
