@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -118,6 +119,16 @@ export default function CategorySection() {
     return null;
   }
 
+  const visibleCategories = categories.slice(0, 3);
+
+  const getCategoryLink = (category) => {
+    return (
+      categoryPaths[
+        category.name.trim().toLowerCase()
+      ] || "/user/shop"
+    );
+  };
+
   return (
     <section className="bg-[#EFE9E1] px-4 py-10 sm:px-6 md:py-12 lg:px-8">
       <div className="mx-auto max-w-[1400px]">
@@ -126,9 +137,8 @@ export default function CategorySection() {
             SECTION HEADER
         ===================================================== */}
 
-        <div className="mb-7 text-left md:mb-9">
-
-          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[3px] text-[#AC9C8D]">
+        <div className="mb-8 text-left md:mb-10">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
             Explore Our Collection
           </p>
 
@@ -136,56 +146,370 @@ export default function CategorySection() {
             Shop by Category
           </h2>
 
-          <div className="mt-3 h-px w-10 bg-[#72383D]" />
+          <div className="mt-5 h-px w-12 bg-[#72383D]" />
+        </div>
+
+        {/* =====================================================
+            DESKTOP EDITORIAL LAYOUT
+            LEFT + 2 CENTER IMAGES + RIGHT
+        ===================================================== */}
+
+        <div className="flex items-center justify-center gap-4 lg:gap-5">
+
+          {/* ===================================================
+              LEFT SIDE - 3 SMALL CARDS
+          =================================================== */}
+
+          <div className="hidden w-[115px] shrink-0 flex-col gap-5 lg:flex">
+
+            {visibleCategories.map((category, index) => (
+              <Link
+                key={`left-${category.category_id || category.name}`}
+                href={getCategoryLink(category)}
+                className="
+                  group
+                  relative
+                  block
+                  h-[145px]
+                  w-[115px]
+                  overflow-hidden
+                  rounded-tr-[1.8rem]
+                  rounded-bl-[1.8rem]
+                  bg-[#EFECE6]
+                  shadow-[0_5px_20px_rgba(50,45,41,0.08)]
+                  cursor-pointer
+                "
+              >
+
+                {/* IMAGE */}
+
+                {category.image ? (
+                  <img
+                    src={normalizeCategoryImage(category.image)}
+                    alt={`${category.name} fashion`}
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                      object-center
+                      transition-transform
+                      duration-700
+                      ease-out
+                      group-hover:scale-110
+                    "
+                  />
+                ) : (
+                  <div
+                    className="
+                      h-full
+                      w-full
+                      bg-gradient-to-br
+                      from-[#D8CEC5]
+                      to-[#B6A49A]
+                    "
+                  />
+                )}
+
+                {/* OVERLAY */}
+
+                <div
+                  className="
+                    absolute
+                    inset-0
+                    bg-gradient-to-t
+                    from-[#322D29]/75
+                    via-[#322D29]/15
+                    to-transparent
+                  "
+                />
+
+                {/* CONTENT */}
+
+                <div className="absolute bottom-3 left-3 right-2">
+                  <p className="mb-1 text-[7px] uppercase tracking-[1.5px] text-[#AC9C8D]">
+                    Collection
+                  </p>
+
+                  <h3 className="font-serif text-base italic tracking-wide text-white">
+                    {category.name}
+                  </h3>
+
+                  <div className="mt-1 flex items-center gap-1 text-[7px] font-semibold uppercase tracking-[1px] text-white/80">
+                    <span>Shop</span>
+
+                    <span className="transition-transform duration-300 group-hover:translate-x-1">
+                      →
+                    </span>
+                  </div>
+                </div>
+
+              </Link>
+            ))}
+
+          </div>
+
+          {/* ===================================================
+              CENTER - 2 LARGE MAIN IMAGES
+          =================================================== */}
+
+          <div className="grid w-full max-w-[820px] grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
+
+            {visibleCategories.slice(0, 2).map((category, index) => (
+              <Link
+                key={`center-${category.category_id || category.name}`}
+                href={getCategoryLink(category)}
+                className="
+                  group
+                  relative
+                  block
+                  h-[440px]
+                  w-full
+                  overflow-hidden
+                  rounded-tr-[3rem]
+                  rounded-bl-[3rem]
+                  bg-[#EFECE6]
+                  shadow-[0_10px_35px_rgba(50,45,41,0.12)]
+                  cursor-pointer
+                  sm:h-[500px]
+                  lg:h-[520px]
+                "
+              >
+
+                {/* MAIN IMAGE */}
+
+                {category.image ? (
+                  <img
+                    src={normalizeCategoryImage(category.image)}
+                    alt={`${category.name} fashion`}
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                      object-center
+                      transition-transform
+                      duration-700
+                      ease-out
+                      group-hover:scale-105
+                    "
+                  />
+                ) : (
+                  <div
+                    className="
+                      h-full
+                      w-full
+                      bg-gradient-to-br
+                      from-[#D8CEC5]
+                      to-[#B6A49A]
+                    "
+                  />
+                )}
+
+                {/* MAIN OVERLAY */}
+
+                <div
+                  className="
+                    absolute
+                    inset-0
+                    bg-gradient-to-t
+                    from-[#322D29]/85
+                    via-[#322D29]/20
+                    to-transparent
+                    transition
+                    duration-500
+                    group-hover:from-[#322D29]/95
+                  "
+                />
+
+                {/* TOP LABEL */}
+
+                <div className="absolute left-6 right-6 top-6 flex items-center justify-between">
+                  <span className="text-[8px] font-semibold uppercase tracking-[2.5px] text-white/80">
+                    VELORA
+                  </span>
+
+                  <span className="h-px w-10 bg-white/50" />
+                </div>
+
+                {/* NUMBER */}
+
+                <div className="absolute right-6 top-6">
+                  <span className="font-serif text-sm italic text-white/70">
+                    0{index + 1}
+                  </span>
+                </div>
+
+                {/* MAIN CONTENT */}
+
+                <div className="absolute bottom-8 left-6 right-6 text-white sm:bottom-10 sm:left-8 sm:right-8">
+
+                  <p className="mb-2 text-[9px] uppercase tracking-[3px] text-[#AC9C8D]">
+                    Discover
+                  </p>
+
+                  <h3 className="font-serif text-4xl italic tracking-wide sm:text-5xl">
+                    {category.name}
+                  </h3>
+
+                  <div className="mt-5 flex items-center justify-between">
+
+                    <span className="text-[9px] font-semibold uppercase tracking-[2px]">
+                      Shop Collection
+                    </span>
+
+                    <span
+                      className="
+                        flex
+                        h-10
+                        w-10
+                        items-center
+                        justify-center
+                        rounded-full
+                        border
+                        border-white/50
+                        text-lg
+                        transition-all
+                        duration-300
+                        group-hover:bg-white
+                        group-hover:text-[#322D29]
+                      "
+                    >
+                      →
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </Link>
+            ))}
+
+          </div>
+
+          {/* ===================================================
+              RIGHT SIDE - 3 SMALL CARDS
+          =================================================== */}
+
+          <div className="hidden w-[115px] shrink-0 flex-col gap-5 lg:flex">
+
+            {visibleCategories
+              .slice()
+              .reverse()
+              .map((category) => (
+                <Link
+                  key={`right-${category.category_id || category.name}`}
+                  href={getCategoryLink(category)}
+                  className="
+                    group
+                    relative
+                    block
+                    h-[145px]
+                    w-[115px]
+                    overflow-hidden
+                    rounded-tl-[1.8rem]
+                    rounded-br-[1.8rem]
+                    bg-[#EFECE6]
+                    shadow-[0_5px_20px_rgba(50,45,41,0.08)]
+                    cursor-pointer
+                  "
+                >
+
+                  {/* IMAGE */}
+
+                  {category.image ? (
+                    <img
+                      src={normalizeCategoryImage(category.image)}
+                      alt={`${category.name} fashion`}
+                      className="
+                        h-full
+                        w-full
+                        object-cover
+                        object-center
+                        transition-transform
+                        duration-700
+                        ease-out
+                        group-hover:scale-110
+                      "
+                    />
+                  ) : (
+                    <div
+                      className="
+                        h-full
+                        w-full
+                        bg-gradient-to-br
+                        from-[#D8CEC5]
+                        to-[#B6A49A]
+                      "
+                    />
+                  )}
+
+                  {/* OVERLAY */}
+
+                  <div
+                    className="
+                      absolute
+                      inset-0
+                      bg-gradient-to-t
+                      from-[#322D29]/75
+                      via-[#322D29]/15
+                      to-transparent
+                    "
+                  />
+
+                  {/* CONTENT */}
+
+                  <div className="absolute bottom-3 left-3 right-2">
+
+                    <p className="mb-1 text-[7px] uppercase tracking-[1.5px] text-[#AC9C8D]">
+                      Collection
+                    </p>
+
+                    <h3 className="font-serif text-base italic tracking-wide text-white">
+                      {category.name}
+                    </h3>
+
+                    <div className="mt-1 flex items-center gap-1 text-[7px] font-semibold uppercase tracking-[1px] text-white/80">
+                      <span>Shop</span>
+
+                      <span className="transition-transform duration-300 group-hover:translate-x-1">
+                        →
+                      </span>
+                    </div>
+
+                  </div>
+
+                </Link>
+              ))}
+
+          </div>
 
         </div>
 
         {/* =====================================================
-            CATEGORY GRID
+            MOBILE / TABLET
         ===================================================== */}
 
-        <div
-          className="
-            grid
-            grid-cols-2
-            gap-3
-            sm:grid-cols-3
-            md:grid-cols-4
-            lg:grid-cols-5
-            xl:gap-4
-          "
-        >
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3 lg:hidden">
 
-          {categories.map((category) => (
-
+          {visibleCategories.map((category, index) => (
             <Link
-              key={
-                category.category_id ||
-                category.name
-              }
-              href={
-                categoryPaths[
-                  category.name.trim().toLowerCase()
-                ] || "/user/shop"
-              }
+              key={`mobile-${category.category_id || category.name}`}
+              href={getCategoryLink(category)}
               className="
                 group
                 relative
                 block
-                h-56
+                h-[360px]
                 overflow-hidden
-                bg-[#D8CEC5]
-                sm:h-64
-                lg:h-72
+                rounded-tr-[2.5rem]
+                rounded-bl-[2.5rem]
+                bg-[#EFECE6]
+                shadow-sm
               "
             >
 
-              {/* =================================================
-                  CATEGORY IMAGE
-              ================================================= */}
+              {/* IMAGE */}
 
               {category.image ? (
-
                 <img
                   src={normalizeCategoryImage(category.image)}
                   alt={`${category.name} fashion`}
@@ -193,23 +517,24 @@ export default function CategorySection() {
                     h-full
                     w-full
                     object-cover
-                    object-center
-                    transition
+                    transition-transform
                     duration-700
-                    ease-out
                     group-hover:scale-105
                   "
                 />
-
               ) : (
-
-                <div className="h-full w-full bg-gradient-to-br from-[#D8CEC5] to-[#B6A49A]" />
-
+                <div
+                  className="
+                    h-full
+                    w-full
+                    bg-gradient-to-br
+                    from-[#D8CEC5]
+                    to-[#B6A49A]
+                  "
+                />
               )}
 
-              {/* =================================================
-                  OVERLAY
-              ================================================= */}
+              {/* OVERLAY */}
 
               <div
                 className="
@@ -217,41 +542,30 @@ export default function CategorySection() {
                   inset-0
                   bg-gradient-to-t
                   from-[#322D29]/85
-                  via-[#322D29]/25
+                  via-[#322D29]/20
                   to-transparent
-                  transition
-                  duration-500
-                  group-hover:from-[#322D29]/95
                 "
               />
 
-              {/* =================================================
-                  CONTENT
-              ================================================= */}
+              {/* CONTENT */}
 
-              <div className="absolute inset-x-0 bottom-0 p-4 text-white sm:p-5">
+              <div className="absolute bottom-6 left-6 right-6 text-white">
 
-                <p className="mb-1.5 text-[8px] uppercase tracking-[2px] text-[#AC9C8D]">
+                <p className="mb-2 text-[8px] uppercase tracking-[2px] text-[#AC9C8D]">
                   Discover
                 </p>
 
-                <h3 className="font-serif text-xl italic sm:text-2xl lg:text-[25px]">
+                <h3 className="font-serif text-3xl italic">
                   {category.name}
                 </h3>
 
-                <div className="mt-3 flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[1.2px] sm:text-[10px]">
+                <div className="mt-3 flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[1.5px]">
 
                   <span>
                     Shop Collection
                   </span>
 
-                  <span
-                    className="
-                      transition-transform
-                      duration-300
-                      group-hover:translate-x-1.5
-                    "
-                  >
+                  <span className="text-lg transition-transform duration-300 group-hover:translate-x-2">
                     →
                   </span>
 
@@ -259,27 +573,7 @@ export default function CategorySection() {
 
               </div>
 
-              {/* =================================================
-                  TOP LINE
-              ================================================= */}
-
-              <div
-                className="
-                  absolute
-                  left-4
-                  right-4
-                  top-4
-                  h-px
-                  bg-white/40
-                  opacity-0
-                  transition
-                  duration-500
-                  group-hover:opacity-100
-                "
-              />
-
             </Link>
-
           ))}
 
         </div>

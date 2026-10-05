@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -22,8 +23,9 @@ export default function NewArrivals() {
         }
 
         const result = await response.json();
+
         const products = Array.isArray(result.data)
-          ? result.data.slice(0, 5).map((product) => ({
+          ? result.data.slice(0, 4).map((product) => ({
               id: product.item_id,
               name: product.title,
               category: product.category_name,
@@ -75,13 +77,15 @@ export default function NewArrivals() {
           </div>
         </div>
 
-        {/* Products */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:gap-4">
+        {/* 4 Product Cards Horizontally */}
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-5">
           {newArrivals.map((product) => (
-            <ProductCard
+            <div
               key={product.id}
-              product={product}
-            />
+              className="shadow-[0_4px_15px_rgba(50,45,41,0.10)]"
+            >
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
 
@@ -106,3 +110,4 @@ export default function NewArrivals() {
     </section>
   );
 }
+
