@@ -4,6 +4,7 @@ import {
   CUSTOMER_COOKIE_NAME,
   verifyCustomerToken,
 } from "@/lib/auth";
+import { publishRealtime } from "@/lib/realtime.mjs";
 
 export async function GET(request) {
   const token = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
@@ -420,6 +421,15 @@ export async function POST(request) {
     }
 
     await connection.commit();
+
+    const orderUpdate = {
+      order_id: String(orderId),
+      user_id: String(customer.user_id),
+      order_status: "pending",
+      payment_status: "pending",
+    };
+    publishRealtime(`customer:${customer.user_id}`, "orders:created", orderUpdate);
+    publishRealtime("admins", "orders:created", orderUpdate);
 
     return NextResponse.json(
       {

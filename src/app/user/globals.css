@@ -26,7 +26,24 @@ body {
   font-family: Arial, sans-serif;
 }
 
+.user-page-gutter {
+  --user-page-gutter-size: 16px;
+  padding-inline: var(--user-page-gutter-size);
+}
+
+.user-page-full-bleed {
+  width: calc(
+    100% + var(--user-page-gutter-size) + var(--user-page-gutter-size)
+  );
+  margin-inline: calc(0px - var(--user-page-gutter-size));
+}
+
+@media (min-width: 768px) {
+  .user-page-gutter {
+    --user-page-gutter-size: 50px;
+  }
+}
+
 button {
   cursor: pointer;
 }
-

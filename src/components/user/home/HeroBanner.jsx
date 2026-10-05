@@ -60,7 +60,7 @@ export default function HeroBanner() {
   // Skeleton while fetching — avoids a jarring layout pop-in
   if (loading) {
     return (
-      <section className="relative h-[400px] w-full overflow-hidden bg-[#322D29]">
+      <section className="user-page-full-bleed relative h-[400px] w-full overflow-hidden bg-[#322D29]">
         <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[#2a2622] via-[#322D29] to-[#2a2622]" />
       </section>
     );
@@ -71,7 +71,7 @@ export default function HeroBanner() {
   }
 
   return (
-    <section className="relative h-[400px] w-full overflow-hidden bg-[#322D29]">
+    <section className="user-page-full-bleed relative h-[400px] w-full overflow-hidden bg-[#322D29]">
       <Swiper
         modules={[Autoplay, EffectFade, Navigation, Pagination]}
         effect="fade"

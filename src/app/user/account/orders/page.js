@@ -4,11 +4,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { io } from "socket.io-client";
 import {
   Package,
   ChevronRight,
   ArrowLeft,
-  Clock3,
   CheckCircle2,
   Truck,
 } from "lucide-react";
@@ -24,26 +24,53 @@ export default function OrdersPage() {
 
     const loadOrders = async () => {
       try {
-        const response = await fetch("/api/user/orders", {
-          signal: controller.signal,
-          cache: "no-store",
-        });
-        const result = await response.json();
+        const [ordersResponse, itemsResponse] = await Promise.all([
+          fetch("/api/user/orders", {
+            signal: controller.signal,
+            cache: "no-store",
+          }),
+          fetch("/api/user/order-items", {
+            signal: controller.signal,
+            cache: "no-store",
+          }),
+        ]);
+        const [result, itemsResult] = await Promise.all([
+          ordersResponse.json(),
+          itemsResponse.json(),
+        ]);
 
-        if (response.status === 401) {
+        if (ordersResponse.status === 401 || itemsResponse.status === 401) {
           localStorage.removeItem("velora-user-session");
           router.replace("/user/login");
           return;
         }
 
-        if (!response.ok || !result.success) {
+        if (!ordersResponse.ok || !result.success) {
           throw new Error(result.message || "Unable to load your orders.");
+        }
+
+        if (!itemsResponse.ok || !itemsResult.success) {
+          throw new Error(itemsResult.message || "Unable to load order items.");
+        }
+
+        const itemsByOrder = new Map();
+        for (const item of Array.isArray(itemsResult.data) ? itemsResult.data : []) {
+          const orderId = String(item.order_id);
+          const orderItems = itemsByOrder.get(orderId) || [];
+          orderItems.push({
+            id: String(item.order_item_id),
+            name: item.product_title || `Product #${item.item_id}`,
+            image: item.image || "",
+            quantity: Number(item.qty) || 0,
+          });
+          itemsByOrder.set(orderId, orderItems);
         }
 
         const customerOrders = Array.isArray(result.data) ? result.data : [];
         setOrders(
           customerOrders.map((order) => {
             const status = String(order.order_status || "pending").toLowerCase();
+            const items = itemsByOrder.get(String(order.order_id)) || [];
 
             return {
               id: String(order.order_id),
@@ -51,7 +78,7 @@ export default function OrdersPage() {
               total: `Rs. ${Number(order.total_amount || 0).toLocaleString()}`,
               status: status.charAt(0).toUpperCase() + status.slice(1),
               statusType: status,
-              items: Number(order.item_count) || 0,
+              items,
             };
           })
         );
@@ -66,7 +93,16 @@ export default function OrdersPage() {
     };
 
     void loadOrders();
-    return () => controller.abort();
+
+    const socket = io({ autoConnect: false, withCredentials: true });
+    socket.on("orders:created", () => void loadOrders());
+    socket.on("order:updated", () => void loadOrders());
+    socket.connect();
+
+    return () => {
+      controller.abort();
+      socket.disconnect();
+    };
   }, [router]);
 
   return (
@@ -139,137 +175,55 @@ export default function OrdersPage() {
               className="group block border border-[#D8D0C8] bg-[#F8F5F1] transition hover:border-[#72383D] hover:shadow-sm"
             >
 
-              {/* ORDER HEADER */}
-              <div className="flex flex-col gap-4 border-b border-[#D8D0C8] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-
-                <div className="flex items-center gap-4">
-
-                  <div className="flex h-12 w-12 items-center justify-center bg-[#E3DCD1]">
-                    <Package size={20} />
-                  </div>
-
-                  <div>
-
-                    <p className="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#8B817A]">
-                      Order
-                    </p>
-
-                    <h2 className="mt-1 font-serif text-xl">
-                      #{order.id}
-                    </h2>
-
-                  </div>
-
-                </div>
-
-                <div className="text-left sm:text-right">
-
-                  <p className="text-xs text-[#8B817A]">
-                    {order.date}
-                  </p>
-
-                  <p className="mt-1 text-sm font-semibold">
-                    {order.total}
-                  </p>
-
-                </div>
-
-              </div>
-
-              {/* ORDER DETAILS */}
-              <div className="p-5 sm:p-6">
-
-                <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-
-                  {/* STATUS */}
-                  <div>
-
-                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-[1.5px] text-[#8B817A]">
-                      Order Status
-                    </p>
-
-                    <div className="flex items-center gap-2">
-
-                      {order.statusType === "shipped" ? (
-                        <Truck
-                          size={17}
-                          className="text-[#72383D]"
+              <div className="space-y-3 p-5 sm:p-6">
+                {order.items.map((item) => (
+                  <div key={item.id} className="flex items-center gap-4">
+                    <div className="h-20 w-16 shrink-0 overflow-hidden bg-[#E3DCD1]">
+                      {item.image ? (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="h-full w-full object-cover"
                         />
                       ) : (
-                        <CheckCircle2
-                          size={17}
-                          className="text-[#547454]"
-                        />
+                        <div className="flex h-full items-center justify-center text-[10px] text-[#8B817A]">
+                          No image
+                        </div>
                       )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="truncate text-sm font-semibold">{item.name}</h3>
+                      <p className="mt-1 text-xs text-[#8B817A]">Quantity: {item.quantity}</p>
+                    </div>
+                  </div>
+                ))}
 
-                      <span
-                        className={`
-                          text-sm
-                          font-semibold
-                          ${
-                            order.statusType ===
-                            "delivered"
-                              ? "text-[#547454]"
-                              : "text-[#72383D]"
-                          }
-                        `}
-                      >
+                <div className="flex flex-col gap-4 border-t border-[#D8D0C8] pt-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-[#8B817A]">
+                    <span className="font-semibold text-[#322D29]">Order #{order.id}</span>
+                    <span>{order.date}</span>
+                    <span className="inline-flex items-center gap-1.5">
+                      {order.statusType === "shipped" ? (
+                        <Truck size={14} className="text-[#72383D]" />
+                      ) : (
+                        <CheckCircle2 size={14} className="text-[#547454]" />
+                      )}
+                      <span className={order.statusType === "delivered" ? "text-[#547454]" : "text-[#72383D]"}>
                         {order.status}
                       </span>
-
-                    </div>
-
+                    </span>
+                    <span className="font-semibold text-[#322D29]">{order.total}</span>
                   </div>
 
-                  {/* ITEMS */}
-                  <div>
-
-                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-[1.5px] text-[#8B817A]">
-                      Items
-                    </p>
-
-                    <p className="text-sm">
-                      {order.items}{" "}
-                      {order.items === 1
-                        ? "item"
-                        : "items"}
-                    </p>
-
-                  </div>
-
-                  {/* VIEW */}
-                  <span
-                    className="
-                      group
-                      flex
-                      items-center
-                      justify-center
-                      gap-2
-                      border
-                      border-[#322D29]
-                      px-5
-                      py-3
-                      text-xs
-                      font-semibold
-                      uppercase
-                      tracking-[1.5px]
-                      transition
-                      hover:bg-[#322D29]
-                      hover:text-white
-                    "
-                  >
+                  <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29] group-hover:text-[#72383D]">
                     View Order
-
                     <ChevronRight
                       size={15}
                       className="transition-transform group-hover:translate-x-1"
                     />
-
                   </span>
-
                 </div>
-
-            </div>
+              </div>
 
             </Link>
 

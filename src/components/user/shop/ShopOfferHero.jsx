@@ -3,7 +3,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { sanitizeProductDescription } from "@/lib/productDescription";
 import { Autoplay, EffectFade } from "swiper/modules";
@@ -13,6 +12,13 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 
 const AUTOPLAY_DELAY = 3000;
+const DEFAULT_SHOP_HERO = {
+  offer_id: "featured-collection",
+  title: "Discover Your Style",
+  description: "Explore timeless styles made for your everyday look.",
+  banner_image: "/images/banners/banner1.jpg",
+  href: "/user/shop",
+};
 
 function isOfferCurrent(offer) {
   if (offer.status !== "active" || !offer.banner_image) return false;
@@ -29,6 +35,30 @@ function isOfferCurrent(offer) {
     (!startsAt || startsAt <= now) &&
     (!endsAt || endsAt >= now)
   );
+}
+
+function getDisplayOffers(offers) {
+  const now = new Date();
+  const availableOffers = offers.filter((offer) => {
+    if (offer.status !== "active" || !offer.banner_image) return false;
+
+    const endsAt = offer.end_date ? new Date(offer.end_date) : null;
+    return !endsAt || endsAt >= now;
+  });
+  const currentOffers = availableOffers.filter(isOfferCurrent);
+
+  if (currentOffers.length) return currentOffers;
+
+  return availableOffers.sort((first, second) => {
+    const firstStart = first.start_date
+      ? new Date(first.start_date).getTime()
+      : 0;
+    const secondStart = second.start_date
+      ? new Date(second.start_date).getTime()
+      : 0;
+
+    return firstStart - secondStart;
+  });
 }
 
 export default function ShopOfferHero() {
@@ -55,9 +85,7 @@ export default function ShopOfferHero() {
         }
 
         setOffers(
-          (Array.isArray(result.data) ? result.data : []).filter(
-            isOfferCurrent
-          )
+          getDisplayOffers(Array.isArray(result.data) ? result.data : [])
         );
       } catch (error) {
         if (!controller.signal.aborted) {
@@ -72,23 +100,23 @@ export default function ShopOfferHero() {
     return () => controller.abort();
   }, []);
 
-  if (!offers.length) return null;
+  const displayOffers = offers.length ? offers : [DEFAULT_SHOP_HERO];
 
   return (
     <section
-      aria-label="Current offers"
-      className="mx-auto w-[94%] max-w-[1280px] pt-5 md:pt-7"
+      aria-label={offers.length ? "Featured offers" : "Featured collection"}
+      className="user-page-full-bleed w-full pt-5 md:pt-7"
     >
       <div className="relative overflow-hidden shadow-[0_18px_45px_rgba(50,45,41,0.10)]">
         <Swiper
           modules={[Autoplay, EffectFade]}
           effect="fade"
           fadeEffect={{ crossFade: true }}
-          loop={offers.length > 1}
+          loop={displayOffers.length > 1}
           slidesPerView={1}
           speed={900}
           autoplay={
-            offers.length > 1
+            displayOffers.length > 1
               ? {
                   delay: AUTOPLAY_DELAY,
                   disableOnInteraction: false,
@@ -104,109 +132,97 @@ export default function ShopOfferHero() {
           }
           className="overflow-hidden"
         >
-          {offers.map((offer) => (
-            <SwiperSlide key={offer.offer_id}>
-              <article className="group relative isolate h-[180px] overflow-hidden bg-[#322D29] sm:h-[210px] md:h-[240px]">
-                {/* Background Image */}
-                <Image
-                  src={offer.banner_image}
-                  alt={offer.title}
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 94vw, 1280px"
-                  className={`absolute inset-0 z-0 object-cover transition-transform ease-out ${
-                    offers[activeIndex]?.offer_id === offer.offer_id
-                      ? "scale-[1.04] duration-[7000ms]"
-                      : "scale-100 duration-0"
-                  }`}
-                />
+          {displayOffers.map((offer, index) => {
+            const isFallback = offers.length === 0;
 
-                {/* Luxury dark overlay */}
-                <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#171310]/95 via-[#171310]/65 to-[#171310]/15" />
+            return (
+              <SwiperSlide key={offer.offer_id}>
+                <article className="group relative isolate overflow-hidden bg-[#322D29]">
+                  {/* Keep wide banners full-width while capping their height. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={offer.banner_image}
+                    alt={offer.title}
+                    className="block max-h-[400px] w-full object-cover"
+                  />
 
-                {/* Bottom gradient */}
-                <div className="absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-[#171310]/70 to-transparent" />
+                  <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#171310]/95 via-[#171310]/65 to-[#171310]/15" />
+                  <div className="absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-[#171310]/70 to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 z-30 border border-white/10" />
 
-                {/* Soft border */}
-                <div className="pointer-events-none absolute inset-0 z-30 border border-white/10" />
+                  <div className="absolute inset-0 z-20 flex flex-col justify-center px-6 sm:px-9 md:px-12">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Sparkles
+                        size={11}
+                        strokeWidth={1.5}
+                        className="text-[#C7AE9A]"
+                      />
 
-                {/* Content */}
-                <div className="relative z-20 flex h-full max-w-2xl flex-col justify-center px-6 sm:px-9 md:px-12">
-                  
-                  {/* Premium Label */}
-                  <div className="mb-2 flex items-center gap-2">
-                    <Sparkles
-                      size={11}
-                      strokeWidth={1.5}
-                      className="text-[#C7AE9A]"
-                    />
+                      <p className="text-[8px] font-medium uppercase tracking-[0.32em] text-[#E3DCD1]">
+                        {isFallback
+                          ? "New Season Collection"
+                          : "Velora Exclusive"}
+                      </p>
 
-                    <p className="text-[8px] font-medium uppercase tracking-[0.32em] text-[#E3DCD1]">
-                      Velora Exclusive
-                    </p>
+                      <span className="h-px w-8 bg-[#C7AE9A]/60" />
+                    </div>
 
-                    <span className="h-px w-8 bg-[#C7AE9A]/60" />
+                    <h2 className="max-w-xl font-serif text-[22px] font-medium leading-[1.05] tracking-[-0.02em] text-white sm:text-[26px] md:text-[32px]">
+                      {offer.title}
+                    </h2>
+
+                    {offer.description && (
+                      <div
+                        className="mt-2 line-clamp-1 max-w-lg text-[10px] leading-5 text-white/70 sm:text-xs"
+                        dangerouslySetInnerHTML={{
+                          __html: sanitizeProductDescription(
+                            offer.description
+                          ),
+                        }}
+                      />
+                    )}
+
+                    <Link
+                      href={
+                        offer.href ||
+                        `/user/offers/${encodeURIComponent(
+                          String(offer.offer_id)
+                        )}`
+                      }
+                      className="group/cta mt-3 inline-flex h-8 w-fit items-center gap-2 bg-[#F7F3ED] px-4 text-[8px] font-semibold uppercase tracking-[0.18em] text-[#322D29] shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-300 hover:bg-[#C7AE9A] hover:shadow-[0_10px_25px_rgba(0,0,0,0.22)] sm:h-9 sm:px-5"
+                    >
+                      {isFallback ? "Shop Collection" : "Discover Offer"}
+
+                      <ArrowRight
+                        size={12}
+                        strokeWidth={1.8}
+                        className="transition-transform duration-300 group-hover/cta:translate-x-1"
+                      />
+                    </Link>
                   </div>
 
-                  {/* Title */}
-                  <h2 className="max-w-xl font-serif text-[22px] font-medium leading-[1.05] tracking-[-0.02em] text-white sm:text-[26px] md:text-[32px]">
-                    {offer.title}
-                  </h2>
+                  {!isFallback && (
+                    <div className="absolute bottom-4 right-5 z-20 hidden items-center gap-2 sm:flex">
+                      <span className="text-[8px] uppercase tracking-[0.25em] text-white/45">
+                        Offer
+                      </span>
 
-                  {/* Description */}
-                  {offer.description && (
-                    <div
-                      className="mt-2 line-clamp-1 max-w-lg text-[10px] leading-5 text-white/70 sm:text-xs"
-                      dangerouslySetInnerHTML={{
-                        __html: sanitizeProductDescription(
-                          offer.description
-                        ),
-                      }}
-                    />
+                      <span className="font-serif text-sm text-white/75">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </div>
                   )}
-
-                  {/* CTA */}
-                  <Link
-                    href={`/user/offers/${encodeURIComponent(
-                      String(offer.offer_id)
-                    )}`}
-                    className="group/cta mt-3 inline-flex h-8 w-fit items-center gap-2 bg-[#F7F3ED] px-4 text-[8px] font-semibold uppercase tracking-[0.18em] text-[#322D29] shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-300 hover:bg-[#C7AE9A] hover:shadow-[0_10px_25px_rgba(0,0,0,0.22)] sm:h-9 sm:px-5"
-                  >
-                    Discover Offer
-
-                    <ArrowRight
-                      size={12}
-                      strokeWidth={1.8}
-                      className="transition-transform duration-300 group-hover/cta:translate-x-1"
-                    />
-                  </Link>
-                </div>
-
-                {/* Offer Number */}
-                <div className="absolute bottom-4 right-5 z-20 hidden items-center gap-2 sm:flex">
-                  <span className="text-[8px] uppercase tracking-[0.25em] text-white/45">
-                    Offer
-                  </span>
-
-                  <span className="font-serif text-sm text-white/75">
-                    {String(
-                      offers.findIndex(
-                        (item) =>
-                          item.offer_id === offer.offer_id
-                      ) + 1
-                    ).padStart(2, "0")}
-                  </span>
-                </div>
-              </article>
-            </SwiperSlide>
-          ))}
+                </article>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
 
         {/* Pagination */}
-        {offers.length > 1 && (
+        {displayOffers.length > 1 && (
           <div className="absolute bottom-3 left-1/2 z-40 -translate-x-1/2">
             <div className="flex items-center gap-2 rounded-full border border-white/10 bg-[#171310]/40 px-3 py-1.5 backdrop-blur-md">
-              {offers.map((offer, index) => (
+              {displayOffers.map((offer, index) => (
                 <button
                   key={offer.offer_id}
                   type="button"
@@ -235,4 +251,3 @@ export default function ShopOfferHero() {
     </section>
   );
 }
-

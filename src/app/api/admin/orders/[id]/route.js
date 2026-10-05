@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { getAdmin } from "@/lib/auth";
+import { publishRealtime } from "@/lib/realtime.mjs";
 
 // ==========================================
 // GET SINGLE ORDER
@@ -7,6 +9,10 @@ import pool from "@/lib/db";
 
 export async function GET(request, { params }) {
   try {
+    if (!(await getAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await params;
 
     // ========================================
@@ -118,6 +124,10 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
+    if (!(await getAdmin())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await params;
 
     const body = await request.json();
@@ -133,7 +143,7 @@ export async function PUT(request, { params }) {
 
     const [existing] = await pool.query(
       `
-      SELECT order_id
+      SELECT order_id, user_id
       FROM orders
       WHERE order_id = ?
       `,
@@ -221,6 +231,27 @@ export async function PUT(request, { params }) {
         [payment_status, id]
       );
     }
+
+    const [updatedOrders] = await pool.query(
+      `SELECT order_id, user_id, order_status, payment_status
+       FROM orders
+       WHERE order_id = ?`,
+      [id]
+    );
+    const updatedOrder = updatedOrders[0];
+    const orderUpdate = {
+      order_id: String(updatedOrder.order_id),
+      user_id: String(updatedOrder.user_id),
+      order_status: updatedOrder.order_status,
+      payment_status: updatedOrder.payment_status,
+    };
+
+    publishRealtime(
+      `customer:${updatedOrder.user_id}`,
+      "order:updated",
+      orderUpdate
+    );
+    publishRealtime("admins", "orders:updated", orderUpdate);
 
     return NextResponse.json({
       success: true,

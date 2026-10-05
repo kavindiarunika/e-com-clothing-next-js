@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import {
   Search,
   Eye,
@@ -35,36 +36,42 @@ export default function OrdersPage() {
   // ==========================================
 
   const fetchOrders = async () => {
-    try {
-      setLoading(true);
-
-      const response = await fetch(
-        "/api/admin/orders"
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          "Failed to fetch orders."
-        );
-      }
-
-      const data = await response.json();
-
-      setOrders(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error(
-        "Fetch orders error:",
-        error
-      );
-
-      alert("Failed to load orders.");
-    } finally {
-      setLoading(false);
+    const response = await fetch("/api/admin/orders");
+    if (!response.ok) {
+      throw new Error("Failed to fetch orders.");
     }
+
+    return response.json();
   };
 
   useEffect(() => {
-    fetchOrders();
+    let isMounted = true;
+    const refreshOrders = () => {
+      fetchOrders()
+        .then((data) => {
+          if (isMounted) setOrders(Array.isArray(data) ? data : []);
+        })
+        .catch((error) => {
+          if (!isMounted) return;
+          console.error("Fetch orders error:", error);
+          alert("Failed to load orders.");
+        })
+        .finally(() => {
+          if (isMounted) setLoading(false);
+        });
+    };
+
+    refreshOrders();
+
+    const socket = io({ autoConnect: false, withCredentials: true });
+    socket.on("orders:created", refreshOrders);
+    socket.on("orders:updated", refreshOrders);
+    socket.connect();
+
+    return () => {
+      isMounted = false;
+      socket.disconnect();
+    };
   }, []);
 
   // ==========================================

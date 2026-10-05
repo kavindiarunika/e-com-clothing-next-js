@@ -2,13 +2,14 @@
 
 import { ChevronDown } from "lucide-react";
 
-export default function SortDropdown({ sortBy, setSortBy }) {
+export default function SortDropdown({ id, sortBy, setSortBy }) {
   return (
     <div className="relative">
       <select
+        id={id}
         value={sortBy}
         onChange={(e) => setSortBy(e.target.value)}
-        className="appearance-none border border-[#D8D0C8] bg-white py-2.5 pl-4 pr-10 text-sm text-[#322D29] outline-none focus:border-[#72383D]"
+        className="w-full appearance-none border border-[#D8D0C8] bg-white py-2.5 pl-3 pr-10 text-sm text-[#322D29] outline-none focus:border-[#72383D]"
       >
         <option value="newest">Newest</option>
         <option value="featured">Featured</option>

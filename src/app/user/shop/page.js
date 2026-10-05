@@ -24,7 +24,6 @@ export default function ShopPage() {
 
   const [sortBy, setSortBy] = useState("newest");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
   const productGridRef = useRef(null);
@@ -312,18 +311,7 @@ export default function ShopPage() {
       <ShopOfferHero />
 
       {/* Main */}
-      <section className="mx-auto w-[92%] max-w-[1200px] py-8 md:py-12">
-
-        {/* Search */}
-        <div className="mb-8">
-          <SearchBar
-            value={searchTerm}
-            onChange={(value) => {
-              setSearchTerm(value);
-              setCurrentPage(1);
-            }}
-          />
-        </div>
+      <section className="mx-auto w-[94%] max-w-[1440px] py-8 md:py-12">
 
         {/* Mobile Filter Button */}
         <div className="mb-6 flex items-center justify-between md:hidden">
@@ -350,47 +338,25 @@ export default function ShopPage() {
         </div>
 
 
-        {/* Desktop Toolbar */}
-        <div className="mb-6 hidden items-center justify-between md:flex">
-          <div className="flex items-center gap-5">
-            <button
-              type="button"
-              onClick={() => setDesktopFiltersOpen((isOpen) => !isOpen)}
-              aria-expanded={desktopFiltersOpen}
-              aria-controls="shop-filter-sidebar"
-              className={`flex items-center gap-2 border px-4 py-2.5 text-xs font-semibold uppercase tracking-[1px] transition ${
-                desktopFiltersOpen
-                  ? "border-[#72383D] bg-[#72383D] text-white"
-                  : "border-[#D8D0C8] bg-white text-[#322D29] hover:border-[#72383D] hover:text-[#72383D]"
-              }`}
-            >
-              <SlidersHorizontal size={15} />
-              Filters
-            </button>
-
-            <p className="text-sm text-[#6B625C]">
-              {filteredProducts.length}{" "}
-              {filteredProducts.length === 1 ? "product" : "products"}
-            </p>
-          </div>
-
-          <SortDropdown
-            sortBy={sortBy}
-            setSortBy={(value) => {
-              setSortBy(value);
-              setCurrentPage(1);
-            }}
-          />
-        </div>
-        <div className="flex gap-8">
+        <div className="flex gap-6 lg:gap-8">
 
           {/* Desktop Sidebar */}
-          {desktopFiltersOpen && (
-            <aside id="shop-filter-sidebar" className="hidden w-[220px] shrink-0 md:block">
-            <div className="sticky top-28 bg-white p-6">
+          <aside
+            id="shop-filter-sidebar"
+            className="hidden w-[220px] shrink-0 md:block lg:w-[250px]"
+          >
+            <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto border border-[#DED5CB] border-t-2 border-t-[#72383D] bg-gradient-to-b from-white to-[#FAF7F3] p-5 shadow-[0_12px_32px_rgba(50,45,41,0.08)] lg:p-6">
+              <div className="mb-6 rounded-sm bg-[#F3EEE8] p-2">
+                <SearchBar
+                  value={searchTerm}
+                  onChange={(value) => {
+                    setSearchTerm(value);
+                    setCurrentPage(1);
+                  }}
+                />
+              </div>
 
               <div className="mb-6 flex items-center justify-between">
-
                 <h2 className="font-serif text-lg text-[#322D29]">
                   Filters
                 </h2>
@@ -402,7 +368,23 @@ export default function ShopPage() {
                 >
                   Clear
                 </button>
+              </div>
 
+              <div className="mb-6 border-b border-[#E7DED5] pb-6">
+                <label
+                  htmlFor="shop-sort-desktop"
+                  className="mb-3 block text-[10px] font-semibold uppercase tracking-[1.5px] text-[#786E66]"
+                >
+                  Sort by
+                </label>
+                <SortDropdown
+                  id="shop-sort-desktop"
+                  sortBy={sortBy}
+                  setSortBy={(value) => {
+                    setSortBy(value);
+                    setCurrentPage(1);
+                  }}
+                />
               </div>
 
               <FilterSidebar
@@ -411,43 +393,27 @@ export default function ShopPage() {
                   setSelectedCategory(value);
                   setCurrentPage(1);
                 }}
-
                 selectedPrice={selectedPrice}
                 setSelectedPrice={(value) => {
                   setSelectedPrice(value);
                   setCurrentPage(1);
                 }}
-
                 selectedSizes={selectedSizes}
                 setSelectedSizes={(value) => {
                   setSelectedSizes(value);
                   setCurrentPage(1);
                 }}
-
-                selectedAvailability={
-                  selectedAvailability
-                }
+                selectedAvailability={selectedAvailability}
                 setSelectedAvailability={(value) => {
                   setSelectedAvailability(value);
                   setCurrentPage(1);
                 }}
               />
-
             </div>
-
-            </aside>
-          )}
+          </aside>
 
           {/* Products */}
           <div className="min-w-0 flex-1">
-
-            {/* Mobile Count */}
-            <p className="mb-5 text-sm text-[#6B625C] md:hidden">
-              {filteredProducts.length}{" "}
-              {filteredProducts.length === 1
-                ? "product"
-                : "products"}
-            </p>
 
             {/* Product Grid */}
             {isLoadingProducts ? (
@@ -461,7 +427,7 @@ export default function ShopPage() {
             ) : filteredProducts.length > 0 ? (
               <div
                 ref={productGridRef}
-                className={`grid scroll-mt-28 grid-cols-2 gap-4 ${desktopFiltersOpen ? "md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "md:grid-cols-3 lg:grid-cols-4"}`}
+                className="grid scroll-mt-28 grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
               >
 
                 {pageProducts.map((product) => (
@@ -593,7 +559,34 @@ export default function ShopPage() {
 
             </div>
 
-            <div className="p-6">
+            <div className="bg-gradient-to-b from-white to-[#FAF7F3] p-6">
+
+              <div className="mb-6 rounded-sm bg-[#F3EEE8] p-2">
+                <SearchBar
+                  value={searchTerm}
+                  onChange={(value) => {
+                    setSearchTerm(value);
+                    setCurrentPage(1);
+                  }}
+                />
+              </div>
+
+              <div className="mb-6 border-b border-[#E7DED5] pb-6">
+                <label
+                  htmlFor="shop-sort-mobile"
+                  className="mb-3 block text-[10px] font-semibold uppercase tracking-[1.5px] text-[#786E66]"
+                >
+                  Sort by
+                </label>
+                <SortDropdown
+                  id="shop-sort-mobile"
+                  sortBy={sortBy}
+                  setSortBy={(value) => {
+                    setSortBy(value);
+                    setCurrentPage(1);
+                  }}
+                />
+              </div>
 
               {/* Clear */}
               <div className="mb-6 flex justify-end">

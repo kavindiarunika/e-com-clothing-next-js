@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 import {
   ArrowLeft,
@@ -101,6 +102,25 @@ export default function OrderDetailsPage() {
     };
 
     loadOrder();
+
+    const socket = io({ autoConnect: false, withCredentials: true });
+    socket.on("order:updated", (update) => {
+      if (String(update.order_id) !== String(orderId)) return;
+
+      setOrder((current) => {
+        if (!current) return current;
+        const orderStatus = String(update.order_status || "pending");
+
+        return {
+          ...current,
+          status: orderStatus.charAt(0).toUpperCase() + orderStatus.slice(1),
+          paymentStatus: String(update.payment_status || "pending").toLowerCase(),
+        };
+      });
+    });
+    socket.connect();
+
+    return () => socket.disconnect();
   }, [orderId]);
 
   if (isLoading) {

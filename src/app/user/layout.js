@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
     <>
       <Navbar />
 
-      <main>{children}</main>
+      <main className="user-page-gutter">{children}</main>
 
       <FloatingWhatsApp />
       <Footer />
