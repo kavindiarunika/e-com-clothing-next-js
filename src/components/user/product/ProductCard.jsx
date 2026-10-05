@@ -1,12 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Heart, ShoppingBag, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({
+  product,
+  showSoldOut = false,
+  onWishlistChange,
+}) {
+  const router = useRouter();
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isUpdatingWishlist, setIsUpdatingWishlist] = useState(false);
 
   // ---------------------------------------
   // Rating
@@ -67,7 +74,9 @@ export default function ProductCard({ product }) {
         savedWishlist = [];
       }
 
-      setIsWishlisted(savedWishlist.includes(product.id));
+      setIsWishlisted(
+        savedWishlist.some((id) => String(id) === String(product.id))
+      );
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
@@ -147,49 +156,69 @@ export default function ProductCard({ product }) {
     product.reviews,
   ]);
 
-  if (isSoldOut) return null;
+  if (isSoldOut && !showSoldOut) return null;
 
   // ---------------------------------------
   // Wishlist
   // ---------------------------------------
-  const handleWishlist = () => {
-    const savedWishlist =
-      JSON.parse(
+  const handleWishlist = async () => {
+    if (isUpdatingWishlist) return;
+
+    setIsUpdatingWishlist(true);
+    let savedWishlist = [];
+    try {
+      savedWishlist = JSON.parse(
         localStorage.getItem("velora-wishlist") || "[]"
       );
-
-    if (savedWishlist.includes(product.id)) {
-      // Remove from wishlist
-      const updatedWishlist =
-        savedWishlist.filter(
-          (id) => id !== product.id
-        );
-
-      localStorage.setItem(
-        "velora-wishlist",
-        JSON.stringify(updatedWishlist)
-      );
-
-      setIsWishlisted(false);
-    } else {
-      // Add to wishlist
-      const updatedWishlist = [
-        ...savedWishlist,
-        product.id,
-      ];
-
-      localStorage.setItem(
-        "velora-wishlist",
-        JSON.stringify(updatedWishlist)
-      );
-
-      setIsWishlisted(true);
+    } catch (error) {
+      console.error("Could not read saved wishlist:", error);
+      window.alert("Unable to update your wishlist. Please try again.");
+      setIsUpdatingWishlist(false);
+      return;
     }
 
-    // Notify Wishlist page / Navbar
-    window.dispatchEvent(
-      new Event("velora-wishlist-updated")
-    );
+    const alreadyWishlisted = savedWishlist.some(
+      (id) => String(id) === String(product.id)
+    ) || isWishlisted;
+
+    try {
+      const response = await fetch(
+        alreadyWishlisted
+          ? `/api/user/wishlist?item_id=${encodeURIComponent(product.id)}`
+          : "/api/user/wishlist",
+        {
+          method: alreadyWishlisted ? "DELETE" : "POST",
+          headers: alreadyWishlisted
+            ? undefined
+            : { "Content-Type": "application/json" },
+          body: alreadyWishlisted
+            ? undefined
+            : JSON.stringify({ item_id: product.id }),
+        }
+      );
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to update your wishlist.");
+      }
+
+      const updatedWishlist = alreadyWishlisted
+        ? savedWishlist.filter((id) => String(id) !== String(product.id))
+        : [...savedWishlist.filter((id) => String(id) !== String(product.id)), product.id];
+      localStorage.setItem("velora-wishlist", JSON.stringify(updatedWishlist));
+      setIsWishlisted(!alreadyWishlisted);
+      onWishlistChange?.(product.id, !alreadyWishlisted);
+      window.dispatchEvent(new Event("velora-wishlist-updated"));
+
+      if (!alreadyWishlisted) {
+        router.push("/user/wishlist");
+      }
+    } catch (error) {
+      console.error("Update customer wishlist error:", error);
+      window.alert(error.message || "Unable to update your wishlist.");
+    } finally {
+      setIsUpdatingWishlist(false);
+    }
   };
 
   // ---------------------------------------
@@ -338,6 +367,7 @@ export default function ProductCard({ product }) {
         <button
           type="button"
           onClick={handleWishlist}
+          disabled={isUpdatingWishlist}
           aria-label={
             isWishlisted
               ? "Remove from wishlist"

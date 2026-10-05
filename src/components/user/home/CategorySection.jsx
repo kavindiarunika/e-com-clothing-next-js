@@ -119,7 +119,10 @@ export default function CategorySection() {
     return null;
   }
 
-  const visibleCategories = categories.slice(0, 3);
+  const visibleCategories = Array.from(
+    { length: 4 },
+    (_, index) => categories[index % categories.length]
+  );
 
   const getCategoryLink = (category) => {
     return (
@@ -130,8 +133,8 @@ export default function CategorySection() {
   };
 
   return (
-    <section className="bg-[#EFE9E1] px-4 py-10 sm:px-6 md:py-12 lg:px-8">
-      <div className="mx-auto max-w-[1400px]">
+    <section className="bg-[#EFE9E1] px-0 py-10 md:py-12">
+      <div className="mx-auto w-full max-w-none">
 
         {/* =====================================================
             SECTION HEADER
@@ -146,13 +149,9 @@ export default function CategorySection() {
             Shop by Category
           </h2>
 
-          <div className="mt-5 h-px w-12 bg-[#72383D]" />
         </div>
 
-        {/* =====================================================
-            DESKTOP EDITORIAL LAYOUT
-            LEFT + 2 CENTER IMAGES + RIGHT
-        ===================================================== */}
+        {/* Four featured categories */}
 
         <div className="flex items-center justify-center gap-4 lg:gap-5">
 
@@ -160,11 +159,11 @@ export default function CategorySection() {
               LEFT SIDE - 3 SMALL CARDS
           =================================================== */}
 
-          <div className="hidden w-[115px] shrink-0 flex-col gap-5 lg:flex">
+          <div className="hidden">
 
             {visibleCategories.map((category, index) => (
               <Link
-                key={`left-${category.category_id || category.name}`}
+                key={`left-${category.category_id || category.name}-${index}`}
                 href={getCategoryLink(category)}
                 className="
                   group
@@ -252,17 +251,17 @@ export default function CategorySection() {
               CENTER - 2 LARGE MAIN IMAGES
           =================================================== */}
 
-          <div className="grid w-full max-w-[820px] grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5">
+          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 lg:gap-5">
 
-            {visibleCategories.slice(0, 2).map((category, index) => (
+            {visibleCategories.map((category, index) => (
               <Link
-                key={`center-${category.category_id || category.name}`}
+                key={`center-${category.category_id || category.name}-${index}`}
                 href={getCategoryLink(category)}
                 className="
                   group
                   relative
                   block
-                  h-[440px]
+                  h-[360px]
                   w-full
                   overflow-hidden
                   rounded-tr-[3rem]
@@ -270,8 +269,8 @@ export default function CategorySection() {
                   bg-[#EFECE6]
                   shadow-[0_10px_35px_rgba(50,45,41,0.12)]
                   cursor-pointer
-                  sm:h-[500px]
-                  lg:h-[520px]
+                  sm:h-[400px]
+                  xl:h-[440px]
                 "
               >
 
@@ -346,7 +345,7 @@ export default function CategorySection() {
                     Discover
                   </p>
 
-                  <h3 className="font-serif text-4xl italic tracking-wide sm:text-5xl">
+                  <h3 className="font-serif text-3xl italic tracking-wide sm:text-4xl">
                     {category.name}
                   </h3>
 
@@ -389,14 +388,14 @@ export default function CategorySection() {
               RIGHT SIDE - 3 SMALL CARDS
           =================================================== */}
 
-          <div className="hidden w-[115px] shrink-0 flex-col gap-5 lg:flex">
+          <div className="hidden">
 
             {visibleCategories
               .slice()
               .reverse()
-              .map((category) => (
+              .map((category, index) => (
                 <Link
-                  key={`right-${category.category_id || category.name}`}
+                  key={`right-${category.category_id || category.name}-${index}`}
                   href={getCategoryLink(category)}
                   className="
                     group
@@ -488,11 +487,11 @@ export default function CategorySection() {
             MOBILE / TABLET
         ===================================================== */}
 
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3 lg:hidden">
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
 
           {visibleCategories.map((category, index) => (
             <Link
-              key={`mobile-${category.category_id || category.name}`}
+              key={`mobile-${category.category_id || category.name}-${index}`}
               href={getCategoryLink(category)}
               className="
                 group

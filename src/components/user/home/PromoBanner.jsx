@@ -118,7 +118,7 @@ export default function PromoBanner() {
   const visibleOffers = activeOffers.length > 0 ? activeOffers : [DEFAULT_PROMO];
 
   return (
-    <section className="w-full">
+    <section className="user-page-full-bleed w-full">
 
       <Swiper
         modules={[Autoplay]}
