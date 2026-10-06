@@ -13,7 +13,11 @@ const GOOGLE_JWKS = createRemoteJWKSet(
 
 function loginRedirect(request, status) {
   const nextPath = request.cookies.get(NEXT_COOKIE_NAME)?.value;
-  const loginUrl = new URL("/user/login", request.url);
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI;
+  const appOrigin = redirectUri
+    ? new URL(redirectUri).origin
+    : request.nextUrl.origin;
+  const loginUrl = new URL("/user/login", appOrigin);
   loginUrl.searchParams.set("google", status);
   if (
     nextPath === "/user" ||
@@ -51,15 +55,23 @@ export async function GET(request) {
     process.env.GOOGLE_REDIRECT_URI ||
     `${request.nextUrl.origin}/api/auth/google/callback`;
 
-  if (
-    params.has("error") ||
-    !state ||
-    !savedState ||
-    state !== savedState ||
-    !code ||
-    !clientId ||
-    !clientSecret
-  ) {
+  const callbackFailures = [];
+  if (params.has("error")) callbackFailures.push("provider_error");
+  if (!state) callbackFailures.push("missing_state");
+  if (!savedState) callbackFailures.push("missing_state_cookie");
+  if (state && savedState && state !== savedState) {
+    callbackFailures.push("state_mismatch");
+  }
+  if (!code) callbackFailures.push("missing_authorization_code");
+  if (!clientId || !clientSecret) {
+    callbackFailures.push("missing_oauth_credentials");
+  }
+
+  if (callbackFailures.length > 0) {
+    console.error(
+      "Google sign-in callback validation failed:",
+      callbackFailures.join(", ")
+    );
     return loginRedirect(request, "error");
   }
 
@@ -104,6 +116,9 @@ export async function GET(request) {
     let user = existingUsers[0];
 
     if (user && (user.role !== "customer" || user.status !== "active")) {
+      console.error(
+        "Google sign-in rejected: matching account is not an active customer."
+      );
       return loginRedirect(request, "error");
     }
 

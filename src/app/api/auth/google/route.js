@@ -12,6 +12,12 @@ function getSafeNextPath(value) {
 }
 
 export async function GET(request) {
+  if (request.nextUrl.hostname === "0.0.0.0") {
+    const localUrl = new URL(request.url);
+    localUrl.hostname = "localhost";
+    return NextResponse.redirect(localUrl);
+  }
+
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 

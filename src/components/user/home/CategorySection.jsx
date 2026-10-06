@@ -2,7 +2,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
 
 const normalizeCategoryImage = (value) => {
   if (!value) return "";
@@ -84,6 +88,7 @@ const categoryPaths = {
 
 export default function CategorySection() {
   const [categories, setCategories] = useState([]);
+  const swiperRef = useRef(null);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -119,11 +124,6 @@ export default function CategorySection() {
     return null;
   }
 
-  const visibleCategories = Array.from(
-    { length: 4 },
-    (_, index) => categories[index % categories.length]
-  );
-
   const getCategoryLink = (category) => {
     return (
       categoryPaths[
@@ -133,22 +133,44 @@ export default function CategorySection() {
   };
 
   return (
-    <section className="bg-[#EFE9E1] px-0 py-10 md:py-12">
-      <div className="mx-auto w-full max-w-none">
+    <section className="bg-[#EFE9E1] px-[5%] py-10 md:py-12">
+      <div className="mx-auto w-full max-w-[1600px]">
 
         {/* =====================================================
             SECTION HEADER
         ===================================================== */}
 
-        <div className="mb-8 text-left md:mb-10">
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
-            Explore Our Collection
-          </p>
+        <div className="mb-8 flex items-end justify-between md:mb-10">
+          <div>
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
+              Explore Our Collection
+            </p>
 
-          <h2 className="font-serif text-3xl font-medium tracking-wide text-[#322D29] sm:text-4xl">
-            Shop by Category
-          </h2>
+            <h2 className="font-serif text-3xl font-medium tracking-wide text-[#322D29] sm:text-4xl">
+              Shop by Category
+            </h2>
+          </div>
 
+          {categories.length > 1 && (
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => swiperRef.current?.slidePrev()}
+                aria-label="Previous categories"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#BEB3A8] text-[#322D29] transition hover:bg-[#322D29] hover:text-white"
+              >
+                <ArrowLeft size={18} />
+              </button>
+              <button
+                type="button"
+                onClick={() => swiperRef.current?.slideNext()}
+                aria-label="Next categories"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#BEB3A8] text-[#322D29] transition hover:bg-[#322D29] hover:text-white"
+              >
+                <ArrowRight size={18} />
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Four featured categories */}
@@ -161,7 +183,7 @@ export default function CategorySection() {
 
           <div className="hidden">
 
-            {visibleCategories.map((category, index) => (
+            {categories.map((category, index) => (
               <Link
                 key={`left-${category.category_id || category.name}-${index}`}
                 href={getCategoryLink(category)}
@@ -251,13 +273,24 @@ export default function CategorySection() {
               CENTER - 2 LARGE MAIN IMAGES
           =================================================== */}
 
-          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 lg:gap-5">
-
-            {visibleCategories.map((category, index) => (
-              <Link
-                key={`center-${category.category_id || category.name}-${index}`}
-                href={getCategoryLink(category)}
-                className="
+          <Swiper
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+            slidesPerView={1.15}
+            spaceBetween={16}
+            breakpoints={{
+              640: { slidesPerView: 2, spaceBetween: 16 },
+              1024: { slidesPerView: 3, spaceBetween: 20 },
+              1280: { slidesPerView: 4, spaceBetween: 20 },
+            }}
+            className="w-full"
+          >
+            {categories.map((category, index) => (
+              <SwiperSlide key={category.category_id || category.name}>
+                <Link
+                  href={getCategoryLink(category)}
+                  className="
                   group
                   relative
                   block
@@ -271,8 +304,8 @@ export default function CategorySection() {
                   cursor-pointer
                   sm:h-[400px]
                   xl:h-[440px]
-                "
-              >
+                  "
+                >
 
                 {/* MAIN IMAGE */}
 
@@ -379,10 +412,10 @@ export default function CategorySection() {
 
                 </div>
 
-              </Link>
+                </Link>
+              </SwiperSlide>
             ))}
-
-          </div>
+          </Swiper>
 
           {/* ===================================================
               RIGHT SIDE - 3 SMALL CARDS
@@ -390,7 +423,7 @@ export default function CategorySection() {
 
           <div className="hidden">
 
-            {visibleCategories
+            {categories
               .slice()
               .reverse()
               .map((category, index) => (
@@ -487,9 +520,9 @@ export default function CategorySection() {
             MOBILE / TABLET
         ===================================================== */}
 
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
+        <div className="hidden">
 
-          {visibleCategories.map((category, index) => (
+          {categories.map((category, index) => (
             <Link
               key={`mobile-${category.category_id || category.name}-${index}`}
               href={getCategoryLink(category)}
