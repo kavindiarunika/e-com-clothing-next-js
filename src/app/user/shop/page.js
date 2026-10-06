@@ -22,7 +22,7 @@ export default function ShopPage() {
   const [selectedAvailability, setSelectedAvailability] =
     useState("all");
 
-  const [sortBy, setSortBy] = useState("newest");
+  const [sortBy, setSortBy] = useState("best-selling");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
@@ -57,6 +57,7 @@ export default function ShopPage() {
             variants: product.variants || [],
             sizes: product.sizes || [],
             colors: product.colors || [],
+            isBestSelling: Number(product.is_best_selling) === 1,
             stock: Number(product.total_stock) || 0,
             createdAt: product.created_at,
           }))
@@ -213,6 +214,14 @@ export default function ShopPage() {
     // =========================
     // Sorting
     // =========================
+
+    if (sortBy === "best-selling") {
+      result.sort(
+        (a, b) =>
+          Number(b.isBestSelling) - Number(a.isBestSelling) ||
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    }
 
     if (sortBy === "newest") {
       result.sort(
