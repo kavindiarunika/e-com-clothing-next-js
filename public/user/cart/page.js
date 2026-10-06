@@ -8,9 +8,23 @@ import CartItem from "@/components/user/cart/CartItem";
 import CartSummary from "@/components/user/cart/CartSummary";
 
 export default function CartPage() {
-  const [cart, setCart] = useState([]);
+  const readCartFromStorage = () => {
+    if (typeof window === "undefined") return [];
+
+    try {
+      const savedCart = JSON.parse(
+        localStorage.getItem("velora-cart") || "[]"
+      );
+
+      return Array.isArray(savedCart) ? savedCart : [];
+    } catch (error) {
+      console.error("Failed to load cart:", error);
+      return [];
+    }
+  };
+
+  const [cart, setCart] = useState(readCartFromStorage);
   const [couponDiscount, setCouponDiscount] = useState(0);
-  const [hasLoadedCart, setHasLoadedCart] = useState(false);
 
   // Get color name safely
   const getColorName = (color) => {
@@ -39,56 +53,26 @@ export default function CartPage() {
     );
   };
 
-  // Sync cart from localStorage
-  const syncCartFromStorage = () => {
-    if (typeof window === "undefined") return;
-
-    try {
-      const savedCart = JSON.parse(
-        localStorage.getItem("velora-cart") || "[]"
-      );
-
-      setCart(Array.isArray(savedCart) ? savedCart : []);
-    } catch (error) {
-      console.error("Failed to load cart:", error);
-      setCart([]);
-    }
-
-    setHasLoadedCart(true);
-  };
-
-  // Load cart
   useEffect(() => {
-    syncCartFromStorage();
-
     const handleCartUpdate = () => {
-      syncCartFromStorage();
+      setCart(readCartFromStorage());
     };
 
-    window.addEventListener(
-      "velora-cart-updated",
-      handleCartUpdate
-    );
+    window.addEventListener("velora-cart-updated", handleCartUpdate);
 
     return () => {
-      window.removeEventListener(
-        "velora-cart-updated",
-        handleCartUpdate
-      );
+      window.removeEventListener("velora-cart-updated", handleCartUpdate);
     };
   }, []);
 
   // Save cart
   useEffect(() => {
-    if (!hasLoadedCart || typeof window === "undefined") {
+    if (typeof window === "undefined") {
       return;
     }
 
-    localStorage.setItem(
-      "velora-cart",
-      JSON.stringify(cart)
-    );
-  }, [cart, hasLoadedCart]);
+    localStorage.setItem("velora-cart", JSON.stringify(cart));
+  }, [cart]);
 
   // Increase quantity
   const increaseQuantity = (item) => {

@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import {
@@ -12,19 +13,23 @@ import {
   CheckCircle2,
   XCircle,
   PackageCheck,
+  Package,
 } from "lucide-react";
 
 export default function ReturnsPage() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [ordersError, setOrdersError] = useState("");
 
   useEffect(() => {
-    const userId = Number(localStorage.getItem("velora-user-id") || 1);
-
     const loadRequests = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/user/returns?user_id=${userId}`);
+        const response = await fetch("/api/user/returns", {
+          cache: "no-store",
+        });
         const data = await response.json();
 
         if (!response.ok) {
@@ -41,6 +46,65 @@ export default function ReturnsPage() {
     };
 
     loadRequests();
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadOrders = async () => {
+      try {
+        const [ordersResponse, itemsResponse] = await Promise.all([
+          fetch("/api/user/orders", {
+            signal: controller.signal,
+            cache: "no-store",
+          }),
+          fetch("/api/user/order-items", {
+            signal: controller.signal,
+            cache: "no-store",
+          }),
+        ]);
+        const [ordersResult, itemsResult] = await Promise.all([
+          ordersResponse.json(),
+          itemsResponse.json(),
+        ]);
+
+        if (!ordersResponse.ok || !ordersResult.success) {
+          throw new Error(ordersResult.message || "Unable to load your orders.");
+        }
+
+        if (!itemsResponse.ok || !itemsResult.success) {
+          throw new Error(itemsResult.message || "Unable to load your order items.");
+        }
+
+        const itemsByOrder = new Map();
+        for (const item of Array.isArray(itemsResult.data) ? itemsResult.data : []) {
+          const orderItems = itemsByOrder.get(String(item.order_id)) || [];
+          orderItems.push(item);
+          itemsByOrder.set(String(item.order_id), orderItems);
+        }
+
+        setOrders(
+          (Array.isArray(ordersResult.data) ? ordersResult.data : []).map((order) => ({
+            ...order,
+            items: itemsByOrder.get(String(order.order_id)) || [],
+          }))
+        );
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Load orders for returns error:", error);
+          setOrdersError(error.message || "Unable to load your orders.");
+          setOrders([]);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setOrdersLoading(false);
+        }
+      }
+    };
+
+    void loadOrders();
+
+    return () => controller.abort();
   }, []);
 
   const getStatusStyle = (status) => {
@@ -150,6 +214,124 @@ export default function ReturnsPage() {
 
           </div>
 
+        </div>
+
+        {/* ORDERS */}
+        <div className="mb-14">
+          <div className="mb-6">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[3px] text-[#72383D]">
+              Start a Request
+            </p>
+            <h2 className="font-serif text-2xl sm:text-3xl">
+              Your Orders
+            </h2>
+          </div>
+
+          {ordersLoading ? (
+            <div className="border border-[#D8D0C8] bg-[#F8F5F1] p-8 text-center">
+              <p className="text-sm text-[#6B625C]">Loading your orders...</p>
+            </div>
+          ) : ordersError ? (
+            <p role="alert" className="border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+              {ordersError}
+            </p>
+          ) : orders.length === 0 ? (
+            <div className="border border-[#D8D0C8] bg-[#F8F5F1] p-8 text-center">
+              <Package size={30} className="mx-auto text-[#8B817A]" />
+              <p className="mt-3 text-sm text-[#6B625C]">
+                Your orders will appear here when you have placed an order.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-5">
+              {orders.map((order) => {
+                const isDelivered =
+                  String(order.order_status || "").toLowerCase() === "delivered";
+
+                return (
+                  <article
+                    key={order.order_id}
+                    className="border border-[#D8D0C8] bg-[#F8F5F1]"
+                  >
+                    <div className="flex flex-col gap-2 border-b border-[#D8D0C8] px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+                      <p className="text-sm font-semibold">
+                        Order #{order.order_id}
+                      </p>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#6B625C]">
+                        <span>
+                          {new Date(order.order_date || order.created_at).toLocaleDateString()}
+                        </span>
+                        <span className="capitalize">
+                          {order.order_status || "Pending"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="divide-y divide-[#D8D0C8]">
+                      {order.items.map((item) => (
+                        <div
+                          key={item.order_item_id}
+                          className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center"
+                        >
+                          <div className="flex min-w-0 flex-1 items-center gap-4">
+                            <div className="relative h-20 w-16 shrink-0 overflow-hidden bg-[#E3DCD1]">
+                              {item.image ? (
+                                <Image
+                                  src={item.image}
+                                  alt={item.product_title || "Ordered product"}
+                                  fill
+                                  unoptimized
+                                  sizes="64px"
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : (
+                                <div className="flex h-full items-center justify-center text-[10px] text-[#8B817A]">
+                                  No image
+                                </div>
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-semibold">
+                                {item.product_title || `Product #${item.item_id}`}
+                              </p>
+                              <p className="mt-1 text-xs text-[#6B625C]">
+                                Quantity: {item.qty}
+                                {item.size ? ` · Size: ${item.size}` : ""}
+                                {item.color ? ` · Color: ${item.color}` : ""}
+                              </p>
+                            </div>
+                          </div>
+
+                          {isDelivered ? (
+                            <div className="flex flex-wrap gap-2">
+                              <Link
+                                href={`/user/account/returns/request?orderId=${order.order_id}&orderItemId=${item.order_item_id}&type=return`}
+                                className="inline-flex items-center justify-center gap-2 border border-[#72383D] px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[1px] text-[#72383D] transition hover:bg-[#72383D] hover:text-white"
+                              >
+                                <RotateCcw size={14} />
+                                Return
+                              </Link>
+                              <Link
+                                href={`/user/account/returns/request?orderId=${order.order_id}&orderItemId=${item.order_item_id}&type=exchange`}
+                                className="inline-flex items-center justify-center gap-2 border border-[#49657C] px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[1px] text-[#49657C] transition hover:bg-[#49657C] hover:text-white"
+                              >
+                                <RefreshCw size={14} />
+                                Exchange
+                              </Link>
+                            </div>
+                          ) : (
+                            <p className="text-xs text-[#8B817A]">
+                              Returns and exchanges are available after delivery.
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* REQUESTS */}
@@ -364,4 +546,3 @@ export default function ReturnsPage() {
     </main>
   );
 }
-

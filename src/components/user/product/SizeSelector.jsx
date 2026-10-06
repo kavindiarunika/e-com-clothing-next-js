@@ -7,20 +7,20 @@ export default function SizeSelector({
   sizes = [],
   selectedSize,
   setSelectedSize,
+  selectedSizes = [],
+  setSelectedSizes,
   category,
   variants = [],
   selectedColor,
   productQty = 0,
   defaultSize = "",
+  allowMultiple = false,
 }) {
-  const [isSizeChartOpen, setIsSizeChartOpen] =
-    useState(false);
+  const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
 
-  // =========================
-  // Check Size Stock
-  // =========================
   const normalizeText = (value) =>
     String(value ?? "").trim().toLowerCase();
+
   const totalVariantStock = variants.reduce(
     (total, variant) => total + (Number(variant.stock) || 0),
     0
@@ -79,12 +79,41 @@ export default function SizeSelector({
     return 0;
   };
 
-  const selectedStock = selectedSize ? getSizeStock(selectedSize) : 0;
+  const selectedOptionList = allowMultiple
+    ? Array.isArray(selectedSizes)
+      ? selectedSizes.map((size) => String(size))
+      : []
+    : selectedSize
+      ? [String(selectedSize)]
+      : [];
+
+  const selectedStock = selectedOptionList.length > 0
+    ? selectedOptionList.reduce((total, size) => total + getSizeStock(size), 0)
+    : 0;
+
+  const toggleSize = (size) => {
+    const normalizedSize = String(size);
+
+    if (allowMultiple && typeof setSelectedSizes === "function") {
+      const nextSizes = selectedOptionList.includes(normalizedSize)
+        ? selectedOptionList.filter((item) => item !== normalizedSize)
+        : [...selectedOptionList, normalizedSize];
+
+      setSelectedSizes(nextSizes);
+      if (typeof setSelectedSize === "function") {
+        setSelectedSize(nextSizes[nextSizes.length - 1] || "");
+      }
+      return;
+    }
+
+    if (typeof setSelectedSize === "function") {
+      setSelectedSize(size);
+    }
+  };
 
   return (
     <>
       <div>
-        {/* Title */}
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
             Size
@@ -99,18 +128,17 @@ export default function SizeSelector({
           </button>
         </div>
 
-        {/* Sizes */}
         <div role="group" aria-label="Select size" className="flex flex-wrap gap-2">
           {sizes.map((size) => {
             const sizeStock = getSizeStock(size);
             const isOutOfStock = sizeStock <= 0;
-            const isSelected = selectedSize === size;
+            const isSelected = selectedOptionList.includes(String(size));
 
             return (
               <button
                 key={size}
                 type="button"
-                onClick={() => setSelectedSize(size)}
+                onClick={() => toggleSize(size)}
                 disabled={isOutOfStock}
                 aria-pressed={isSelected}
                 aria-label={`${size}${isOutOfStock ? ", unavailable" : ""}`}
@@ -129,7 +157,6 @@ export default function SizeSelector({
           })}
         </div>
 
-        {/* Selected Color Info */}
         {selectedColor && (
           <p className="mt-3 text-xs text-[#6B625C]">
             Available stock shown for{" "}
@@ -141,17 +168,16 @@ export default function SizeSelector({
           </p>
         )}
 
-        {selectedSize && (
+        {selectedOptionList.length > 0 && (
           <p className="mt-2 text-xs text-[#6B625C]">
             <span className="font-medium text-[#322D29]">
-              {selectedSize.toUpperCase()}
+              {selectedOptionList.map((size) => size.toUpperCase()).join(", ")}
             </span>{" "}
             has {selectedStock} item{selectedStock === 1 ? "" : "s"} available
           </p>
         )}
       </div>
 
-      {/* Size Chart */}
       <SizeChart
         isOpen={isSizeChartOpen}
         onClose={() => setIsSizeChartOpen(false)}

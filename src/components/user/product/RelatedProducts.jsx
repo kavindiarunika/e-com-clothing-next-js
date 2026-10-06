@@ -4,9 +4,11 @@ export default function RelatedProducts({
   products,
   currentProduct,
 }) {
-  const relatedProducts = products
+  const relatedProducts = (Array.isArray(products) ? products : [])
     .filter(
       (product) =>
+        product &&
+        currentProduct &&
         product.category === currentProduct.category &&
         product.id !== currentProduct.id
     )

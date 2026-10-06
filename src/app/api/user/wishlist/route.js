@@ -20,6 +20,10 @@ export async function GET(request) {
   if (!customer) return unauthorized();
 
   try {
+    const productColumns = new Set(
+      (await query("SHOW COLUMNS FROM products")).map((column) => column.Field)
+    );
+    const productQty = productColumns.has("qty") ? "p.qty" : "0";
     const wishlistRows = await query(
       `SELECT
          p.item_id,
@@ -27,7 +31,7 @@ export async function GET(request) {
          p.price,
          p.discount,
          p.main_image,
-         p.qty,
+         ${productQty} AS qty,
          c.name AS category_name
        FROM wishlists w
        INNER JOIN products p ON p.item_id = w.item_id

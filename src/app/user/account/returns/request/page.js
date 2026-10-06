@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 
@@ -33,6 +33,14 @@ function ReturnExchangeRequestContent() {
       ? "exchange"
       : "return";
 
+  useEffect(() => {
+    if (orderId && orderItemId) {
+      return;
+    }
+
+    router.replace("/user/account/orders");
+  }, [orderId, orderItemId, router]);
+
   const [requestType, setRequestType] = useState(initialType);
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
@@ -62,8 +70,6 @@ function ReturnExchangeRequestContent() {
       return;
     }
 
-    const userId = Number(localStorage.getItem("velora-user-id") || 1);
-
     try {
       const response = await fetch("/api/user/returns", {
         method: "POST",
@@ -73,7 +79,6 @@ function ReturnExchangeRequestContent() {
         body: JSON.stringify({
           order_id: Number(orderId),
           order_item_id: Number(orderItemId),
-          user_id: userId,
           request_type: requestType,
           reason,
           description,
@@ -515,4 +520,3 @@ function ReturnExchangeRequestContent() {
     </main>
   );
 }
-

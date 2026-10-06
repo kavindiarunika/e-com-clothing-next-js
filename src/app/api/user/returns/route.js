@@ -1,21 +1,22 @@
 import { NextResponse } from "next/server";
+import {
+  CUSTOMER_COOKIE_NAME,
+  verifyCustomerToken,
+} from "@/lib/auth";
 import { getPool } from "@/lib/db";
 
 export async function GET(request) {
+  const token = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
+  const customer = token ? verifyCustomerToken(token) : null;
+
+  if (!customer) {
+    return NextResponse.json(
+      { success: false, message: "Please sign in to view your return requests." },
+      { status: 401 }
+    );
+  }
+
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = Number(searchParams.get("user_id") || 0);
-
-    if (!userId) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User id is required.",
-        },
-        { status: 400 }
-      );
-    }
-
     const pool = getPool();
 
     const [returns] = await pool.query(
@@ -24,7 +25,6 @@ export async function GET(request) {
           return_id,
           order_id,
           order_item_id,
-          user_id,
           request_type,
           reason,
           description,
@@ -35,7 +35,7 @@ export async function GET(request) {
         WHERE user_id = ?
         ORDER BY return_id DESC
       `,
-      [userId]
+      [customer.user_id]
     );
 
     return NextResponse.json({
@@ -57,6 +57,16 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  const token = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
+  const customer = token ? verifyCustomerToken(token) : null;
+
+  if (!customer) {
+    return NextResponse.json(
+      { success: false, message: "Please sign in to submit a return request." },
+      { status: 401 }
+    );
+  }
+
   try {
     const body = await request.json();
 
@@ -71,18 +81,16 @@ export async function POST(request) {
 
     const orderId = Number(order_id);
     const orderItemId = Number(order_item_id);
-    const userId = Number(user_id);
 
     if (
       !Number.isInteger(orderId) || orderId < 1 ||
       !Number.isInteger(orderItemId) || orderItemId < 1 ||
-      !Number.isInteger(userId) || userId < 1 ||
       !["return", "exchange"].includes(request_type)
     ) {
       return NextResponse.json(
         {
           success: false,
-          message: "A valid order, item, user, and request type are required.",
+          message: "A valid order, item, and request type are required.",
         },
         { status: 400 }
       );
@@ -113,11 +121,11 @@ export async function POST(request) {
 
     const order = matchingItems[0];
 
-    if (order.user_id && Number(order.user_id) !== userId) {
+    if (Number(order.user_id) !== Number(customer.user_id)) {
       return NextResponse.json(
         {
           success: false,
-          message: "This order does not belong to the selected user.",
+          message: "This order does not belong to your account.",
         },
         { status: 403 }
       );
@@ -135,7 +143,7 @@ export async function POST(request) {
 
     const [users] = await pool.execute(
       "SELECT user_id FROM users WHERE user_id = ? LIMIT 1",
-      [userId]
+      [customer.user_id]
     );
 
     if (!users.length) {
@@ -164,7 +172,7 @@ export async function POST(request) {
       [
         orderId,
         orderItemId,
-        userId,
+        customer.user_id,
         request_type,
         reason || null,
         description || null,
