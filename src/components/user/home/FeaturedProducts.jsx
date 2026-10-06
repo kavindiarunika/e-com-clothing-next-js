@@ -77,7 +77,7 @@ export default function FeaturedProducts() {
 
         {/* Products - 4 Cards Horizontal */}
         {!loading && featuredProducts.length > 0 && (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
             {featuredProducts.map((product) => (
               <div
                 key={product.id}
@@ -91,7 +91,7 @@ export default function FeaturedProducts() {
 
         {/* Loading */}
         {loading && (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
             {[1, 2, 3, 4].map((n) => (
               <div
                 key={n}
