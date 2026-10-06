@@ -16,8 +16,9 @@ function loginRedirect(request, status) {
   const loginUrl = new URL("/user/login", request.url);
   loginUrl.searchParams.set("google", status);
   if (
-    nextPath?.startsWith("/user/") &&
-    !nextPath.startsWith("/user/login")
+    nextPath === "/user" ||
+    (nextPath?.startsWith("/user/") &&
+      !nextPath.startsWith("/user/login"))
   ) {
     loginUrl.searchParams.set("next", nextPath);
   }

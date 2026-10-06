@@ -5,7 +5,8 @@ const STATE_COOKIE_NAME = "velora_google_oauth_state";
 const NEXT_COOKIE_NAME = "velora_google_oauth_next";
 
 function getSafeNextPath(value) {
-  return value?.startsWith("/user/") && !value.startsWith("/user/login")
+  return (value === "/user" ||
+    (value?.startsWith("/user/") && !value.startsWith("/user/login")))
     ? value
     : "";
 }
