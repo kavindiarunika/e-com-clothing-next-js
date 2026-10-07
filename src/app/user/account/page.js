@@ -1,28 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  User,
-  Package,
-  Heart,
-  MapPin,
-  RotateCcw,
-  Bell,
-  LogOut,
-  Save,
-  Loader2,
-} from "lucide-react";
-
-const notifications = [
-  {
-    notification_id: 1,
-    title: "Order Shipped",
-    message: "Your order #1001 has been shipped.",
-    is_read: false,
-  },
-];
+import { Save, Loader2 } from "lucide-react";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -76,12 +56,6 @@ export default function AccountPage() {
     return () => controller.abort();
   }, [router]);
 
-  const handleLogout = () => {
-    void fetch("/api/auth/logout", { method: "POST" });
-    localStorage.removeItem("velora-user-session");
-    router.replace("/user/login");
-  };
-
   const handleProfileChange = (event) => {
     const { name, value } = event.target;
     setProfile((current) => ({ ...current, [name]: value }));
@@ -108,6 +82,9 @@ export default function AccountPage() {
       }
 
       setProfile((current) => ({ ...current, ...result.data }));
+      window.dispatchEvent(
+        new CustomEvent("velora-profile-updated", { detail: result.data })
+      );
       setProfileMessage(result.message);
     } catch (error) {
       setProfileError(error.message || "Unable to save your profile.");
@@ -116,95 +93,8 @@ export default function AccountPage() {
     }
   };
 
-  const unreadNotifications = notifications.filter(
-    (notification) => !notification.is_read
-  ).length;
-
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
-      {/* Header */}
-      <header className="border-b border-[#322D29]/10 bg-[#322D29]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5">
-          <Link
-            href="/user"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#EFE9E1]"
-          >
-            VELORA
-          </Link>
-
-          <Link
-            href="/user/shop"
-            className="rounded-full border border-[#EFE9E1]/40 px-5 py-2 text-sm text-[#EFE9E1] transition hover:bg-[#EFE9E1] hover:text-[#322D29]"
-          >
-            Continue Shopping
-          </Link>
-        </div>
-      </header>
-
-      <div className="mx-auto grid max-w-7xl gap-8 px-5 py-10 lg:grid-cols-[250px_1fr]">
-        {/* Sidebar */}
-        <aside className="h-fit rounded-3xl bg-white p-5 shadow-sm">
-          <div className="mb-6 border-b border-[#322D29]/10 pb-5">
-            <p className="text-xs uppercase tracking-[0.2em] text-[#72383D]">
-              My Account
-            </p>
-
-            <h2 className="mt-2 text-xl font-semibold">
-              {[profile.first_name, profile.last_name].filter(Boolean).join(" ") || "Your account"}
-            </h2>
-
-            <p className="mt-1 text-sm text-[#322D29]/60">
-              {profile.email}
-            </p>
-          </div>
-
-          <nav className="space-y-1">
-            <AccountLink
-              href="/user/account"
-              icon={<User size={18} />}
-              label="Profile"
-              active
-            />
-
-            <AccountLink
-              href="/user/account/orders"
-              icon={<Package size={18} />}
-              label="Orders"
-            />
-
-            <AccountLink
-              href="/user/account/wishlist"
-              icon={<Heart size={18} />}
-              label="Wishlist"
-            />
-
-        
-
-            <AccountLink
-              href="/user/account/returns"
-              icon={<RotateCcw size={18} />}
-              label="Returns & Exchanges"
-            />
-
-            <AccountLink
-              href="/user/account/notifications"
-              icon={<Bell size={18} />}
-              label="Notifications"
-              badge={unreadNotifications}
-            />
-
-            <button
-              onClick={handleLogout}
-              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-600 transition hover:bg-red-50"
-            >
-              <LogOut size={18} />
-              Logout
-            </button>
-          </nav>
-        </aside>
-
-        {/* Main */}
-        <section>
+    <div>
           <div className="mb-8">
             <p className="text-sm uppercase tracking-[0.2em] text-[#72383D]">
               My Account
@@ -214,21 +104,14 @@ export default function AccountPage() {
               Welcome back{profile.first_name ? `, ${profile.first_name}` : ""}
             </h1>
 
-            <p className="mt-2 text-[#322D29]/60">
-              Manage your orders, returns and account information.
-            </p>
+            
           </div>
 
           {/* Profile */}
           <div className="rounded-3xl bg-white p-6 shadow-sm">
             <div className="mb-6">
               <h2 className="text-xl font-semibold">Profile</h2>
-              <p className="mt-1 text-sm text-[#322D29]/60">
-                Update your personal and contact information.
-              </p>
-              <p className="mt-2 text-sm text-[#322D29]/60">
-                Your name, phone, and saved address details will be filled in automatically at checkout.
-              </p>
+              
             </div>
 
             {profileError && (
@@ -271,33 +154,7 @@ export default function AccountPage() {
               </form>
             )}
           </div>
-        </section>
-      </div>
-    </main>
-  );
-}
-
-function AccountLink({ href, icon, label, active, badge }) {
-  return (
-    <Link
-      href={href}
-      className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm transition ${
-        active
-          ? "bg-[#72383D] text-white"
-          : "text-[#322D29] hover:bg-[#EFE9E1]"
-      }`}
-    >
-      <span className="flex items-center gap-3">
-        {icon}
-        {label}
-      </span>
-
-      {badge > 0 && (
-        <span className="rounded-full bg-[#AC9C8D] px-2 py-0.5 text-xs">
-          {badge}
-        </span>
-      )}
-    </Link>
+    </div>
   );
 }
 

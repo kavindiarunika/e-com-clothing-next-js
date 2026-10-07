@@ -44,24 +44,26 @@ const notifications = [
 export default function NotificationsPage() {
   return (
     <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
-      <header className="bg-[#322D29]">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
-          <Link
-            href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#EFE9E1]"
-          >
-            VELORA
-          </Link>
-
-          <Link
-            href="/user/account"
-            className="flex items-center gap-2 text-sm text-[#EFE9E1]"
-          >
-            <ArrowLeft size={17} />
-            My Account
-          </Link>
-        </div>
-      </header>
+      <header className="border-b border-[#D8D0C8]">
+              <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
+      
+                <Link
+                  href="/user"
+                  className="font-serif text-3xl tracking-[4px]"
+                >
+                  VELORA
+                </Link>
+      
+                <Link
+                  href="/user/account"
+                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#72383D]"
+                >
+                  <ArrowLeft size={15} />
+                  My Account
+                </Link>
+      
+              </div>
+            </header>
 
       <div className="mx-auto max-w-4xl px-5 py-12">
         <div className="mb-8">
