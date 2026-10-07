@@ -11,7 +11,7 @@ const GOOGLE_JWKS = createRemoteJWKSet(
   new URL("https://www.googleapis.com/oauth2/v3/certs")
 );
 
-function loginRedirect(request, status) {
+function loginRedirect(request, status, reason) {
   const nextPath = request.cookies.get(NEXT_COOKIE_NAME)?.value;
   const redirectUri = process.env.GOOGLE_REDIRECT_URI;
   const appOrigin = redirectUri
@@ -19,6 +19,9 @@ function loginRedirect(request, status) {
     : request.nextUrl.origin;
   const loginUrl = new URL("/user/login", appOrigin);
   loginUrl.searchParams.set("google", status);
+  if (status === "error" && reason) {
+    loginUrl.searchParams.set("google_reason", reason);
+  }
   if (
     nextPath === "/user" ||
     (nextPath?.startsWith("/user/") &&
@@ -68,14 +71,21 @@ export async function GET(request) {
   }
 
   if (callbackFailures.length > 0) {
+    const reason = params.has("error")
+      ? "provider_error"
+      : callbackFailures.includes("missing_oauth_credentials")
+        ? "oauth_config"
+        : "session_error";
     console.error(
       "Google sign-in callback validation failed:",
       callbackFailures.join(", ")
     );
-    return loginRedirect(request, "error");
+    return loginRedirect(request, "error", reason);
   }
 
+  let failureReason = "token_exchange";
   try {
+    failureReason = "token_exchange_network";
     const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -88,12 +98,24 @@ export async function GET(request) {
       }),
       cache: "no-store",
     });
-    const tokens = await tokenResponse.json();
+    let tokens;
+    try {
+      tokens = await tokenResponse.json();
+    } catch {
+      throw new Error("Google returned an invalid token response.");
+    }
 
     if (!tokenResponse.ok || !tokens.id_token) {
+      failureReason =
+        {
+          invalid_client: "oauth_invalid_client",
+          unauthorized_client: "oauth_unauthorized_client",
+          invalid_grant: "oauth_invalid_grant",
+        }[tokens.error] || "token_exchange";
       throw new Error("Google token exchange failed.");
     }
 
+    failureReason = "identity_verification";
     const { payload } = await jwtVerify(tokens.id_token, GOOGLE_JWKS, {
       issuer: ["https://accounts.google.com", "accounts.google.com"],
       audience: clientId,
@@ -108,6 +130,7 @@ export async function GET(request) {
     }
 
     const email = payload.email.trim().toLowerCase();
+    failureReason = "account_database";
     const existingUsers = await query(
       `SELECT user_id, first_name, last_name, email, role, status
        FROM users WHERE email = ? LIMIT 1`,
@@ -119,7 +142,7 @@ export async function GET(request) {
       console.error(
         "Google sign-in rejected: matching account is not an active customer."
       );
-      return loginRedirect(request, "error");
+      return loginRedirect(request, "error", "account_inactive");
     }
 
     if (!user) {
@@ -160,6 +183,6 @@ export async function GET(request) {
     return response;
   } catch (error) {
     console.error("Google sign-in error:", error);
-    return loginRedirect(request, "error");
+    return loginRedirect(request, "error", failureReason);
   }
 }

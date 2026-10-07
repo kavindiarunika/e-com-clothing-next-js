@@ -3,7 +3,6 @@
 
 import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   Eye,
@@ -11,7 +10,6 @@ import {
 } from "lucide-react";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,24 +19,56 @@ export default function LoginPage() {
 
   const getPostLoginPath = () => {
     const requestedPath = new URLSearchParams(window.location.search).get("next");
-    return requestedPath?.startsWith("/user/") &&
-      !requestedPath.startsWith("/user/login")
+    return (requestedPath === "/user" ||
+      (requestedPath?.startsWith("/user/") &&
+        !requestedPath.startsWith("/user/login")))
       ? requestedPath
       : "/user";
   };
 
   useEffect(() => {
-    const googleStatus = new URLSearchParams(window.location.search).get("google");
+    const searchParams = new URLSearchParams(window.location.search);
+    const googleStatus = searchParams.get("google");
 
     if (googleStatus === "success") {
       localStorage.setItem("velora-user-session", "true");
-      router.replace(getPostLoginPath());
+      window.location.replace(getPostLoginPath());
     } else if (googleStatus === "unavailable") {
       startTransition(() => setError("Google sign-in is not configured yet."));
     } else if (googleStatus === "error") {
-      startTransition(() => setError("Google sign-in failed. Please try again."));
+      const failureMessages = {
+        account_database:
+          "Google authenticated you, but your account could not be loaded or created. Check the MySQL server and users table.",
+        account_inactive:
+          "This email is linked to an inactive or non-customer account. Contact the store administrator.",
+        identity_verification:
+          "Google sign-in could not verify your account. Try again or check the dev-server terminal.",
+        oauth_invalid_client:
+          "Google rejected the OAuth client credentials. Verify the client ID and current client secret in .env, then restart the dev server.",
+        oauth_invalid_grant:
+          "Google rejected the sign-in code. Start again at http://localhost:3000 and make sure the authorized redirect URI is exactly http://localhost:3000/api/auth/google/callback.",
+        oauth_unauthorized_client:
+          "This OAuth client is not permitted for the requested sign-in. Check the OAuth client type and consent-screen configuration in Google Cloud Console.",
+        oauth_config:
+          "Google OAuth credentials are missing. Check GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env, then restart the dev server.",
+        provider_error:
+          "Google declined or canceled sign-in. Check the OAuth consent screen and add your account as a test user if the app is in testing mode.",
+        session_error:
+          "The Google sign-in session expired or changed hosts. Start again at http://localhost:3000 and use the same address throughout.",
+        token_exchange_network:
+          "The app could not reach Google's token service. Check the server's internet connection, then try again.",
+        token_exchange:
+          "Google rejected the OAuth token exchange. Check the client secret and confirm the authorized redirect URI is exactly http://localhost:3000/api/auth/google/callback.",
+      };
+      const reason = searchParams.get("google_reason");
+      startTransition(() =>
+        setError(
+          failureMessages[reason] ||
+            "Google sign-in failed. Check the dev-server terminal for details."
+        )
+      );
     }
-  }, [router]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +88,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("velora-user-session", "true");
-      router.replace(getPostLoginPath());
+      window.location.replace(getPostLoginPath());
     } catch (loginError) {
       setError(loginError.message || "Unable to sign in right now.");
     } finally {
