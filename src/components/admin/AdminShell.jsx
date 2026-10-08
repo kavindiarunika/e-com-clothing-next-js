@@ -14,6 +14,7 @@ export default function AdminShell({
 
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const isLoginPage =
     pathname === "/admin/login";
@@ -62,12 +63,25 @@ export default function AdminShell({
 
   return (
     <div className="admin-shell">
+      <button
+        type="button"
+        className="admin-overlay"
+        aria-label="Close sidebar"
+        onClick={() => setSidebarOpen(false)}
+        style={{ display: sidebarOpen ? "block" : "none" }}
+      />
 
-      <AdminSidebar />
+      <AdminSidebar
+        isMobileOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       <div className="admin-main">
 
-        <AdminNavbar admin={admin} />
+        <AdminNavbar
+          admin={admin}
+          onToggleSidebar={() => setSidebarOpen((current) => !current)}
+        />
 
         {children}
 

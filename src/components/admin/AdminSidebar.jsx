@@ -130,7 +130,10 @@ const menuGroups = [
   },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({
+  isMobileOpen = false,
+  onClose = () => {},
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -139,13 +142,21 @@ export default function AdminSidebar() {
       method: "POST",
     });
 
+    onClose();
     router.replace("/admin/login");
   }
 
   return (
-    <aside className="admin-sidebar">
+    <aside className={isMobileOpen ? "admin-sidebar mobile-open" : "admin-sidebar"}>
       <div className="sidebar-brand">
-       
+        <button
+          type="button"
+          className="mobile-close"
+          aria-label="Close sidebar"
+          onClick={onClose}
+        >
+          ×
+        </button>
 
         <div>
           <strong>VELORA</strong>
@@ -180,6 +191,7 @@ export default function AdminSidebar() {
                       ? "sidebar-link active"
                       : "sidebar-link"
                   }
+                  onClick={onClose}
                 >
                   <Icon size={18} />
                   <span>{item.name}</span>

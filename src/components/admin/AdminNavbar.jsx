@@ -1,10 +1,19 @@
 "use client";
 
-import { Bell, Search } from "lucide-react";
+import { Bell, Menu, Search } from "lucide-react";
 
-export default function AdminNavbar({ admin }) {
+export default function AdminNavbar({ admin, onToggleSidebar }) {
   return (
     <header className="admin-navbar">
+      <button
+        type="button"
+        className="mobile-menu-button"
+        aria-label="Open sidebar menu"
+        onClick={onToggleSidebar}
+      >
+        <Menu size={20} />
+      </button>
+
       <div className="navbar-title">
         <strong>Clothing Store Admin</strong>
       </div>
