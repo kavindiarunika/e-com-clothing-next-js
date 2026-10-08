@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Mail,
@@ -11,6 +12,84 @@ import {
 } from "lucide-react";
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [isSending, setIsSending] = useState(false);
+  const [submissionMessage, setSubmissionMessage] = useState("");
+  const [submissionError, setSubmissionError] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadCustomerProfile() {
+      try {
+        const response = await fetch("/api/auth/profile", {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+        if (!response.ok) return;
+
+        const result = await response.json();
+        if (!result.success || !result.data) return;
+
+        const profile = result.data;
+        const name = [profile.first_name, profile.last_name]
+          .filter(Boolean)
+          .join(" ");
+
+        setFormData((current) => ({
+          ...current,
+          name: current.name || name,
+          email: current.email || profile.email || "",
+        }));
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Unable to load contact form profile:", error);
+        }
+      }
+    }
+
+    void loadCustomerProfile();
+    return () => controller.abort();
+  }, []);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setIsSending(true);
+    setSubmissionMessage("");
+    setSubmissionError(false);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Unable to send your message.");
+      }
+
+      setSubmissionMessage(result.message);
+      setFormData((current) => ({ ...current, subject: "", message: "" }));
+    } catch (error) {
+      setSubmissionError(true);
+      setSubmissionMessage(error.message || "Unable to send your message. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
 
@@ -84,43 +163,73 @@ export default function ContactPage() {
             Send us a message
           </h2>
 
-          <form className="mt-7 grid gap-5 sm:grid-cols-2">
+          <form className="mt-7 grid gap-5 sm:grid-cols-2" onSubmit={handleSubmit}>
 
             <input
+              name="name"
               type="text"
+              maxLength={100}
+              required
+              value={formData.name}
+              onChange={handleChange}
+              autoComplete="name"
+              aria-label="Your name"
               placeholder="Your Name"
               className="h-12 border border-[#322D29]/15 bg-[#EFE9E1]/40 px-4 text-sm outline-none focus:border-[#72383D]"
             />
 
             <input
+              name="email"
               type="email"
+              maxLength={150}
+              required
+              value={formData.email}
+              onChange={handleChange}
+              autoComplete="email"
+              aria-label="Email address"
               placeholder="Email Address"
               className="h-12 border border-[#322D29]/15 bg-[#EFE9E1]/40 px-4 text-sm outline-none focus:border-[#72383D]"
             />
 
             <input
+              name="subject"
               type="text"
-              placeholder="Order Number"
-              className="h-12 border border-[#322D29]/15 bg-[#EFE9E1]/40 px-4 text-sm outline-none focus:border-[#72383D]"
-            />
-
-            <input
-              type="text"
+              maxLength={150}
+              required
+              value={formData.subject}
+              onChange={handleChange}
+              aria-label="Subject"
               placeholder="Subject"
-              className="h-12 border border-[#322D29]/15 bg-[#EFE9E1]/40 px-4 text-sm outline-none focus:border-[#72383D]"
+              className="h-12 border border-[#322D29]/15 bg-[#EFE9E1]/40 px-4 text-sm outline-none focus:border-[#72383D] sm:col-span-2"
             />
 
             <textarea
+              name="message"
+              maxLength={5000}
+              required
+              value={formData.message}
+              onChange={handleChange}
+              aria-label="Your message"
               placeholder="Your Message"
-              rows={6}
+              rows={10}
               className="resize-none border border-[#322D29]/15 bg-[#EFE9E1]/40 px-4 py-3 text-sm outline-none focus:border-[#72383D] sm:col-span-2"
             />
 
+            {submissionMessage && (
+              <p
+                className={`text-sm sm:col-span-2 ${submissionError ? "text-red-700" : "text-green-700"}`}
+                role={submissionError ? "alert" : "status"}
+              >
+                {submissionMessage}
+              </p>
+            )}
+
             <button
-              type="button"
-              className="h-12 bg-[#72383D] px-6 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#432415] sm:w-fit"
+              type="submit"
+              disabled={isSending}
+              className="h-12 bg-[#72383D] px-6 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#432415] disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
             >
-              Send Message
+              {isSending ? "Sending..." : "Send Message"}
             </button>
 
           </form>
@@ -147,4 +256,3 @@ function ContactCard({ icon, title, value }) {
     </div>
   );
 }
-

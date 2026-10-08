@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ArrowUp, MessageCircle } from "lucide-react";
 
-const whatsappNumber = "94771234567";
+const whatsappNumber = "94774547033";
 const whatsappMessage = encodeURIComponent(
   "Hello, I have a question about Velora."
 );
