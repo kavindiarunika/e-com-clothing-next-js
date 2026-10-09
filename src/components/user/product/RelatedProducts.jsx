@@ -9,8 +9,7 @@ export default function RelatedProducts({
       (product) =>
         product &&
         currentProduct &&
-        product.category === currentProduct.category &&
-        product.id !== currentProduct.id
+        String(product.id) !== String(currentProduct.id)
     )
     .slice(0, 4);
 

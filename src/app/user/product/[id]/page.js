@@ -82,7 +82,7 @@ export default function ProductPage({ params }) {
     async function loadRelatedProducts() {
       try {
         const response = await fetch(
-          `/api/user/Product?status=active&category_id=${encodeURIComponent(product.category_id)}`,
+          `/api/user/Product?status=active&category_id=${encodeURIComponent(product.category_id)}&include_category_family=1`,
           { signal: controller.signal }
         );
 

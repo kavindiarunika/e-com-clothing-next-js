@@ -10,6 +10,7 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status'); // optional filter: active/inactive/out_of_stock
     const category_id = searchParams.get('category_id'); // optional filter
+    const includeCategoryFamily = searchParams.get('include_category_family') === '1';
     const offer_id = searchParams.get('offer_id'); // optional filter
     const featured = searchParams.get('featured'); // optional: "1" or "0"
     const [productColumnRows] = await db.query("SHOW COLUMNS FROM products");
@@ -58,8 +59,21 @@ export async function GET(req) {
     }
 
     if (category_id) {
-      query += " AND p.category_id = ?";
-      params.push(category_id);
+      if (includeCategoryFamily) {
+        query += ` AND (
+          p.category_id = ?
+          OR p.category_id = (
+            SELECT parent_category_id FROM categories WHERE category_id = ?
+          )
+          OR p.category_id IN (
+            SELECT category_id FROM categories WHERE parent_category_id = ?
+          )
+        )`;
+        params.push(category_id, category_id, category_id);
+      } else {
+        query += " AND p.category_id = ?";
+        params.push(category_id);
+      }
     }
 
     if (offer_id && productColumns.has("offer_id")) {
