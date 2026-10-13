@@ -1,4 +1,8 @@
 import { getPool } from "@/lib/db";
+import {
+  CUSTOMER_COOKIE_NAME,
+  verifyCustomerToken,
+} from "@/lib/auth";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -27,7 +31,56 @@ export async function GET(request) {
       [Number(itemId)]
     );
 
-    return Response.json({ success: true, reviews });
+    const token = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
+    const customer = token ? verifyCustomerToken(token) : null;
+    let purchases = [];
+    let hasPurchased = false;
+    let isAuthenticated = false;
+
+    if (customer) {
+      const [activeCustomers] = await pool.execute(
+        "SELECT user_id FROM users WHERE user_id = ? AND role = 'customer' AND status = 'active' LIMIT 1",
+        [customer.user_id]
+      );
+
+      if (activeCustomers.length > 0) {
+        isAuthenticated = true;
+        const [customerPurchases] = await pool.execute(
+          `SELECT DISTINCT
+             o.order_id,
+             o.order_date,
+             EXISTS (
+               SELECT 1
+               FROM reviews r
+               WHERE r.order_id = o.order_id
+                 AND r.item_id = ?
+             ) AS has_review
+           FROM orders o
+           INNER JOIN order_items oi
+             ON oi.order_id = o.order_id AND oi.item_id = ?
+           WHERE o.user_id = ?
+             AND o.order_status = 'delivered'
+           ORDER BY o.order_date DESC, o.order_id DESC`,
+          [Number(itemId), Number(itemId), customer.user_id]
+        );
+
+        hasPurchased = customerPurchases.length > 0;
+        purchases = customerPurchases
+          .filter((purchase) => !Number(purchase.has_review))
+          .map(({ order_id, order_date }) => ({
+            order_id,
+            order_date,
+          }));
+      }
+    }
+
+    return Response.json({
+      success: true,
+      reviews,
+      is_authenticated: isAuthenticated,
+      has_purchased: hasPurchased,
+      eligible_purchases: purchases,
+    });
   } catch (error) {
     console.error("Review GET API Error:", error);
     return Response.json(
@@ -38,18 +91,30 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  const token = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
+  const customer = token ? verifyCustomerToken(token) : null;
+
+  if (!customer) {
+    return Response.json(
+      { success: false, message: "Please sign in to submit a review." },
+      { status: 401 }
+    );
+  }
+
+  let connection;
+
   try {
-    const { item_id, reviewer_name, rating, review_text } = await request.json();
+    const { item_id, order_id, rating, review_text } = await request.json();
     const itemId = Number(item_id);
+    const orderId = Number(order_id);
     const reviewRating = Number(rating);
-    const reviewerName = String(reviewer_name || "").trim();
     const reviewText = String(review_text || "").trim();
 
     if (
       !Number.isInteger(itemId) ||
       itemId < 1 ||
-      !reviewerName ||
-      reviewerName.length > 150 ||
+      !Number.isInteger(orderId) ||
+      orderId < 1 ||
       !Number.isInteger(reviewRating) ||
       reviewRating < 1 ||
       reviewRating > 5 ||
@@ -62,38 +127,65 @@ export async function POST(request) {
     }
 
     const pool = getPool();
-    const [products] = await pool.execute(
-      "SELECT item_id FROM products WHERE item_id = ? AND status = 'active'",
-      [itemId]
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    const [activeCustomers] = await connection.execute(
+      "SELECT user_id FROM users WHERE user_id = ? AND role = 'customer' AND status = 'active' LIMIT 1",
+      [customer.user_id]
     );
 
-    if (products.length === 0) {
+    if (activeCustomers.length === 0) {
+      await connection.rollback();
       return Response.json(
-        { success: false, message: "Product not found." },
-        { status: 404 }
+        { success: false, message: "Your customer account is not active. Please sign in again." },
+        { status: 401 }
       );
     }
 
-    const [users] = await pool.execute(
-      `SELECT user_id FROM users
-       WHERE CONCAT_WS(' ', first_name, last_name) = ?
-       ORDER BY user_id DESC
-       LIMIT 1`,
-      [reviewerName]
+    const [purchases] = await connection.execute(
+      `SELECT o.order_id
+       FROM orders o
+       WHERE o.order_id = ?
+         AND o.user_id = ?
+         AND o.order_status = 'delivered'
+         AND EXISTS (
+           SELECT 1
+           FROM order_items oi
+           WHERE oi.order_id = o.order_id
+             AND oi.item_id = ?
+         )
+       FOR UPDATE`,
+      [orderId, customer.user_id, itemId]
     );
 
-    if (users.length === 0) {
+    if (purchases.length === 0) {
+      await connection.rollback();
       return Response.json(
-        { success: false, message: "Enter the full name on your customer account to submit a review." },
-        { status: 404 }
+        { success: false, message: "You can review this product after it has been delivered in one of your orders." },
+        { status: 403 }
       );
     }
 
-    const [result] = await pool.execute(
-      `INSERT INTO reviews (item_id, user_id, rating, review_text, status)
-       VALUES (?, ?, ?, ?, 'pending')`,
-      [itemId, users[0].user_id, reviewRating, reviewText]
+    const [existingReviews] = await connection.execute(
+      "SELECT review_id FROM reviews WHERE order_id = ? AND item_id = ? LIMIT 1 FOR UPDATE",
+      [orderId, itemId]
     );
+
+    if (existingReviews.length > 0) {
+      await connection.rollback();
+      return Response.json(
+        { success: false, message: "You have already submitted a review for this purchase." },
+        { status: 409 }
+      );
+    }
+
+    const [result] = await connection.execute(
+      `INSERT INTO reviews (item_id, user_id, order_id, rating, review_text, status)
+       VALUES (?, ?, ?, ?, ?, 'pending')`,
+      [itemId, customer.user_id, orderId, reviewRating, reviewText]
+    );
+    await connection.commit();
 
     return Response.json(
       {
@@ -106,10 +198,20 @@ export async function POST(request) {
       { status: 201 }
     );
   } catch (error) {
+    if (connection) {
+      try {
+        await connection.rollback();
+      } catch (rollbackError) {
+        console.error("Review transaction rollback error:", rollbackError);
+      }
+    }
+
     console.error("Review POST API Error:", error);
     return Response.json(
       { success: false, message: "Failed to submit review." },
       { status: 500 }
     );
+  } finally {
+    connection?.release();
   }
 }

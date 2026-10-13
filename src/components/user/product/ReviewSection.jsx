@@ -2,14 +2,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { Star } from "lucide-react";
 
 export default function ReviewSection({ product }) {
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
   const [reviewsError, setReviewsError] = useState("");
+  const [reviewAccess, setReviewAccess] = useState({
+    isAuthenticated: false,
+    hasPurchased: false,
+    eligiblePurchases: [],
+  });
+  const [selectedOrderId, setSelectedOrderId] = useState("");
   const [rating, setRating] = useState(5);
-  const [name, setName] = useState("");
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -36,6 +42,17 @@ export default function ReviewSection({ product }) {
             comment: review.review_text,
             date: new Date(review.created_at).toLocaleDateString(),
           }))
+        );
+        const eligiblePurchases = Array.isArray(data.eligible_purchases)
+          ? data.eligible_purchases
+          : [];
+        setReviewAccess({
+          isAuthenticated: Boolean(data.is_authenticated),
+          hasPurchased: Boolean(data.has_purchased),
+          eligiblePurchases,
+        });
+        setSelectedOrderId(
+          eligiblePurchases[0] ? String(eligiblePurchases[0].order_id) : ""
         );
         setReviewsError("");
       } catch (error) {
@@ -74,8 +91,8 @@ export default function ReviewSection({ product }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name.trim() || !comment.trim()) {
-      alert("Please enter your name and review.");
+    if (!selectedOrderId || !comment.trim()) {
+      alert("Select an eligible delivered purchase and enter your review.");
       return;
     }
 
@@ -87,7 +104,7 @@ export default function ReviewSection({ product }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           item_id: product.id,
-          reviewer_name: name.trim(),
+          order_id: Number(selectedOrderId),
           rating: Number(rating),
           review_text: comment.trim(),
         }),
@@ -99,7 +116,16 @@ export default function ReviewSection({ product }) {
         return;
       }
 
-      setName("");
+      const eligiblePurchases = reviewAccess.eligiblePurchases.filter(
+        (purchase) => String(purchase.order_id) !== selectedOrderId
+      );
+      setReviewAccess({
+        ...reviewAccess,
+        eligiblePurchases,
+      });
+      setSelectedOrderId(
+        eligiblePurchases[0] ? String(eligiblePurchases[0].order_id) : ""
+      );
       setComment("");
       setRating(5);
 
@@ -180,29 +206,50 @@ export default function ReviewSection({ product }) {
 
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6"
-        >
-
-          {/* NAME */}
-          <div>
-
-            <label className="mb-2 block text-xs font-semibold uppercase tracking-[1px] text-[#322D29]">
-              Your Name
-            </label>
-
-            <input
-              type="text"
-              value={name}
-              onChange={(e) =>
-                setName(e.target.value)
-              }
-              placeholder="Enter your name"
-              className="w-full border border-[#D8D0C8] bg-[#FAF8F5] px-4 py-3 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
-            />
-
+        {reviewsLoading ? (
+          <p className="text-sm text-[#6B625C]">Checking purchase eligibility...</p>
+        ) : !reviewAccess.isAuthenticated ? (
+          <div className="border border-[#D8D0C8] bg-[#FAF8F5] p-5 text-sm text-[#6B625C]">
+            <p>Sign in to your customer account to write a review.</p>
+            <Link
+              href={`/user/login?next=%2Fuser%2Fproduct%2F${encodeURIComponent(product.id)}`}
+              className="mt-3 inline-block font-semibold text-[#72383D] hover:underline"
+            >
+              Sign in
+            </Link>
           </div>
+        ) : reviewAccess.eligiblePurchases.length === 0 ? (
+          <div className="border border-[#D8D0C8] bg-[#FAF8F5] p-5 text-sm text-[#6B625C]">
+            {reviewAccess.hasPurchased
+              ? "You have already submitted a review for each delivered purchase of this product."
+              : "Only customers with a delivered purchase of this product can submit a review."}
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6"
+          >
+            <div>
+              <label
+                htmlFor={`review-purchase-${product.id}`}
+                className="mb-2 block text-xs font-semibold uppercase tracking-[1px] text-[#322D29]"
+              >
+                Delivered Purchase
+              </label>
+              <select
+                id={`review-purchase-${product.id}`}
+                value={selectedOrderId}
+                onChange={(event) => setSelectedOrderId(event.target.value)}
+                className="w-full border border-[#D8D0C8] bg-[#FAF8F5] px-4 py-3 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
+              >
+                {reviewAccess.eligiblePurchases.map((purchase) => (
+                  <option key={purchase.order_id} value={purchase.order_id}>
+                    Order #{purchase.order_id} ·{" "}
+                    {new Date(purchase.order_date).toLocaleDateString()}
+                  </option>
+                ))}
+              </select>
+            </div>
 
           {/* RATING */}
           <div>
@@ -271,7 +318,8 @@ export default function ReviewSection({ product }) {
             {isSubmitting ? "Submitting..." : "Submit Review"}
           </button>
 
-        </form>
+          </form>
+        )}
       </div>
 
       {/* ================= CUSTOMER REVIEWS ================= */}
