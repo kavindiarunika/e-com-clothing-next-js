@@ -51,6 +51,7 @@ export default function ShopPage({ initialSort = "best-selling" }) {
             category: product.category_name || "",
             subcategory: "",
             isFeatured: Number(product.is_featured) === 1,
+            soldQuantity: Number(product.sold_quantity) || 0,
             price: product.price,
             discount: product.discount,
             image: product.image,
@@ -58,7 +59,6 @@ export default function ShopPage({ initialSort = "best-selling" }) {
             variants: product.variants || [],
             sizes: product.sizes || [],
             colors: product.colors || [],
-            isBestSelling: Number(product.is_best_selling) === 1,
             stock: Number(product.total_stock) || 0,
             createdAt: product.created_at,
           }))
@@ -223,7 +223,7 @@ export default function ShopPage({ initialSort = "best-selling" }) {
     if (sortBy === "best-selling") {
       result.sort(
         (a, b) =>
-          Number(b.isBestSelling) - Number(a.isBestSelling) ||
+          b.soldQuantity - a.soldQuantity ||
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     }
