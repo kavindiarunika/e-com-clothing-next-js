@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import ProductCard from "../product/ProductCard";
 
 export default function NewArrivals() {
@@ -97,17 +98,16 @@ export default function NewArrivals() {
 
         {/* View All Products Button */}
         <div className="mt-12 text-center">
-          <a
-            href="/user/shop"
+          <Link
+            href="/user/shop?sort=newest"
             className="inline-flex items-center gap-3 border border-[#72383D] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.5px] text-[#72383D] transition duration-300 hover:bg-[#72383D] hover:text-white"
           >
             View All Products
             <span>→</span>
-          </a>
+          </Link>
         </div>
 
       </div>
     </section>
   );
 }
-
