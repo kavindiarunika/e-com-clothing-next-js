@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 export default function CategoryFilterSidebar({
   subcategories = [],
   selectedSubcategory,
@@ -12,7 +14,46 @@ export default function CategoryFilterSidebar({
   setSelectedAvailability,
   onClear,
 }) {
-  const sizes = ["XS", "S", "M", "L", "XL"];
+  const [sizes, setSizes] = useState([]);
+  const [isLoadingSizes, setIsLoadingSizes] = useState(true);
+  const [sizesError, setSizesError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadSizes() {
+      try {
+        const response = await fetch("/api/user/sizes", {
+          signal: controller.signal,
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Failed to load sizes.");
+        }
+
+        setSizes(
+          (Array.isArray(result.sizes) ? result.sizes : [])
+            .map((size) => size.name)
+            .filter(Boolean)
+        );
+        setSizesError("");
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Category size options error:", error);
+          setSizesError("Sizes could not be loaded.");
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoadingSizes(false);
+        }
+      }
+    }
+
+    void loadSizes();
+
+    return () => controller.abort();
+  }, []);
 
   const toggleSize = (size) => {
     setSelectedSizes((current) =>
@@ -108,22 +149,33 @@ export default function CategoryFilterSidebar({
               Size
             </h3>
 
-            <div className="grid grid-cols-3 gap-2">
-              {sizes.map((size) => (
-                <button
-                  key={size}
-                  type="button"
-                  onClick={() => toggleSize(size)}
-                  className={`border px-3 py-2 text-xs transition ${
-                    selectedSizes.includes(size)
-                      ? "border-[#72383D] bg-[#72383D] text-white"
-                      : "border-[#D8D0C8] bg-white text-[#5D554F] hover:border-[#72383D]"
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
+            {isLoadingSizes ? (
+              <p className="text-sm text-[#6B625C]">Loading sizes...</p>
+            ) : sizesError ? (
+              <p role="alert" className="text-sm text-[#72383D]">
+                {sizesError}
+              </p>
+            ) : sizes.length > 0 ? (
+              <div className="grid grid-cols-3 gap-2">
+                {sizes.map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    aria-pressed={selectedSizes.includes(size)}
+                    onClick={() => toggleSize(size)}
+                    className={`border px-3 py-2 text-xs transition ${
+                      selectedSizes.includes(size)
+                        ? "border-[#72383D] bg-[#72383D] text-white"
+                        : "border-[#D8D0C8] bg-white text-[#5D554F] hover:border-[#72383D]"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-[#6B625C]">No sizes available.</p>
+            )}
           </div>
 
           <div>
