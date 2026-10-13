@@ -30,6 +30,8 @@ export default function FeaturedProducts() {
               id: product.item_id,
               name: product.title,
               category: product.category_name,
+              rating: Number(product.rating) || 0,
+              reviews: Number(product.review_count) || 0,
               stock_quantity: product.total_stock,
               price: product.price,
               discount: product.discount,

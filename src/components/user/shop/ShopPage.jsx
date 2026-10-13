@@ -52,6 +52,8 @@ export default function ShopPage({ initialSort = "best-selling" }) {
             subcategory: "",
             isFeatured: Number(product.is_featured) === 1,
             soldQuantity: Number(product.sold_quantity) || 0,
+            rating: Number(product.rating) || 0,
+            reviews: Number(product.review_count) || 0,
             price: product.price,
             discount: product.discount,
             image: product.image,
@@ -256,8 +258,9 @@ export default function ShopPage({ initialSort = "best-selling" }) {
     if (sortBy === "rating") {
       result.sort(
         (a, b) =>
-          Number(b.rating || 0) -
-          Number(a.rating || 0)
+          b.rating - a.rating ||
+          b.reviewCount - a.reviewCount ||
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     }
 

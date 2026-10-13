@@ -1,5 +1,42 @@
 import { getPool } from "@/lib/db";
 
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const itemId = searchParams.get("item_id");
+
+  if (!itemId || !/^\d+$/.test(itemId) || Number(itemId) < 1) {
+    return Response.json(
+      { success: false, message: "A valid product ID is required." },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const pool = getPool();
+    const [reviews] = await pool.execute(
+      `SELECT
+         r.review_id,
+         r.rating,
+         r.review_text,
+         r.created_at,
+         CONCAT_WS(' ', u.first_name, u.last_name) AS reviewer_name
+       FROM reviews r
+       INNER JOIN users u ON u.user_id = r.user_id
+       WHERE r.item_id = ? AND r.status = 'approved'
+       ORDER BY r.created_at DESC, r.review_id DESC`,
+      [Number(itemId)]
+    );
+
+    return Response.json({ success: true, reviews });
+  } catch (error) {
+    console.error("Review GET API Error:", error);
+    return Response.json(
+      { success: false, message: "Failed to load product reviews." },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request) {
   try {
     const { item_id, reviewer_name, rating, review_text } = await request.json();

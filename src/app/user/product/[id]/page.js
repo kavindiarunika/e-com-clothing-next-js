@@ -96,6 +96,8 @@ export default function ProductPage({ params }) {
               id: item.item_id,
               name: item.title,
               category: item.category_name,
+              rating: Number(item.rating) || 0,
+              reviews: Number(item.review_count) || 0,
               price: item.price,
               discount: item.discount,
               image: item.image,
@@ -400,8 +402,6 @@ export default function ProductPage({ params }) {
             <div className="mt-4 text-sm">
               <ProductRating
                 productId={product.id}
-                defaultRating={product.rating}
-                defaultReviews={product.reviews}
               />
             </div>
 

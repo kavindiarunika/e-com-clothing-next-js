@@ -32,10 +32,18 @@ export async function GET(request) {
          p.discount,
          p.main_image,
          ${productQty} AS qty,
-         c.name AS category_name
+         c.name AS category_name,
+         COALESCE(review_stats.average_rating, 0) AS rating,
+         COALESCE(review_stats.review_count, 0) AS review_count
        FROM wishlists w
        INNER JOIN products p ON p.item_id = w.item_id
        LEFT JOIN categories c ON c.category_id = p.category_id
+       LEFT JOIN (
+         SELECT item_id, AVG(rating) AS average_rating, COUNT(*) AS review_count
+         FROM reviews
+         WHERE status = 'approved'
+         GROUP BY item_id
+       ) review_stats ON review_stats.item_id = p.item_id
        WHERE w.user_id = ? AND p.status = 'active'
        ORDER BY w.created_at DESC, w.wishlist_id DESC`,
       [customer.user_id]
@@ -92,6 +100,8 @@ export async function GET(request) {
         id: item.item_id,
         name: item.title,
         category: item.category_name || "",
+        rating: Number(item.rating) || 0,
+        reviews: Number(item.review_count) || 0,
         price: Number(item.price) || 0,
         discount: Number(item.discount) || 0,
         image: getImageSource(item.main_image),

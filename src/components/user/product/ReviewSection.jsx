@@ -5,49 +5,70 @@ import { useEffect, useMemo, useState } from "react";
 import { Star } from "lucide-react";
 
 export default function ReviewSection({ product }) {
-  const reviewKey = `velora-reviews-${product.id}`;
-
   const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [reviewsError, setReviewsError] = useState("");
   const [rating, setRating] = useState(5);
   const [name, setName] = useState("");
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Load customer reviews
   useEffect(() => {
-    const savedReviews =
-      JSON.parse(localStorage.getItem(reviewKey)) || [];
+    const controller = new AbortController();
 
-    setReviews(savedReviews);
-  }, [reviewKey]);
+    async function loadApprovedReviews() {
+      try {
+        const response = await fetch(
+          `/api/user/reviews?item_id=${encodeURIComponent(product.id)}`,
+          { signal: controller.signal }
+        );
+        const data = await response.json();
 
-  // Calculate overall rating
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || "Failed to load product reviews.");
+        }
+
+        setReviews(
+          (Array.isArray(data.reviews) ? data.reviews : []).map((review) => ({
+            id: review.review_id,
+            name: review.reviewer_name,
+            rating: Number(review.rating),
+            comment: review.review_text,
+            date: new Date(review.created_at).toLocaleDateString(),
+          }))
+        );
+        setReviewsError("");
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Product reviews error:", error);
+          setReviewsError("Reviews could not be loaded. Please try again.");
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setReviewsLoading(false);
+        }
+      }
+    }
+
+    void loadApprovedReviews();
+
+    return () => controller.abort();
+  }, [product.id]);
+
   const averageRating = useMemo(() => {
-    const existingRating = Number(product.rating) || 0;
-    const existingReviewCount = Number(product.reviews) || 0;
-
-    const customerRatingTotal = reviews.reduce(
+    const totalRating = reviews.reduce(
       (sum, review) => sum + Number(review.rating),
       0
     );
 
-    const totalReviewCount =
-      existingReviewCount + reviews.length;
-
-    if (totalReviewCount === 0) {
+    if (reviews.length === 0) {
       return 0;
     }
 
-    const totalRating =
-      existingRating * existingReviewCount +
-      customerRatingTotal;
+    return (totalRating / reviews.length).toFixed(1);
+  }, [reviews]);
 
-    return (totalRating / totalReviewCount).toFixed(1);
-  }, [product.rating, product.reviews, reviews]);
-
-  // Total number of reviews
-  const totalReviews =
-    Number(product.reviews || 0) + reviews.length;
+  const totalReviews = reviews.length;
 
   // Submit review
   const handleSubmit = async (e) => {
@@ -77,19 +98,6 @@ export default function ReviewSection({ product }) {
         alert(data.message || "Failed to submit your review.");
         return;
       }
-
-      const newReview = {
-        id: data.review.review_id,
-        name: name.trim(),
-        rating: Number(rating),
-        comment: comment.trim(),
-        date: new Date(data.review.created_at).toLocaleDateString(),
-      };
-
-      const updatedReviews = [newReview, ...reviews];
-
-      localStorage.setItem(reviewKey, JSON.stringify(updatedReviews));
-      setReviews(updatedReviews);
 
       setName("");
       setComment("");
@@ -279,7 +287,15 @@ export default function ReviewSection({ product }) {
           </span>
         </div>
 
-        {reviews.length === 0 ? (
+        {reviewsError ? (
+          <div className="border border-[#D8D0C8] bg-white p-8 text-center">
+            <p className="text-sm text-[#72383D]">{reviewsError}</p>
+          </div>
+        ) : reviewsLoading ? (
+          <div className="border border-[#D8D0C8] bg-white p-8 text-center">
+            <p className="text-sm text-[#6B625C]">Loading reviews...</p>
+          </div>
+        ) : reviews.length === 0 ? (
 
           <div className="border border-[#D8D0C8] bg-white p-8 text-center">
 
@@ -357,4 +373,3 @@ export default function ReviewSection({ product }) {
     </section>
   );
 }
-

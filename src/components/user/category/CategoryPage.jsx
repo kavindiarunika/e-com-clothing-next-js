@@ -119,6 +119,8 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                 Number(item.category_id) === rootCategoryId
                   ? ""
                   : assignedCategory?.name || "",
+              rating: Number(item.rating) || 0,
+              reviews: Number(item.review_count) || 0,
               price: item.price,
               discount: item.discount,
               image: item.image,

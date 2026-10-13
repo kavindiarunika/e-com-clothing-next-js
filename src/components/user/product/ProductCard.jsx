@@ -15,16 +15,10 @@ export default function ProductCard({
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isUpdatingWishlist, setIsUpdatingWishlist] = useState(false);
 
-  // ---------------------------------------
-  // Rating
-  // ---------------------------------------
-  const [currentRating, setCurrentRating] = useState(
-    Number(product.rating) || 0
+  const currentRating = Number(
+    (Number(product.rating) || 0).toFixed(1)
   );
-
-  const [reviewCount, setReviewCount] = useState(
-    Number(product.reviews) || 0
-  );
+  const reviewCount = Number(product.reviews ?? product.reviewCount) || 0;
 
   // ---------------------------------------
   // Product Image
@@ -81,80 +75,6 @@ export default function ProductCard({
 
     return () => window.clearTimeout(timeoutId);
   }, [product.id]);
-
-  // ---------------------------------------
-  // Load Reviews
-  // ---------------------------------------
-  useEffect(() => {
-    const loadReviews = () => {
-      const reviewKey =
-        `velora-reviews-${product.id}`;
-
-      const savedReviews =
-        JSON.parse(
-          localStorage.getItem(reviewKey) || "[]"
-        );
-
-      const existingRating =
-        Number(product.rating) || 0;
-
-      const existingReviewCount =
-        Number(product.reviews) || 0;
-
-      // Rating total from customer reviews
-      const customerRatingTotal =
-        savedReviews.reduce(
-          (sum, review) =>
-            sum + Number(review.rating || 0),
-          0
-        );
-
-      // Existing + customer reviews
-      const totalReviews =
-        existingReviewCount +
-        savedReviews.length;
-
-      // Existing rating total + customer rating total
-      const totalRating =
-        existingRating *
-          existingReviewCount +
-        customerRatingTotal;
-
-      const updatedRating =
-        totalReviews > 0
-          ? totalRating / totalReviews
-          : 0;
-
-      setCurrentRating(
-        Number(updatedRating.toFixed(1))
-      );
-
-      setReviewCount(totalReviews);
-    };
-
-    loadReviews();
-
-    // Update when ReviewSection submits a review
-    const handleReviewUpdated = () => {
-      loadReviews();
-    };
-
-    window.addEventListener(
-      "velora-review-updated",
-      handleReviewUpdated
-    );
-
-    return () => {
-      window.removeEventListener(
-        "velora-review-updated",
-        handleReviewUpdated
-      );
-    };
-  }, [
-    product.id,
-    product.rating,
-    product.reviews,
-  ]);
 
   if (isSoldOut && !showSoldOut) return null;
 

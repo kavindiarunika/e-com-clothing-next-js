@@ -37,6 +37,8 @@ export async function GET(req) {
         ${productColumns.has("color_id") ? "default_color.hex_code" : "NULL"} AS default_color_hex,
         c.name AS category_name,
         COALESCE(sales.sold_quantity, 0) AS sold_quantity,
+        COALESCE(review_stats.average_rating, 0) AS rating,
+        COALESCE(review_stats.review_count, 0) AS review_count,
         p.sku,
         p.brand,
         p.tags,
@@ -58,6 +60,15 @@ export async function GET(req) {
           AND o.order_status != 'cancelled'
         GROUP BY oi.item_id
       ) sales ON sales.item_id = p.item_id
+      LEFT JOIN (
+        SELECT
+          r.item_id,
+          AVG(r.rating) AS average_rating,
+          COUNT(*) AS review_count
+        FROM reviews r
+        WHERE r.status = 'approved'
+        GROUP BY r.item_id
+      ) review_stats ON review_stats.item_id = p.item_id
       ${productColumns.has("size_id") ? "LEFT JOIN sizes default_size ON p.size_id = default_size.size_id" : ""}
       ${productColumns.has("color_id") ? "LEFT JOIN colors default_color ON p.color_id = default_color.color_id" : ""}
       WHERE 1 = 1

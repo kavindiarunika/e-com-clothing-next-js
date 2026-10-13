@@ -4,38 +4,53 @@
 import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 
-export default function ProductRating({
-  productId,
-  defaultRating = 0,
-  defaultReviews = 0,
-}) {
-  const [rating, setRating] = useState(defaultRating);
-  const [reviews, setReviews] = useState(defaultReviews);
+export default function ProductRating({ productId }) {
+  const [ratingSummary, setRatingSummary] = useState({
+    rating: 0,
+    reviews: 0,
+  });
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
-    if (!productId) return;
+    const controller = new AbortController();
 
-    const reviewKey = `velora-reviews-${productId}`;
+    async function loadApprovedReviews() {
+      try {
+        const response = await fetch(
+          `/api/user/reviews?item_id=${encodeURIComponent(productId)}`,
+          { signal: controller.signal }
+        );
+        const data = await response.json();
 
-    const savedReviews =
-      JSON.parse(localStorage.getItem(reviewKey)) || [];
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || "Failed to load product reviews.");
+        }
 
-    if (savedReviews.length > 0) {
-      const totalRating = savedReviews.reduce(
-        (sum, review) => sum + Number(review.rating),
-        0
-      );
+        const reviews = Array.isArray(data.reviews) ? data.reviews : [];
+        const totalRating = reviews.reduce(
+          (sum, review) => sum + Number(review.rating || 0),
+          0
+        );
 
-      const averageRating =
-        totalRating / savedReviews.length;
-
-      setRating(Number(averageRating.toFixed(1)));
-      setReviews(savedReviews.length);
-    } else {
-      setRating(defaultRating);
-      setReviews(defaultReviews);
+        setRatingSummary({
+          rating: reviews.length
+            ? Number((totalRating / reviews.length).toFixed(1))
+            : 0,
+          reviews: reviews.length,
+        });
+        setLoadError("");
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Product rating error:", error);
+          setLoadError("Rating unavailable");
+        }
+      }
     }
-  }, [productId, defaultRating, defaultReviews]);
+
+    void loadApprovedReviews();
+
+    return () => controller.abort();
+  }, [productId]);
 
   return (
     <div className="flex items-center gap-3">
@@ -47,12 +62,12 @@ export default function ProductRating({
             key={star}
             size={15}
             fill={
-              star <= Math.round(rating)
+              star <= Math.round(ratingSummary.rating)
                 ? "#72383D"
                 : "none"
             }
             className={
-              star <= Math.round(rating)
+              star <= Math.round(ratingSummary.rating)
                 ? "text-[#72383D]"
                 : "text-[#AC9C8D]"
             }
@@ -62,10 +77,9 @@ export default function ProductRating({
 
       {/* Rating */}
       <span className="text-xs text-[#6B625C]">
-        {rating} ({reviews} reviews)
+        {loadError || `${ratingSummary.rating} (${ratingSummary.reviews} reviews)`}
       </span>
 
     </div>
   );
 }
-
