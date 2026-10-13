@@ -661,12 +661,12 @@ export default function OrderDetailsPage() {
                 you need assistance with your order.
               </p>
 
-              <button
-                type="button"
+              <Link
+                href="/user/contact"
                 className="mt-5 border border-[#322D29] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1.5px] transition hover:bg-[#322D29] hover:text-white"
               >
                 Contact Us
-              </button>
+              </Link>
 
             </div>
 
