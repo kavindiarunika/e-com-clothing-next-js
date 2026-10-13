@@ -125,6 +125,25 @@ export default function CategorySection() {
   }
 
   const getCategoryLink = (category) => {
+    if (category.parent_category_id) {
+      const parentCategory = categories.find(
+        (item) =>
+          Number(item.category_id) ===
+          Number(category.parent_category_id)
+      );
+      const parentPath =
+        categoryPaths[parentCategory?.name.trim().toLowerCase()];
+
+      if (parentPath) {
+        const subcategorySlug = category.name
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, "-");
+
+        return `${parentPath}/${encodeURIComponent(subcategorySlug)}`;
+      }
+    }
+
     return (
       categoryPaths[
         category.name.trim().toLowerCase()

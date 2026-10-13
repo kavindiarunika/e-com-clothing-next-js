@@ -12,13 +12,13 @@ import SortDropdown from "@/components/user/shop/SortDropdown";
 export default function CategoryPage(props) {
   return (
     <CategoryPageContent
-      key={`${props.category}-${props.subcategory || ""}`}
+      key={`${props.category}-${props.subcategorySlug || props.subcategory || ""}`}
       {...props}
     />
   );
 }
 
-function CategoryPageContent({ category, subcategory }) {
+function CategoryPageContent({ category, subcategory, subcategorySlug }) {
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [selectedSubcategory, setSelectedSubcategory] =
@@ -76,6 +76,19 @@ function CategoryPageContent({ category, subcategory }) {
         }
 
         const rootCategoryId = Number(rootCategory.category_id);
+        if (subcategorySlug) {
+          const matchedSubcategory = activeCategories.find(
+            (item) =>
+              Number(item.parent_category_id) === rootCategoryId &&
+              item.name
+                ?.trim()
+                .toLowerCase()
+                .replace(/\s+/g, "-") === subcategorySlug
+          );
+
+          setSelectedSubcategory(matchedSubcategory?.name || "All");
+        }
+
         const categoryById = new Map(
           activeCategories.map((item) => [Number(item.category_id), item])
         );
@@ -133,7 +146,7 @@ function CategoryPageContent({ category, subcategory }) {
     void loadCategoryProducts();
 
     return () => controller.abort();
-  }, [category]);
+  }, [category, subcategorySlug]);
 
   const [mobileFiltersOpen, setMobileFiltersOpen] =
     useState(false);
