@@ -119,6 +119,8 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                 Number(item.category_id) === rootCategoryId
                   ? ""
                   : assignedCategory?.name || "",
+              isFeatured: Number(item.is_featured) === 1,
+              soldQuantity: Number(item.sold_quantity) || 0,
               rating: Number(item.rating) || 0,
               reviews: Number(item.review_count) || 0,
               price: item.price,
@@ -129,6 +131,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
               sizes: item.sizes || [],
               colors: item.colors || [],
               stock: Number(item.total_stock) || 0,
+              createdAt: item.created_at,
             };
           });
 
@@ -222,6 +225,10 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
   const filteredProducts = useMemo(() => {
     let result = [...categoryProducts];
 
+    if (sortBy === "featured") {
+      result = result.filter((product) => product.isFeatured);
+    }
+
     // Search
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
@@ -313,6 +320,21 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
     }
 
     // Sorting
+    if (sortBy === "best-selling") {
+      result.sort(
+        (a, b) =>
+          b.soldQuantity - a.soldQuantity ||
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    }
+
+    if (sortBy === "newest") {
+      result.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    }
+
     if (sortBy === "price-low") {
       result.sort((a, b) => getFinalPrice(a) - getFinalPrice(b));
     }
@@ -322,7 +344,12 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
     }
 
     if (sortBy === "rating") {
-      result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      result.sort(
+        (a, b) =>
+          b.rating - a.rating ||
+          b.reviews - a.reviews ||
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
     }
 
     if (sortBy === "name") {
