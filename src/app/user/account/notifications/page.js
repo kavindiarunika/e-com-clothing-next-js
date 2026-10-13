@@ -2,46 +2,58 @@
 "use client";
 
 import Link from "next/link";
-import {
-  ArrowLeft,
-  Bell,
-  CheckCircle,
-  Package,
-  RotateCcw,
-  XCircle,
-} from "lucide-react";
-
-const notifications = [
-  {
-    notification_id: 1,
-    order_id: 1001,
-    title: "Order Shipped",
-    message: "Your order #1001 has been shipped.",
-    type: "order",
-    is_read: false,
-    created_at: "September 24, 2026",
-  },
-  {
-    notification_id: 2,
-    order_id: 1000,
-    title: "Order Delivered",
-    message: "Your order #1000 has been delivered successfully.",
-    type: "order",
-    is_read: true,
-    created_at: "September 23, 2026",
-  },
-  {
-    notification_id: 3,
-    order_id: 1001,
-    title: "Return Approved",
-    message: "Your return request for order #1001 has been approved.",
-    type: "return",
-    is_read: false,
-    created_at: "September 24, 2026",
-  },
-];
+import { useEffect, useState } from "react";
+import { ArrowLeft, ArrowLeftRight, Bell, Package, RotateCcw } from "lucide-react";
 
 export default function NotificationsPage() {
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadNotifications = async () => {
+      try {
+        const response = await fetch("/api/user/notifications", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load notifications.");
+        }
+
+        setNotifications(
+          Array.isArray(data.notifications) ? data.notifications : []
+        );
+      } catch (loadError) {
+        if (!controller.signal.aborted) {
+          console.error("Load notifications error:", loadError);
+          setError(loadError.message || "Failed to load notifications.");
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void loadNotifications();
+
+    return () => controller.abort();
+  }, []);
+
+  const formatDate = (date) => {
+    if (!date) return "";
+
+    const parsedDate = new Date(date);
+    return Number.isNaN(parsedDate.getTime())
+      ? ""
+      : parsedDate.toLocaleString();
+  };
+
   return (
     <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
       <header className="border-b border-[#D8D0C8]">
@@ -94,6 +106,8 @@ export default function NotificationsPage() {
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EFE9E1] text-[#72383D]">
                   {notification.type === "return" ? (
                     <RotateCcw size={20} />
+                  ) : notification.type === "exchange" ? (
+                    <ArrowLeftRight size={20} />
                   ) : (
                     <Package size={20} />
                   )}
@@ -106,7 +120,7 @@ export default function NotificationsPage() {
                     </h2>
 
                     <span className="text-xs text-[#322D29]/50">
-                      {notification.created_at}
+                      {formatDate(notification.created_at)}
                     </span>
                   </div>
 
@@ -125,7 +139,22 @@ export default function NotificationsPage() {
           ))}
         </div>
 
-        {notifications.length === 0 && (
+        {loading && (
+          <div className="rounded-3xl bg-white px-6 py-16 text-center text-sm text-[#322D29]/60">
+            Loading notifications...
+          </div>
+        )}
+
+        {!loading && error && (
+          <div
+            role="alert"
+            className="rounded-3xl bg-white px-6 py-16 text-center text-sm text-[#A44747]"
+          >
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && notifications.length === 0 && (
           <div className="rounded-3xl bg-white px-6 py-16 text-center">
             <Bell
               size={40}
@@ -145,4 +174,3 @@ export default function NotificationsPage() {
     </main>
   );
 }
-

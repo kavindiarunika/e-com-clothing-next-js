@@ -47,23 +47,56 @@ export async function PUT(request, context) {
     }
 
     const pool = getPool();
-    const [result] = await pool.execute(
-      "UPDATE returns_exchanges SET status = ? WHERE return_id = ?",
-      [status, returnId]
-    );
+    const connection = await pool.getConnection();
 
-    if (result.affectedRows === 0) {
-      const [returns] = await pool.execute(
-        "SELECT return_id FROM returns_exchanges WHERE return_id = ?",
+    try {
+      await connection.beginTransaction();
+
+      const [returnRequests] = await connection.execute(
+        `SELECT return_id, order_id, user_id, request_type, status
+         FROM returns_exchanges
+         WHERE return_id = ?
+         FOR UPDATE`,
         [returnId]
       );
 
-      if (returns.length === 0) {
+      if (returnRequests.length === 0) {
+        await connection.rollback();
         return Response.json(
           { success: false, message: "Return request not found" },
           { status: 404 }
         );
       }
+
+      const returnRequest = returnRequests[0];
+      await connection.execute(
+        "UPDATE returns_exchanges SET status = ? WHERE return_id = ?",
+        [status, returnId]
+      );
+
+      if (status === "approved" && returnRequest.status !== "approved") {
+        const requestType =
+          returnRequest.request_type === "exchange" ? "Exchange" : "Return";
+
+        await connection.execute(
+          `INSERT INTO notifications (user_id, order_id, title, message, type)
+           VALUES (?, ?, ?, ?, ?)`,
+          [
+            returnRequest.user_id,
+            returnRequest.order_id,
+            `${requestType} Approved`,
+            `Your ${returnRequest.request_type} request for order #${returnRequest.order_id} has been approved.`,
+            returnRequest.request_type,
+          ]
+        );
+      }
+
+      await connection.commit();
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
     }
 
     return Response.json({
