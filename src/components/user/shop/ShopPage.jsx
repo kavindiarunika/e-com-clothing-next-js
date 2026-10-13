@@ -33,10 +33,13 @@ export default function ShopPage({ initialSort = "best-selling" }) {
 
     async function loadProducts() {
       try {
-        const response = await fetch("/api/user/Product?status=active", {
-          signal: controller.signal,
-          cache: "no-store",
-        });
+        const response = await fetch(
+          "/api/user/Product?status=active&include_out_of_stock=1",
+          {
+            signal: controller.signal,
+            cache: "no-store",
+          }
+        );
         const result = await response.json();
 
         if (!response.ok || !result.success) {
@@ -451,6 +454,7 @@ export default function ShopPage({ initialSort = "best-selling" }) {
                   <ProductCard
                     key={product.id}
                     product={product}
+                    showSoldOut
                   />
                 ))}
 

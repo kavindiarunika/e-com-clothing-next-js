@@ -11,6 +11,7 @@ export async function GET(req) {
     const status = searchParams.get('status'); // optional filter: active/inactive/out_of_stock
     const category_id = searchParams.get('category_id'); // optional filter
     const includeCategoryFamily = searchParams.get('include_category_family') === '1';
+    const includeOutOfStock = searchParams.get('include_out_of_stock') === '1';
     const offer_id = searchParams.get('offer_id'); // optional filter
     const featured = searchParams.get('featured'); // optional: "1" or "0"
     const [productColumnRows] = await db.query("SHOW COLUMNS FROM products");
@@ -185,7 +186,7 @@ export async function GET(req) {
         ],
         total_stock: availableStock,
       };
-    }).filter((product) => product.total_stock > 0);
+    }).filter((product) => includeOutOfStock || product.total_stock > 0);
 
     return NextResponse.json(
       {
