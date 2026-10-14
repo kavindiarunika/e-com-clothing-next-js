@@ -157,13 +157,6 @@ export async function GET(_request, { params }) {
       ? variantStock
       : Number(fallbackQty) || 0;
 
-    if (availableStock <= 0) {
-      return NextResponse.json(
-        { success: false, message: "Product not found." },
-        { status: 404 }
-      );
-    }
-
     return NextResponse.json({
       success: true,
       product: {
