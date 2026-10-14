@@ -89,7 +89,7 @@ export default function ProductRating({ productId }) {
 
       {/* Rating */}
       <span className="text-xs text-[#6B625C]">
-        {loadError || `${ratingSummary.rating} (${ratingSummary.reviews} reviews)`}
+        {loadError || `${ratingSummary.rating.toFixed(1)} (${ratingSummary.reviews} reviews)`}
       </span>
 
     </div>
