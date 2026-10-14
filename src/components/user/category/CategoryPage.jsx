@@ -23,6 +23,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [selectedSubcategory, setSelectedSubcategory] =
     useState(subcategory || "All");
+  const [subcategories, setSubcategories] = useState(["All"]);
 
   const [selectedPrice, setSelectedPrice] =
     useState("");
@@ -71,11 +72,21 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
         );
 
         if (!rootCategory) {
+          setSubcategories(["All"]);
           setCategoryProducts([]);
           return;
         }
 
         const rootCategoryId = Number(rootCategory.category_id);
+        setSubcategories([
+          "All",
+          ...activeCategories
+            .filter(
+              (item) => Number(item.parent_category_id) === rootCategoryId
+            )
+            .map((item) => item.name)
+            .filter(Boolean),
+        ]);
         if (subcategorySlug) {
           const matchedSubcategory = activeCategories.find(
             (item) =>
@@ -161,21 +172,6 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
   // ---------------------------------------
   // Category Products
   // ---------------------------------------
-
-  // ---------------------------------------
-  // Subcategories
-  // ---------------------------------------
-
-  const subcategories = useMemo(() => {
-    const values = categoryProducts
-      .map(
-        (product) =>
-          product.subcategory
-      )
-      .filter(Boolean);
-
-    return ["All", ...new Set(values)];
-  }, [categoryProducts]);
 
   // ---------------------------------------
   // Final Product Price
