@@ -12,6 +12,7 @@ import {
   TicketPercent,
   Image,
   Star,
+  MessageSquare,
   RotateCcw,
   CreditCard,
   BarChart3,
@@ -109,6 +110,11 @@ const menuGroups = [
         name: "Reviews",
         href: "/admin/reviews",
         icon: Star,
+      },
+      {
+        name: "Comments",
+        href: "/admin/comments",
+        icon: MessageSquare,
       },
        {
          name: "Featured Products",

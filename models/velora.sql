@@ -579,3 +579,61 @@ FROM products p
 LEFT JOIN offers o ON o.offer_id = p.offer_id
 LEFT JOIN sizes  s ON s.size_id  = p.size_id
 LEFT JOIN colors c ON c.color_id = p.color_id;
+
+
+
+-- =====================================================
+-- 19b. PRODUCT COMMENTS
+-- =====================================================
+CREATE TABLE comments (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT NOT NULL,                 -- linked to products.item_id
+    user_id INT NOT NULL,                 -- who wrote the comment
+    parent_comment_id INT NULL,           -- for replies (NULL = top-level comment)
+    comment_text TEXT NOT NULL,
+
+    status ENUM(
+        'pending',
+        'approved',
+        'rejected'
+    ) DEFAULT 'pending',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (item_id)
+        REFERENCES products(item_id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (parent_comment_id)
+        REFERENCES comments(comment_id)
+        ON DELETE CASCADE,
+
+    INDEX idx_comments_item (item_id, status)
+);
+
+-- =====================================================
+-- 19c. COMMENT IMAGES
+-- =====================================================
+CREATE TABLE comment_images (
+    image_id INT AUTO_INCREMENT PRIMARY KEY,
+    comment_id INT NOT NULL,
+
+    -- Image binary data
+    image LONGBLOB NOT NULL,
+                
+
+    sort_order INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (comment_id)
+        REFERENCES comments(comment_id)
+        ON DELETE CASCADE,
+
+    INDEX idx_comment_images_comment (comment_id)
+);

@@ -154,41 +154,36 @@ export default function ReviewSection({ product }) {
         <div className="mt-5 h-px w-12 bg-[#72383D]" />
       </div>
 
-      {/* ================= RATING SUMMARY ================= */}
-      <div className="border border-[#D8D0C8] bg-white p-6 md:p-8">
+      <div className="flex flex-col border border-[#D8D0C8] bg-white md:flex-row">
+        {/* ================= RATING SUMMARY ================= */}
+        <div className="flex items-center justify-center border-b border-[#D8D0C8] p-6 text-center md:w-1/3 md:border-b-0 md:border-r md:p-8">
+          <div>
+            <span className="font-serif text-5xl text-[#322D29]">
+              {averageRating}
+            </span>
 
-        <div className="flex flex-col items-center text-center">
+            <div className="mt-3 flex justify-center gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  size={18}
+                  className={
+                    star <= Math.round(Number(averageRating))
+                      ? "fill-[#72383D] text-[#72383D]"
+                      : "text-[#D8D0C8]"
+                  }
+                />
+              ))}
+            </div>
 
-          {/* Average Rating */}
-          <span className="font-serif text-5xl text-[#322D29]">
-            {averageRating}
-          </span>
-
-          {/* Stars */}
-          <div className="mt-3 flex gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                size={18}
-                className={
-                  star <=
-                  Math.round(Number(averageRating))
-                    ? "fill-[#72383D] text-[#72383D]"
-                    : "text-[#D8D0C8]"
-                }
-              />
-            ))}
+            <p className="mt-3 text-xs text-[#6B625C]">
+              Based on {totalReviews} reviews
+            </p>
           </div>
-
-          {/* Review Count */}
-          <p className="mt-3 text-xs text-[#6B625C]">
-            Based on {totalReviews} reviews
-          </p>
-
         </div>
-      </div>
-       {/* ================= WRITE REVIEW ================= */}
-      <div className="mt-12 border border-[#D8D0C8] bg-white p-6 md:p-8">
+
+        {/* ================= WRITE REVIEW ================= */}
+        <div className="flex-1 p-6 md:p-8">
 
         <div className="mb-6">
 
@@ -320,6 +315,7 @@ export default function ReviewSection({ product }) {
 
           </form>
         )}
+      </div>
       </div>
 
       {/* ================= CUSTOMER REVIEWS ================= */}

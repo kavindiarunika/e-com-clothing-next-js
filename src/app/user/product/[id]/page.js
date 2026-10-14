@@ -10,6 +10,7 @@ import ColorSelector from "@/components/user/product/ColorSelector";
 import SizeSelector from "@/components/user/product/SizeSelector";
 import RelatedProducts from "@/components/user/product/RelatedProducts";
 import ReviewSection from "@/components/user/product/ReviewSection";
+import ProductComments from "@/components/user/product/ProductComments";
 
 export default function ProductPage({ params }) {
   const router = useRouter();
@@ -530,11 +531,8 @@ export default function ProductPage({ params }) {
               <button
                 type="button"
                 onClick={handleWishlist}
-                className="mt-2 flex items-center gap-2 self-start text-xs font-medium uppercase tracking-[1.5px] text-[#322D29]"
+                className="mt-2 self-start text-xs font-medium uppercase tracking-[1.5px] text-[#322D29] transition hover:text-[#72383D]"
               >
-                <span className={`text-base ${isWishlisted ? "text-[#72383D]" : "text-[#322D29]"}`}>
-                  {isWishlisted ? "?" : "?"}
-                </span>
                 {isWishlisted ? "Saved to wishlist" : "Add to wishlist"}
               </button>
             </div>
@@ -542,17 +540,27 @@ export default function ProductPage({ params }) {
         </div>
       </section>
 
-      <section className="mx-auto w-[92%] max-w-[1200px] pb-12">
-        <div className="rounded-[24px] border border-[#E3DCD1] bg-white/60 p-6 md:p-8">
-          <RelatedProducts
-            products={relatedProducts}
-            currentProduct={product}
-          />
-        </div>
-      </section>
+      {relatedProducts.some(
+        (relatedProduct) =>
+          relatedProduct &&
+          String(relatedProduct.id) !== String(product.id)
+      ) && (
+        <section className="mx-auto w-[92%] max-w-[1200px] pb-12">
+          <div className="rounded-[24px] border border-[#E3DCD1] bg-white/60 p-6 md:p-8">
+            <RelatedProducts
+              products={relatedProducts}
+              currentProduct={product}
+            />
+          </div>
+        </section>
+      )}
 
       <section className="mx-auto w-[92%] max-w-[1200px] pb-16">
         <ReviewSection product={product} />
+      </section>
+
+      <section className="mx-auto w-[92%] max-w-[1200px] pb-16">
+        <ProductComments product={product} />
       </section>
     </main>
   );
