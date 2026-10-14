@@ -68,6 +68,7 @@ export async function GET(req) {
           COUNT(*) AS review_count
         FROM reviews r
         WHERE r.status = 'approved'
+          OR (r.status = 'pending' AND r.review_text IS NULL)
         GROUP BY r.item_id
       ) review_stats ON review_stats.item_id = p.item_id
       ${productColumns.has("size_id") ? "LEFT JOIN sizes default_size ON p.size_id = default_size.size_id" : ""}

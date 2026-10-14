@@ -36,6 +36,8 @@ export async function GET(_request, { params }) {
         ${productColumns.has("color_id") ? "default_color.name" : "NULL"} AS default_color,
         ${productColumns.has("color_id") ? "default_color.hex_code" : "NULL"} AS default_color_hex,
         c.name AS category_name,
+        COALESCE(review_stats.average_rating, 0) AS rating,
+        COALESCE(review_stats.review_count, 0) AS review_count,
         p.sku,
         p.brand,
         p.tags,
@@ -43,6 +45,16 @@ export async function GET(_request, { params }) {
         p.is_featured
       FROM products p
       LEFT JOIN categories c ON c.category_id = p.category_id
+      LEFT JOIN (
+        SELECT
+          item_id,
+          AVG(rating) AS average_rating,
+          COUNT(*) AS review_count
+        FROM reviews
+        WHERE status = 'approved'
+          OR (status = 'pending' AND review_text IS NULL)
+        GROUP BY item_id
+      ) review_stats ON review_stats.item_id = p.item_id
       ${productColumns.has("size_id") ? "LEFT JOIN sizes default_size ON p.size_id = default_size.size_id" : ""}
       ${productColumns.has("color_id") ? "LEFT JOIN colors default_color ON p.color_id = default_color.color_id" : ""}
       WHERE p.item_id = ? AND p.status = 'active'
@@ -167,8 +179,8 @@ export async function GET(_request, { params }) {
         colors,
         sizes,
         variants,
-        rating: 0,
-        reviews: 0,
+        rating: Number(product.rating) || 0,
+        reviews: Number(product.review_count) || 0,
         sizeGuide: {},
       },
     });

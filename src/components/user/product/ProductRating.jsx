@@ -18,7 +18,7 @@ export default function ProductRating({ productId }) {
       try {
         const response = await fetch(
           `/api/user/reviews?item_id=${encodeURIComponent(productId)}`,
-          { signal: controller.signal }
+          { signal: controller.signal, cache: "no-store" }
         );
         const data = await response.json();
 
@@ -26,17 +26,11 @@ export default function ProductRating({ productId }) {
           throw new Error(data.message || "Failed to load product reviews.");
         }
 
-        const reviews = Array.isArray(data.reviews) ? data.reviews : [];
-        const totalRating = reviews.reduce(
-          (sum, review) => sum + Number(review.rating || 0),
-          0
-        );
+        const summary = data.rating_summary || {};
 
         setRatingSummary({
-          rating: reviews.length
-            ? Number((totalRating / reviews.length).toFixed(1))
-            : 0,
-          reviews: reviews.length,
+          rating: Number(summary.average_rating) || 0,
+          reviews: Number(summary.review_count) || 0,
         });
         setLoadError("");
       } catch (error) {
@@ -49,7 +43,25 @@ export default function ProductRating({ productId }) {
 
     void loadApprovedReviews();
 
-    return () => controller.abort();
+    function handleRatingUpdated(event) {
+      if (event.detail?.productId !== String(productId)) {
+        return;
+      }
+
+      controller.abort();
+      const summary = event.detail.ratingSummary;
+      setRatingSummary({
+        rating: Number(summary.average_rating) || 0,
+        reviews: Number(summary.review_count) || 0,
+      });
+      setLoadError("");
+    }
+
+    window.addEventListener("product-rating-updated", handleRatingUpdated);
+    return () => {
+      controller.abort();
+      window.removeEventListener("product-rating-updated", handleRatingUpdated);
+    };
   }, [productId]);
 
   return (

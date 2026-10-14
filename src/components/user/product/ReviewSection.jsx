@@ -1,102 +1,89 @@
-
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Star } from "lucide-react";
 
 export default function ReviewSection({ product }) {
-  const [reviews, setReviews] = useState([]);
-  const [reviewsLoading, setReviewsLoading] = useState(true);
-  const [reviewsError, setReviewsError] = useState("");
-  const [reviewAccess, setReviewAccess] = useState({
-    isAuthenticated: false,
-    hasPurchased: false,
-    eligiblePurchases: [],
+  const router = useRouter();
+  const [ratingSummary, setRatingSummary] = useState({
+    averageRating: 0,
+    reviewCount: 0,
+    distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
   });
-  const [selectedOrderId, setSelectedOrderId] = useState("");
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hasSubmittedReview, setHasSubmittedReview] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadError, setLoadError] = useState("");
+  const [submitMessage, setSubmitMessage] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
 
-    async function loadApprovedReviews() {
+    async function loadRatingSummary() {
       try {
         const response = await fetch(
           `/api/user/reviews?item_id=${encodeURIComponent(product.id)}`,
-          { signal: controller.signal }
+          { signal: controller.signal, cache: "no-store" }
         );
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-          throw new Error(data.message || "Failed to load product reviews.");
+          throw new Error(data.message || "Failed to load product rating.");
         }
 
-        setReviews(
-          (Array.isArray(data.reviews) ? data.reviews : []).map((review) => ({
-            id: review.review_id,
-            name: review.reviewer_name,
-            rating: Number(review.rating),
-            comment: review.review_text,
-            date: new Date(review.created_at).toLocaleDateString(),
-          }))
-        );
-        const eligiblePurchases = Array.isArray(data.eligible_purchases)
-          ? data.eligible_purchases
-          : [];
-        setReviewAccess({
-          isAuthenticated: Boolean(data.is_authenticated),
-          hasPurchased: Boolean(data.has_purchased),
-          eligiblePurchases,
+        const summary = data.rating_summary || {};
+        const distribution = summary.rating_distribution || {};
+        setRatingSummary({
+          averageRating: Number(summary.average_rating) || 0,
+          reviewCount: Number(summary.review_count) || 0,
+          distribution: {
+            1: Number(distribution[1]) || 0,
+            2: Number(distribution[2]) || 0,
+            3: Number(distribution[3]) || 0,
+            4: Number(distribution[4]) || 0,
+            5: Number(distribution[5]) || 0,
+          },
         });
-        setSelectedOrderId(
-          eligiblePurchases[0] ? String(eligiblePurchases[0].order_id) : ""
-        );
-        setReviewsError("");
+        setIsAuthenticated(Boolean(data.is_authenticated));
+        setHasSubmittedReview(Boolean(data.has_submitted_review));
+        setLoadError("");
       } catch (error) {
         if (!controller.signal.aborted) {
-          console.error("Product reviews error:", error);
-          setReviewsError("Reviews could not be loaded. Please try again.");
+          console.error("Product rating error:", error);
+          setLoadError("Rating could not be loaded. Please try again.");
         }
       } finally {
         if (!controller.signal.aborted) {
-          setReviewsLoading(false);
+          setIsLoading(false);
         }
       }
     }
 
-    void loadApprovedReviews();
-
+    void loadRatingSummary();
     return () => controller.abort();
   }, [product.id]);
 
-  const averageRating = useMemo(() => {
-    const totalRating = reviews.reduce(
-      (sum, review) => sum + Number(review.rating),
-      0
-    );
+  const averageRating = ratingSummary.averageRating.toFixed(1);
+  const displayedRating =
+    selectedRating === null ? averageRating : selectedRating.toFixed(1);
 
-    if (reviews.length === 0) {
-      return 0;
+  async function submitRating() {
+    if (selectedRating === null || isSubmitting || hasSubmittedReview) {
+      return;
     }
 
-    return (totalRating / reviews.length).toFixed(1);
-  }, [reviews]);
-
-  const totalReviews = reviews.length;
-
-  // Submit review
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!selectedOrderId || !comment.trim()) {
-      alert("Select an eligible delivered purchase and enter your review.");
+    if (!isAuthenticated) {
+      router.push(
+        `/user/login?next=%2Fuser%2Fproduct%2F${encodeURIComponent(product.id)}`
+      );
       return;
     }
 
     setIsSubmitting(true);
+    setSubmitMessage("");
 
     try {
       const response = await fetch("/api/user/reviews", {
@@ -104,316 +91,160 @@ export default function ReviewSection({ product }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           item_id: product.id,
-          order_id: Number(selectedOrderId),
-          rating: Number(rating),
-          review_text: comment.trim(),
+          rating: selectedRating,
+          review_text: "",
         }),
       });
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        alert(data.message || "Failed to submit your review.");
-        return;
+        throw new Error(data.message || "Failed to submit your rating.");
       }
 
-      const eligiblePurchases = reviewAccess.eligiblePurchases.filter(
-        (purchase) => String(purchase.order_id) !== selectedOrderId
-      );
-      setReviewAccess({
-        ...reviewAccess,
-        eligiblePurchases,
+      setRatingSummary({
+        averageRating: Number(data.rating_summary.average_rating) || 0,
+        reviewCount: Number(data.rating_summary.review_count) || 0,
+        distribution: {
+          1: Number(data.rating_summary.rating_distribution[1]) || 0,
+          2: Number(data.rating_summary.rating_distribution[2]) || 0,
+          3: Number(data.rating_summary.rating_distribution[3]) || 0,
+          4: Number(data.rating_summary.rating_distribution[4]) || 0,
+          5: Number(data.rating_summary.rating_distribution[5]) || 0,
+        },
       });
-      setSelectedOrderId(
-        eligiblePurchases[0] ? String(eligiblePurchases[0].order_id) : ""
+      setHasSubmittedReview(true);
+      setSelectedRating(null);
+      setSubmitMessage("Your rating has been added to the product rating.");
+      window.dispatchEvent(
+        new CustomEvent("product-rating-updated", {
+          detail: {
+            productId: String(product.id),
+            ratingSummary: data.rating_summary,
+          },
+        })
       );
-      setComment("");
-      setRating(5);
-
-      alert("Thank you! Your review has been submitted for review.");
     } catch (error) {
-      console.error("Failed to submit review:", error);
-      alert("Failed to submit your review. Please try again.");
+      console.error("Failed to submit product rating:", error);
+      setSubmitMessage(
+        error.message || "Failed to submit your rating. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
   return (
-    <section className="border-t border-[#D8D0C8] pt-14 md:pt-20">
-
-      {/* ================= HEADER ================= */}
-      <div className="mb-10">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[3px] text-[#72383D]">
-          Customer Feedback
-        </p>
-
-        <h2 className="font-serif text-3xl text-[#322D29] md:text-4xl">
-          Reviews & Ratings
-        </h2>
-
-        <div className="mt-5 h-px w-12 bg-[#72383D]" />
-      </div>
-
-      <div className="flex flex-col border border-[#D8D0C8] bg-white md:flex-row">
-        {/* ================= RATING SUMMARY ================= */}
-        <div className="flex items-center justify-center border-b border-[#D8D0C8] p-6 text-center md:w-1/3 md:border-b-0 md:border-r md:p-8">
-          <div>
-            <span className="font-serif text-5xl text-[#322D29]">
-              {averageRating}
-            </span>
-
-            <div className="mt-3 flex justify-center gap-1">
-              {[1, 2, 3, 4, 5].map((star) => (
+    <section className="border-t border-[#D8D0C8] pt-8 md:pt-10">
+      <div className="grid w-full gap-8 border border-[#D8D0C8] bg-white p-5 sm:grid-cols-[minmax(180px,1fr)_minmax(0,2fr)] sm:items-center sm:p-7">
+        <div className="text-center">
+          <p className="font-serif text-4xl text-[#322D29]">
+            {displayedRating}
+          </p>
+          <div
+            className="mt-2 flex justify-center gap-1"
+            role="group"
+            aria-label="Choose a rating from 1 to 5 stars"
+          >
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => {
+                  setSelectedRating(star);
+                  setSubmitMessage("");
+                }}
+                disabled={isLoading || isSubmitting}
+                aria-label={`Rate ${star} stars`}
+                aria-pressed={selectedRating === star}
+                className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-[#FAF8F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72383D] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              >
                 <Star
-                  key={star}
-                  size={18}
+                  size={20}
+                  aria-hidden="true"
                   className={
-                    star <= Math.round(Number(averageRating))
+                    star <=
+                    (selectedRating ?? Math.round(ratingSummary.averageRating))
                       ? "fill-[#72383D] text-[#72383D]"
                       : "text-[#D8D0C8]"
                   }
                 />
-              ))}
-            </div>
-
-            <p className="mt-3 text-xs text-[#6B625C]">
-              Based on {totalReviews} reviews
-            </p>
-          </div>
-        </div>
-
-        {/* ================= WRITE REVIEW ================= */}
-        <div className="flex-1 p-6 md:p-8">
-
-        <div className="mb-6">
-
-          <p className="text-xs font-semibold uppercase tracking-[2px] text-[#72383D]">
-            Share Your Experience
-          </p>
-
-          <h3 className="mt-2 font-serif text-2xl text-[#322D29]">
-            Write a Review
-          </h3>
-
-          <p className="mt-2 text-sm text-[#6B625C]">
-            Tell other customers what you think about this product.
-          </p>
-
-        </div>
-
-        {reviewsLoading ? (
-          <p className="text-sm text-[#6B625C]">Checking purchase eligibility...</p>
-        ) : !reviewAccess.isAuthenticated ? (
-          <div className="border border-[#D8D0C8] bg-[#FAF8F5] p-5 text-sm text-[#6B625C]">
-            <p>Sign in to your customer account to write a review.</p>
-            <Link
-              href={`/user/login?next=%2Fuser%2Fproduct%2F${encodeURIComponent(product.id)}`}
-              className="mt-3 inline-block font-semibold text-[#72383D] hover:underline"
-            >
-              Sign in
-            </Link>
-          </div>
-        ) : reviewAccess.eligiblePurchases.length === 0 ? (
-          <div className="border border-[#D8D0C8] bg-[#FAF8F5] p-5 text-sm text-[#6B625C]">
-            {reviewAccess.hasPurchased
-              ? "You have already submitted a review for each delivered purchase of this product."
-              : "Only customers with a delivered purchase of this product can submit a review."}
-          </div>
-        ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-6"
-          >
-            <div>
-              <label
-                htmlFor={`review-purchase-${product.id}`}
-                className="mb-2 block text-xs font-semibold uppercase tracking-[1px] text-[#322D29]"
-              >
-                Delivered Purchase
-              </label>
-              <select
-                id={`review-purchase-${product.id}`}
-                value={selectedOrderId}
-                onChange={(event) => setSelectedOrderId(event.target.value)}
-                className="w-full border border-[#D8D0C8] bg-[#FAF8F5] px-4 py-3 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
-              >
-                {reviewAccess.eligiblePurchases.map((purchase) => (
-                  <option key={purchase.order_id} value={purchase.order_id}>
-                    Order #{purchase.order_id} ·{" "}
-                    {new Date(purchase.order_date).toLocaleDateString()}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-          {/* RATING */}
-          <div>
-
-            <label className="mb-3 block text-xs font-semibold uppercase tracking-[1px] text-[#322D29]">
-              Your Rating
-            </label>
-
-            <div className="flex gap-2">
-
-              {[1, 2, 3, 4, 5].map((star) => (
-
-                <button
-                  key={star}
-                  type="button"
-                  onClick={() => setRating(star)}
-                  aria-label={`Rate ${star} stars`}
-                >
-
-                  <Star
-                    size={23}
-                    className={
-                      star <= rating
-                        ? "fill-[#72383D] text-[#72383D]"
-                        : "text-[#D8D0C8]"
-                    }
-                  />
-
-                </button>
-
-              ))}
-
-            </div>
-
-            <p className="mt-2 text-xs text-[#6B625C]">
-              {rating} out of 5
-            </p>
-
-          </div>
-
-          {/* COMMENT */}
-          <div>
-
-            <label className="mb-2 block text-xs font-semibold uppercase tracking-[1px] text-[#322D29]">
-              Your Review
-            </label>
-
-            <textarea
-              rows={5}
-              value={comment}
-              onChange={(e) =>
-                setComment(e.target.value)
-              }
-              placeholder="Share your experience with this product..."
-              className="w-full resize-none border border-[#D8D0C8] bg-[#FAF8F5] px-4 py-3 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
-            />
-
-          </div>
-
-          {/* SUBMIT */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-[#72383D] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#322D29]"
-          >
-            {isSubmitting ? "Submitting..." : "Submit Review"}
-          </button>
-
-          </form>
-        )}
-      </div>
-      </div>
-
-      {/* ================= CUSTOMER REVIEWS ================= */}
-      <div className="mt-10">
-
-        <div className="mb-6 flex items-center justify-between">
-          <h3 className="font-serif text-2xl text-[#322D29]">
-            Customer Reviews
-          </h3>
-
-          <span className="text-xs text-[#6B625C]">
-            {totalReviews} reviews
-          </span>
-        </div>
-
-        {reviewsError ? (
-          <div className="border border-[#D8D0C8] bg-white p-8 text-center">
-            <p className="text-sm text-[#72383D]">{reviewsError}</p>
-          </div>
-        ) : reviewsLoading ? (
-          <div className="border border-[#D8D0C8] bg-white p-8 text-center">
-            <p className="text-sm text-[#6B625C]">Loading reviews...</p>
-          </div>
-        ) : reviews.length === 0 ? (
-
-          <div className="border border-[#D8D0C8] bg-white p-8 text-center">
-
-            <p className="text-sm text-[#6B625C]">
-              No customer reviews yet.
-            </p>
-
-            <p className="mt-2 text-xs text-[#AC9C8D]">
-              Be the first to share your experience.
-            </p>
-
-          </div>
-
-        ) : (
-
-          <div className="space-y-4">
-
-            {reviews.map((review) => (
-
-              <div
-                key={review.id}
-                className="border border-[#D8D0C8] bg-white p-6"
-              >
-
-                {/* Review Header */}
-                <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-
-                  <div>
-
-                    <p className="text-sm font-medium text-[#322D29]">
-                      {review.name}
-                    </p>
-
-                    {/* Review Stars */}
-                    <div className="mt-2 flex gap-1">
-
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          size={14}
-                          className={
-                            star <= review.rating
-                              ? "fill-[#72383D] text-[#72383D]"
-                              : "text-[#D8D0C8]"
-                          }
-                        />
-                      ))}
-
-                    </div>
-
-                  </div>
-
-                  <span className="text-xs text-[#AC9C8D]">
-                    {review.date}
-                  </span>
-
-                </div>
-
-                {/* Review Text */}
-                <p className="mt-4 text-sm leading-7 text-[#6B625C]">
-                  {review.comment}
-                </p>
-
-              </div>
-
+              </button>
             ))}
-
           </div>
+          <p
+            className="mt-2 text-xs text-[#6B625C]"
+            aria-live="polite"
+          >
+            {selectedRating === null
+              ? `Based on ${ratingSummary.reviewCount} reviews`
+              : `Your selected rating: ${selectedRating} out of 5`}
+          </p>
+          {selectedRating !== null && (
+            <button
+              type="button"
+              onClick={() => void submitRating()}
+              disabled={isSubmitting || hasSubmittedReview}
+              className="mt-3 inline-flex min-h-10 items-center justify-center rounded-full bg-[#72383D] px-5 py-2 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#5E2B30] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72383D] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isSubmitting
+                ? "Submitting..."
+                : hasSubmittedReview
+                  ? "Rating Submitted"
+                  : "Submit Rating"}
+            </button>
+          )}
+          {submitMessage && (
+            <p
+              role="status"
+              className="mt-3 text-sm text-[#6B625C]"
+            >
+              {submitMessage}
+            </p>
+          )}
+        </div>
 
-        )}
+        <div
+          className="w-full space-y-3"
+          aria-label="Ratings breakdown"
+        >
+          {[5, 4, 3, 2, 1].map((star) => {
+            const count = ratingSummary.distribution[star];
+            const percentage = ratingSummary.reviewCount
+              ? (count / ratingSummary.reviewCount) * 100
+              : 0;
+
+            return (
+              <div
+                key={star}
+                className="flex items-center gap-3 text-sm text-[#6B625C]"
+              >
+                <span className="w-3 text-right">{star}</span>
+                <Star
+                  size={14}
+                  className="shrink-0 fill-[#AC9C8D] text-[#AC9C8D]"
+                  aria-hidden="true"
+                />
+                <div
+                  className="h-2 flex-1 overflow-hidden rounded-full bg-[#E9E4DE]"
+                  role="img"
+                  aria-label={`${star} stars: ${count} reviews`}
+                >
+                  <div
+                    className="h-full rounded-full bg-[#72383D]"
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+                <span className="w-8 text-right">{count}</span>
+              </div>
+            );
+          })}
+          {loadError && (
+            <p role="alert" className="text-sm text-[#72383D]">
+              {loadError}
+            </p>
+          )}
+        </div>
       </div>
-
-     
-
     </section>
   );
 }

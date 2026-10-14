@@ -18,7 +18,8 @@ export default function ProductCard({
   const currentRating = Number(
     (Number(product.rating) || 0).toFixed(1)
   );
-  const reviewCount = Number(product.reviews ?? product.reviewCount) || 0;
+  const reviewCount =
+    Number(product.reviews ?? product.reviewCount ?? product.review_count) || 0;
 
   // ---------------------------------------
   // Product Image

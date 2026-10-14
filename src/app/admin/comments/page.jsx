@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Check, MessageSquare, RefreshCw, Search, X } from "lucide-react";
 
 const STATUS_LABELS = {
@@ -11,7 +11,7 @@ const STATUS_LABELS = {
 
 export default function AdminCommentsPage() {
   const [comments, setComments] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("pending");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -126,7 +126,7 @@ export default function AdminCommentsPage() {
             </p>
             <h1 className="mt-2 font-serif text-3xl">Product Comments</h1>
             <p className="mt-2 text-sm text-[#6B625C]">
-              Review comments before they appear on product pages.
+              Comments appear on product pages immediately. You can still reject inappropriate comments here.
             </p>
           </div>
           <button

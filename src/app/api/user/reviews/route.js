@@ -4,6 +4,36 @@ import {
   verifyCustomerToken,
 } from "@/lib/auth";
 
+async function getRatingSummary(database, itemId) {
+  const [rows] = await database.execute(
+    `SELECT
+       COUNT(*) AS review_count,
+       AVG(rating) AS average_rating,
+       SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) AS five_star_count,
+       SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) AS four_star_count,
+       SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) AS three_star_count,
+       SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) AS two_star_count,
+       SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) AS one_star_count
+     FROM reviews
+     WHERE item_id = ?
+       AND (status = 'approved' OR (status = 'pending' AND review_text IS NULL))`,
+    [itemId]
+  );
+  const summary = rows[0];
+
+  return {
+    average_rating: Number(summary.average_rating) || 0,
+    review_count: Number(summary.review_count) || 0,
+    rating_distribution: {
+      5: Number(summary.five_star_count) || 0,
+      4: Number(summary.four_star_count) || 0,
+      3: Number(summary.three_star_count) || 0,
+      2: Number(summary.two_star_count) || 0,
+      1: Number(summary.one_star_count) || 0,
+    },
+  };
+}
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const itemId = searchParams.get("item_id");
@@ -30,12 +60,14 @@ export async function GET(request) {
        ORDER BY r.created_at DESC, r.review_id DESC`,
       [Number(itemId)]
     );
+    const ratingSummary = await getRatingSummary(pool, Number(itemId));
 
     const token = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
     const customer = token ? verifyCustomerToken(token) : null;
     let purchases = [];
     let hasPurchased = false;
     let isAuthenticated = false;
+    let hasSubmittedReview = false;
 
     if (customer) {
       const [activeCustomers] = await pool.execute(
@@ -45,6 +77,11 @@ export async function GET(request) {
 
       if (activeCustomers.length > 0) {
         isAuthenticated = true;
+        const [submittedReviews] = await pool.execute(
+          "SELECT review_id FROM reviews WHERE item_id = ? AND user_id = ? LIMIT 1",
+          [Number(itemId), customer.user_id]
+        );
+        hasSubmittedReview = submittedReviews.length > 0;
         const [customerPurchases] = await pool.execute(
           `SELECT DISTINCT
              o.order_id,
@@ -77,7 +114,9 @@ export async function GET(request) {
     return Response.json({
       success: true,
       reviews,
+      rating_summary: ratingSummary,
       is_authenticated: isAuthenticated,
+      has_submitted_review: hasSubmittedReview,
       has_purchased: hasPurchased,
       eligible_purchases: purchases,
     });
@@ -106,22 +145,24 @@ export async function POST(request) {
   try {
     const { item_id, order_id, rating, review_text } = await request.json();
     const itemId = Number(item_id);
-    const orderId = Number(order_id);
+    const hasOrderId = order_id !== null && order_id !== undefined && order_id !== "";
+    const orderId = hasOrderId ? Number(order_id) : null;
     const reviewRating = Number(rating);
     const reviewText = String(review_text || "").trim();
+    const isRatingOnly = !reviewText;
 
     if (
       !Number.isInteger(itemId) ||
       itemId < 1 ||
-      !Number.isInteger(orderId) ||
-      orderId < 1 ||
       !Number.isInteger(reviewRating) ||
       reviewRating < 1 ||
       reviewRating > 5 ||
-      !reviewText
+      (!isRatingOnly &&
+        (!Number.isInteger(orderId) || orderId < 1)) ||
+      (isRatingOnly && hasOrderId)
     ) {
       return Response.json(
-        { success: false, message: "Please provide a valid name, rating, and review." },
+        { success: false, message: "Please provide a valid product and rating." },
         { status: 400 }
       );
     }
@@ -131,7 +172,7 @@ export async function POST(request) {
     await connection.beginTransaction();
 
     const [activeCustomers] = await connection.execute(
-      "SELECT user_id FROM users WHERE user_id = ? AND role = 'customer' AND status = 'active' LIMIT 1",
+      "SELECT user_id FROM users WHERE user_id = ? AND role = 'customer' AND status = 'active' LIMIT 1 FOR UPDATE",
       [customer.user_id]
     );
 
@@ -143,39 +184,64 @@ export async function POST(request) {
       );
     }
 
-    const [purchases] = await connection.execute(
-      `SELECT o.order_id
-       FROM orders o
-       WHERE o.order_id = ?
-         AND o.user_id = ?
-         AND o.order_status = 'delivered'
-         AND EXISTS (
-           SELECT 1
-           FROM order_items oi
-           WHERE oi.order_id = o.order_id
-             AND oi.item_id = ?
-         )
-       FOR UPDATE`,
-      [orderId, customer.user_id, itemId]
+    const [products] = await connection.execute(
+      "SELECT item_id FROM products WHERE item_id = ? AND status = 'active' LIMIT 1",
+      [itemId]
     );
 
-    if (purchases.length === 0) {
+    if (products.length === 0) {
       await connection.rollback();
       return Response.json(
-        { success: false, message: "You can review this product after it has been delivered in one of your orders." },
-        { status: 403 }
+        { success: false, message: "This product is not available." },
+        { status: 404 }
       );
     }
 
-    const [existingReviews] = await connection.execute(
-      "SELECT review_id FROM reviews WHERE order_id = ? AND item_id = ? LIMIT 1 FOR UPDATE",
-      [orderId, itemId]
-    );
+    if (!isRatingOnly) {
+      const [purchases] = await connection.execute(
+        `SELECT o.order_id
+         FROM orders o
+         WHERE o.order_id = ?
+           AND o.user_id = ?
+           AND o.order_status = 'delivered'
+           AND EXISTS (
+             SELECT 1
+             FROM order_items oi
+             WHERE oi.order_id = o.order_id
+               AND oi.item_id = ?
+           )
+         FOR UPDATE`,
+        [orderId, customer.user_id, itemId]
+      );
+
+      if (purchases.length === 0) {
+        await connection.rollback();
+        return Response.json(
+          { success: false, message: "You can write a review after this product has been delivered in one of your orders." },
+          { status: 403 }
+        );
+      }
+    }
+
+    const [existingReviews] = isRatingOnly
+      ? await connection.execute(
+          "SELECT review_id FROM reviews WHERE item_id = ? AND user_id = ? LIMIT 1 FOR UPDATE",
+          [itemId, customer.user_id]
+        )
+      : await connection.execute(
+          "SELECT review_id FROM reviews WHERE order_id = ? AND item_id = ? LIMIT 1 FOR UPDATE",
+          [orderId, itemId]
+        );
 
     if (existingReviews.length > 0) {
       await connection.rollback();
       return Response.json(
-        { success: false, message: "You have already submitted a review for this purchase." },
+        {
+          success: false,
+          message: isRatingOnly
+            ? "You have already submitted a rating or review for this product."
+            : "You have already submitted a review for this purchase.",
+        },
         { status: 409 }
       );
     }
@@ -183,13 +249,15 @@ export async function POST(request) {
     const [result] = await connection.execute(
       `INSERT INTO reviews (item_id, user_id, order_id, rating, review_text, status)
        VALUES (?, ?, ?, ?, ?, 'pending')`,
-      [itemId, customer.user_id, orderId, reviewRating, reviewText]
+      [itemId, customer.user_id, orderId, reviewRating, reviewText || null]
     );
+    const ratingSummary = await getRatingSummary(connection, itemId);
     await connection.commit();
 
     return Response.json(
       {
         success: true,
+        rating_summary: ratingSummary,
         review: {
           review_id: result.insertId,
           created_at: new Date().toISOString(),

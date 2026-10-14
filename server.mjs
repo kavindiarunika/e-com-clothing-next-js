@@ -10,6 +10,9 @@ const ADMIN_COOKIE_NAME = "admin_token";
 const CUSTOMER_COOKIE_NAME = "velora_customer_token";
 const dev = process.argv.includes("--dev");
 loadEnvConfig(process.cwd(), dev);
+if (dev) {
+  process.env.__NEXT_DEV_SERVER = "1";
+}
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_key";
 const hostname = process.env.HOST || "0.0.0.0";

@@ -42,6 +42,7 @@ export async function GET(request) {
          SELECT item_id, AVG(rating) AS average_rating, COUNT(*) AS review_count
          FROM reviews
          WHERE status = 'approved'
+           OR (status = 'pending' AND review_text IS NULL)
          GROUP BY item_id
        ) review_stats ON review_stats.item_id = p.item_id
        WHERE w.user_id = ? AND p.status = 'active'

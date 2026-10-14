@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { MessageSquare, Reply } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, ImagePlus, Reply, Send, X } from "lucide-react";
 
 function buildCommentTree(comments) {
   const commentsById = new Map(
@@ -35,6 +36,16 @@ export default function ProductComments({ product }) {
   const [replyText, setReplyText] = useState("");
   const [replyingTo, setReplyingTo] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageFiles, setImageFiles] = useState([]);
+  const previewUrls = useRef(new Set());
+
+  useEffect(() => {
+    const activePreviewUrls = previewUrls.current;
+    return () => {
+      activePreviewUrls.forEach((url) => URL.revokeObjectURL(url));
+      activePreviewUrls.clear();
+    };
+  }, []);
 
   const loadComments = useCallback(async (signal) => {
     const response = await fetch(
@@ -76,12 +87,43 @@ export default function ProductComments({ product }) {
 
   const commentTree = useMemo(() => buildCommentTree(comments), [comments]);
 
+  function handleImageSelection(event) {
+    const selectedFiles = Array.from(event.target.files || []);
+    event.target.value = "";
+
+    if (imageFiles.length + selectedFiles.length > 2) {
+      setSubmitError("You can add up to two images to a comment.");
+      return;
+    }
+
+    const invalidFile = selectedFiles.find(
+      (file) =>
+        !["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
+        file.size === 0 ||
+        file.size > 5 * 1024 * 1024
+    );
+
+    if (invalidFile) {
+      setSubmitError("Choose JPEG, PNG, or WebP images up to 5 MB each.");
+      return;
+    }
+
+    setSubmitError("");
+    const selectedImages = selectedFiles.map((file) => {
+      const url = URL.createObjectURL(file);
+      previewUrls.current.add(url);
+      return { file, url };
+    });
+    setImageFiles((current) => [...current, ...selectedImages]);
+  }
+
   async function submitComment(event, parentCommentId = null) {
     event.preventDefault();
     const text = parentCommentId === null ? commentText.trim() : replyText.trim();
+    const attachedImages = parentCommentId === null ? imageFiles : [];
 
-    if (!text) {
-      setSubmitError("Please enter a comment before submitting.");
+    if (!text && attachedImages.length === 0) {
+      setSubmitError("Write a comment or attach an image before sending.");
       return;
     }
 
@@ -89,14 +131,17 @@ export default function ProductComments({ product }) {
     setSubmitError("");
 
     try {
+      const formData = new FormData();
+      formData.append("item_id", String(product.id));
+      formData.append("comment_text", text);
+      if (parentCommentId !== null) {
+        formData.append("parent_comment_id", String(parentCommentId));
+      }
+      attachedImages.forEach(({ file }) => formData.append("images", file));
+
       const response = await fetch("/api/user/comments", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          item_id: product.id,
-          parent_comment_id: parentCommentId,
-          comment_text: text,
-        }),
+        body: formData,
       });
       const data = await response.json();
 
@@ -104,11 +149,21 @@ export default function ProductComments({ product }) {
         throw new Error(data.message || "Failed to submit your comment.");
       }
 
+      if (!data.comment) {
+        throw new Error("Your comment was submitted but could not be displayed.");
+      }
+
+      setComments((current) => [...current, data.comment]);
       setCommentText("");
       setReplyText("");
+      attachedImages.forEach(({ url }) => {
+        URL.revokeObjectURL(url);
+        previewUrls.current.delete(url);
+      });
+      setImageFiles([]);
       setReplyingTo(null);
       setSubmitError("");
-      window.alert("Your comment has been submitted for approval.");
+      window.alert("Your comment has been posted.");
     } catch (error) {
       console.error("Failed to submit product comment:", error);
       setSubmitError(error.message || "Failed to submit your comment. Please try again.");
@@ -155,6 +210,29 @@ export default function ProductComments({ product }) {
           {comment.comment_text}
         </p>
 
+        {comment.images?.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-3">
+            {comment.images.map((src, index) => (
+              <a
+                key={`${comment.comment_id}-image-${index}`}
+                href={src}
+                target="_blank"
+                rel="noreferrer"
+                className="relative block h-24 w-24 overflow-hidden rounded-lg border border-[#E3DCD1] sm:h-28 sm:w-28"
+              >
+                <Image
+                  src={src}
+                  alt={`Image ${index + 1} attached to comment by ${comment.commenter_name || "customer"}`}
+                  fill
+                  unoptimized
+                  sizes="112px"
+                  className="object-cover transition duration-200 hover:scale-105"
+                />
+              </a>
+            ))}
+          </div>
+        )}
+
         {replyingTo === comment.comment_id && (
           <form
             onSubmit={(event) => void submitComment(event, comment.comment_id)}
@@ -196,58 +274,116 @@ export default function ProductComments({ product }) {
   }
 
   return (
-    <section className="border-t border-[#D8D0C8] pt-14 md:pt-20">
-      <div className="mb-8">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[3px] text-[#72383D]">
-          Product Discussion
-        </p>
-        <h2 className="font-serif text-3xl text-[#322D29] md:text-4xl">
-          Comments
-        </h2>
-        <p className="mt-3 text-sm text-[#6B625C]">
-          Ask a question or share your thoughts about this product.
-        </p>
-      </div>
-
-      <div className="border border-[#D8D0C8] bg-white p-5 md:p-7">
+    <section className="border-t border-[#D8D0C8] pt-8 md:pt-10">
+      <div className="border border-[#D8D0C8] bg-white p-4 md:p-5">
         {loading ? (
           <p className="text-sm text-[#6B625C]">Checking your account...</p>
-        ) : isAuthenticated ? (
-          <form onSubmit={(event) => void submitComment(event)} className="space-y-4">
+        ) : (
+          <form
+            onSubmit={(event) => void submitComment(event)}
+            className="space-y-3"
+          >
             <label
               htmlFor={`product-comment-${product.id}`}
-              className="block text-xs font-semibold uppercase tracking-[1px] text-[#322D29]"
+              className="sr-only"
             >
               Add a comment
             </label>
-            <textarea
-              id={`product-comment-${product.id}`}
-              value={commentText}
-              onChange={(event) => setCommentText(event.target.value)}
-              maxLength={5000}
-              rows={4}
-              required
-              placeholder="Write your comment..."
-              className="w-full border border-[#D8D0C8] bg-[#FAF8F5] px-4 py-3 text-sm text-[#322D29] outline-none focus:border-[#72383D]"
-            />
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-[#72383D] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#322D29] disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isSubmitting ? "Submitting..." : "Post Comment"}
-            </button>
+            {imageFiles.length > 0 && (
+              <div className="flex flex-wrap gap-3">
+                {imageFiles.map(({ file, url }, index) => (
+                  <div
+                    key={`${file.name}-${file.lastModified}-${index}`}
+                    className="relative h-16 w-16 overflow-hidden rounded-lg border border-[#E3DCD1]"
+                  >
+                    <Image
+                      src={url}
+                      alt={`Selected comment image ${index + 1}`}
+                      fill
+                      unoptimized
+                      sizes="64px"
+                      className="object-cover"
+                    />
+                    <button
+                      type="button"
+                      aria-label={`Remove image ${index + 1}`}
+                      disabled={isSubmitting}
+                      onClick={() => {
+                        URL.revokeObjectURL(url);
+                        previewUrls.current.delete(url);
+                        setImageFiles((current) =>
+                          current.filter((_, fileIndex) => fileIndex !== index)
+                        );
+                      }}
+                      className="absolute right-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-white hover:bg-black"
+                    >
+                      <X size={12} aria-hidden="true" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex items-end gap-3">
+              <textarea
+                id={`product-comment-${product.id}`}
+                value={commentText}
+                onChange={(event) => setCommentText(event.target.value)}
+                maxLength={5000}
+                rows={2}
+                disabled={!isAuthenticated || isSubmitting}
+                placeholder={
+                  isAuthenticated
+                    ? "Write your comment..."
+                    : "Sign in to add a comment..."
+                }
+                className="min-h-12 flex-1 resize-y rounded-xl border border-[#E3DCD1] bg-[#FAF8F5] px-4 py-3 text-sm text-[#322D29] outline-none transition placeholder:text-[#AC9C8D] focus:border-[#72383D] focus:ring-2 focus:ring-[#72383D]/10 disabled:cursor-not-allowed disabled:opacity-75"
+              />
+              {isAuthenticated && (
+                <>
+                  <input
+                    id={`product-comment-images-${product.id}`}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                    disabled={isSubmitting}
+                    onChange={handleImageSelection}
+                    className="sr-only"
+                  />
+                  <label
+                    htmlFor={`product-comment-images-${product.id}`}
+                    title="Attach up to two images"
+                    className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#D8D0C8] text-[#72383D] transition focus-within:ring-2 focus-within:ring-[#72383D] focus-within:ring-offset-2 ${isSubmitting ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-[#72383D] hover:bg-[#FAF8F5]"}`}
+                  >
+                    <ImagePlus size={19} aria-hidden="true" />
+                    <span className="sr-only">Attach up to two images</span>
+                  </label>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    aria-label={isSubmitting ? "Sending comment" : "Send comment"}
+                    title={isSubmitting ? "Sending comment" : "Send comment"}
+                    className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#72383D] text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#5E2B30] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72383D] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    <Send size={18} aria-hidden="true" />
+                  </button>
+                </>
+              )}
+              {!isAuthenticated && (
+                <Link
+                  href={`/user/login?next=%2Fuser%2Fproduct%2F${encodeURIComponent(product.id)}`}
+                  className="group inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#72383D] px-5 text-xs font-semibold uppercase tracking-[1px] text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#5E2B30] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72383D] focus-visible:ring-offset-2"
+                >
+                  Sign in
+                  <ArrowRight
+                    size={16}
+                    aria-hidden="true"
+                    className="transition-transform duration-200 group-hover:translate-x-0.5"
+                  />
+                </Link>
+              )}
+            </div>
           </form>
-        ) : (
-          <div className="bg-[#FAF8F5] p-5 text-sm text-[#6B625C]">
-            <p>Sign in to your customer account to add a comment.</p>
-            <Link
-              href={`/user/login?next=%2Fuser%2Fproduct%2F${encodeURIComponent(product.id)}`}
-              className="mt-3 inline-block font-semibold text-[#72383D] hover:underline"
-            >
-              Sign in
-            </Link>
-          </div>
         )}
         {submitError && (
           <p role="alert" className="mt-3 text-sm text-[#72383D]">
@@ -256,31 +392,18 @@ export default function ProductComments({ product }) {
         )}
       </div>
 
-      <div className="mt-8">
-        <div className="mb-5 flex items-center justify-between">
-          <h3 className="inline-flex items-center gap-2 font-serif text-2xl text-[#322D29]">
-            <MessageSquare size={20} />
-            Customer Comments
-          </h3>
-          <span className="text-xs text-[#6B625C]">
-            {comments.length} {comments.length === 1 ? "comment" : "comments"}
-          </span>
-        </div>
-
+      <div className="mt-4">
         {loadError ? (
-          <div role="alert" className="border border-[#D8D0C8] bg-white p-6 text-sm text-[#72383D]">
+          <div role="alert" className="border border-[#D8D0C8] bg-white p-5 text-sm text-[#72383D]">
             {loadError}
           </div>
         ) : loading ? (
-          <div className="border border-[#D8D0C8] bg-white p-6 text-sm text-[#6B625C]">
+          <div className="border border-[#D8D0C8] bg-white p-5 text-sm text-[#6B625C]">
             Loading comments...
           </div>
         ) : commentTree.length === 0 ? (
-          <div className="border border-[#D8D0C8] bg-white p-8 text-center">
-            <p className="text-sm text-[#6B625C]">No approved comments yet.</p>
-            <p className="mt-2 text-xs text-[#AC9C8D]">
-              Be the first to start the conversation.
-            </p>
+          <div className="border border-[#D8D0C8] bg-white p-5 text-center text-sm text-[#6B625C]">
+            No comments yet.
           </div>
         ) : (
           <div className="space-y-3">
