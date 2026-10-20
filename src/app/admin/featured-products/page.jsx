@@ -8,6 +8,7 @@ export default function FeaturedProductsPage() {
       title="Featured Products"
       description="Manage products displayed as featured."
       addLabel="Add Featured Product"
+      pageClassName="product-style-crud-page"
       fields={[
         {
           key: "title",
