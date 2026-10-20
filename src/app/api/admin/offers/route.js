@@ -1,14 +1,8 @@
 
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { getImageSource } from "@/lib/productImageSource";
 import { saveProductImage } from "@/lib/productImageStorage";
-
-function formatStoredImage(value) {
-  if (!value) return null;
-  if (typeof value === "string") return value;
-
-  return Buffer.from(value).toString("base64");
-}
 
 /* =====================================================
    GET ALL OFFERS
@@ -34,9 +28,7 @@ export async function GET() {
     const formattedOffers = offers.map((offer) => ({
       ...offer,
 
-      banner_image: formatStoredImage(
-        offer.banner_image
-      ),
+      banner_image: getImageSource(offer.banner_image),
     }));
 
     return NextResponse.json({
