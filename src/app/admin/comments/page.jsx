@@ -1,7 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Check, MessageSquare, RefreshCw, Search, X } from "lucide-react";
+import {
+  Check,
+  CheckCircle,
+  Clock,
+  MessageSquare,
+  RefreshCw,
+  Search,
+  X,
+  XCircle,
+} from "lucide-react";
 
 const STATUS_LABELS = {
   pending: "Pending",
@@ -115,131 +124,213 @@ export default function AdminCommentsPage() {
   const pendingCount = comments.filter(
     (comment) => comment.status === "pending"
   ).length;
+  const approvedCount = comments.filter(
+    (comment) => comment.status === "approved"
+  ).length;
+  const rejectedCount = comments.filter(
+    (comment) => comment.status === "rejected"
+  ).length;
 
   return (
-    <main className="min-h-screen bg-[#F7F5F2] px-4 py-8 text-[#322D29] sm:px-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <main className="admin-review-page admin-comments-page">
+      <div className="review-page-header">
+        <div>
+          <h1>Product Comments</h1>
+          <p>
+            Manage customer comments and moderate what appears on product pages.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={refreshComments}
+          disabled={loading}
+          className="review-refresh-btn"
+        >
+          <RefreshCw
+            size={17}
+            className={loading ? "review-spin" : ""}
+          />
+          Refresh
+        </button>
+      </div>
+
+      <div className="review-summary">
+        <div className="review-summary-card">
+          <div className="review-summary-icon">
+            <MessageSquare size={21} />
+          </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[2px] text-[#72383D]">
-              Catalog moderation
-            </p>
-            <h1 className="mt-2 font-serif text-3xl">Product Comments</h1>
-            <p className="mt-2 text-sm text-[#6B625C]">
-              Comments appear on product pages immediately. You can still reject inappropriate comments here.
-            </p>
+            <span>Total Comments</span>
+            <strong>{comments.length}</strong>
           </div>
-          <button
-            type="button"
-            onClick={refreshComments}
-            disabled={loading}
-            className="inline-flex items-center gap-2 border border-[#D8D0C8] bg-white px-4 py-2.5 text-sm hover:border-[#72383D] disabled:opacity-60"
-          >
-            <RefreshCw size={16} />
-            Refresh
-          </button>
         </div>
-
-        <div className="mb-5 grid gap-4 sm:grid-cols-[1fr_auto]">
-          <label className="relative block">
-            <Search
-              size={17}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-[#AC9C8D]"
-            />
-            <input
-              type="search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search product, customer, or comment"
-              className="w-full border border-[#D8D0C8] bg-white py-3 pl-10 pr-4 text-sm outline-none focus:border-[#72383D]"
-            />
-          </label>
-          <label className="sr-only" htmlFor="comment-status-filter">
-            Filter by status
-          </label>
-          <select
-            id="comment-status-filter"
-            value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value)}
-            className="border border-[#D8D0C8] bg-white px-4 py-3 text-sm outline-none focus:border-[#72383D]"
-          >
-            <option value="pending">Pending ({pendingCount})</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
-            <option value="all">All statuses</option>
-          </select>
+        <div className="review-summary-card">
+          <div className="review-summary-icon">
+            <Clock size={21} />
+          </div>
+          <div>
+            <span>Pending</span>
+            <strong>{pendingCount}</strong>
+          </div>
         </div>
+        <div className="review-summary-card">
+          <div className="review-summary-icon">
+            <CheckCircle size={21} />
+          </div>
+          <div>
+            <span>Approved</span>
+            <strong>{approvedCount}</strong>
+          </div>
+        </div>
+        <div className="review-summary-card">
+          <div className="review-summary-icon">
+            <XCircle size={21} />
+          </div>
+          <div>
+            <span>Rejected</span>
+            <strong>{rejectedCount}</strong>
+          </div>
+        </div>
+      </div>
 
-        {loadError && (
-          <div role="alert" className="mb-5 border border-[#D8D0C8] bg-white p-4 text-sm text-[#72383D]">
-            {loadError}
-          </div>
-        )}
+      <div className="review-filters">
+        <label className="review-search">
+          <Search size={18} />
+          <input
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search product, customer, or comment..."
+          />
+        </label>
+        <label className="sr-only" htmlFor="comment-status-filter">
+          Filter by status
+        </label>
+        <select
+          id="comment-status-filter"
+          value={statusFilter}
+          onChange={(event) => setStatusFilter(event.target.value)}
+          className="review-filter-select"
+        >
+          <option value="pending">Pending ({pendingCount})</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+          <option value="all">All statuses</option>
+        </select>
+      </div>
 
-        {loading ? (
-          <div className="border border-[#D8D0C8] bg-white p-8 text-center text-sm text-[#6B625C]">
-            Loading comments...
-          </div>
-        ) : filteredComments.length === 0 ? (
-          <div className="border border-[#D8D0C8] bg-white p-8 text-center">
-            <MessageSquare className="mx-auto text-[#AC9C8D]" size={24} />
-            <p className="mt-3 text-sm text-[#6B625C]">No comments found.</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {filteredComments.map((comment) => (
-              <article
-                key={comment.comment_id}
-                className="border border-[#D8D0C8] bg-white p-5 md:p-6"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold">
-                      {comment.product_name}{" "}
-                      <span className="font-normal text-[#6B625C]">
-                        (Product #{comment.item_id})
+      {loadError && (
+        <div role="alert" className="comment-error">
+          {loadError}
+        </div>
+      )}
+
+      <div className="review-table-card">
+        <div className="review-table-wrapper">
+          <table className="review-table comment-table">
+            <thead>
+              <tr>
+                <th>Comment</th>
+                <th>Product</th>
+                <th>Customer</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="7" className="review-empty">
+                    Loading comments...
+                  </td>
+                </tr>
+              ) : filteredComments.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="review-empty">
+                    <MessageSquare
+                      className="comment-empty-icon"
+                      size={24}
+                    />
+                    No comments found.
+                  </td>
+                </tr>
+              ) : (
+                filteredComments.map((comment) => (
+                  <tr key={comment.comment_id}>
+                    <td>
+                      <div className="review-info comment-info">
+                        <div className="review-icon">
+                          <MessageSquare size={17} />
+                        </div>
+                        <p className="comment-text">{comment.comment_text}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="comment-product">
+                        <strong>{comment.product_name || "Product"}</strong>
+                        <span>Product #{comment.item_id}</span>
+                      </div>
+                    </td>
+                    <td>{comment.commenter_name || "Customer"}</td>
+                    <td>
+                      {comment.parent_comment_id
+                        ? `Reply #${comment.parent_comment_id}`
+                        : "Comment"}
+                    </td>
+                    <td>
+                      <span
+                        className={`review-status review-status-${comment.status}`}
+                      >
+                        {STATUS_LABELS[comment.status] || comment.status}
                       </span>
-                    </p>
-                    <p className="mt-1 text-xs text-[#6B625C]">
-                      {comment.commenter_name || "Customer"} ·{" "}
-                      {new Date(comment.created_at).toLocaleString()}
-                      {comment.parent_comment_id &&
-                        ` · Reply to comment #${comment.parent_comment_id}`}
-                    </p>
-                  </div>
-                  <span className="border border-[#D8D0C8] px-2.5 py-1 text-xs">
-                    {STATUS_LABELS[comment.status] || comment.status}
-                  </span>
-                </div>
-
-                <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-[#6B625C]">
-                  {comment.comment_text}
-                </p>
-
-                <div className="mt-5 flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() => void updateStatus(comment.comment_id, "approved")}
-                    disabled={savingId === comment.comment_id || comment.status === "approved"}
-                    className="inline-flex items-center gap-1.5 bg-[#72383D] px-4 py-2 text-xs font-semibold text-white hover:bg-[#322D29] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <Check size={14} />
-                    Approve
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void updateStatus(comment.comment_id, "rejected")}
-                    disabled={savingId === comment.comment_id || comment.status === "rejected"}
-                    className="inline-flex items-center gap-1.5 border border-[#D8D0C8] px-4 py-2 text-xs font-semibold text-[#72383D] hover:border-[#72383D] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <X size={14} />
-                    Reject
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
+                    </td>
+                    <td className="review-date">
+                      {comment.created_at
+                        ? new Date(comment.created_at).toLocaleString()
+                        : "-"}
+                    </td>
+                    <td>
+                      <div className="review-actions">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            void updateStatus(comment.comment_id, "approved")
+                          }
+                          disabled={
+                            savingId === comment.comment_id ||
+                            comment.status === "approved"
+                          }
+                          className="review-action-btn comment-approve-btn"
+                          aria-label="Approve comment"
+                          title="Approve comment"
+                        >
+                          <Check size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            void updateStatus(comment.comment_id, "rejected")
+                          }
+                          disabled={
+                            savingId === comment.comment_id ||
+                            comment.status === "rejected"
+                          }
+                          className="review-action-btn comment-reject-btn"
+                          aria-label="Reject comment"
+                          title="Reject comment"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   );

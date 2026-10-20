@@ -7258,6 +7258,86 @@ margin: 0;
     flex-wrap: wrap;
   }
 }
+
+/* =========================================================
+   VELORA ADMIN - COMMENTS
+========================================================= */
+
+.comment-error {
+  margin-bottom: 18px;
+  padding: 13px 16px;
+  border: 1px solid #e5c7c2;
+  border-radius: 8px;
+  background: #f8e9e7;
+  color: #a05245;
+  font-family: var(--font-inter);
+  font-size: 13px;
+}
+
+.comment-table {
+  min-width: 1050px;
+}
+
+.comment-info {
+  min-width: 260px;
+}
+
+.comment-info .review-icon {
+  margin-top: 2px;
+}
+
+.comment-text {
+  max-width: 360px;
+  margin: 0;
+  color: #322d29;
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.comment-product strong,
+.comment-product span {
+  display: block;
+}
+
+.comment-product strong {
+  margin-bottom: 4px;
+  color: #1c1c1c;
+  font-family: var(--font-poppins);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.comment-product span {
+  color: #77706a;
+  font-size: 11px;
+}
+
+.comment-empty-icon {
+  display: block;
+  margin: 0 auto 10px;
+  color: #aaa29b;
+}
+
+.comment-approve-btn:hover {
+  border-color: #b8d8bd;
+  background: #e8f3e9;
+  color: #397044;
+}
+
+.comment-reject-btn:hover {
+  border-color: #e5c7c2;
+  background: #f8e9e7;
+  color: #a05245;
+}
+
+.comment-approve-btn:disabled,
+.comment-reject-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 /* =========================================
    VELORA ADMIN - ORDERS
 ========================================= */
