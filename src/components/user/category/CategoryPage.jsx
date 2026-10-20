@@ -36,7 +36,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [sortBy, setSortBy] = useState("featured");
+  const [sortBy, setSortBy] = useState("best-selling");
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
