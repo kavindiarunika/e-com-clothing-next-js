@@ -207,14 +207,22 @@ export default function PaymentsPage() {
         `/api/admin/payments/${paymentId}`
       );
 
+      const contentType = response.headers.get("content-type") || "";
+      if (!contentType.includes("application/json")) {
+        throw new Error("Payment details endpoint returned a non-JSON response.");
+      }
+
       const data = await response.json();
 
-      if (data.success) {
-        setSelectedPayment(data.payment);
-        setShowModal(true);
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Failed to load payment.");
       }
+
+      setSelectedPayment(data.payment);
+      setShowModal(true);
     } catch (error) {
       console.error("Failed to load payment:", error);
+      window.alert(error.message);
     }
   };
 
