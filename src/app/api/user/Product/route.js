@@ -14,6 +14,7 @@ export async function GET(req) {
     const includeOutOfStock = searchParams.get('include_out_of_stock') === '1';
     const offer_id = searchParams.get('offer_id'); // optional filter
     const featured = searchParams.get('featured'); // optional: "1" or "0"
+    const search = searchParams.get('search')?.trim();
     const [productColumnRows] = await db.query("SHOW COLUMNS FROM products");
     const productColumns = new Set(productColumnRows.map((column) => column.Field));
     const productSizeId = productColumns.has("size_id") ? "p.size_id" : "NULL";
@@ -37,6 +38,7 @@ export async function GET(req) {
         ${productColumns.has("color_id") ? "default_color.name" : "NULL"} AS default_color,
         ${productColumns.has("color_id") ? "default_color.hex_code" : "NULL"} AS default_color_hex,
         c.name AS category_name,
+        parent_category.name AS parent_category_name,
         COALESCE(sales.sold_quantity, 0) AS sold_quantity,
         COALESCE(review_stats.average_rating, 0) AS rating,
         COALESCE(review_stats.review_count, 0) AS review_count,
@@ -51,6 +53,8 @@ export async function GET(req) {
         p.main_image
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.category_id
+      LEFT JOIN categories parent_category
+        ON c.parent_category_id = parent_category.category_id
       LEFT JOIN (
         SELECT
           oi.item_id,
@@ -109,7 +113,30 @@ export async function GET(req) {
       query += " AND p.is_featured = TRUE";
     }
 
+    if (search) {
+      query += ` AND (
+        p.title LIKE ?
+        OR c.name LIKE ?
+        OR parent_category.name LIKE ?
+        OR CAST(p.tags AS CHAR) LIKE ?
+        OR p.sku LIKE ?
+        OR p.brand LIKE ?
+      )`;
+      const searchPattern = `%${search}%`;
+      params.push(
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        searchPattern
+      );
+    }
+
     query += " ORDER BY p.created_at DESC, p.item_id DESC";
+    if (search) {
+      query += " LIMIT 8";
+    }
 
     const [products] = await db.query(query, params);
 

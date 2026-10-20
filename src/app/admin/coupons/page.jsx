@@ -32,7 +32,6 @@ export default function CouponsPage() {
     discount_value: "",
     minimum_order_amount: "0",
     maximum_discount: "",
-    usage_limit: "",
     start_date: "",
     end_date: "",
     status: "active",
@@ -88,7 +87,6 @@ export default function CouponsPage() {
       discount_value: "",
       minimum_order_amount: "0",
       maximum_discount: "",
-      usage_limit: "",
       start_date: "",
       end_date: "",
       status: "active",
@@ -125,8 +123,6 @@ export default function CouponsPage() {
         coupon.minimum_order_amount ?? "0",
       maximum_discount:
         coupon.maximum_discount ?? "",
-      usage_limit:
-        coupon.usage_limit ?? "",
       start_date: coupon.start_date
         ? formatDateTimeForInput(
             coupon.start_date
@@ -195,6 +191,15 @@ export default function CouponsPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (
+      form.start_date &&
+      form.end_date &&
+      form.end_date < form.start_date
+    ) {
+      alert("End date must be on or after the start date.");
+      return;
+    }
+
     try {
       const url = editingCoupon
         ? `/api/admin/coupons/${editingCoupon.coupon_id}`
@@ -232,11 +237,6 @@ export default function CouponsPage() {
               : Number(
                   form.maximum_discount
                 ),
-
-          usage_limit:
-            form.usage_limit === ""
-              ? null
-              : Number(form.usage_limit),
 
           start_date:
             form.start_date || null,
@@ -489,7 +489,6 @@ export default function CouponsPage() {
                 <th>Coupon</th>
                 <th>Discount</th>
                 <th>Minimum Order</th>
-                <th>Usage</th>
                 <th>Validity</th>
                 <th>Status</th>
                 <th>Created</th>
@@ -502,7 +501,7 @@ export default function CouponsPage() {
               {loading ? (
                 <tr>
                   <td
-                    colSpan="8"
+                    colSpan="7"
                     className="coupon-empty"
                   >
                     Loading coupons...
@@ -512,7 +511,7 @@ export default function CouponsPage() {
                 0 ? (
                 <tr>
                   <td
-                    colSpan="8"
+                    colSpan="7"
                     className="coupon-empty"
                   >
                     No coupons found.
@@ -584,28 +583,6 @@ export default function CouponsPage() {
                         {formatMoney(
                           coupon.minimum_order_amount
                         )}
-                      </td>
-
-                      {/* USAGE */}
-
-                      <td>
-
-                        <div className="coupon-usage">
-
-                          <strong>
-                            {
-                              coupon.used_count
-                            }
-                          </strong>
-
-                          <span>
-                            /
-                            {coupon.usage_limit ??
-                              "∞"}
-                          </span>
-
-                        </div>
-
                       </td>
 
                       {/* VALIDITY */}
@@ -913,27 +890,6 @@ export default function CouponsPage() {
                   placeholder="Optional"
                   min="0"
                   step="0.01"
-                />
-
-              </div>
-
-              {/* USAGE LIMIT */}
-
-              <div className="coupon-form-group">
-
-                <label>
-                  Usage Limit
-                </label>
-
-                <input
-                  type="number"
-                  name="usage_limit"
-                  value={
-                    form.usage_limit
-                  }
-                  onChange={handleChange}
-                  placeholder="Unlimited"
-                  min="1"
                 />
 
               </div>

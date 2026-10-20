@@ -130,6 +130,9 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                 Number(item.category_id) === rootCategoryId
                   ? ""
                   : assignedCategory?.name || "",
+              tags: item.tags,
+              sku: item.sku || "",
+              brand: item.brand || "",
               isFeatured: Number(item.is_featured) === 1,
               soldQuantity: Number(item.sold_quantity) || 0,
               rating: Number(item.rating) || 0,
@@ -227,14 +230,31 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
     // Search
     if (searchTerm.trim()) {
-      const term = searchTerm.toLowerCase();
+      const term = searchTerm.trim().toLowerCase();
 
-      result = result.filter(
-        (product) =>
-          product.name.toLowerCase().includes(term) ||
-          product.category.toLowerCase().includes(term) ||
-          product.subcategory.toLowerCase().includes(term)
-      );
+      result = result.filter((product) => {
+        let tags = product.tags;
+        if (typeof tags === "string") {
+          try {
+            tags = JSON.parse(tags);
+          } catch {
+            tags = tags.split(",");
+          }
+        }
+
+        const searchableValues = [
+          product.name,
+          product.category,
+          product.subcategory,
+          product.brand,
+          product.sku,
+          ...(Array.isArray(tags) ? tags : []),
+        ];
+
+        return searchableValues.some((value) =>
+          String(value || "").toLowerCase().includes(term)
+        );
+      });
     }
 
     // Subcategory

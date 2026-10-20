@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -19,8 +19,11 @@ export default function Navbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openCollection, setOpenCollection] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [categories, setCategories] = useState([]);
+  const searchInputRef = useRef(null);
 
   // =====================================================
   // CART COUNT
@@ -53,6 +56,20 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    if (!searchOpen) return undefined;
+
+    searchInputRef.current?.focus();
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setSearchOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [searchOpen]);
+
+  useEffect(() => {
     const controller = new AbortController();
 
     const loadCategories = async () => {
@@ -83,6 +100,29 @@ export default function Navbar() {
   const closeMenu = () => {
     setMobileMenuOpen(false);
     setOpenCollection(false);
+  };
+
+  const openSearch = () => {
+    closeMenu();
+    setSearchTerm("");
+    setSearchOpen(true);
+  };
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+  };
+
+  const closeSearch = () => {
+    setSearchOpen(false);
+    setSearchTerm("");
+  };
+
+  const submitSearch = (event) => {
+    event.preventDefault();
+    const query = searchTerm.trim();
+    if (!query) return;
+    router.push(`/user/shop?search=${encodeURIComponent(query)}`);
+    closeSearch();
   };
 
   // =====================================================
@@ -140,7 +180,7 @@ export default function Navbar() {
         <Link
           href="/user"
           onClick={closeMenu}
-          className="flex items-center gap-2"
+          className={`flex items-center gap-2 ${searchOpen ? "hidden" : ""}`}
         >
           <Image
             src="/images/logo/logo.png"
@@ -156,11 +196,37 @@ export default function Navbar() {
           </span>
         </Link>
 
+        {searchOpen && (
+          <form
+            onSubmit={submitSearch}
+            className="flex h-11 min-w-0 flex-1 items-center gap-3 rounded-md border border-[#E5DDD5] bg-white px-3 text-[#322D29] shadow-sm sm:mx-6 sm:h-12 sm:px-4"
+          >
+            <Search size={19} className="shrink-0 text-[#72383D]" />
+            <input
+              ref={searchInputRef}
+              type="search"
+              value={searchTerm}
+              onChange={(event) => handleSearchChange(event.target.value)}
+              placeholder="Search products..."
+              aria-label="Search products"
+              className="h-full min-w-0 flex-1 bg-transparent text-sm text-[#322D29] outline-none placeholder:text-[#8B817A] sm:text-base"
+            />
+            <button
+              type="button"
+              onClick={closeSearch}
+              aria-label="Close search"
+              className="shrink-0 rounded-full p-1 text-[#6B625C] transition hover:bg-[#F1ECE6] hover:text-[#72383D]"
+            >
+              <X size={18} />
+            </button>
+          </form>
+        )}
+
         {/* =====================================================
             DESKTOP NAVIGATION
         ===================================================== */}
 
-        <nav className="hidden items-center gap-9 md:flex">
+        <nav className={`hidden items-center gap-9 md:flex ${searchOpen ? "!hidden" : ""}`}>
 
           {/* HOME */}
 
@@ -254,12 +320,13 @@ export default function Navbar() {
             DESKTOP ACTIONS
         ===================================================== */}
 
-        <div className="hidden items-center gap-5 md:flex">
+        <div className={`hidden items-center gap-5 md:flex ${searchOpen ? "!hidden" : ""}`}>
 
           {/* Search */}
 
-          <Link
-            href="/user/shop"
+          <button
+            type="button"
+            onClick={openSearch}
             aria-label="Search"
             className="transition hover:text-[#AC9C8D]"
           >
@@ -267,7 +334,7 @@ export default function Navbar() {
               size={20}
               strokeWidth={1.7}
             />
-          </Link>
+          </button>
 
           {/* Wishlist */}
 
@@ -319,26 +386,29 @@ export default function Navbar() {
             MOBILE MENU BUTTON
         ===================================================== */}
 
-        <button
-          type="button"
-          onClick={() =>
-            setMobileMenuOpen(!mobileMenuOpen)
-          }
-          aria-label="Toggle menu"
-          className="flex items-center justify-center md:hidden"
-        >
-          {mobileMenuOpen ? (
-            <X
-              size={25}
-              strokeWidth={1.7}
-            />
-          ) : (
-            <Menu
-              size={25}
-              strokeWidth={1.7}
-            />
-          )}
-        </button>
+        <div className={`flex items-center gap-5 md:hidden ${searchOpen ? "hidden" : ""}`}>
+          <button
+            type="button"
+            onClick={openSearch}
+            aria-label="Search products"
+            className="flex items-center justify-center transition hover:text-[#AC9C8D]"
+          >
+            <Search size={21} strokeWidth={1.7} />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+            className="flex items-center justify-center"
+          >
+            {mobileMenuOpen ? (
+              <X size={25} strokeWidth={1.7} />
+            ) : (
+              <Menu size={25} strokeWidth={1.7} />
+            )}
+          </button>
+        </div>
 
       </div>
 

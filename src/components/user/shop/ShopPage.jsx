@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from "lucide-react";
 
 import SearchBar from "@/components/user/shop/SearchBar";
@@ -9,18 +9,21 @@ import SortDropdown from "@/components/user/shop/SortDropdown";
 import ProductCard from "@/components/user/product/ProductCard";
 import ShopOfferHero from "@/components/user/shop/ShopOfferHero";
 
-export default function ShopPage({ initialSort = "best-selling" }) {
+export default function ShopPage({
+  initialSort = "best-selling",
+  initialSearch = "",
+}) {
   const [products, setProducts] = useState([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [productLoadError, setProductLoadError] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedSizes, setSelectedSizes] = useState([]);
 
   // Availability
   const [selectedAvailability, setSelectedAvailability] =
-    useState("all");
+    useState("available");
 
   const [sortBy, setSortBy] = useState(initialSort);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -34,7 +37,7 @@ export default function ShopPage({ initialSort = "best-selling" }) {
     async function loadProducts() {
       try {
         const response = await fetch(
-          "/api/user/Product?status=active&include_out_of_stock=1",
+          "/api/user/Product?status=active",
           {
             signal: controller.signal,
             cache: "no-store",
@@ -48,25 +51,40 @@ export default function ShopPage({ initialSort = "best-selling" }) {
 
         const apiProducts = Array.isArray(result.data) ? result.data : [];
         setProducts(
-          apiProducts.map((product) => ({
-            id: product.item_id,
-            name: product.title,
-            category: product.category_name || "",
-            subcategory: "",
-            isFeatured: Number(product.is_featured) === 1,
-            soldQuantity: Number(product.sold_quantity) || 0,
-            rating: Number(product.rating) || 0,
-            reviews: Number(product.review_count) || 0,
-            price: product.price,
-            discount: product.discount,
-            image: product.image,
-            images: product.image ? [product.image] : [],
-            variants: product.variants || [],
-            sizes: product.sizes || [],
-            colors: product.colors || [],
-            stock: Number(product.total_stock) || 0,
-            createdAt: product.created_at,
-          }))
+          apiProducts
+            .filter((product) => {
+              const variants = product.variants || [];
+              const variantStock = variants.reduce(
+                (total, variant) => total + (Number(variant.stock) || 0),
+                0
+              );
+              const totalStock = variantStock > 0
+                ? variantStock
+                : Number(product.total_stock) || 0;
+              return totalStock > 0;
+            })
+            .map((product) => ({
+              id: product.item_id,
+              name: product.title,
+              category: product.category_name || "",
+              subcategory: product.parent_category_name || "",
+              tags: product.tags,
+              sku: product.sku || "",
+              brand: product.brand || "",
+              isFeatured: Number(product.is_featured) === 1,
+              soldQuantity: Number(product.sold_quantity) || 0,
+              rating: Number(product.rating) || 0,
+              reviews: Number(product.review_count) || 0,
+              price: product.price,
+              discount: product.discount,
+              image: product.image,
+              images: product.image ? [product.image] : [],
+              variants: product.variants || [],
+              sizes: product.sizes || [],
+              colors: product.colors || [],
+              stock: Number(product.total_stock) || 0,
+              createdAt: product.created_at,
+            }))
         );
         setProductLoadError("");
       } catch (error) {
@@ -110,7 +128,7 @@ export default function ShopPage({ initialSort = "best-selling" }) {
   // =========================
   // Check Product Sold Out
   // =========================
-  const isProductSoldOut = (product) => {
+  const isProductSoldOut = useCallback((product) => {
     const variantStock = (product.variants || []).reduce(
       (total, variant) => total + (Number(variant.stock) || 0),
       0
@@ -120,13 +138,18 @@ export default function ShopPage({ initialSort = "best-selling" }) {
       : Number(product.stock ?? product.qty ?? 0);
 
     return availableStock <= 0;
-  };
+  }, []);
+
+  const hasAvailableStock = useCallback(
+    (product) => !isProductSoldOut(product),
+    [isProductSoldOut]
+  );
 
   // =========================
   // Filter Products
   // =========================
   const filteredProducts = useMemo(() => {
-    let result = [...products];
+    let result = [...products].filter(hasAvailableStock);
 
     if (sortBy === "featured") {
       result = result.filter((product) => product.isFeatured);
@@ -139,19 +162,26 @@ export default function ShopPage({ initialSort = "best-selling" }) {
       const search = searchTerm.toLowerCase();
 
       result = result.filter((product) => {
-        const productName =
-          product.name?.toLowerCase() || "";
+        let tags = product.tags;
+        if (typeof tags === "string") {
+          try {
+            tags = JSON.parse(tags);
+          } catch {
+            tags = tags.split(",");
+          }
+        }
 
-        const category =
-          product.category?.toLowerCase() || "";
+        const searchableValues = [
+          product.name,
+          product.category,
+          product.subcategory,
+          product.brand,
+          product.sku,
+          ...(Array.isArray(tags) ? tags : []),
+        ];
 
-        const subcategory =
-          product.subcategory?.toLowerCase() || "";
-
-        return (
-          productName.includes(search) ||
-          category.includes(search) ||
-          subcategory.includes(search)
+        return searchableValues.some((value) =>
+          String(value || "").toLowerCase().includes(search)
         );
       });
     }
@@ -285,6 +315,8 @@ export default function ShopPage({ initialSort = "best-selling" }) {
     selectedSizes,
     selectedAvailability,
     sortBy,
+    hasAvailableStock,
+    isProductSoldOut,
   ]);
 
   const pageCount = Math.max(

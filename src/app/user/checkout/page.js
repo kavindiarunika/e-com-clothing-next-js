@@ -17,6 +17,10 @@ export default function CheckoutPage() {
   const router = useRouter();
 
   const [cart, setCart] = useState([]);
+  const [coupons, setCoupons] = useState([]);
+  const [selectedCouponId, setSelectedCouponId] = useState(null);
+  const [isLoadingCoupons, setIsLoadingCoupons] = useState(true);
+  const [couponLoadError, setCouponLoadError] = useState("");
   const [isBuyNowCheckout, setIsBuyNowCheckout] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,6 +85,11 @@ export default function CheckoutPage() {
           ? savedCart
           : [];
       setIsBuyNowCheckout(Boolean(isBuyNow));
+      setSelectedCouponId(
+        isBuyNow
+          ? null
+          : sessionStorage.getItem("velora-selected-coupon")
+      );
       setCart(checkoutCart);
 
       if (checkoutCart.length === 0) {
@@ -136,6 +145,41 @@ export default function CheckoutPage() {
     return () => controller.abort();
   }, [router]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadCoupons() {
+      try {
+        const response = await fetch("/api/user/coupons", {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Unable to load available coupons.");
+        }
+
+        setCoupons(Array.isArray(result.coupons) ? result.coupons : []);
+        setCouponLoadError("");
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Checkout coupons error:", error);
+          setCouponLoadError(
+            error.message || "Unable to load available coupons."
+          );
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoadingCoupons(false);
+        }
+      }
+    }
+
+    void loadCoupons();
+    return () => controller.abort();
+  }, []);
+
   // Handle form changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -153,7 +197,32 @@ export default function CheckoutPage() {
     0
   );
 
-  const total = subtotal + (cart.length > 0 ? shippingCost : 0);
+  const orderTotalBeforeCoupon =
+    subtotal + (cart.length > 0 ? shippingCost : 0);
+  const eligibleCoupons = coupons.filter(
+    (coupon) =>
+      orderTotalBeforeCoupon >=
+      (Number(coupon.minimum_order_amount) || 0)
+  );
+  const selectedCoupon = eligibleCoupons.find(
+    (coupon) => String(coupon.coupon_id) === String(selectedCouponId)
+  ) || null;
+  const couponBase = subtotal;
+  const rawCouponDiscount = selectedCoupon
+    ? selectedCoupon.discount_type === "percentage"
+      ? couponBase * (Number(selectedCoupon.discount_value) || 0) / 100
+      : Number(selectedCoupon.discount_value) || 0
+    : 0;
+  const maximumCouponDiscount = Number(selectedCoupon?.maximum_discount) || 0;
+  const couponDiscount = Math.round(
+    Math.min(
+      couponBase,
+      maximumCouponDiscount > 0
+        ? Math.min(rawCouponDiscount, maximumCouponDiscount)
+        : rawCouponDiscount
+    ) * 100
+  ) / 100;
+  const total = Math.max(0, orderTotalBeforeCoupon - couponDiscount);
 
   // Place order
   const handlePlaceOrder = async (e) => {
@@ -187,6 +256,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           items: cart,
           shippingAddress: formData,
+          couponId: selectedCoupon?.coupon_id || null,
         }),
       });
       const result = await response.json();
@@ -214,6 +284,7 @@ export default function CheckoutPage() {
         sessionStorage.removeItem("velora-checkout-items");
         window.dispatchEvent(new Event("velora-cart-updated"));
       }
+      sessionStorage.removeItem("velora-selected-coupon");
       alert(
         `Order placed successfully!\n\nOrder ID: ${result.data.order_id}\nPayment: Cash on Delivery`
       );
@@ -654,6 +725,18 @@ export default function CheckoutPage() {
                     Rs. {shippingCost.toLocaleString()}
                   </span>
                 </div>
+
+                {couponDiscount > 0 && selectedCoupon && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-[#6B625C]">
+                      Coupon ({selectedCoupon.code})
+                    </span>
+
+                    <span className="font-medium text-[#72383D]">
+                      - Rs. {couponDiscount.toLocaleString()}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Total */}
@@ -666,6 +749,79 @@ export default function CheckoutPage() {
                   Rs. {total.toLocaleString()}
                 </span>
               </div>
+
+              {/* Eligible Coupons */}
+              <section className="mt-6 border-t border-[#D8D0C8] pt-5">
+                <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+                  Coupons you can use
+                </h3>
+
+                {isLoadingCoupons ? (
+                  <p className="mt-3 text-sm text-[#6B625C]">
+                    Checking available coupons...
+                  </p>
+                ) : couponLoadError ? (
+                  <p role="alert" className="mt-3 text-sm text-[#72383D]">
+                    {couponLoadError}
+                  </p>
+                ) : eligibleCoupons.length > 0 ? (
+                  <div className="mt-3 space-y-3">
+                    {eligibleCoupons.map((coupon) => (
+                      <button
+                        type="button"
+                        key={coupon.coupon_id}
+                        aria-label={`Apply coupon ${coupon.code}`}
+                        aria-pressed={
+                          String(selectedCouponId) === String(coupon.coupon_id)
+                        }
+                        onClick={() =>
+                          setSelectedCouponId((currentId) =>
+                            String(currentId) === String(coupon.coupon_id)
+                              ? null
+                              : coupon.coupon_id
+                          )
+                        }
+                        className={`checkout-coupon-ticket w-full cursor-pointer text-left transition ${
+                          String(selectedCouponId) === String(coupon.coupon_id)
+                            ? "ring-2 ring-[#322D29] ring-offset-2"
+                            : "hover:brightness-95"
+                        }`}
+                      >
+                        <div className="checkout-coupon-discount">
+                          <span>Save</span>
+                          <strong>
+                            {coupon.discount_type === "percentage"
+                              ? `${Number(coupon.discount_value)}%`
+                              : `Rs. ${Number(coupon.discount_value).toLocaleString()}`}
+                          </strong>
+                          <span>Off</span>
+                        </div>
+
+                        <div className="checkout-coupon-details">
+                          <span className="checkout-coupon-label">
+                            Coupon
+                          </span>
+                          <strong className="checkout-coupon-code">
+                            {coupon.code}
+                          </strong>
+                          <span className="checkout-coupon-title">
+                            {coupon.title || coupon.description || "Special offer"}
+                          </span>
+                          <span className="checkout-coupon-select-hint">
+                            {String(selectedCouponId) === String(coupon.coupon_id)
+                              ? "Selected - click to remove"
+                              : "Tap to apply"}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-3 text-sm text-[#6B625C]">
+                    No active coupons match this order total.
+                  </p>
+                )}
+              </section>
 
               {/* Payment Info */}
               <div className="mt-6 bg-[#FAF8F5] p-4">

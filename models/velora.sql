@@ -330,8 +330,6 @@ CREATE TABLE coupons (
     discount_value DECIMAL(10,2) NOT NULL,
     minimum_order_amount DECIMAL(10,2) DEFAULT 0.00,
     maximum_discount DECIMAL(10,2),
-    usage_limit INT,
-    used_count INT DEFAULT 0,
     start_date DATETIME,
     end_date DATETIME,
     status ENUM('active', 'inactive') DEFAULT 'active',
@@ -626,7 +624,6 @@ CREATE TABLE comment_images (
 
     -- Image binary data
     image LONGBLOB NOT NULL,
-                
 
     sort_order INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -33,8 +33,6 @@ export async function GET() {
         discount_value,
         minimum_order_amount,
         maximum_discount,
-        usage_limit,
-        used_count,
         start_date,
         end_date,
         status,
@@ -98,11 +96,31 @@ export async function POST(request) {
       discount_value,
       minimum_order_amount,
       maximum_discount,
-      usage_limit,
       start_date,
       end_date,
       status,
     } = body;
+
+    const startDateTime = start_date ? new Date(start_date).getTime() : null;
+    const endDateTime = end_date ? new Date(end_date).getTime() : null;
+
+    if (
+      (startDateTime !== null && !Number.isFinite(startDateTime)) ||
+      (endDateTime !== null && !Number.isFinite(endDateTime)) ||
+      (startDateTime !== null &&
+        endDateTime !== null &&
+        endDateTime < startDateTime)
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message: "End date must be on or after the start date.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
     if (!code) {
       return Response.json(
@@ -176,13 +194,12 @@ export async function POST(request) {
         discount_value,
         minimum_order_amount,
         maximum_discount,
-        usage_limit,
         start_date,
         end_date,
         status
       )
 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         code.trim().toUpperCase(),
@@ -197,10 +214,6 @@ export async function POST(request) {
         maximum_discount === ""
           ? null
           : Number(maximum_discount),
-        usage_limit === null ||
-        usage_limit === ""
-          ? null
-          : Number(usage_limit),
         start_date || null,
         end_date || null,
         status || "active",

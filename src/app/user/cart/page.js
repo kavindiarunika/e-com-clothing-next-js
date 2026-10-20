@@ -18,6 +18,10 @@ function getCartItemKey(item) {
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
+  const [coupons, setCoupons] = useState([]);
+  const [selectedCouponId, setSelectedCouponId] = useState(null);
+  const [isLoadingCoupons, setIsLoadingCoupons] = useState(true);
+  const [couponLoadError, setCouponLoadError] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [hasLoadedCart, setHasLoadedCart] = useState(false);
   const [cartMessage, setCartMessage] = useState("");
@@ -85,6 +89,40 @@ export default function CartPage() {
       );
     };
   }, [syncCartFromStorage]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadCoupons() {
+      try {
+        const response = await fetch("/api/user/coupons", {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Unable to load available coupons.");
+        }
+
+        setCoupons(Array.isArray(result.coupons) ? result.coupons : []);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Cart coupons error:", error);
+          setCouponLoadError(
+            error.message || "Unable to load available coupons."
+          );
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoadingCoupons(false);
+        }
+      }
+    }
+
+    void loadCoupons();
+    return () => controller.abort();
+  }, []);
 
   // Save cart
   useEffect(() => {
@@ -199,16 +237,36 @@ export default function CartPage() {
     [selectedCart]
   );
 
-  const [couponApplied, setCouponApplied] = useState(false);
-  const couponDiscount = couponApplied
-    ? Math.round((subtotal - productDiscount) * 0.1)
-    : 0;
-  const discount = productDiscount + couponDiscount;
-
   // Shipping is charged once whenever at least one item is selected.
   const shipping = selectedCart.length > 0 ? 500 : 0;
-
-  const total = Math.max(0, subtotal - discount + shipping);
+  const orderTotalBeforeCoupon = Math.max(
+    0,
+    subtotal - productDiscount + shipping
+  );
+  const eligibleCoupons = coupons.filter(
+    (coupon) =>
+      orderTotalBeforeCoupon >=
+      (Number(coupon.minimum_order_amount) || 0)
+  );
+  const selectedCoupon = eligibleCoupons.find(
+    (coupon) => String(coupon.coupon_id) === String(selectedCouponId)
+  ) || null;
+  const couponBase = Math.max(0, subtotal - productDiscount);
+  const rawCouponDiscount = selectedCoupon
+    ? selectedCoupon.discount_type === "percentage"
+      ? couponBase * (Number(selectedCoupon.discount_value) || 0) / 100
+      : Number(selectedCoupon.discount_value) || 0
+    : 0;
+  const maximumCouponDiscount = Number(selectedCoupon?.maximum_discount) || 0;
+  const couponDiscount = Math.round(
+    Math.min(
+      couponBase,
+      maximumCouponDiscount > 0
+        ? Math.min(rawCouponDiscount, maximumCouponDiscount)
+        : rawCouponDiscount
+    ) * 100
+  ) / 100;
+  const total = Math.max(0, orderTotalBeforeCoupon - couponDiscount);
 
   const allSelected =
     cart.length > 0 &&
@@ -235,22 +293,6 @@ export default function CartPage() {
     }
 
     setSelectedItems(cart.map((item) => getCartItemKey(item)));
-  };
-
-  // Coupon
-  const applyCoupon = (coupon) => {
-    const code = coupon.trim().toUpperCase();
-
-    if (code === "VELORA10") {
-      setCouponApplied(true);
-      alert("Coupon applied! 10% discount.");
-    } else if (code === "") {
-      setCouponApplied(false);
-    } else {
-      setCouponApplied(false);
-
-      alert("Invalid coupon code.");
-    }
   };
 
   // Empty cart
@@ -371,12 +413,22 @@ export default function CartPage() {
           <section className="lg:sticky lg:top-24">
             <CartSummary
               subtotal={subtotal}
-              discount={discount}
+              productDiscount={productDiscount}
+              couponDiscount={couponDiscount}
+              selectedCoupon={selectedCoupon}
+              coupons={eligibleCoupons}
+              selectedCouponId={selectedCouponId}
+              onSelectCoupon={(couponId) =>
+                setSelectedCouponId((currentId) =>
+                  String(currentId) === String(couponId) ? null : couponId
+                )
+              }
+              isLoadingCoupons={isLoadingCoupons}
+              couponLoadError={couponLoadError}
               shipping={shipping}
               total={total}
               selectedCount={selectedCount}
               selectedItems={selectedCart}
-              onApplyCoupon={applyCoupon}
             />
           </section>
 

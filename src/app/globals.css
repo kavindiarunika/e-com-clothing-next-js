@@ -22,6 +22,100 @@
   --admin-warning: #a15c00;
 }
 
+.checkout-coupon-ticket {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(110px, 0.38fr) minmax(0, 1fr);
+  min-height: 106px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #72383d;
+  background-image:
+    radial-gradient(circle at 0 7px, #fff 4px, transparent 4.5px),
+    radial-gradient(circle at 100% 7px, #fff 4px, transparent 4.5px);
+  background-size: 12px 14px;
+  background-repeat: repeat-y;
+  box-shadow: 0 5px 14px rgba(120, 0, 15, 0.12);
+}
+
+.checkout-coupon-discount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 12px 10px;
+  border-right: 1px dashed #72383d;
+  background: #fff;
+  color: #72383d;
+  text-align: center;
+}
+
+.checkout-coupon-discount span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.checkout-coupon-discount strong {
+  overflow-wrap: anywhere;
+  font-size: clamp(17px, 4vw, 26px);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.checkout-coupon-details {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 16px;
+  color: #fff;
+}
+
+.checkout-coupon-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.checkout-coupon-code {
+  overflow-wrap: anywhere;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.checkout-coupon-title {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0.92;
+}
+
+.checkout-coupon-select-hint {
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  opacity: 0.82;
+}
+
+@media (max-width: 420px) {
+  .checkout-coupon-ticket {
+    grid-template-columns: 105px minmax(0, 1fr);
+  }
+
+  .checkout-coupon-details {
+    padding: 10px 12px;
+  }
+}
+
 /* Layout */
 
 .admin-layout {
@@ -6108,27 +6202,6 @@ margin: 0;
   color: #8a817a;
   font-size: 11px;
   text-transform: capitalize;
-}
-
-/* =========================================
-   USAGE
-========================================= */
-
-.coupon-usage {
-  display: flex;
-  align-items: baseline;
-  gap: 3px;
-}
-
-.coupon-usage strong {
-  font-family: var(--font-poppins), sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.coupon-usage span {
-  color: #8a817a;
-  font-size: 12px;
 }
 
 /* =========================================

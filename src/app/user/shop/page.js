@@ -11,8 +11,15 @@ const validSorts = new Set([
 ]);
 
 export default async function ShopRoute({ searchParams }) {
-  const { sort } = await searchParams;
+  const { sort, search } = await searchParams;
   const initialSort = validSorts.has(sort) ? sort : "best-selling";
+  const initialSearch = typeof search === "string" ? search : "";
 
-  return <ShopPage initialSort={initialSort} />;
+  return (
+    <ShopPage
+      key={`${initialSort}-${initialSearch}`}
+      initialSort={initialSort}
+      initialSearch={initialSearch}
+    />
+  );
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import CouponBox from "./CouponBox";
 import Link from "next/link";
 
 function PriceRow({ label, value, valueClassName = "text-[#322D29]" }) {
@@ -16,12 +15,18 @@ function PriceRow({ label, value, valueClassName = "text-[#322D29]" }) {
 
 export default function CartSummary({
   subtotal,
-  discount,
+  productDiscount,
+  couponDiscount,
+  selectedCoupon,
+  coupons = [],
+  selectedCouponId,
+  onSelectCoupon,
+  isLoadingCoupons,
+  couponLoadError,
   shipping,
   total,
   selectedCount,
   selectedItems = [],
-  onApplyCoupon,
 }) {
   return (
     <div className="bg-white p-5 md:p-7 lg:p-8">
@@ -36,11 +41,21 @@ export default function CartSummary({
       <div className="mt-6 space-y-3 text-sm md:space-y-4">
         <PriceRow label="Subtotal" value={`Rs. ${subtotal.toLocaleString()}`} />
 
-        <PriceRow
-          label="Discount"
-          value={`- Rs. ${discount.toLocaleString()}`}
-          valueClassName="text-[#72383D]"
-        />
+        {productDiscount > 0 && (
+          <PriceRow
+            label="Product discount"
+            value={`- Rs. ${productDiscount.toLocaleString()}`}
+            valueClassName="text-[#72383D]"
+          />
+        )}
+
+        {couponDiscount > 0 && selectedCoupon && (
+          <PriceRow
+            label={`Coupon (${selectedCoupon.code})`}
+            value={`- Rs. ${couponDiscount.toLocaleString()}`}
+            valueClassName="text-[#72383D]"
+          />
+        )}
 
         <PriceRow label="Shipping" value={`Rs. ${shipping.toLocaleString()}`} />
       </div>
@@ -58,10 +73,70 @@ export default function CartSummary({
         </span>
       </div>
 
-      {/* Coupon */}
-      <div className="mt-7">
-        <CouponBox onApplyCoupon={onApplyCoupon} />
-      </div>
+      {/* Available coupons */}
+      <section className="mt-7 border-t border-[#D8D0C8] pt-6">
+        <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+          Coupons you can use
+        </h3>
+
+        {isLoadingCoupons ? (
+          <p className="mt-3 text-sm text-[#6B625C]">
+            Checking available coupons...
+          </p>
+        ) : couponLoadError ? (
+          <p role="alert" className="mt-3 text-sm text-[#72383D]">
+            {couponLoadError}
+          </p>
+        ) : coupons.length > 0 ? (
+          <div className="mt-3 space-y-3">
+            {coupons.map((coupon) => (
+              <button
+                type="button"
+                key={coupon.coupon_id}
+                aria-label={`Apply coupon ${coupon.code}`}
+                aria-pressed={
+                  String(selectedCouponId) === String(coupon.coupon_id)
+                }
+                onClick={() => onSelectCoupon(coupon.coupon_id)}
+                className={`checkout-coupon-ticket w-full cursor-pointer text-left transition ${
+                  String(selectedCouponId) === String(coupon.coupon_id)
+                    ? "ring-2 ring-[#322D29] ring-offset-2"
+                    : "hover:brightness-95"
+                }`}
+              >
+                <div className="checkout-coupon-discount">
+                  <span>Save</span>
+                  <strong>
+                    {coupon.discount_type === "percentage"
+                      ? `${Number(coupon.discount_value)}%`
+                      : `Rs. ${Number(coupon.discount_value).toLocaleString()}`}
+                  </strong>
+                  <span>Off</span>
+                </div>
+
+                <div className="checkout-coupon-details">
+                  <span className="checkout-coupon-label">Coupon</span>
+                  <strong className="checkout-coupon-code">{coupon.code}</strong>
+                  <span className="checkout-coupon-title">
+                    {coupon.title || coupon.description || "Special offer"}
+                  </span>
+                  <span className="checkout-coupon-select-hint">
+                    {String(selectedCouponId) === String(coupon.coupon_id)
+                      ? "Selected - click to remove"
+                      : "Tap to apply"}
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-3 text-sm text-[#6B625C]">
+            {selectedCount > 0
+              ? "No active coupons match the selected items."
+              : "Select items to see matching coupons."}
+          </p>
+        )}
+      </section>
 
       {/* Checkout */}
       <Link
@@ -78,6 +153,14 @@ export default function CartSummary({
             "velora-checkout-items",
             JSON.stringify(selectedItems)
           );
+          if (selectedCoupon) {
+            sessionStorage.setItem(
+              "velora-selected-coupon",
+              String(selectedCoupon.coupon_id)
+            );
+          } else {
+            sessionStorage.removeItem("velora-selected-coupon");
+          }
         }}
         className={`mt-7 block w-full px-6 py-4 text-center text-xs font-semibold uppercase tracking-[1.5px] text-white transition ${
           selectedItems.length === 0

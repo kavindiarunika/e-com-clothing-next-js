@@ -114,6 +114,9 @@ export async function POST(request) {
         : String(item.color || ""),
       quantity: Number(item.quantity),
     }));
+    const couponId = body.couponId == null || body.couponId === ""
+      ? null
+      : Number(body.couponId);
 
     if (
       items.some(
@@ -127,6 +130,16 @@ export async function POST(request) {
     ) {
       return NextResponse.json(
         { success: false, message: "One or more cart quantities are invalid." },
+        { status: 400 }
+      );
+    }
+
+    if (
+      couponId !== null &&
+      (!Number.isInteger(couponId) || couponId <= 0)
+    ) {
+      return NextResponse.json(
+        { success: false, message: "The selected coupon is invalid." },
         { status: 400 }
       );
     }
@@ -349,6 +362,56 @@ export async function POST(request) {
     }
 
     const shippingFee = 500;
+    let couponDiscount = 0;
+    if (couponId !== null) {
+      const [couponRows] = await connection.execute(
+        `SELECT
+           coupon_id,
+           discount_type,
+           discount_value,
+           minimum_order_amount,
+           maximum_discount
+         FROM coupons
+         WHERE coupon_id = ? AND status = 'active'
+         LIMIT 1
+         FOR UPDATE`,
+        [couponId]
+      );
+      const coupon = couponRows[0];
+      if (!coupon) {
+        await connection.rollback();
+        return NextResponse.json(
+          { success: false, message: "The selected coupon is no longer available." },
+          { status: 400 }
+        );
+      }
+
+      const discountedSubtotal = Math.max(0, subtotal - discountTotal);
+      const orderTotalBeforeCoupon = discountedSubtotal + shippingFee;
+      if (orderTotalBeforeCoupon < Number(coupon.minimum_order_amount || 0)) {
+        await connection.rollback();
+        return NextResponse.json(
+          { success: false, message: "The order total does not meet this coupon's minimum." },
+          { status: 400 }
+        );
+      }
+
+      const discountValue = Number(coupon.discount_value) || 0;
+      const rawCouponDiscount = coupon.discount_type === "percentage"
+        ? discountedSubtotal * discountValue / 100
+        : discountValue;
+      const maximumDiscount = Number(coupon.maximum_discount) || 0;
+      couponDiscount = Math.round(
+        Math.min(
+          discountedSubtotal,
+          maximumDiscount > 0
+            ? Math.min(rawCouponDiscount, maximumDiscount)
+            : rawCouponDiscount
+        ) * 100
+      ) / 100;
+      discountTotal += couponDiscount;
+    }
+
     const totalAmount = subtotal - discountTotal + shippingFee;
     const shippingAddress = JSON.stringify({
       first_name: String(address.firstName).trim(),
@@ -363,14 +426,15 @@ export async function POST(request) {
     const [orderResult] = await connection.execute(
       `INSERT INTO orders (
          user_id, subtotal, discount, shipping_fee, total_amount,
-         payment_status, order_status, shipping_address, billing_address
-       ) VALUES (?, ?, ?, ?, ?, 'pending', 'pending', ?, ?)`,
+         coupon_id, payment_status, order_status, shipping_address, billing_address
+       ) VALUES (?, ?, ?, ?, ?, ?, 'pending', 'pending', ?, ?)`,
       [
         customer.user_id,
         subtotal,
         discountTotal,
         shippingFee,
         totalAmount,
+        couponId,
         shippingAddress,
         shippingAddress,
       ]
@@ -439,6 +503,7 @@ export async function POST(request) {
           order_id: orderId,
           subtotal,
           discount: discountTotal,
+          coupon_discount: couponDiscount,
           shipping_fee: shippingFee,
           total_amount: totalAmount,
         },
