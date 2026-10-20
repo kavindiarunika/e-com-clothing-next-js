@@ -8686,6 +8686,117 @@ margin: 0;
   .order-status-controls,.order-info-grid{grid-template-columns:1fr}
   .order-modal{max-height:95vh}
 }
+
+.orders-page {
+  min-height: calc(100vh - 70px);
+  padding: 30px;
+  background: #f5f1eb;
+}
+
+.orders-page .orders-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.orders-page .orders-search {
+  flex: 1;
+  max-width: 480px;
+}
+
+.orders-page .orders-table {
+  min-width: 900px;
+}
+
+.orders-page .orders-table th {
+  padding: 13px 16px;
+  background: #f8f6f2;
+  border-bottom: 1px solid #e5e2dc;
+  color: #6b625d;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.orders-page .orders-table td {
+  padding: 13px 16px;
+}
+
+.orders-page .order-items-count {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+}
+
+.orders-page .order-modal {
+  max-width: 520px;
+  max-height: none;
+}
+
+.orders-page .order-status-controls {
+  padding: 20px 22px;
+  background: #fff;
+  border-bottom: 0;
+}
+
+.orders-page .order-modal-customer {
+  margin: 0 22px 22px;
+  padding: 16px;
+  border: 1px solid #e5e2dc;
+  border-radius: 8px;
+  background: #faf8f5;
+}
+
+.orders-page .order-modal-customer h3 {
+  margin: 0 0 12px;
+  color: #322d29;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.orders-page .order-modal-customer dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.orders-page .order-modal-customer dl > div {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.orders-page .order-modal-customer dt {
+  color: #77706a;
+  font-size: 12px;
+}
+
+.orders-page .order-modal-customer dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #322d29;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .orders-page {
+    padding: 20px;
+  }
+
+  .orders-page .orders-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .orders-page .orders-search {
+    max-width: none;
+  }
+}
+
 .dashboard-page {
   min-height: calc(100vh - 70px);
   padding: 28px;

@@ -6,11 +6,6 @@ import {
   Search,
   Eye,
   X,
-  Package,
-  User,
-  MapPin,
-  CreditCard,
-  Truck,
   CalendarDays,
 } from "lucide-react";
 
@@ -265,10 +260,6 @@ export default function OrdersPage() {
     return `payment-status ${status}`;
   };
 
-  // ==========================================
-  // FORMAT MONEY
-  // ==========================================
-
   const formatMoney = (value) => {
     return `Rs. ${Number(
       value || 0
@@ -296,13 +287,13 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="admin-orders">
+    <main className="admin-page orders-page">
 
       {/* =====================================
           PAGE HEADER
       ====================================== */}
 
-      <div className="orders-header">
+      <div className="admin-page-header">
         <div>
           <h1>Orders</h1>
 
@@ -411,7 +402,6 @@ export default function OrdersPage() {
                 <th>Order</th>
                 <th>Customer</th>
                 <th>Date</th>
-                <th>Items</th>
                 <th>Total</th>
                 <th>Payment</th>
                 <th>Order Status</th>
@@ -424,7 +414,7 @@ export default function OrdersPage() {
               {loading ? (
                 <tr>
                   <td
-                    colSpan="8"
+                    colSpan="7"
                     className="orders-empty"
                   >
                     Loading orders...
@@ -434,7 +424,7 @@ export default function OrdersPage() {
                 0 ? (
                 <tr>
                   <td
-                    colSpan="8"
+                    colSpan="7"
                     className="orders-empty"
                   >
                     No orders found.
@@ -458,6 +448,10 @@ export default function OrdersPage() {
                             5,
                             "0"
                           )}
+                          <span className="order-items-count">
+                            {order.item_count || 0} item
+                            {Number(order.item_count) !== 1 ? "s" : ""}
+                          </span>
                         </div>
                       </td>
 
@@ -489,21 +483,6 @@ export default function OrdersPage() {
                             order.order_date
                           )}
                         </div>
-                      </td>
-
-                      {/* ITEMS */}
-
-                      <td>
-                        <span className="order-items-count">
-                          {order.item_count ||
-                            0}{" "}
-                          item
-                          {Number(
-                            order.item_count
-                          ) !== 1
-                            ? "s"
-                            : ""}
-                        </span>
                       </td>
 
                       {/* TOTAL */}
@@ -588,11 +567,6 @@ export default function OrdersPage() {
                   ).padStart(5, "0")}
                 </h2>
 
-                <p>
-                  {formatDate(
-                    selectedOrder.order_date
-                  )}
-                </p>
               </div>
 
               <button
@@ -684,275 +658,29 @@ export default function OrdersPage() {
 
             </div>
 
-            {/* CUSTOMER + ADDRESS */}
-
-            <div className="order-info-grid">
-
-              {/* CUSTOMER */}
-
-              <div className="order-info-card">
-
-                <div className="order-info-title">
-                  <User size={18} />
-
-                  <h3>Customer</h3>
+            <section className="order-modal-customer">
+              <h3>Customer Details</h3>
+              <dl>
+                <div>
+                  <dt>Name</dt>
+                  <dd>{selectedOrder.customer_name || "Guest Customer"}</dd>
                 </div>
-
-                <p>
-                  <strong>
-                    {selectedOrder.customer_name ||
-                      "Guest Customer"}
-                  </strong>
-                </p>
-
-                <p>
-                  {selectedOrder.customer_email ||
-                    "No email"}
-                </p>
-
-                {selectedOrder.customer_phone && (
-                  <p>
-                    {
-                      selectedOrder.customer_phone
-                    }
-                  </p>
-                )}
-
-              </div>
-
-              {/* SHIPPING */}
-
-              <div className="order-info-card">
-
-                <div className="order-info-title">
-                  <Truck size={18} />
-
-                  <h3>
-                    Shipping Address
-                  </h3>
+                <div>
+                  <dt>Email</dt>
+                  <dd>{selectedOrder.customer_email || "Not provided"}</dd>
                 </div>
-
-                <p className="order-address">
-                  {selectedOrder.shipping_address ||
-                    "No shipping address"}
-                </p>
-
-              </div>
-
-              {/* BILLING */}
-
-              <div className="order-info-card">
-
-                <div className="order-info-title">
-                  <MapPin size={18} />
-
-                  <h3>
-                    Billing Address
-                  </h3>
+                <div>
+                  <dt>Phone</dt>
+                  <dd>{selectedOrder.customer_phone || "Not provided"}</dd>
                 </div>
-
-                <p className="order-address">
-                  {selectedOrder.billing_address ||
-                    "No billing address"}
-                </p>
-
-              </div>
-
-              {/* PAYMENT */}
-
-              <div className="order-info-card">
-
-                <div className="order-info-title">
-                  <CreditCard size={18} />
-
-                  <h3>Payment</h3>
-                </div>
-
-                <p>
-                  Status:{" "}
-                  <strong>
-                    {
-                      selectedOrder.payment_status
-                    }
-                  </strong>
-                </p>
-
-              </div>
-
-            </div>
-
-            {/* ORDER ITEMS */}
-
-            <div className="order-items-section">
-
-              <div className="order-section-title">
-
-                <Package size={18} />
-
-                <h3>
-                  Order Items
-                </h3>
-
-              </div>
-
-              <div className="order-items-table-wrapper">
-
-                <table className="order-items-table">
-
-                  <thead>
-                    <tr>
-                      <th>Product</th>
-                      <th>Qty</th>
-                      <th>Unit Price</th>
-                      <th>Discount</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-
-                    {selectedOrder.items?.map(
-                      (item) => (
-                        <tr
-                          key={
-                            item.order_item_id
-                          }
-                        >
-
-                          <td>
-                            <div className="order-item-product">
-
-                              {item.main_image ? (
-                                <img
-                                  src={
-                                    item.main_image
-                                  }
-                                  alt={
-                                    item.product_title
-                                  }
-                                />
-                              ) : (
-                                <div className="order-item-image-placeholder">
-                                  <Package
-                                    size={18}
-                                  />
-                                </div>
-                              )}
-
-                              <div>
-                                <strong>
-                                  {
-                                    item.product_title
-                                  }
-                                </strong>
-
-                                {item.sku && (
-                                  <span>
-                                    SKU:{" "}
-                                    {item.sku}
-                                  </span>
-                                )}
-                              </div>
-
-                            </div>
-                          </td>
-
-                          <td>
-                            {item.qty}
-                          </td>
-
-                          <td>
-                            {formatMoney(
-                              item.unit_price
-                            )}
-                          </td>
-
-                          <td>
-                            {formatMoney(
-                              item.discount
-                            )}
-                          </td>
-
-                          <td>
-                            <strong>
-                              {formatMoney(
-                                item.total_price
-                              )}
-                            </strong>
-                          </td>
-
-                        </tr>
-                      )
-                    )}
-
-                  </tbody>
-
-                </table>
-
-              </div>
-
-            </div>
-
-            {/* ORDER SUMMARY */}
-
-            <div className="order-summary">
-
-              <div className="order-summary-row">
-                <span>
-                  Subtotal
-                </span>
-
-                <strong>
-                  {formatMoney(
-                    selectedOrder.subtotal
-                  )}
-                </strong>
-              </div>
-
-              <div className="order-summary-row">
-                <span>
-                  Discount
-                </span>
-
-                <strong>
-                  -
-                  {formatMoney(
-                    selectedOrder.discount
-                  )}
-                </strong>
-              </div>
-
-              <div className="order-summary-row">
-                <span>
-                  Shipping Fee
-                </span>
-
-                <strong>
-                  {formatMoney(
-                    selectedOrder.shipping_fee
-                  )}
-                </strong>
-              </div>
-
-              <div className="order-summary-row order-grand-total">
-                <span>
-                  Total
-                </span>
-
-                <strong>
-                  {formatMoney(
-                    selectedOrder.total_amount
-                  )}
-                </strong>
-              </div>
-
-            </div>
+              </dl>
+            </section>
 
           </div>
 
         </div>
       )}
 
-    </div>
+    </main>
   );
 }
