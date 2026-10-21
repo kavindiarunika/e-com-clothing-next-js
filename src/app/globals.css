@@ -20,6 +20,14 @@ h1, h2, h3, h4, h5, h6 {
   font-style: normal;
 }
 
+
+.button{
+  font-family: "Outfit", sans-serif;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  background-color: rgb(255,192,203);
+}
+
 :root {
   --font-inter: "Segoe UI", Arial, sans-serif;
   --font-poppins: "Segoe UI", Arial, sans-serif;
