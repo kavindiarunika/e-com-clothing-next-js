@@ -238,7 +238,7 @@ export default function ProductCard({
           PRODUCT IMAGE
       ====================================== */}
 
-      <div className="relative aspect-[3/4] overflow-hidden bg-[#E3DCD1]">
+      <div className="relative aspect-[3/4] overflow-hidden bg-[#FAF6F5]">
 
         <Link
           href={`/user/product/${product.id}`}
@@ -275,7 +275,7 @@ export default function ProductCard({
 
         {hasDiscount && !isSoldOut && (
           <span
-            className="absolute left-3 top-3 z-10 bg-[#72383D] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white"
+            className="absolute left-3 top-3 z-10 bg-[#C08081] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white"
           >
             -{product.discount}%
           </span>
@@ -294,7 +294,7 @@ export default function ProductCard({
               ? "Remove from wishlist"
               : "Add to wishlist"
           }
-          className={`absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-white ${isWishlisted ? "text-[#72383D]" : "text-[#322D29]"}`}
+          className={`absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-white ${isWishlisted ? "text-[#C08081]" : "text-[#292524]"}`}
         >
           <Heart
             size={19}
@@ -315,7 +315,7 @@ export default function ProductCard({
           <button
             type="button"
             onClick={handleAddToCart}
-            className="absolute bottom-0 left-0 right-0 z-30 flex translate-y-full items-center justify-center gap-2 bg-[#322D29] py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition-transform duration-300 group-hover:translate-y-0"
+            className="absolute bottom-0 left-0 right-0 z-30 flex translate-y-full items-center justify-center gap-2 bg-[#C08081] py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition-transform duration-300 hover:bg-[#A96870] group-hover:translate-y-0"
           >
             <ShoppingBag
               size={16}
@@ -340,7 +340,7 @@ export default function ProductCard({
           href={`/user/product/${product.id}`}
         >
           <h3
-            className="text-sm font-medium text-[#322D29] transition-colors hover:text-[#72383D]"
+            className="text-sm font-medium text-[#292524] transition-colors hover:text-[#C08081]"
           >
             {product.name}
           </h3>
@@ -364,8 +364,8 @@ export default function ProductCard({
                     Math.round(
                       currentRating
                     )
-                      ? "fill-[#AC9C8D] text-[#AC9C8D]"
-                      : "text-[#D8CEC5]"
+                      ? "fill-[#C08081] text-[#C08081]"
+                      : "text-[#E7DEDC]"
                   }
                 />
               )
@@ -389,7 +389,7 @@ export default function ProductCard({
         >
 
           <span
-            className="text-sm font-semibold text-[#72383D]"
+            className="text-sm font-semibold text-[#C08081]"
           >
             Rs.{" "}
             {Math.round(

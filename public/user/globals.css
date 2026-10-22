@@ -2,13 +2,13 @@
 
 
 :root {
-  --color-dark: #322D29;
-  --color-primary: #72383D;
-  --color-background: #EFE9E1;
-  --color-banner: #AC9C8D;
+  --color-dark: #292524;
+  --color-primary: #C08081;
+  --color-background: #FFFFFF;
+  --color-banner: #C08081;
   --color-white: #FFFFFF;
   --color-text-light: #6B625D;
-  --color-border: #D8CEC5;
+  --color-border: #E7DEDC;
 }
 
 * {

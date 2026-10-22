@@ -165,7 +165,7 @@ export default function Navbar() {
     });
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#322D29] text-white">
+    <header className="sticky top-0 z-50 w-full bg-black text-white">
 
       {/* =====================================================
           MAIN NAVBAR
@@ -199,9 +199,9 @@ export default function Navbar() {
         {searchOpen && (
           <form
             onSubmit={submitSearch}
-            className="flex h-11 min-w-0 flex-1 items-center gap-3 rounded-md border border-[#E5DDD5] bg-white px-3 text-[#322D29] shadow-sm sm:mx-6 sm:h-12 sm:px-4"
+            className="flex h-11 min-w-0 flex-1 items-center gap-3 rounded-md border border-[#E5DDD5] bg-white px-3 text-[#292524] shadow-sm sm:mx-6 sm:h-12 sm:px-4"
           >
-            <Search size={19} className="shrink-0 text-[#72383D]" />
+            <Search size={19} className="shrink-0 text-[#C08081]" />
             <input
               ref={searchInputRef}
               type="search"
@@ -209,13 +209,13 @@ export default function Navbar() {
               onChange={(event) => handleSearchChange(event.target.value)}
               placeholder="Search products..."
               aria-label="Search products"
-              className="h-full min-w-0 flex-1 bg-transparent text-sm text-[#322D29] outline-none placeholder:text-[#8B817A] sm:text-base"
+              className="h-full min-w-0 flex-1 bg-transparent text-sm text-[#292524] outline-none placeholder:text-[#8B817A] sm:text-base"
             />
             <button
               type="button"
               onClick={closeSearch}
               aria-label="Close search"
-              className="shrink-0 rounded-full p-1 text-[#6B625C] transition hover:bg-[#F1ECE6] hover:text-[#72383D]"
+              className="shrink-0 rounded-full p-1 text-[#6B625C] transition hover:bg-[#F1ECE6] hover:text-[#C08081]"
             >
               <X size={18} />
             </button>
@@ -232,7 +232,7 @@ export default function Navbar() {
 
           <Link
             href="/user"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#C08081]"
           >
             Home
           </Link>
@@ -241,14 +241,14 @@ export default function Navbar() {
 
           <Link
             href="/user/shop"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#C08081]"
           >
             Shop
           </Link>
 
           <Link
             href="/user/offers"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#C08081]"
           >
             Offers
           </Link>
@@ -265,7 +265,7 @@ export default function Navbar() {
 
             <Link
               href="/user/shop"
-              className="flex items-center gap-1 text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+              className="flex items-center gap-1 text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#C08081]"
             >
               Collection
 
@@ -281,7 +281,7 @@ export default function Navbar() {
             {openCollection && (
               <div className="absolute left-1/2 top-full w-72 -translate-x-1/2 pt-4">
 
-                <div className="overflow-hidden rounded-sm bg-white py-4 text-[#322D29] shadow-xl">
+                <div className="overflow-hidden rounded-sm bg-white py-4 text-[#292524] shadow-xl">
                   {collections.map(({ id, name, href }) => (
                       <div key={id}>
 
@@ -290,7 +290,7 @@ export default function Navbar() {
                         <Link
                           href={href}
                           onClick={closeMenu}
-                          className="block px-6 pt-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                          className="block px-6 pt-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
                         >
                           {name}
                         </Link>
@@ -309,7 +309,7 @@ export default function Navbar() {
 
           <Link
             href="/user/shop?sort=newest"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#C08081]"
           >
             New Arrivals
           </Link>
@@ -328,7 +328,7 @@ export default function Navbar() {
             type="button"
             onClick={openSearch}
             aria-label="Search"
-            className="transition hover:text-[#AC9C8D]"
+            className="transition hover:text-[#C08081]"
           >
             <Search
               size={20}
@@ -341,7 +341,7 @@ export default function Navbar() {
           <Link
             href="/user/wishlist"
             aria-label="Wishlist"
-            className="transition hover:text-[#AC9C8D]"
+            className="transition hover:text-[#C08081]"
           >
             <Heart
               size={20}
@@ -354,14 +354,14 @@ export default function Navbar() {
           <Link
             href="/user/cart"
             aria-label="Shopping Cart"
-            className="relative transition hover:text-[#AC9C8D]"
+            className="relative transition hover:text-[#C08081]"
           >
             <ShoppingBag
               size={20}
               strokeWidth={1.7}
             />
 
-            <span className="absolute -right-2 -top-2 flex h-3.75 w-3.75 items-center justify-center rounded-full bg-[#72383D] text-[9px] font-bold text-white">
+            <span className="absolute -right-2 -top-2 flex h-3.75 w-3.75 items-center justify-center rounded-full bg-[#C08081] text-[9px] font-bold text-white">
               {cartCount}
             </span>
           </Link>
@@ -372,7 +372,7 @@ export default function Navbar() {
             href="/user/account"
             onClick={handleAccountClick}
             aria-label="Account"
-            className="transition hover:text-[#AC9C8D]"
+            className="transition hover:text-[#C08081]"
           >
             <User
               size={20}
@@ -391,7 +391,7 @@ export default function Navbar() {
             type="button"
             onClick={openSearch}
             aria-label="Search products"
-            className="flex items-center justify-center transition hover:text-[#AC9C8D]"
+            className="flex items-center justify-center transition hover:text-[#C08081]"
           >
             <Search size={21} strokeWidth={1.7} />
           </button>
@@ -417,7 +417,7 @@ export default function Navbar() {
       ===================================================== */}
 
       {mobileMenuOpen && (
-        <div className="border-t border-white/10 bg-[#322D29] px-[6%] pb-6 md:hidden">
+        <div className="border-t border-white/10 bg-black px-[6%] pb-6 md:hidden">
 
           <nav className="flex flex-col">
 
@@ -426,7 +426,7 @@ export default function Navbar() {
             <Link
               href="/user"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#C08081]"
             >
               Home
             </Link>
@@ -436,7 +436,7 @@ export default function Navbar() {
             <Link
               href="/user/shop"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#C08081]"
             >
               Shop
             </Link>
@@ -444,7 +444,7 @@ export default function Navbar() {
             <Link
               href="/user/offers"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#C08081]"
             >
               Offers
             </Link>
@@ -503,7 +503,7 @@ export default function Navbar() {
             <Link
               href="/user/shop?sort=newest"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#AC9C8D]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#C08081]"
             >
               New Arrivals
             </Link>
@@ -521,7 +521,7 @@ export default function Navbar() {
             <Link
               href="/user/wishlist"
               onClick={closeMenu}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#AC9C8D]"
+              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#C08081]"
             >
               <Heart
                 size={18}
@@ -536,7 +536,7 @@ export default function Navbar() {
             <Link
               href="/user/cart"
               onClick={closeMenu}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#AC9C8D]"
+              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#C08081]"
             >
               <ShoppingBag
                 size={18}
@@ -546,7 +546,7 @@ export default function Navbar() {
               Cart
 
               {cartCount > 0 && (
-                <span className="ml-auto rounded-full bg-[#72383D] px-2 py-0.5 text-[10px]">
+                <span className="ml-auto rounded-full bg-[#C08081] px-2 py-0.5 text-[10px]">
                   {cartCount}
                 </span>
               )}
@@ -557,7 +557,7 @@ export default function Navbar() {
             <Link
               href="/user/account"
               onClick={handleAccountClick}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#AC9C8D]"
+              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#C08081]"
             >
               <User
                 size={18}

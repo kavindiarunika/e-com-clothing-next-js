@@ -145,7 +145,7 @@ export default function ProductPage({ params }) {
 
   if (loading) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-[#EFE9E1] text-sm text-[#6B625D]">
+      <main className="flex min-h-[60vh] items-center justify-center bg-[#FFFFFF] text-sm text-[#6B625D]">
         Loading product...
       </main>
     );
@@ -153,7 +153,7 @@ export default function ProductPage({ params }) {
 
   if (loadError) {
     return (
-      <main className="flex min-h-[60vh] items-center justify-center bg-[#EFE9E1] px-6 text-center text-sm text-[#6B625D]">
+      <main className="flex min-h-[60vh] items-center justify-center bg-[#FFFFFF] px-6 text-center text-sm text-[#6B625D]">
         We couldn&apos;t load this product. Please try again later.
       </main>
     );
@@ -370,7 +370,7 @@ export default function ProductPage({ params }) {
   };
 
   return (
-    <main className="bg-[#EFE9E1]">
+    <main className="bg-[#FFFFFF]">
       <section className="mx-auto w-[92%] max-w-[1200px] py-10 md:py-16">
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
@@ -384,7 +384,7 @@ export default function ProductPage({ params }) {
                 selectedVariantImage={selectedVariant?.image || selectedColor?.image || null}
               />
             ) : (
-              <div className="flex aspect-[4/5] flex-col items-center justify-center gap-3 bg-[#E3DCD1] text-[#6B625D]">
+              <div className="flex aspect-[4/5] flex-col items-center justify-center gap-3 bg-[#FAF6F5] text-[#6B625D]">
                 <ImageIcon size={32} strokeWidth={1.4} />
                 <span className="text-xs">No product image available</span>
               </div>
@@ -392,11 +392,11 @@ export default function ProductPage({ params }) {
           </div>
 
           <div className="flex flex-col justify-center">
-            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#72383D]">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#C08081]">
               {product.category}
             </p>
 
-            <h1 className="font-serif text-4xl leading-tight text-[#322D29] md:text-5xl">
+            <h1 className="font-serif text-4xl leading-tight text-[#292524] md:text-5xl">
               {product.name}
             </h1>
 
@@ -407,7 +407,7 @@ export default function ProductPage({ params }) {
             </div>
 
             <div className="mt-6 flex items-center gap-3">
-              <span className="text-3xl font-semibold text-[#72383D]">
+              <span className="text-3xl font-semibold text-[#C08081]">
                 Rs. {Math.round(discountedPrice).toLocaleString()}
               </span>
 
@@ -418,7 +418,7 @@ export default function ProductPage({ params }) {
               )}
 
               {hasDiscount && (
-                <span className="bg-[#72383D] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                <span className="bg-[#C08081] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
                   {product.discount}% OFF
                 </span>
               )}
@@ -479,22 +479,22 @@ export default function ProductPage({ params }) {
               )}
 
               <div>
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
                   Quantity
                 </p>
 
-                <div className="flex w-fit items-center border border-[#D8D0C8] bg-white">
+                <div className="flex w-fit items-center border border-[#E7DEDC] bg-white">
                   <button
                     type="button"
                     onClick={decreaseQuantity}
                     disabled={quantity <= 1 || availableStock <= 0}
                     aria-label="Decrease quantity"
-                    className="flex h-11 w-11 items-center justify-center text-xl text-[#322D29] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-11 w-11 items-center justify-center text-xl text-[#292524] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     ?
                   </button>
 
-                  <span className="flex h-11 w-14 items-center justify-center text-sm font-medium text-[#322D29]">
+                  <span className="flex h-11 w-14 items-center justify-center text-sm font-medium text-[#292524]">
                     {quantity}
                   </span>
 
@@ -503,7 +503,7 @@ export default function ProductPage({ params }) {
                     onClick={increaseQuantity}
                     disabled={quantity >= quantityLimit || availableStock <= 0}
                     aria-label="Increase quantity"
-                    className="flex h-11 w-11 items-center justify-center text-xl text-[#322D29] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-11 w-11 items-center justify-center text-xl text-[#292524] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     +
                   </button>
@@ -514,7 +514,7 @@ export default function ProductPage({ params }) {
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="flex-1 bg-[#72383D] px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2B30]"
+                  className="flex-1 bg-[#C08081] px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2B30]"
                 >
                   Add to Cart
                 </button>
@@ -522,7 +522,7 @@ export default function ProductPage({ params }) {
                 <button
                   type="button"
                   onClick={handleBuyNow}
-                  className="flex-1 border border-[#72383D] bg-transparent px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-[#72383D] transition hover:bg-[#F6F1EA]"
+                  className="flex-1 border border-[#C08081] bg-transparent px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-[#C08081] transition hover:bg-[#F6F1EA]"
                 >
                   Buy Now
                 </button>
@@ -531,7 +531,7 @@ export default function ProductPage({ params }) {
               <button
                 type="button"
                 onClick={handleWishlist}
-                className="mt-2 self-start text-xs font-medium uppercase tracking-[1.5px] text-[#322D29] transition hover:text-[#72383D]"
+                className="mt-2 self-start text-xs font-medium uppercase tracking-[1.5px] text-[#292524] transition hover:text-[#C08081]"
               >
                 {isWishlisted ? "Saved to wishlist" : "Add to wishlist"}
               </button>
@@ -546,7 +546,7 @@ export default function ProductPage({ params }) {
           String(relatedProduct.id) !== String(product.id)
       ) && (
         <section className="mx-auto w-[92%] max-w-[1200px] pb-12">
-          <div className="rounded-[24px] border border-[#E3DCD1] bg-white/60 p-6 md:p-8">
+          <div className="rounded-[24px] border border-[#FAF6F5] bg-white/60 p-6 md:p-8">
             <RelatedProducts
               products={relatedProducts}
               currentProduct={product}

@@ -4,20 +4,20 @@ import { ArrowLeft } from "lucide-react";
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
-      <header className="bg-[#322D29]">
+      <header className="bg-[#292524]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
           <Link
             href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#EFE9E1]"
+            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
           >
             VELORA
           </Link>
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#EFE9E1] hover:text-[#AC9C8D]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] hover:text-[#C08081]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
       <section className="mx-auto max-w-4xl px-5 py-16">
 
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#72383D]">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C08081]">
             VELORA
           </p>
 
@@ -84,7 +84,7 @@ function Section({ title, children }) {
         {title}
       </h2>
 
-      <p className="mt-3 text-sm leading-7 text-[#322D29]/65">
+      <p className="mt-3 text-sm leading-7 text-[#292524]/65">
         {children}
       </p>
     </section>

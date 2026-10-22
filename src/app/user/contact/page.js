@@ -91,21 +91,21 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
       {/* Header */}
-      <header className="bg-[#322D29]">
+      <header className="bg-[#292524]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
           <Link
             href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#EFE9E1]"
+            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
           >
             VELORA
           </Link>
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#EFE9E1] hover:text-[#AC9C8D]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] hover:text-[#C08081]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -116,7 +116,7 @@ export default function ContactPage() {
       {/* Content */}
       <section className="mx-auto max-w-5xl px-5 py-16">
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#72383D]">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C08081]">
             Customer Care
           </p>
 
@@ -124,7 +124,7 @@ export default function ContactPage() {
             Contact Us
           </h1>
 
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#322D29]/60">
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#292524]/60">
             Have a question about your order, products, delivery, or returns?
             Our customer care team is here to help.
           </p>
@@ -175,7 +175,7 @@ export default function ContactPage() {
               autoComplete="name"
               aria-label="Your name"
               placeholder="Your Name"
-              className="h-12 border border-[#322D29]/15 bg-[#EFE9E1]/40 px-4 text-sm outline-none focus:border-[#72383D]"
+              className="h-12 border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 text-sm outline-none focus:border-[#C08081]"
             />
 
             <input
@@ -188,7 +188,7 @@ export default function ContactPage() {
               autoComplete="email"
               aria-label="Email address"
               placeholder="Email Address"
-              className="h-12 border border-[#322D29]/15 bg-[#EFE9E1]/40 px-4 text-sm outline-none focus:border-[#72383D]"
+              className="h-12 border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 text-sm outline-none focus:border-[#C08081]"
             />
 
             <input
@@ -200,7 +200,7 @@ export default function ContactPage() {
               onChange={handleChange}
               aria-label="Subject"
               placeholder="Subject"
-              className="h-12 border border-[#322D29]/15 bg-[#EFE9E1]/40 px-4 text-sm outline-none focus:border-[#72383D] sm:col-span-2"
+              className="h-12 border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 text-sm outline-none focus:border-[#C08081] sm:col-span-2"
             />
 
             <textarea
@@ -212,7 +212,7 @@ export default function ContactPage() {
               aria-label="Your message"
               placeholder="Your Message"
               rows={10}
-              className="resize-none border border-[#322D29]/15 bg-[#EFE9E1]/40 px-4 py-3 text-sm outline-none focus:border-[#72383D] sm:col-span-2"
+              className="resize-none border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 py-3 text-sm outline-none focus:border-[#C08081] sm:col-span-2"
             />
 
             {submissionMessage && (
@@ -227,7 +227,7 @@ export default function ContactPage() {
             <button
               type="submit"
               disabled={isSending}
-              className="h-12 bg-[#72383D] px-6 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#432415] disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
+              className="h-12 bg-[#C08081] px-6 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#A96870] disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
             >
               {isSending ? "Sending..." : "Send Message"}
             </button>
@@ -242,7 +242,7 @@ export default function ContactPage() {
 function ContactCard({ icon, title, value }) {
   return (
     <div className="rounded-2xl bg-white p-6 text-center shadow-sm">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#EFE9E1] text-[#72383D]">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
         {icon}
       </div>
 
@@ -250,7 +250,7 @@ function ContactCard({ icon, title, value }) {
         {title}
       </h3>
 
-      <p className="mt-2 text-sm text-[#322D29]/60">
+      <p className="mt-2 text-sm text-[#292524]/60">
         {value}
       </p>
     </div>

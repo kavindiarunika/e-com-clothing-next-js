@@ -247,7 +247,7 @@ export default function RegisterPage() {
 
   if (step === "register") {
     return (
-      <main className="min-h-screen bg-[#EFE9E1]">
+      <main className="min-h-screen bg-[#FFFFFF]">
 
         <div className="grid min-h-screen lg:grid-cols-2">
 
@@ -264,23 +264,23 @@ export default function RegisterPage() {
 
                 <Link
                   href="/"
-                  className="font-serif text-2xl tracking-[3px] text-[#322D29]"
+                  className="font-serif text-2xl tracking-[3px] text-[#292524]"
                 >
                   VELORA
                 </Link>
 
-                <div className="mx-auto mt-4 h-px w-8 bg-[#72383D]" />
+                <div className="mx-auto mt-4 h-px w-8 bg-[#C08081]" />
 
               </div>
 
               {/* TITLE */}
               <div className="mb-5">
 
-                <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#72383D]">
+                <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
                   Join Velora
                 </p>
 
-                <h1 className="font-serif text-3xl text-[#322D29]">
+                <h1 className="font-serif text-3xl text-[#292524]">
                   Create your account
                 </h1>
 
@@ -304,15 +304,15 @@ export default function RegisterPage() {
                   justify-center
                   gap-3
                   border
-                  border-[#D8D0C8]
+                  border-[#E7DEDC]
                   bg-white
                   text-sm
                   font-medium
-                  text-[#322D29]
+                  text-[#292524]
                   transition
                   duration-300
-                  hover:border-[#72383D]
-                  hover:bg-[#FAF8F5]
+                  hover:border-[#C08081]
+                  hover:bg-[#FAF6F5]
                   disabled:cursor-not-allowed
                   disabled:opacity-60
                 "
@@ -354,13 +354,13 @@ export default function RegisterPage() {
               {/* DIVIDER */}
               <div className="my-5 flex items-center gap-4">
 
-                <div className="h-px flex-1 bg-[#D8D0C8]" />
+                <div className="h-px flex-1 bg-[#E7DEDC]" />
 
                 <span className="text-[10px] uppercase tracking-[2px] text-[#9A9088]">
                   Or continue with email
                 </span>
 
-                <div className="h-px flex-1 bg-[#D8D0C8]" />
+                <div className="h-px flex-1 bg-[#E7DEDC]" />
 
               </div>
 
@@ -391,7 +391,7 @@ export default function RegisterPage() {
 
                     <label
                       htmlFor="firstName"
-                      className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
                     >
                       First Name
                     </label>
@@ -407,14 +407,14 @@ export default function RegisterPage() {
                         h-11
                         w-full
                         border
-                        border-[#D8D0C8]
+                        border-[#E7DEDC]
                         bg-white
                         px-4
                         text-sm
-                        text-[#322D29]
+                        text-[#292524]
                         outline-none
                         placeholder:text-[#A69C94]
-                        focus:border-[#72383D]
+                        focus:border-[#C08081]
                       "
                     />
 
@@ -424,7 +424,7 @@ export default function RegisterPage() {
 
                     <label
                       htmlFor="lastName"
-                      className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
                     >
                       Last Name
                     </label>
@@ -440,14 +440,14 @@ export default function RegisterPage() {
                         h-11
                         w-full
                         border
-                        border-[#D8D0C8]
+                        border-[#E7DEDC]
                         bg-white
                         px-4
                         text-sm
-                        text-[#322D29]
+                        text-[#292524]
                         outline-none
                         placeholder:text-[#A69C94]
-                        focus:border-[#72383D]
+                        focus:border-[#C08081]
                       "
                     />
 
@@ -460,7 +460,7 @@ export default function RegisterPage() {
 
                   <label
                     htmlFor="email"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
                   >
                     Email
                   </label>
@@ -476,14 +476,14 @@ export default function RegisterPage() {
                       h-11
                       w-full
                       border
-                      border-[#D8D0C8]
+                      border-[#E7DEDC]
                       bg-white
                       px-4
                       text-sm
-                      text-[#322D29]
+                      text-[#292524]
                       outline-none
                       placeholder:text-[#A69C94]
-                      focus:border-[#72383D]
+                      focus:border-[#C08081]
                     "
                   />
 
@@ -494,7 +494,7 @@ export default function RegisterPage() {
 
                   <label
                     htmlFor="phone"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
                   >
                     Phone
                   </label>
@@ -510,14 +510,14 @@ export default function RegisterPage() {
                       h-11
                       w-full
                       border
-                      border-[#D8D0C8]
+                      border-[#E7DEDC]
                       bg-white
                       px-4
                       text-sm
-                      text-[#322D29]
+                      text-[#292524]
                       outline-none
                       placeholder:text-[#A69C94]
-                      focus:border-[#72383D]
+                      focus:border-[#C08081]
                     "
                   />
 
@@ -528,7 +528,7 @@ export default function RegisterPage() {
 
                   <label
                     htmlFor="password"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
                   >
                     Password
                   </label>
@@ -550,15 +550,15 @@ export default function RegisterPage() {
                         h-11
                         w-full
                         border
-                        border-[#D8D0C8]
+                        border-[#E7DEDC]
                         bg-white
                         px-4
                         pr-12
                         text-sm
-                        text-[#322D29]
+                        text-[#292524]
                         outline-none
                         placeholder:text-[#A69C94]
-                        focus:border-[#72383D]
+                        focus:border-[#C08081]
                       "
                     />
 
@@ -575,7 +575,7 @@ export default function RegisterPage() {
                         top-1/2
                         -translate-y-1/2
                         text-[#8B817A]
-                        hover:text-[#72383D]
+                        hover:text-[#C08081]
                       "
                     >
                       {showPassword ? (
@@ -594,7 +594,7 @@ export default function RegisterPage() {
 
                   <label
                     htmlFor="confirmPassword"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
                   >
                     Confirm Password
                   </label>
@@ -618,15 +618,15 @@ export default function RegisterPage() {
                         h-11
                         w-full
                         border
-                        border-[#D8D0C8]
+                        border-[#E7DEDC]
                         bg-white
                         px-4
                         pr-12
                         text-sm
-                        text-[#322D29]
+                        text-[#292524]
                         outline-none
                         placeholder:text-[#A69C94]
-                        focus:border-[#72383D]
+                        focus:border-[#C08081]
                       "
                     />
 
@@ -643,7 +643,7 @@ export default function RegisterPage() {
                         top-1/2
                         -translate-y-1/2
                         text-[#8B817A]
-                        hover:text-[#72383D]
+                        hover:text-[#C08081]
                       "
                     >
                       {showConfirmPassword ? (
@@ -669,7 +669,7 @@ export default function RegisterPage() {
                     items-center
                     justify-center
                     gap-3
-                    bg-[#322D29]
+                    bg-[#292524]
                     text-xs
                     font-semibold
                     uppercase
@@ -677,7 +677,7 @@ export default function RegisterPage() {
                     text-white
                     transition
                     duration-300
-                    hover:bg-[#72383D]
+                    hover:bg-[#C08081]
                     disabled:cursor-not-allowed
                     disabled:opacity-60
                   "
@@ -706,7 +706,7 @@ export default function RegisterPage() {
               </form>
 
               {/* LOGIN */}
-              <div className="mt-6 border-t border-[#D8D0C8] pt-5 text-center">
+              <div className="mt-6 border-t border-[#E7DEDC] pt-5 text-center">
 
                 <p className="text-sm text-[#6B625C]">
                   Already have an account?
@@ -714,7 +714,7 @@ export default function RegisterPage() {
 
                 <Link
                   href="/user/login"
-                  className="mt-2 inline-block text-sm font-semibold text-[#72383D] hover:text-[#432415]"
+                  className="mt-2 inline-block text-sm font-semibold text-[#C08081] hover:text-[#A96870]"
                 >
                   Sign In
                 </Link>
@@ -738,11 +738,11 @@ export default function RegisterPage() {
               className="absolute inset-0 h-full w-full object-cover"
             />
 
-            <div className="absolute inset-0 bg-[#322D29]/35" />
+            <div className="absolute inset-0 bg-[#292524]/35" />
 
             <div className="absolute bottom-12 left-12 max-w-md text-white">
 
-              <p className="mb-4 text-xs uppercase tracking-[4px] text-[#E3DCD1]">
+              <p className="mb-4 text-xs uppercase tracking-[4px] text-[#FAF6F5]">
                 VELORA COLLECTION
               </p>
 
@@ -775,15 +775,15 @@ export default function RegisterPage() {
 
   if (step === "otp") {
     return (
-      <main className="min-h-screen bg-[#EFE9E1]">
+      <main className="min-h-screen bg-[#FFFFFF]">
 
         {/* HEADER */}
-        <header className="border-b border-[#D8D0C8]">
+        <header className="border-b border-[#E7DEDC]">
           <div className="flex h-16 items-center justify-center">
 
             <Link
               href="/"
-              className="font-serif text-2xl tracking-[4px] text-[#322D29]"
+              className="font-serif text-2xl tracking-[4px] text-[#292524]"
             >
               VELORA
             </Link>
@@ -801,15 +801,15 @@ export default function RegisterPage() {
               <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#F3E8E5]">
                 <Mail
                   size={27}
-                  className="text-[#72383D]"
+                  className="text-[#C08081]"
                 />
               </div>
 
-              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#72383D]">
+              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
                 Email Verification
               </p>
 
-              <h1 className="font-serif text-3xl text-[#322D29]">
+              <h1 className="font-serif text-3xl text-[#292524]">
                 Verify your email
               </h1>
 
@@ -818,14 +818,14 @@ export default function RegisterPage() {
                 to
               </p>
 
-              <p className="mt-1 break-all text-sm font-semibold text-[#322D29]">
+              <p className="mt-1 break-all text-sm font-semibold text-[#292524]">
                 {formData.email}
               </p>
 
             </div>
 
             {/* CARD */}
-            <div className="border border-[#D8D0C8] bg-[#F8F5F1] p-5 sm:p-6">
+            <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-5 sm:p-6">
 
               {error && (
                 <div className="mb-5 border border-[#C98B8B] bg-[#F8EAEA] px-4 py-3 text-sm text-[#8B3A3A]">
@@ -843,7 +843,7 @@ export default function RegisterPage() {
 
                 <label
                   htmlFor="otp"
-                  className="mb-3 block text-center text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                  className="mb-3 block text-center text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
                 >
                   Verification Code
                 </label>
@@ -865,17 +865,17 @@ export default function RegisterPage() {
                     h-14
                     w-full
                     border
-                    border-[#D8D0C8]
+                    border-[#E7DEDC]
                     bg-white
                     px-4
                     text-center
                     text-xl
                     font-semibold
                     tracking-[10px]
-                    text-[#322D29]
+                    text-[#292524]
                     outline-none
                     placeholder:text-[#C8BFB8]
-                    focus:border-[#72383D]
+                    focus:border-[#C08081]
                   "
                 />
 
@@ -895,14 +895,14 @@ export default function RegisterPage() {
                     items-center
                     justify-center
                     gap-3
-                    bg-[#322D29]
+                    bg-[#292524]
                     text-xs
                     font-semibold
                     uppercase
                     tracking-[2px]
                     text-white
                     transition
-                    hover:bg-[#72383D]
+                    hover:bg-[#C08081]
                     disabled:cursor-not-allowed
                     disabled:opacity-60
                   "
@@ -938,7 +938,7 @@ export default function RegisterPage() {
                   type="button"
                   onClick={handleResendOtp}
                   disabled={loading}
-                  className="mt-2 text-sm font-semibold text-[#72383D] hover:text-[#432415]"
+                  className="mt-2 text-sm font-semibold text-[#C08081] hover:text-[#A96870]"
                 >
                   Resend Code
                 </button>
@@ -965,7 +965,7 @@ export default function RegisterPage() {
                   uppercase
                   tracking-[1px]
                   text-[#6B625C]
-                  hover:text-[#72383D]
+                  hover:text-[#C08081]
                 "
               >
                 <ArrowLeft size={14} />
@@ -989,15 +989,15 @@ export default function RegisterPage() {
 
   if (step === "verified") {
     return (
-      <main className="min-h-screen bg-[#EFE9E1]">
+      <main className="min-h-screen bg-[#FFFFFF]">
 
         {/* HEADER */}
-        <header className="border-b border-[#D8D0C8]">
+        <header className="border-b border-[#E7DEDC]">
           <div className="flex h-16 items-center justify-center">
 
             <Link
               href="/"
-              className="font-serif text-2xl tracking-[4px] text-[#322D29]"
+              className="font-serif text-2xl tracking-[4px] text-[#292524]"
             >
               VELORA
             </Link>
@@ -1010,7 +1010,7 @@ export default function RegisterPage() {
 
           <div className="w-full max-w-sm">
 
-            <div className="border border-[#D8D0C8] bg-[#F8F5F1] px-5 py-8 text-center sm:px-8">
+            <div className="border border-[#E7DEDC] bg-[#FAF6F5] px-5 py-8 text-center sm:px-8">
 
               {/* ICON */}
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#EAF2EA]">
@@ -1022,11 +1022,11 @@ export default function RegisterPage() {
 
               </div>
 
-              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#72383D]">
+              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
                 Email Verified
               </p>
 
-              <h1 className="font-serif text-3xl text-[#322D29]">
+              <h1 className="font-serif text-3xl text-[#292524]">
                 Your email is verified
               </h1>
 
@@ -1055,14 +1055,14 @@ export default function RegisterPage() {
                   items-center
                   justify-center
                   gap-3
-                  bg-[#322D29]
+                  bg-[#292524]
                   text-xs
                   font-semibold
                   uppercase
                   tracking-[2px]
                   text-white
                   transition
-                  hover:bg-[#72383D]
+                  hover:bg-[#C08081]
                   disabled:cursor-not-allowed
                   disabled:opacity-60
                 "
@@ -1104,15 +1104,15 @@ export default function RegisterPage() {
   // ==========================================
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1]">
+    <main className="min-h-screen bg-[#FFFFFF]">
 
       {/* HEADER */}
-      <header className="border-b border-[#D8D0C8]">
+      <header className="border-b border-[#E7DEDC]">
         <div className="flex h-16 items-center justify-center">
 
           <Link
             href="/"
-            className="font-serif text-2xl tracking-[4px] text-[#322D29]"
+            className="font-serif text-2xl tracking-[4px] text-[#292524]"
           >
             VELORA
           </Link>
@@ -1125,7 +1125,7 @@ export default function RegisterPage() {
 
         <div className="w-full max-w-sm">
 
-          <div className="border border-[#D8D0C8] bg-[#F8F5F1] px-5 py-8 text-center sm:px-8">
+          <div className="border border-[#E7DEDC] bg-[#FAF6F5] px-5 py-8 text-center sm:px-8">
 
             {/* SUCCESS ICON */}
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#EAF2EA]">
@@ -1137,11 +1137,11 @@ export default function RegisterPage() {
 
             </div>
 
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#72383D]">
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
               Welcome to Velora
             </p>
 
-            <h1 className="font-serif text-3xl text-[#322D29]">
+            <h1 className="font-serif text-3xl text-[#292524]">
               Account created
             </h1>
 
@@ -1162,14 +1162,14 @@ export default function RegisterPage() {
                 items-center
                 justify-center
                 gap-3
-                bg-[#322D29]
+                bg-[#292524]
                 text-xs
                 font-semibold
                 uppercase
                 tracking-[2px]
                 text-white
                 transition
-                hover:bg-[#72383D]
+                hover:bg-[#C08081]
               "
             >
               Continue to Sign In
@@ -1183,7 +1183,7 @@ export default function RegisterPage() {
             {/* HOME */}
             <Link
               href="/user"
-              className="mt-5 inline-block text-sm text-[#6B625C] hover:text-[#72383D]"
+              className="mt-5 inline-block text-sm text-[#6B625C] hover:text-[#C08081]"
             >
               Return to Home
             </Link>

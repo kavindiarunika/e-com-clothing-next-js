@@ -60,7 +60,7 @@ export default function SizeChart({
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center text-[#322D29] transition hover:text-[#72383D]"
+          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center text-[#292524] transition hover:text-[#C08081]"
           aria-label="Close size chart"
         >
           <X size={20} />
@@ -68,11 +68,11 @@ export default function SizeChart({
 
         {/* Header */}
         <div className="mb-6 pr-8">
-          <p className="text-xs font-semibold uppercase tracking-[2px] text-[#72383D]">
+          <p className="text-xs font-semibold uppercase tracking-[2px] text-[#C08081]">
             Size Guide
           </p>
 
-          <h2 className="mt-2 font-serif text-2xl text-[#322D29]">
+          <h2 className="mt-2 font-serif text-2xl text-[#292524]">
             {chart.title}
           </h2>
 
@@ -85,11 +85,11 @@ export default function SizeChart({
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
-              <tr className="bg-[#EFE9E1]">
+              <tr className="bg-[#FFFFFF]">
                 {chart.headers.map((header) => (
                   <th
                     key={header}
-                    className="border border-[#D8D0C8] px-4 py-3 text-left text-xs font-semibold uppercase tracking-[1px] text-[#322D29]"
+                    className="border border-[#E7DEDC] px-4 py-3 text-left text-xs font-semibold uppercase tracking-[1px] text-[#292524]"
                   >
                     {header}
                   </th>
@@ -103,7 +103,7 @@ export default function SizeChart({
                   {row.map((value, valueIndex) => (
                     <td
                       key={valueIndex}
-                      className="border border-[#D8D0C8] px-4 py-3 text-sm text-[#6B625C]"
+                      className="border border-[#E7DEDC] px-4 py-3 text-sm text-[#6B625C]"
                     >
                       {value}
                     </td>
@@ -115,7 +115,7 @@ export default function SizeChart({
         </div>
 
         {/* Note */}
-        <p className="mt-5 text-xs leading-5 text-[#AC9C8D]">
+        <p className="mt-5 text-xs leading-5 text-[#C08081]">
           Measurements are approximate. For the best fit, compare these
           measurements with a garment you already own.
         </p>

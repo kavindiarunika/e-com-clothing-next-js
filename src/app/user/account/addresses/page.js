@@ -24,9 +24,9 @@ export default function AddressesPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
-      <header className="border-b border-[#D8D0C8]">
+      <header className="border-b border-[#E7DEDC]">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
 
           <Link
@@ -38,7 +38,7 @@ export default function AddressesPage() {
 
           <Link
             href="/user/account"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#72383D]"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#C08081]"
           >
             <ArrowLeft size={15} />
             My Account
@@ -53,7 +53,7 @@ export default function AddressesPage() {
 
           <div>
 
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#72383D]">
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
               Delivery
             </p>
 
@@ -71,14 +71,14 @@ export default function AddressesPage() {
 
             <div
               key={address.id}
-              className="border border-[#D8D0C8] bg-[#F8F5F1] p-6"
+              className="border border-[#E7DEDC] bg-[#FAF6F5] p-6"
             >
 
               <div className="flex items-start justify-between">
 
                 <div className="flex items-center gap-3">
 
-                  <div className="flex h-10 w-10 items-center justify-center bg-[#E3DCD1]">
+                  <div className="flex h-10 w-10 items-center justify-center bg-[#FAF6F5]">
                     <MapPin size={18} />
                   </div>
 
@@ -100,7 +100,7 @@ export default function AddressesPage() {
 
               <div className="mt-6 text-sm leading-6 text-[#6B625C]">
 
-                <p className="font-semibold text-[#322D29]">
+                <p className="font-semibold text-[#292524]">
                   {address.name}
                 </p>
 
@@ -119,11 +119,11 @@ export default function AddressesPage() {
 
               </div>
 
-              <div className="mt-6 flex gap-3 border-t border-[#D8D0C8] pt-5">
+              <div className="mt-6 flex gap-3 border-t border-[#E7DEDC] pt-5">
 
                 <Link
                   href={`/user/account/addresses/edit/${address.id}`}
-                  className="flex items-center gap-2 border border-[#D8D0C8] px-4 py-2 text-xs font-semibold uppercase tracking-[1px] hover:border-[#72383D]"
+                  className="flex items-center gap-2 border border-[#E7DEDC] px-4 py-2 text-xs font-semibold uppercase tracking-[1px] hover:border-[#C08081]"
                 >
                   <Pencil size={14} />
                   Edit
@@ -131,7 +131,7 @@ export default function AddressesPage() {
 
                 <button
                   type="button"
-                  className="flex items-center gap-2 border border-[#D8D0C8] px-4 py-2 text-xs font-semibold uppercase tracking-[1px] text-[#8B817A] hover:border-[#72383D] hover:text-[#72383D]"
+                  className="flex items-center gap-2 border border-[#E7DEDC] px-4 py-2 text-xs font-semibold uppercase tracking-[1px] text-[#8B817A] hover:border-[#C08081] hover:text-[#C08081]"
                 >
                   <Trash2 size={14} />
                   Delete

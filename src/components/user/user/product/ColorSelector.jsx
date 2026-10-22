@@ -36,7 +36,7 @@ export default function ColorSelector({
     <div>
       {/* Title */}
       <div className="mb-4">
-        <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+        <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
           Color
         </h3>
       </div>
@@ -51,7 +51,7 @@ export default function ColorSelector({
           );
           if (color) setSelectedColor(color);
         }}
-        className="w-full max-w-xs border border-[#D8D0C8] bg-white px-4 py-3 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
+        className="w-full max-w-xs border border-[#E7DEDC] bg-white px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
       >
         <option value="" disabled>
           Select color
@@ -72,7 +72,7 @@ export default function ColorSelector({
       {selectedSize && (
         <p className="mt-3 text-xs text-[#6B625C]">
           Available colors for size{" "}
-          <span className="font-medium text-[#322D29]">
+          <span className="font-medium text-[#292524]">
             {selectedSize}
           </span>
         </p>

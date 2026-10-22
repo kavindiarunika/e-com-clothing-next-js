@@ -104,7 +104,7 @@ export async function POST(request) {
       to: email,
       subject: "Your Velora password reset code",
       text: `Your Velora password reset code is ${code}. It expires in 10 minutes. If you did not request a reset, ignore this email.`,
-      html: `<div style="font-family:Arial,sans-serif;color:#322D29;max-width:520px;margin:auto;padding:32px"><p style="font-size:12px;letter-spacing:3px;color:#72383D">VELORA</p><h1 style="font-size:24px;font-weight:500">Reset your password</h1><p>Enter this code to reset your password. It expires in 10 minutes.</p><p style="font-size:32px;font-weight:700;letter-spacing:8px;padding:16px 0">${code}</p><p style="font-size:13px;color:#6B625C">If you did not request a reset, you can ignore this email.</p></div>`,
+      html: `<div style="font-family:Arial,sans-serif;color:#292524;max-width:520px;margin:auto;padding:32px"><p style="font-size:12px;letter-spacing:3px;color:#C08081">VELORA</p><h1 style="font-size:24px;font-weight:500">Reset your password</h1><p>Enter this code to reset your password. It expires in 10 minutes.</p><p style="font-size:32px;font-weight:700;letter-spacing:8px;padding:16px 0">${code}</p><p style="font-size:13px;color:#6B625C">If you did not request a reset, you can ignore this email.</p></div>`,
     });
 
     const response = NextResponse.json({ success: true, message: GENERIC_MESSAGE });

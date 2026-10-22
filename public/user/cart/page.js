@@ -163,18 +163,18 @@ export default function CartPage() {
   // Empty cart
   if (cart.length === 0) {
     return (
-      <main className="min-h-screen bg-[#EFE9E1] py-16">
+      <main className="min-h-screen bg-[#FFFFFF] py-16">
         <div className="mx-auto w-[92%] max-w-175 text-center">
           <ShoppingBag
             size={50}
-            className="mx-auto text-[#AC9C8D]"
+            className="mx-auto text-[#C08081]"
           />
 
-          <p className="mt-6 text-xs uppercase tracking-[3px] text-[#72383D]">
+          <p className="mt-6 text-xs uppercase tracking-[3px] text-[#C08081]">
             Velora
           </p>
 
-          <h1 className="mt-2 font-serif text-4xl text-[#322D29]">
+          <h1 className="mt-2 font-serif text-4xl text-[#292524]">
             Your Cart is Empty
           </h1>
 
@@ -184,7 +184,7 @@ export default function CartPage() {
 
           <Link
             href="/shop"
-            className="mt-8 inline-flex items-center gap-2 bg-[#72383D] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#5E2E33]"
+            className="mt-8 inline-flex items-center gap-2 bg-[#C08081] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#A96870]"
           >
             <ArrowLeft size={15} />
             Continue Shopping
@@ -195,16 +195,16 @@ export default function CartPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1] py-10 md:py-16">
+    <main className="min-h-screen bg-[#FFFFFF] py-10 md:py-16">
       <div className="mx-auto w-[92%] max-w-300">
 
         {/* Header */}
         <div className="mb-10">
-          <p className="text-xs uppercase tracking-[3px] text-[#72383D]">
+          <p className="text-xs uppercase tracking-[3px] text-[#C08081]">
             Velora
           </p>
 
-          <h1 className="mt-2 font-serif text-4xl text-[#322D29] md:text-5xl">
+          <h1 className="mt-2 font-serif text-4xl text-[#292524] md:text-5xl">
             Shopping Cart
           </h1>
         </div>
@@ -215,7 +215,7 @@ export default function CartPage() {
           <section className="bg-white px-5 md:px-7">
 
             {/* Desktop Header */}
-            <div className="hidden border-b border-[#D8D0C8] py-4 text-xs font-semibold uppercase tracking-[1px] text-[#6B625C] sm:grid sm:grid-cols-[1fr_100px_120px]">
+            <div className="hidden border-b border-[#E7DEDC] py-4 text-xs font-semibold uppercase tracking-[1px] text-[#6B625C] sm:grid sm:grid-cols-[1fr_100px_120px]">
               <span>Product</span>
 
               <span className="text-center">
@@ -241,7 +241,7 @@ export default function CartPage() {
             {/* Continue Shopping */}
             <Link
               href="/shop"
-              className="my-6 inline-flex items-center gap-2 text-xs uppercase tracking-[1px] text-[#72383D] hover:underline"
+              className="my-6 inline-flex items-center gap-2 text-xs uppercase tracking-[1px] text-[#C08081] hover:underline"
             >
               <ArrowLeft size={14} />
               Continue Shopping

@@ -93,18 +93,18 @@ export default function AccountLayout({ children }) {
   };
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
-      <header className="border-b border-[#322D29]/10 bg-[#322D29]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
+      <header className="border-b border-[#292524]/10 bg-[#292524]">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5">
           <Link
             href="/user"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#EFE9E1]"
+            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
           >
             VELORA
           </Link>
           <Link
             href="/user/shop"
-            className="rounded-full border border-[#EFE9E1]/40 px-5 py-2 text-sm text-[#EFE9E1] transition hover:bg-[#EFE9E1] hover:text-[#322D29]"
+            className="rounded-full border border-[#FFFFFF]/40 px-5 py-2 text-sm text-[#FFFFFF] transition hover:bg-[#FFFFFF] hover:text-[#292524]"
           >
             Continue Shopping
           </Link>
@@ -113,14 +113,14 @@ export default function AccountLayout({ children }) {
 
       <div className="mx-auto grid max-w-7xl items-start gap-8 px-5 py-10 lg:grid-cols-[250px_minmax(0,1fr)]">
         <aside className="h-fit rounded-3xl bg-white p-5 shadow-sm lg:sticky lg:top-6">
-          <div className="mb-6 border-b border-[#322D29]/10 pb-5">
-            <p className="text-xs uppercase tracking-[0.2em] text-[#72383D]">
+          <div className="mb-6 border-b border-[#292524]/10 pb-5">
+            <p className="text-xs uppercase tracking-[0.2em] text-[#C08081]">
               My Account
             </p>
             <h2 className="mt-2 text-xl font-semibold">
               {[profile.first_name, profile.last_name].filter(Boolean).join(" ") || "Your account"}
             </h2>
-            <p className="mt-1 break-all text-sm text-[#322D29]/60">
+            <p className="mt-1 break-all text-sm text-[#292524]/60">
               {profile.email}
             </p>
             {profileError && (
@@ -138,8 +138,8 @@ export default function AccountLayout({ children }) {
                 aria-current={active ? "page" : undefined}
                 className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition ${
                   active
-                    ? "bg-[#72383D] text-white"
-                    : "text-[#322D29] hover:bg-[#EFE9E1]"
+                    ? "bg-[#C08081] text-white"
+                    : "text-[#292524] hover:bg-[#FFFFFF]"
                 }`}
               >
                 <Icon size={18} />

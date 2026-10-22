@@ -12,22 +12,22 @@ import {
 
 export default function ShippingPage() {
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
       {/* Header */}
-      <header className="bg-[#322D29]">
+      <header className="bg-[#292524]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
 
           <Link
             href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#EFE9E1]"
+            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
           >
             VELORA
           </Link>
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#EFE9E1] transition hover:text-[#AC9C8D]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] transition hover:text-[#C08081]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -41,7 +41,7 @@ export default function ShippingPage() {
 
         <div className="text-center">
 
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#72383D]">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C08081]">
             Customer Care
           </p>
 
@@ -49,7 +49,7 @@ export default function ShippingPage() {
             Shipping & Delivery
           </h1>
 
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#322D29]/60">
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#292524]/60">
             We want your VELORA experience to be simple from the moment you
             place your order until it arrives at your door.
           </p>
@@ -91,7 +91,7 @@ export default function ShippingPage() {
           {/* Delivery Information */}
           <div className="rounded-3xl bg-white p-7 shadow-sm sm:p-9">
 
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EFE9E1] text-[#72383D]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
               <MapPin size={22} />
             </div>
 
@@ -99,7 +99,7 @@ export default function ShippingPage() {
               Delivery Information
             </h2>
 
-            <div className="mt-5 space-y-4 text-sm leading-7 text-[#322D29]/65">
+            <div className="mt-5 space-y-4 text-sm leading-7 text-[#292524]/65">
 
               <p>
                 Please make sure your delivery address and contact number
@@ -122,7 +122,7 @@ export default function ShippingPage() {
           {/* Order Tracking */}
           <div className="rounded-3xl bg-white p-7 shadow-sm sm:p-9">
 
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EFE9E1] text-[#72383D]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
               <Truck size={22} />
             </div>
 
@@ -130,7 +130,7 @@ export default function ShippingPage() {
               Track Your Order
             </h2>
 
-            <p className="mt-5 text-sm leading-7 text-[#322D29]/65">
+            <p className="mt-5 text-sm leading-7 text-[#292524]/65">
               After placing an order, you can view its current status from
               your VELORA account. Order statuses include Pending,
               Processing, Shipped, Delivered, and Cancelled.
@@ -138,7 +138,7 @@ export default function ShippingPage() {
 
             <Link
               href="/user/account/orders"
-              className="mt-6 inline-flex items-center gap-2 bg-[#72383D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#432415]"
+              className="mt-6 inline-flex items-center gap-2 bg-[#C08081] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#A96870]"
             >
               View My Orders
             </Link>
@@ -148,13 +148,13 @@ export default function ShippingPage() {
         </div>
 
         {/* Important Note */}
-        <div className="mt-8 rounded-2xl border border-[#72383D]/15 bg-[#72383D]/5 p-6">
+        <div className="mt-8 rounded-2xl border border-[#C08081]/15 bg-[#C08081]/5 p-6">
 
           <h3 className="font-semibold">
             Important
           </h3>
 
-          <p className="mt-2 text-sm leading-7 text-[#322D29]/65">
+          <p className="mt-2 text-sm leading-7 text-[#292524]/65">
             Delivery times can vary depending on location, order volume,
             product availability, and other delivery conditions. Please
             check your order status for the latest information.
@@ -171,7 +171,7 @@ function ShippingCard({ icon, title, children }) {
   return (
     <div className="rounded-3xl bg-white p-7 text-center shadow-sm">
 
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#EFE9E1] text-[#72383D]">
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
         {icon}
       </div>
 
@@ -179,7 +179,7 @@ function ShippingCard({ icon, title, children }) {
         {title}
       </h2>
 
-      <p className="mt-3 text-sm leading-6 text-[#322D29]/60">
+      <p className="mt-3 text-sm leading-6 text-[#292524]/60">
         {children}
       </p>
 

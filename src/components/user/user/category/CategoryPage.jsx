@@ -260,15 +260,15 @@ export default function CategoryPage({
   };
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1]">
+    <main className="min-h-screen bg-[#FFFFFF]">
 
       {/* ================= HEADER ================= */}
 
-      <section className="border-b border-[#D8D0C8] bg-[#EFE9E1]">
+      <section className="border-b border-[#E7DEDC] bg-[#FFFFFF]">
 
         <div className="mx-auto w-[92%] max-w-300 py-12 md:py-16">
 
-          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#72383D]">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#C08081]">
             Velora Collection
           </p>
 
@@ -276,7 +276,7 @@ export default function CategoryPage({
 
             <Link
               href="/"
-              className="transition hover:text-[#72383D]"
+              className="transition hover:text-[#C08081]"
             >
               Home
             </Link>
@@ -287,7 +287,7 @@ export default function CategoryPage({
 
           </div>
 
-          <h1 className="mt-4 font-serif text-4xl font-medium text-[#322D29] md:text-5xl">
+          <h1 className="mt-4 font-serif text-4xl font-medium text-[#292524] md:text-5xl">
             {category}
           </h1>
 
@@ -312,7 +312,7 @@ export default function CategoryPage({
             onClick={() =>
               setMobileFiltersOpen(true)
             }
-            className="flex w-full items-center justify-center gap-2 border border-[#D8D0C8] bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-[#322D29]"
+            className="flex w-full items-center justify-center gap-2 border border-[#E7DEDC] bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-[#292524]"
           >
             <SlidersHorizontal size={16} />
 
@@ -343,7 +343,7 @@ export default function CategoryPage({
 
           <div className="mb-5 flex items-center justify-between">
 
-            <h2 className="font-serif text-2xl text-[#322D29]">
+            <h2 className="font-serif text-2xl text-[#292524]">
               Shop {category}
             </h2>
 
@@ -368,8 +368,8 @@ export default function CategoryPage({
                   className={`whitespace-nowrap border px-5 py-2.5 text-xs uppercase tracking-[1px] transition ${
                     selectedSubcategory ===
                     subcategoryItem
-                      ? "border-[#72383D] bg-[#72383D] text-white"
-                      : "border-[#D8D0C8] bg-white text-[#322D29] hover:border-[#72383D]"
+                      ? "border-[#C08081] bg-[#C08081] text-white"
+                      : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#C08081]"
                   }`}
                 >
                   {subcategoryItem}
@@ -438,7 +438,7 @@ export default function CategoryPage({
 
                 <div className="text-center">
 
-                  <h2 className="font-serif text-2xl text-[#322D29]">
+                  <h2 className="font-serif text-2xl text-[#292524]">
                     No products found
                   </h2>
 
@@ -450,7 +450,7 @@ export default function CategoryPage({
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="mt-5 bg-[#72383D] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#322D29]"
+                    className="mt-5 bg-[#C08081] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
                   >
                     Clear Filters
                   </button>
@@ -482,11 +482,11 @@ export default function CategoryPage({
 
           {/* Drawer */}
 
-          <div className="absolute right-0 top-0 h-full w-[85%] max-w-90 overflow-y-auto bg-[#EFE9E1] p-5">
+          <div className="absolute right-0 top-0 h-full w-[85%] max-w-90 overflow-y-auto bg-[#FFFFFF] p-5">
 
             <div className="mb-5 flex items-center justify-between">
 
-              <h2 className="font-serif text-2xl text-[#322D29]">
+              <h2 className="font-serif text-2xl text-[#292524]">
                 Filters
               </h2>
 
@@ -495,7 +495,7 @@ export default function CategoryPage({
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="flex h-9 w-9 items-center justify-center bg-white text-[#322D29]"
+                className="flex h-9 w-9 items-center justify-center bg-white text-[#292524]"
               >
                 <ChevronRight
                   size={18}
@@ -540,7 +540,7 @@ export default function CategoryPage({
               onClick={() =>
                 setMobileFiltersOpen(false)
               }
-              className="mt-6 w-full bg-[#72383D] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
+              className="mt-6 w-full bg-[#C08081] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
             >
               View {filteredProducts.length} Products
             </button>

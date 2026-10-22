@@ -60,8 +60,8 @@ export default function HeroBanner() {
   // Skeleton while fetching — avoids a jarring layout pop-in
   if (loading) {
     return (
-      <section className="relative h-[400px] w-full overflow-hidden bg-[#322D29]">
-        <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[#2a2622] via-[#322D29] to-[#2a2622]" />
+      <section className="relative h-[400px] w-full overflow-hidden bg-[#292524]">
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622]" />
       </section>
     );
   }
@@ -71,7 +71,7 @@ export default function HeroBanner() {
   }
 
   return (
-    <section className="relative h-[400px] w-full overflow-hidden bg-[#322D29]">
+    <section className="relative h-[400px] w-full overflow-hidden bg-[#292524]">
       <Swiper
         modules={[Autoplay, EffectFade, Navigation, Pagination]}
         effect="fade"
@@ -119,8 +119,8 @@ export default function HeroBanner() {
                   }`}
                 >
                   <div className="mb-4 flex items-center gap-2.5">
-                    <span className="h-px w-8 bg-[#AC9C8D]" />
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#E3DCD1]">
+                    <span className="h-px w-8 bg-[#C08081]" />
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#FAF6F5]">
                       Velora
                     </span>
                   </div>
@@ -136,9 +136,8 @@ export default function HeroBanner() {
                   <div className="mt-7">
                     <Link
                       href={slide.buttonLink || "/user/shop"}
-                      className="group relative inline-flex h-11 items-center gap-2.5 overflow-hidden bg-white px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-[#322D29] transition-colors duration-300"
+                      className="group relative inline-flex h-11 items-center gap-2.5 overflow-hidden bg-[#C08081] px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-white transition-colors duration-300 hover:bg-[#A96870]"
                     >
-                      <span className="absolute inset-0 -translate-x-full bg-[#AC9C8D] transition-transform duration-300 ease-out group-hover:translate-x-0" />
                       <ShoppingBag
                         size={14}
                         strokeWidth={1.8}
@@ -176,14 +175,14 @@ export default function HeroBanner() {
           <button
             type="button"
             aria-label="Previous slide"
-            className="velora-prev flex h-9 w-9 items-center justify-center border border-white/25 bg-black/10 text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white hover:text-[#322D29]"
+            className="velora-prev flex h-9 w-9 items-center justify-center border border-white/25 bg-black/10 text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white hover:text-[#292524]"
           >
             <ArrowLeft size={14} strokeWidth={1.5} />
           </button>
           <button
             type="button"
             aria-label="Next slide"
-            className="velora-next flex h-9 w-9 items-center justify-center border border-white/25 bg-black/10 text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white hover:text-[#322D29]"
+            className="velora-next flex h-9 w-9 items-center justify-center border border-white/25 bg-black/10 text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white hover:text-[#292524]"
           >
             <ArrowRight size={14} strokeWidth={1.5} />
           </button>

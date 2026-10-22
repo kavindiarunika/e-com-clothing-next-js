@@ -17,14 +17,14 @@ export default function RelatedProducts({
   }
 
   return (
-    <section className="mt-20 border-t border-[#D8D0C8] pt-14">
+    <section className="mt-20 border-t border-[#E7DEDC] pt-14">
 
       <div className="mb-8 text-center">
-        <p className="mb-2 text-xs uppercase tracking-[3px] text-[#72383D]">
+        <p className="mb-2 text-xs uppercase tracking-[3px] text-[#C08081]">
           You May Also Like
         </p>
 
-        <h2 className="font-serif text-3xl text-[#322D29]">
+        <h2 className="font-serif text-3xl text-[#292524]">
           Related Products
         </h2>
       </div>

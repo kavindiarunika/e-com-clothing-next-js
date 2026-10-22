@@ -433,11 +433,11 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
   };
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1]">
+    <main className="min-h-screen bg-[#FFFFFF]">
 
       {/* ================= HEADER ================= */}
 
-      <section className="border-b border-[#D8D0C8] bg-[#EFE9E1]">
+      <section className="border-b border-[#E7DEDC] bg-[#FFFFFF]">
 
         <div className="mx-auto w-[92%] max-w-300 py-8 md:py-8">
 
@@ -446,7 +446,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
             <Link
               href="/"
-              className="transition hover:text-[#72383D]"
+              className="transition hover:text-[#C08081]"
             >
               Home
             </Link>
@@ -457,7 +457,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
           </div>
 
-          <h1 className="mt-3 font-serif text-3xl font-medium text-[#322D29] md:text-4xl">
+          <h1 className="mt-3 font-serif text-3xl font-medium text-[#292524] md:text-4xl">
             {category}
           </h1>
 
@@ -491,7 +491,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
           <button
             type="button"
             onClick={() => setMobileFiltersOpen(true)}
-            className="flex items-center gap-2 border border-[#D8D0C8] bg-white px-4 py-2.5 text-sm text-[#322D29]"
+            className="flex items-center gap-2 border border-[#E7DEDC] bg-white px-4 py-2.5 text-sm text-[#292524]"
           >
             <SlidersHorizontal size={17} />
             Filters
@@ -516,8 +516,8 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
               aria-controls="category-filter-sidebar"
               className={`flex items-center gap-2 border px-4 py-2.5 text-xs font-semibold uppercase tracking-[1px] transition ${
                 desktopFiltersOpen
-                  ? "border-[#72383D] bg-[#72383D] text-white"
-                  : "border-[#D8D0C8] bg-white text-[#322D29] hover:border-[#72383D] hover:text-[#72383D]"
+                  ? "border-[#C08081] bg-[#C08081] text-white"
+                  : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#C08081] hover:text-[#C08081]"
               }`}
             >
               <SlidersHorizontal size={15} />
@@ -622,7 +622,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
                 <div className="text-center">
 
-                  <h2 className="font-serif text-2xl text-[#322D29]">
+                  <h2 className="font-serif text-2xl text-[#292524]">
                     No products found
                   </h2>
 
@@ -634,7 +634,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="mt-5 bg-[#72383D] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#322D29]"
+                    className="mt-5 bg-[#C08081] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
                   >
                     Clear Filters
                   </button>
@@ -647,19 +647,19 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
             {filteredProducts.length > 0 && (
               <nav
                 aria-label="Product pagination"
-                className="mt-10 flex flex-col items-center justify-between gap-5 border-t border-[#D8D0C8] pt-6 sm:flex-row"
+                className="mt-10 flex flex-col items-center justify-between gap-5 border-t border-[#E7DEDC] pt-6 sm:flex-row"
               >
                 <p className="text-sm text-[#6B625C]">
-                  Showing <span className="font-semibold text-[#322D29]">{firstVisibleProduct}-{lastVisibleProduct}</span> of {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
+                  Showing <span className="font-semibold text-[#292524]">{firstVisibleProduct}-{lastVisibleProduct}</span> of {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
                 </p>
 
-                <div className="inline-flex items-center gap-1 border border-[#D8D0C8] bg-white p-1 shadow-sm">
+                <div className="inline-flex items-center gap-1 border border-[#E7DEDC] bg-white p-1 shadow-sm">
                   <button
                     type="button"
                     onClick={() => changePage(activePage - 1)}
                     disabled={activePage === 1}
                     aria-label="Go to previous page"
-                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#72383D] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#C08081] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
                   >
                     <ChevronLeft size={17} />
                   </button>
@@ -667,7 +667,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                   <span
                     aria-current="page"
                     aria-label={`Page ${activePage} of ${pageCount}`}
-                    className="flex h-9 min-w-9 items-center justify-center bg-[#72383D] px-3 text-xs font-semibold text-white shadow-sm"
+                    className="flex h-9 min-w-9 items-center justify-center bg-[#C08081] px-3 text-xs font-semibold text-white shadow-sm"
                   >
                     {activePage}
                   </span>
@@ -677,7 +677,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                     onClick={() => changePage(activePage + 1)}
                     disabled={activePage === pageCount}
                     aria-label="Go to next page"
-                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#72383D] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#C08081] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
                   >
                     <ChevronRight size={17} />
                   </button>
@@ -707,11 +707,11 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
           {/* Drawer */}
 
-          <div className="absolute right-0 top-0 h-full w-[85%] max-w-90 overflow-y-auto bg-[#EFE9E1] p-5">
+          <div className="absolute right-0 top-0 h-full w-[85%] max-w-90 overflow-y-auto bg-[#FFFFFF] p-5">
 
             <div className="mb-5 flex items-center justify-between">
 
-              <h2 className="font-serif text-2xl text-[#322D29]">
+              <h2 className="font-serif text-2xl text-[#292524]">
                 Filters
               </h2>
 
@@ -720,7 +720,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="flex h-9 w-9 items-center justify-center bg-white text-[#322D29]"
+                className="flex h-9 w-9 items-center justify-center bg-white text-[#292524]"
               >
                 <ChevronRight
                   size={18}
@@ -769,7 +769,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
               onClick={() =>
                 setMobileFiltersOpen(false)
               }
-              className="mt-6 w-full bg-[#72383D] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
+              className="mt-6 w-full bg-[#C08081] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
             >
               View {filteredProducts.length} Products
             </button>

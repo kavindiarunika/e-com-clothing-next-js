@@ -39,22 +39,22 @@ export default function SizeGuidePage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
       {/* Header */}
-      <header className="bg-[#322D29]">
+      <header className="bg-[#292524]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
 
           <Link
             href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#EFE9E1]"
+            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
           >
             VELORA
           </Link>
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#EFE9E1] transition hover:text-[#AC9C8D]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] transition hover:text-[#C08081]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -69,11 +69,11 @@ export default function SizeGuidePage() {
         {/* Hero */}
         <div className="text-center">
 
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#72383D] shadow-sm">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#C08081] shadow-sm">
             <Ruler size={25} />
           </div>
 
-          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#72383D]">
+          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#C08081]">
             Find Your Fit
           </p>
 
@@ -81,7 +81,7 @@ export default function SizeGuidePage() {
             Size Guide
           </h1>
 
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#322D29]/60">
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#292524]/60">
             Use the measurements below as a general guide when choosing
             your size. Product-specific measurements may vary.
           </p>
@@ -95,7 +95,7 @@ export default function SizeGuidePage() {
             Clothing Size Chart
           </h2>
 
-          <p className="mt-2 text-sm text-[#322D29]/55">
+          <p className="mt-2 text-sm text-[#292524]/55">
             Measurements are shown in inches.
           </p>
 
@@ -104,7 +104,7 @@ export default function SizeGuidePage() {
             <table className="w-full min-w-[600px] border-collapse text-sm">
 
               <thead>
-                <tr className="bg-[#322D29] text-white">
+                <tr className="bg-[#292524] text-white">
 
                   <th className="rounded-l-xl px-5 py-4 text-left font-medium">
                     Size
@@ -129,22 +129,22 @@ export default function SizeGuidePage() {
                 {sizes.map((item) => (
                   <tr
                     key={item.size}
-                    className="border-b border-[#322D29]/10 last:border-0"
+                    className="border-b border-[#292524]/10 last:border-0"
                   >
 
                     <td className="px-5 py-5 font-semibold">
                       {item.size}
                     </td>
 
-                    <td className="px-5 py-5 text-[#322D29]/65">
+                    <td className="px-5 py-5 text-[#292524]/65">
                       {item.chest} in
                     </td>
 
-                    <td className="px-5 py-5 text-[#322D29]/65">
+                    <td className="px-5 py-5 text-[#292524]/65">
                       {item.waist} in
                     </td>
 
-                    <td className="px-5 py-5 text-[#322D29]/65">
+                    <td className="px-5 py-5 text-[#292524]/65">
                       {item.hip} in
                     </td>
 
@@ -190,13 +190,13 @@ export default function SizeGuidePage() {
         </div>
 
         {/* Tip */}
-        <div className="mt-6 rounded-2xl border border-[#72383D]/15 bg-[#72383D]/5 p-6">
+        <div className="mt-6 rounded-2xl border border-[#C08081]/15 bg-[#C08081]/5 p-6">
 
           <h3 className="font-semibold">
             Fit Tip
           </h3>
 
-          <p className="mt-2 text-sm leading-7 text-[#322D29]/65">
+          <p className="mt-2 text-sm leading-7 text-[#292524]/65">
             For the best fit, compare your measurements with the product
             specific size information available on each product page.
             If you are between two sizes, check the individual product
@@ -214,7 +214,7 @@ function MeasureItem({ number, title, text }) {
   return (
     <div className="flex gap-4">
 
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EFE9E1] text-xs font-semibold text-[#72383D]">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-xs font-semibold text-[#C08081]">
         {number}
       </div>
 
@@ -223,7 +223,7 @@ function MeasureItem({ number, title, text }) {
           {title}
         </h3>
 
-        <p className="mt-1 text-sm leading-6 text-[#322D29]/60">
+        <p className="mt-1 text-sm leading-6 text-[#292524]/60">
           {text}
         </p>
       </div>

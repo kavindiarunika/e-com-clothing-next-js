@@ -152,7 +152,7 @@ export default function CategorySection() {
   };
 
   return (
-    <section className="bg-[#EFE9E1] px-[5%] py-10 md:py-12">
+    <section className="bg-[#FFFFFF] px-[5%] py-10 md:py-12">
       <div className="mx-auto w-full max-w-[1600px]">
 
         {/* =====================================================
@@ -161,11 +161,11 @@ export default function CategorySection() {
 
         <div className="mb-8 flex items-end justify-between md:mb-10">
           <div>
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[4px] text-[#C08081]">
               Explore Our Collection
             </p>
 
-            <h2 className="font-serif text-3xl font-medium tracking-wide text-[#322D29] sm:text-4xl">
+            <h2 className="font-serif text-3xl font-medium tracking-wide text-[#292524] sm:text-4xl">
               Shop by Category
             </h2>
           </div>
@@ -176,7 +176,7 @@ export default function CategorySection() {
                 type="button"
                 onClick={() => swiperRef.current?.slidePrev()}
                 aria-label="Previous categories"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#BEB3A8] text-[#322D29] transition hover:bg-[#322D29] hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition hover:bg-[#A96870] hover:text-white"
               >
                 <ArrowLeft size={18} />
               </button>
@@ -184,7 +184,7 @@ export default function CategorySection() {
                 type="button"
                 onClick={() => swiperRef.current?.slideNext()}
                 aria-label="Next categories"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#BEB3A8] text-[#322D29] transition hover:bg-[#322D29] hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition hover:bg-[#A96870] hover:text-white"
               >
                 <ArrowRight size={18} />
               </button>
@@ -244,7 +244,7 @@ export default function CategorySection() {
                       h-full
                       w-full
                       bg-gradient-to-br
-                      from-[#D8CEC5]
+                      from-[#E7DEDC]
                       to-[#B6A49A]
                     "
                   />
@@ -257,8 +257,8 @@ export default function CategorySection() {
                     absolute
                     inset-0
                     bg-gradient-to-t
-                    from-[#322D29]/75
-                    via-[#322D29]/15
+                    from-[#292524]/75
+                    via-[#292524]/15
                     to-transparent
                   "
                 />
@@ -266,7 +266,7 @@ export default function CategorySection() {
                 {/* CONTENT */}
 
                 <div className="absolute bottom-3 left-3 right-2">
-                  <p className="mb-1 text-[7px] uppercase tracking-[1.5px] text-[#AC9C8D]">
+                  <p className="mb-1 text-[7px] uppercase tracking-[1.5px] text-[#C08081]">
                     Collection
                   </p>
 
@@ -349,7 +349,7 @@ export default function CategorySection() {
                       h-full
                       w-full
                       bg-gradient-to-br
-                      from-[#D8CEC5]
+                      from-[#E7DEDC]
                       to-[#B6A49A]
                     "
                   />
@@ -362,12 +362,12 @@ export default function CategorySection() {
                     absolute
                     inset-0
                     bg-gradient-to-t
-                    from-[#322D29]/85
-                    via-[#322D29]/20
+                    from-[#292524]/85
+                    via-[#292524]/20
                     to-transparent
                     transition
                     duration-500
-                    group-hover:from-[#322D29]/95
+                    group-hover:from-[#292524]/95
                   "
                 />
 
@@ -393,7 +393,7 @@ export default function CategorySection() {
 
                 <div className="absolute bottom-8 left-6 right-6 text-white sm:bottom-10 sm:left-8 sm:right-8">
 
-                  <p className="mb-2 text-[9px] uppercase tracking-[3px] text-[#AC9C8D]">
+                  <p className="mb-2 text-[9px] uppercase tracking-[3px] text-[#C08081]">
                     Discover
                   </p>
 
@@ -421,7 +421,7 @@ export default function CategorySection() {
                         transition-all
                         duration-300
                         group-hover:bg-white
-                        group-hover:text-[#322D29]
+                        group-hover:text-[#292524]
                       "
                     >
                       →
@@ -487,7 +487,7 @@ export default function CategorySection() {
                         h-full
                         w-full
                         bg-gradient-to-br
-                        from-[#D8CEC5]
+                        from-[#E7DEDC]
                         to-[#B6A49A]
                       "
                     />
@@ -500,8 +500,8 @@ export default function CategorySection() {
                       absolute
                       inset-0
                       bg-gradient-to-t
-                      from-[#322D29]/75
-                      via-[#322D29]/15
+                      from-[#292524]/75
+                      via-[#292524]/15
                       to-transparent
                     "
                   />
@@ -510,7 +510,7 @@ export default function CategorySection() {
 
                   <div className="absolute bottom-3 left-3 right-2">
 
-                    <p className="mb-1 text-[7px] uppercase tracking-[1.5px] text-[#AC9C8D]">
+                    <p className="mb-1 text-[7px] uppercase tracking-[1.5px] text-[#C08081]">
                       Collection
                     </p>
 
@@ -579,7 +579,7 @@ export default function CategorySection() {
                     h-full
                     w-full
                     bg-gradient-to-br
-                    from-[#D8CEC5]
+                    from-[#E7DEDC]
                     to-[#B6A49A]
                   "
                 />
@@ -592,8 +592,8 @@ export default function CategorySection() {
                   absolute
                   inset-0
                   bg-gradient-to-t
-                  from-[#322D29]/85
-                  via-[#322D29]/20
+                  from-[#292524]/85
+                  via-[#292524]/20
                   to-transparent
                 "
               />
@@ -602,7 +602,7 @@ export default function CategorySection() {
 
               <div className="absolute bottom-6 left-6 right-6 text-white">
 
-                <p className="mb-2 text-[8px] uppercase tracking-[2px] text-[#AC9C8D]">
+                <p className="mb-2 text-[8px] uppercase tracking-[2px] text-[#C08081]">
                   Discover
                 </p>
 

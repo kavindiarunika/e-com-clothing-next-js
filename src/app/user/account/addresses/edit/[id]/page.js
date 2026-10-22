@@ -33,8 +33,8 @@ export default function EditAddressPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
-      <header className="border-b border-[#D8D0C8]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
+      <header className="border-b border-[#E7DEDC]">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
           <Link
             href="/user"
@@ -45,7 +45,7 @@ export default function EditAddressPage() {
 
           <Link
             href="/user/account/addresses"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] transition hover:text-[#72383D]"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] transition hover:text-[#C08081]"
           >
             <ArrowLeft size={15} />
             Back to Addresses
@@ -55,7 +55,7 @@ export default function EditAddressPage() {
 
       <section className="mx-auto max-w-3xl px-6 py-12 lg:px-10 lg:py-16">
         <div className="mb-10">
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#72383D]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
             Delivery Details
           </p>
 
@@ -63,14 +63,14 @@ export default function EditAddressPage() {
             EDIT ADDRESS
           </h1>
 
-          <div className="mt-5 h-px w-12 bg-[#72383D]" />
+          <div className="mt-5 h-px w-12 bg-[#C08081]" />
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="border border-[#D8D0C8] bg-[#F8F5F1]"
+          className="border border-[#E7DEDC] bg-[#FAF6F5]"
         >
-          <div className="border-b border-[#D8D0C8] p-6 sm:p-8">
+          <div className="border-b border-[#E7DEDC] p-6 sm:p-8">
             <h2 className="font-serif text-2xl">Home Address</h2>
             <p className="mt-2 text-sm leading-6 text-[#6B625C]">
               Update the details used for your deliveries.
@@ -85,7 +85,7 @@ export default function EditAddressPage() {
                 value={address.name}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#D8D0C8] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#72383D]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
               />
             </label>
 
@@ -97,7 +97,7 @@ export default function EditAddressPage() {
                 value={address.phone}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#D8D0C8] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#72383D]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
               />
             </label>
 
@@ -108,7 +108,7 @@ export default function EditAddressPage() {
                 value={address.address}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#D8D0C8] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#72383D]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
               />
             </label>
 
@@ -119,7 +119,7 @@ export default function EditAddressPage() {
                 value={address.city}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#D8D0C8] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#72383D]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
               />
             </label>
 
@@ -130,7 +130,7 @@ export default function EditAddressPage() {
                 value={address.district}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#D8D0C8] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#72383D]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
               />
             </label>
 
@@ -141,22 +141,22 @@ export default function EditAddressPage() {
                 value={address.postalCode}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#D8D0C8] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#72383D]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
               />
             </label>
           </div>
 
-          <div className="flex flex-col-reverse gap-3 border-t border-[#D8D0C8] p-6 sm:flex-row sm:justify-end sm:p-8">
+          <div className="flex flex-col-reverse gap-3 border-t border-[#E7DEDC] p-6 sm:flex-row sm:justify-end sm:p-8">
             <Link
               href="/user/account/addresses"
-              className="flex h-11 items-center justify-center border border-[#D8D0C8] px-6 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:border-[#322D29] hover:text-[#322D29]"
+              className="flex h-11 items-center justify-center border border-[#E7DEDC] px-6 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:border-[#292524] hover:text-[#292524]"
             >
               Cancel
             </Link>
 
             <button
               type="submit"
-              className="flex h-11 items-center justify-center gap-2 bg-[#322D29] px-6 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#72383D]"
+              className="flex h-11 items-center justify-center gap-2 bg-[#292524] px-6 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#C08081]"
             >
               {saved && <Check size={15} />}
               {saved ? "Changes Saved" : "Save Changes"}

@@ -8,7 +8,7 @@ export default function CategoryFilter({
 
   return (
     <div>
-      <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+      <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
         Category
       </h3>
 
@@ -24,7 +24,7 @@ export default function CategoryFilter({
               value={category}
               checked={selectedCategory === category}
               onChange={() => setSelectedCategory(category)}
-              className="h-4 w-4 accent-[#72383D]"
+              className="h-4 w-4 accent-[#C08081]"
             />
 
             {category}

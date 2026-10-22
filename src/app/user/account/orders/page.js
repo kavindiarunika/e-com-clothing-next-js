@@ -106,10 +106,10 @@ export default function OrdersPage() {
   }, [router]);
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
       {/* HEADER */}
-      <header className="border-b border-[#D8D0C8]">
+      <header className="border-b border-[#E7DEDC]">
 
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
 
@@ -122,7 +122,7 @@ export default function OrdersPage() {
 
           <Link
             href="/user/account"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#72383D]"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#C08081]"
           >
             <ArrowLeft size={15} />
             My Account
@@ -138,7 +138,7 @@ export default function OrdersPage() {
         {/* TITLE */}
         <div className="mb-10">
 
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#72383D]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
             Purchase History
           </p>
 
@@ -172,13 +172,13 @@ export default function OrdersPage() {
             <Link
               key={order.id}
               href={`/user/account/orders/${order.id}`}
-              className="group block border border-[#D8D0C8] bg-[#F8F5F1] transition hover:border-[#72383D] hover:shadow-sm"
+              className="group block border border-[#E7DEDC] bg-[#FAF6F5] transition hover:border-[#C08081] hover:shadow-sm"
             >
 
               <div className="space-y-3 p-5 sm:p-6">
                 {order.items.map((item) => (
                   <div key={item.id} className="flex items-center gap-4">
-                    <div className="h-20 w-16 shrink-0 overflow-hidden bg-[#E3DCD1]">
+                    <div className="h-20 w-16 shrink-0 overflow-hidden bg-[#FAF6F5]">
                       {item.image ? (
                         <img
                           src={item.image}
@@ -198,24 +198,24 @@ export default function OrdersPage() {
                   </div>
                 ))}
 
-                <div className="flex flex-col gap-4 border-t border-[#D8D0C8] pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-4 border-t border-[#E7DEDC] pt-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-[#8B817A]">
-                    <span className="font-semibold text-[#322D29]">Order #{order.id}</span>
+                    <span className="font-semibold text-[#292524]">Order #{order.id}</span>
                     <span>{order.date}</span>
                     <span className="inline-flex items-center gap-1.5">
                       {order.statusType === "shipped" ? (
-                        <Truck size={14} className="text-[#72383D]" />
+                        <Truck size={14} className="text-[#C08081]" />
                       ) : (
                         <CheckCircle2 size={14} className="text-[#547454]" />
                       )}
-                      <span className={order.statusType === "delivered" ? "text-[#547454]" : "text-[#72383D]"}>
+                      <span className={order.statusType === "delivered" ? "text-[#547454]" : "text-[#C08081]"}>
                         {order.status}
                       </span>
                     </span>
-                    <span className="font-semibold text-[#322D29]">{order.total}</span>
+                    <span className="font-semibold text-[#292524]">{order.total}</span>
                   </div>
 
-                  <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29] group-hover:text-[#72383D]">
+                  <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524] group-hover:text-[#C08081]">
                     View Order
                     <ChevronRight
                       size={15}
@@ -233,7 +233,7 @@ export default function OrdersPage() {
 
         {/* EMPTY STATE - OPTIONAL */}
         {!isLoading && !loadError && orders.length === 0 && (
-          <div className="border border-[#D8D0C8] bg-[#F8F5F1] px-6 py-16 text-center">
+          <div className="border border-[#E7DEDC] bg-[#FAF6F5] px-6 py-16 text-center">
 
             <Package
               size={40}
@@ -251,7 +251,7 @@ export default function OrdersPage() {
 
             <Link
               href="/user"
-              className="mt-6 inline-block bg-[#322D29] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#72383D]"
+              className="mt-6 inline-block bg-[#292524] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#C08081]"
             >
               Start Shopping
             </Link>

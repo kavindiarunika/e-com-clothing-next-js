@@ -26,12 +26,12 @@ export default function CategoryFilterSidebar({
     <aside className="hidden w-57.5 shrink-0 lg:block">
       <div className="sticky top-24 bg-white p-6">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="font-serif text-lg text-[#322D29]">Filters</h2>
+          <h2 className="font-serif text-lg text-[#292524]">Filters</h2>
 
           <button
             type="button"
             onClick={onClear}
-            className="text-xs text-[#72383D] hover:underline"
+            className="text-xs text-[#C08081] hover:underline"
           >
             Clear
           </button>
@@ -39,7 +39,7 @@ export default function CategoryFilterSidebar({
 
         <div className="space-y-8">
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
               Category
             </h3>
 
@@ -54,7 +54,7 @@ export default function CategoryFilterSidebar({
                     name="subcategory"
                     checked={selectedSubcategory === subcategory}
                     onChange={() => setSelectedSubcategory(subcategory)}
-                    className="h-4 w-4 accent-[#72383D]"
+                    className="h-4 w-4 accent-[#C08081]"
                   />
                   {subcategory}
                 </label>
@@ -63,7 +63,7 @@ export default function CategoryFilterSidebar({
           </div>
 
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
               Price
             </h3>
 
@@ -74,7 +74,7 @@ export default function CategoryFilterSidebar({
                   name="price"
                   checked={selectedPrice === "under5000"}
                   onChange={() => setSelectedPrice("under5000")}
-                  className="h-4 w-4 accent-[#72383D]"
+                  className="h-4 w-4 accent-[#C08081]"
                 />
                 Under Rs. 5,000
               </label>
@@ -85,7 +85,7 @@ export default function CategoryFilterSidebar({
                   name="price"
                   checked={selectedPrice === "5000-10000"}
                   onChange={() => setSelectedPrice("5000-10000")}
-                  className="h-4 w-4 accent-[#72383D]"
+                  className="h-4 w-4 accent-[#C08081]"
                 />
                 Rs. 5,000 - 10,000
               </label>
@@ -96,7 +96,7 @@ export default function CategoryFilterSidebar({
                   name="price"
                   checked={selectedPrice === "above10000"}
                   onChange={() => setSelectedPrice("above10000")}
-                  className="h-4 w-4 accent-[#72383D]"
+                  className="h-4 w-4 accent-[#C08081]"
                 />
                 Above Rs. 10,000
               </label>
@@ -104,7 +104,7 @@ export default function CategoryFilterSidebar({
           </div>
 
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
               Size
             </h3>
 
@@ -116,8 +116,8 @@ export default function CategoryFilterSidebar({
                   onClick={() => toggleSize(size)}
                   className={`border px-3 py-2 text-xs transition ${
                     selectedSizes.includes(size)
-                      ? "border-[#72383D] bg-[#72383D] text-white"
-                      : "border-[#D8D0C8] bg-white text-[#5D554F] hover:border-[#72383D]"
+                      ? "border-[#C08081] bg-[#C08081] text-white"
+                      : "border-[#E7DEDC] bg-white text-[#5D554F] hover:border-[#C08081]"
                   }`}
                 >
                   {size}
@@ -127,7 +127,7 @@ export default function CategoryFilterSidebar({
           </div>
 
           <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
               Availability
             </h3>
 
@@ -138,7 +138,7 @@ export default function CategoryFilterSidebar({
                   name="availability"
                   checked={selectedAvailability === "all"}
                   onChange={() => setSelectedAvailability("all")}
-                  className="h-4 w-4 accent-[#72383D]"
+                  className="h-4 w-4 accent-[#C08081]"
                 />
                 All Products
               </label>
@@ -149,7 +149,7 @@ export default function CategoryFilterSidebar({
                   name="availability"
                   checked={selectedAvailability === "available"}
                   onChange={() => setSelectedAvailability("available")}
-                  className="h-4 w-4 accent-[#72383D]"
+                  className="h-4 w-4 accent-[#C08081]"
                 />
                 In Stock
               </label>
@@ -160,7 +160,7 @@ export default function CategoryFilterSidebar({
                   name="availability"
                   checked={selectedAvailability === "soldout"}
                   onChange={() => setSelectedAvailability("soldout")}
-                  className="h-4 w-4 accent-[#72383D]"
+                  className="h-4 w-4 accent-[#C08081]"
                 />
                 Sold Out
               </label>

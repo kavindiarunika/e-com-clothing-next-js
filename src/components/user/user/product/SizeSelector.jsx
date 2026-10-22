@@ -50,14 +50,14 @@ export default function SizeSelector({
       <div>
         {/* Title */}
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+          <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
             Size
           </h3>
 
           <button
             type="button"
             onClick={() => setIsSizeChartOpen(true)}
-            className="text-xs text-[#72383D] underline underline-offset-2 transition hover:text-[#322D29]"
+            className="text-xs text-[#C08081] underline underline-offset-2 transition hover:text-[#292524]"
           >
             Size Guide
           </button>
@@ -68,7 +68,7 @@ export default function SizeSelector({
           aria-label="Select size"
           value={selectedSize || ""}
           onChange={(event) => setSelectedSize(event.target.value)}
-          className="w-full max-w-xs border border-[#D8D0C8] bg-white px-4 py-3 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
+          className="w-full max-w-xs border border-[#E7DEDC] bg-white px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
         >
           <option value="" disabled>
             Select size
@@ -88,7 +88,7 @@ export default function SizeSelector({
         {selectedColor && (
           <p className="mt-3 text-xs text-[#6B625C]">
             Available stock shown for{" "}
-            <span className="font-medium text-[#322D29]">
+            <span className="font-medium text-[#292524]">
               {typeof selectedColor === "object"
                 ? selectedColor.name
                 : selectedColor}

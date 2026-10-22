@@ -50,7 +50,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1]">
+    <main className="min-h-screen bg-[#FFFFFF]">
       <div className="grid min-h-screen lg:grid-cols-2">
 
         {/* =========================
@@ -63,10 +63,10 @@ export default function LoginPage() {
             className="absolute inset-0 h-full w-full object-cover"
           />
 
-          <div className="absolute inset-0 bg-[#322D29]/40" />
+          <div className="absolute inset-0 bg-[#292524]/40" />
 
           <div className="absolute bottom-12 left-12 max-w-md text-white">
-            <p className="mb-4 text-xs uppercase tracking-[4px] text-[#E3DCD1]">
+            <p className="mb-4 text-xs uppercase tracking-[4px] text-[#FAF6F5]">
               VELORA
             </p>
 
@@ -94,21 +94,21 @@ export default function LoginPage() {
             <div className="mb-7 text-center">
               <Link
                 href="/"
-                className="font-serif text-2xl tracking-wide text-[#322D29]"
+                className="font-serif text-2xl tracking-wide text-[#292524]"
               >
                 VELORA
               </Link>
 
-              <div className="mx-auto mt-4 h-px w-8 bg-[#72383D]" />
+              <div className="mx-auto mt-4 h-px w-8 bg-[#C08081]" />
             </div>
 
             {/* TITLE */}
             <div className="mb-5">
-              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#72383D]">
+              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
                 Welcome Back
               </p>
 
-              <h1 className="font-serif text-3xl text-[#322D29]">
+              <h1 className="font-serif text-3xl text-[#292524]">
                 Sign in to your account
               </h1>
 
@@ -129,17 +129,17 @@ export default function LoginPage() {
                 justify-center
                 gap-3
                 border
-                border-[#D8D0C8]
+                border-[#E7DEDC]
                 bg-white
                 text-xs
                 font-semibold
                 uppercase
                 tracking-[1.3px]
-                text-[#322D29]
+                text-[#292524]
                 transition
                 duration-300
-                hover:border-[#322D29]
-                hover:bg-[#F8F5F1]
+                hover:border-[#292524]
+                hover:bg-[#FAF6F5]
               "
             >
               {/* Google Icon */}
@@ -172,13 +172,13 @@ export default function LoginPage() {
 
             {/* DIVIDER */}
             <div className="my-5 flex items-center gap-4">
-              <span className="h-px flex-1 bg-[#D8D0C8]" />
+              <span className="h-px flex-1 bg-[#E7DEDC]" />
 
               <span className="text-[10px] uppercase tracking-[2px] text-[#A69C94]">
                 Or
               </span>
 
-              <span className="h-px flex-1 bg-[#D8D0C8]" />
+              <span className="h-px flex-1 bg-[#E7DEDC]" />
             </div>
 
             {/* LOGIN FORM */}
@@ -199,7 +199,7 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
                 >
                   Email
                 </label>
@@ -218,16 +218,16 @@ export default function LoginPage() {
                     className="
                       w-full
                       border
-                      border-[#D8D0C8]
+                      border-[#E7DEDC]
                       bg-white
                       px-4
                       py-3
                       text-sm
-                      text-[#322D29]
+                      text-[#292524]
                       outline-none
                       transition
                       placeholder:text-[#A69C94]
-                      focus:border-[#72383D]
+                      focus:border-[#C08081]
                     "
                   />
                 </div>
@@ -238,7 +238,7 @@ export default function LoginPage() {
                 <div className="mb-2 flex items-center justify-between">
                   <label
                     htmlFor="password"
-                    className="text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]"
+                    className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
                   >
                     Password
                   </label>
@@ -248,9 +248,9 @@ export default function LoginPage() {
                     className="
                       text-[11px]
                       font-medium
-                      text-[#72383D]
+                      text-[#C08081]
                       transition
-                      hover:text-[#432415]
+                      hover:text-[#A96870]
                     "
                   >
                     Forgot Password?
@@ -273,17 +273,17 @@ export default function LoginPage() {
                     className="
                       w-full
                       border
-                      border-[#D8D0C8]
+                      border-[#E7DEDC]
                       bg-white
                       px-4
                       py-3
                       pr-12
                       text-sm
-                      text-[#322D29]
+                      text-[#292524]
                       outline-none
                       transition
                       placeholder:text-[#A69C94]
-                      focus:border-[#72383D]
+                      focus:border-[#C08081]
                     "
                   />
 
@@ -299,7 +299,7 @@ export default function LoginPage() {
                       -translate-y-1/2
                       text-[#8B817A]
                       transition
-                      hover:text-[#72383D]
+                      hover:text-[#C08081]
                     "
                     aria-label={
                       showPassword
@@ -328,7 +328,7 @@ export default function LoginPage() {
                   items-center
                   justify-center
                   gap-3
-                  bg-[#322D29]
+                  bg-[#292524]
                   text-xs
                   font-semibold
                   uppercase
@@ -336,7 +336,7 @@ export default function LoginPage() {
                   text-white
                   transition
                   duration-300
-                  hover:bg-[#72383D]
+                  hover:bg-[#C08081]
                   disabled:cursor-not-allowed
                   disabled:opacity-60
                 "
@@ -357,7 +357,7 @@ export default function LoginPage() {
             </form>
 
             {/* REGISTER */}
-            <div className="mt-6 border-t border-[#D8D0C8] pt-5 text-center">
+            <div className="mt-6 border-t border-[#E7DEDC] pt-5 text-center">
               <p className="text-sm text-[#6B625C]">
                 Don&apos;t have an account?
               </p>
@@ -369,9 +369,9 @@ export default function LoginPage() {
                   inline-block
                   text-sm
                   font-semibold
-                  text-[#72383D]
+                  text-[#C08081]
                   transition
-                  hover:text-[#432415]
+                  hover:text-[#A96870]
                 "
               >
                 Create Account

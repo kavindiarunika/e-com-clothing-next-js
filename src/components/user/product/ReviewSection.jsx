@@ -134,10 +134,10 @@ export default function ReviewSection({ product }) {
   }
 
   return (
-    <section className="border-t border-[#D8D0C8] pt-8 md:pt-10">
-      <div className="grid w-full gap-8 border border-[#D8D0C8] bg-white p-5 sm:grid-cols-[minmax(180px,1fr)_minmax(0,2fr)] sm:items-center sm:p-7">
+    <section className="border-t border-[#E7DEDC] pt-8 md:pt-10">
+      <div className="grid w-full gap-8 border border-[#E7DEDC] bg-white p-5 sm:grid-cols-[minmax(180px,1fr)_minmax(0,2fr)] sm:items-center sm:p-7">
         <div className="text-center">
-          <p className="font-serif text-4xl text-[#322D29]">
+          <p className="font-serif text-4xl text-[#292524]">
             {displayedRating}
           </p>
           <div
@@ -156,7 +156,7 @@ export default function ReviewSection({ product }) {
                 disabled={isLoading || isSubmitting}
                 aria-label={`Rate ${star} stars`}
                 aria-pressed={selectedRating === star}
-                className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-[#FAF8F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72383D] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-[#FAF6F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C08081] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Star
                   size={20}
@@ -164,8 +164,8 @@ export default function ReviewSection({ product }) {
                   className={
                     star <=
                     (selectedRating ?? Math.round(ratingSummary.averageRating))
-                      ? "fill-[#72383D] text-[#72383D]"
-                      : "text-[#D8D0C8]"
+                      ? "fill-[#C08081] text-[#C08081]"
+                      : "text-[#E7DEDC]"
                   }
                 />
               </button>
@@ -184,7 +184,7 @@ export default function ReviewSection({ product }) {
               type="button"
               onClick={() => void submitRating()}
               disabled={isSubmitting || hasSubmittedReview}
-              className="mt-3 inline-flex min-h-10 items-center justify-center rounded-full bg-[#72383D] px-5 py-2 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#5E2B30] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72383D] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-3 inline-flex min-h-10 items-center justify-center rounded-full bg-[#C08081] px-5 py-2 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#5E2B30] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C08081] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting
                 ? "Submitting..."
@@ -221,7 +221,7 @@ export default function ReviewSection({ product }) {
                 <span className="w-3 text-right">{star}</span>
                 <Star
                   size={14}
-                  className="shrink-0 fill-[#AC9C8D] text-[#AC9C8D]"
+                  className="shrink-0 fill-[#C08081] text-[#C08081]"
                   aria-hidden="true"
                 />
                 <div
@@ -230,7 +230,7 @@ export default function ReviewSection({ product }) {
                   aria-label={`${star} stars: ${count} reviews`}
                 >
                   <div
-                    className="h-full rounded-full bg-[#72383D]"
+                    className="h-full rounded-full bg-[#C08081]"
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
@@ -239,7 +239,7 @@ export default function ReviewSection({ product }) {
             );
           })}
           {loadError && (
-            <p role="alert" className="text-sm text-[#72383D]">
+            <p role="alert" className="text-sm text-[#C08081]">
               {loadError}
             </p>
           )}

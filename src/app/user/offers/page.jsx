@@ -69,14 +69,14 @@ export default function OffersPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#EFE9E1]">
+    <div className="min-h-screen bg-[#FFFFFF]">
       <section className="mx-auto w-[92%] max-w-[1200px] py-10 md:py-14">
         <div className="mb-8 md:mb-10">
-          <p className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[3px] text-[#72383D]">
+          <p className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[3px] text-[#C08081]">
             <Tag size={14} />
             Velora
           </p>
-          <h1 className="font-serif text-4xl font-medium text-[#322D29] md:text-5xl">
+          <h1 className="font-serif text-4xl font-medium text-[#292524] md:text-5xl">
             Offers
           </h1>
           <p className="mt-3 max-w-xl text-sm leading-6 text-[#6B625C] md:text-[15px]">
@@ -89,7 +89,7 @@ export default function OffersPage() {
             Loading offers...
           </div>
         ) : error ? (
-          <div role="alert" className="bg-white px-6 py-12 text-center text-sm text-[#72383D] shadow-sm">
+          <div role="alert" className="bg-white px-6 py-12 text-center text-sm text-[#C08081] shadow-sm">
             {error}
           </div>
         ) : offers.length ? (
@@ -107,8 +107,8 @@ export default function OffersPage() {
                 status === "expired"
                   ? "bg-[#B23A3A] text-white shadow-[0_8px_18px_rgba(178,58,58,0.18)]"
                   : status === "upcoming"
-                    ? "bg-[#F3E8E2] text-[#322D29] border border-[#D9CFC6]"
-                    : "bg-white text-[#322D29] border border-[#E8DED3] shadow-[0_8px_18px_rgba(50,45,41,0.06)]";
+                    ? "bg-[#F3E8E2] text-[#292524] border border-[#D9CFC6]"
+                    : "bg-white text-[#292524] border border-[#E8DED3] shadow-[0_8px_18px_rgba(50,45,41,0.06)]";
 
               return (
                 <article
@@ -117,7 +117,7 @@ export default function OffersPage() {
                 >
                   <div className="relative">
                     {offer.banner_image && (
-                      <div className="relative aspect-[16/9] overflow-hidden bg-[#D8D0C8]">
+                      <div className="relative aspect-[16/9] overflow-hidden bg-[#E7DEDC]">
                         <Image
                           src={offer.banner_image}
                           alt={offer.title}
@@ -137,7 +137,7 @@ export default function OffersPage() {
 
                   <div className="p-6 md:p-8">
                     <div className="flex items-start justify-between gap-3">
-                      <h2 className="font-serif text-2xl leading-tight text-[#322D29] md:text-[2rem]">
+                      <h2 className="font-serif text-2xl leading-tight text-[#292524] md:text-[2rem]">
                         {offer.title}
                       </h2>
                     </div>
@@ -165,7 +165,7 @@ export default function OffersPage() {
                           ? `/user/offers/${offer.offer_id}`
                           : offer.link || "/user/shop"
                       }
-                      className="mt-6 inline-flex items-center gap-2 bg-[#72383D] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#322D29]"
+                      className="mt-6 inline-flex items-center gap-2 bg-[#C08081] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
                     >
                       Explore Offer
                       <ArrowRight size={15} />
@@ -177,7 +177,7 @@ export default function OffersPage() {
           </div>
         ) : (
           <div className="flex min-h-64 flex-col items-center justify-center bg-white px-6 py-10 text-center shadow-sm">
-            <h2 className="font-serif text-2xl text-[#322D29]">
+            <h2 className="font-serif text-2xl text-[#292524]">
               No offers right now
             </h2>
             <p className="mt-2 text-sm text-[#6B625C]">
@@ -185,7 +185,7 @@ export default function OffersPage() {
             </p>
             <Link
               href="/user/shop"
-              className="mt-6 inline-flex items-center gap-2 border border-[#72383D] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1.5px] text-[#72383D] transition hover:bg-[#72383D] hover:text-white"
+              className="mt-6 inline-flex items-center gap-2 border border-[#C08081] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1.5px] text-[#C08081] transition hover:bg-[#C08081] hover:text-white"
             >
               Shop Collection
               <ArrowRight size={15} />

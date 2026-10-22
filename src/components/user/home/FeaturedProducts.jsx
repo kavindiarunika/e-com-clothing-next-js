@@ -67,15 +67,15 @@ export default function FeaturedProducts() {
 
         {/* Heading */}
         <div className="mb-8 text-left md:mb-10">
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[4px] text-[#C08081]">
             Curated For You
           </p>
 
-          <h2 className="font-serif text-3xl font-medium tracking-wide text-[#322D29] sm:text-4xl">
+          <h2 className="font-serif text-3xl font-medium tracking-wide text-[#292524] sm:text-4xl">
             Featured Collection
           </h2>
 
-          <div className="mt-5 h-px w-12 bg-[#72383D]" />
+          <div className="mt-5 h-px w-12 bg-[#C08081]" />
         </div>
 
         {/* Products - 4 Cards Horizontal */}
@@ -115,7 +115,7 @@ export default function FeaturedProducts() {
         <div className="mt-12 text-center">
           <Link
             href="/user/shop?sort=featured"
-            className="inline-flex items-center gap-3 border border-[#72383D] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.5px] text-[#72383D] transition duration-300 hover:bg-[#72383D] hover:text-white"
+            className="inline-flex items-center gap-3 border border-[#C08081] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.5px] text-[#C08081] transition duration-300 hover:bg-[#C08081] hover:text-white"
           >
             View All Products
             <span>→</span>
