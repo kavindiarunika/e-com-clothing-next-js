@@ -1,28 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 @import "tailwindcss";
 
+.font-sans {
+  font-family: "Poppins", sans-serif;
+}
+
+.font-serif {
+  font-family: "Outfit", sans-serif;
+}
+
 /* =========================================
    ADMIN PANEL
 ========================================= */
-* {
-  font-family: "Poppins", sans-serif;
-  font-weight: 100;
-  font-style: normal;
-}
-
-
 h1, h2, h3, h4, h5, h6 {
   font-family: "Outfit", sans-serif;
   font-optical-sizing: auto;
-  font-weight: 400;
+  font-weight: 500;
   font-style: normal;
 }
 
+body {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+}
+
+button {
+  font-family: "Outfit", sans-serif;
+  font-weight: 500;
+}
 
 .button{
   font-family: "Outfit", sans-serif;
+  font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
   background-color: #C08081;
@@ -35,12 +45,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 :root {
-  --font-inter: "Segoe UI", Arial, sans-serif;
-  --font-poppins: "Segoe UI", Arial, sans-serif;
-  --font-prata: Georgia, "Times New Roman", serif;
-  --font-body: var(--font-inter);
-  --font-subtitle: var(--font-poppins);
-  --font-display: var(--font-prata);
+  --font-inter: "Poppins", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+  --font-prata: "Outfit", sans-serif;
+  --font-body: "Poppins", sans-serif;
+  --font-subtitle: "Poppins", sans-serif;
+  --font-display: "Outfit", sans-serif;
   --admin-black: #1c1c1c;
   --admin-cream: #f8f6f2;
   --admin-white: #ffffff;
@@ -1089,13 +1099,19 @@ margin: 0;
 body {
   background: var(--admin-background);
   color: var(--admin-ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-body);
+  font-weight: 400;
 }
 
 button,
 input,
 select {
-  font-family: inherit;
+  font-family: var(--font-subtitle);
+}
+
+button {
+  font-family: var(--font-display);
+  font-weight: 500;
 }
 
 .admin-shell {
@@ -1632,7 +1648,8 @@ body {
   margin: 0;
   background: var(--color-background);
   color: var(--color-dark);
-  font-family: Arial, sans-serif;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
 }
 
 button {
@@ -1648,9 +1665,9 @@ button {
    ========================================================= */
 
 :root {
-  --font-body: var(--font-inter), sans-serif;
-  --font-subtitle: var(--font-inter), sans-serif;
-  --font-display: var(--font-poppins), sans-serif;
+  --font-body: "Poppins", sans-serif;
+  --font-subtitle: "Poppins", sans-serif;
+  --font-display: "Outfit", sans-serif;
 
   --admin-sidebar: #C08081;
   --admin-background: #FFFFFF;
@@ -1678,6 +1695,7 @@ body {
   background: var(--admin-background);
   color: var(--admin-ink);
   font-family: var(--font-body);
+  font-weight: 400;
 }
 
 button,
@@ -1687,11 +1705,19 @@ textarea {
   font-family: var(--font-subtitle);
 }
 
+button {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
 }
 
 
@@ -13800,7 +13826,7 @@ product image */
 
   color: #292524;
 
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
 
   font-size: 32px;
   font-weight: 600;
