@@ -15272,3 +15272,22 @@ margin: 0;
     max-height: 96vh;
   }
 }
+
+.admin-shell .admin-sidebar {
+  background: #000000;
+}
+
+.admin-shell button,
+.admin-shell input[type="button"],
+.admin-shell input[type="submit"],
+.admin-shell [role="button"],
+.admin-shell a[class*="button"],
+.admin-shell a[class*="-btn"],
+.admin-login-page button,
+.admin-login-page input[type="button"],
+.admin-login-page input[type="submit"] {
+  background: rgb(255, 192, 203) !important;
+  background-image: none !important;
+  border-color: rgb(255, 192, 203) !important;
+  color: #1c1c1c !important;
+}

@@ -363,7 +363,7 @@ export default function ShopPage({
       <ShopOfferHero />
 
       {/* Main */}
-      <section className="mx-auto w-[94%] max-w-[1440px] py-8 md:py-12">
+      <section className="w-full max-w-none px-4 py-8 md:px-6 md:py-12">
 
         {/* Mobile Filter Button */}
         <div className="mb-6 flex items-center justify-between md:hidden">
@@ -390,12 +390,12 @@ export default function ShopPage({
         </div>
 
 
-        <div className="flex gap-6 lg:gap-8">
+        <div className="flex items-start justify-start gap-6 lg:gap-8">
 
           {/* Desktop Sidebar */}
           <aside
             id="shop-filter-sidebar"
-            className="hidden w-[220px] shrink-0 md:block lg:w-[250px]"
+            className="hidden w-[300px] shrink-0 self-start md:block"
           >
             <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto border border-[#DED5CB] border-t-2 border-t-[#72383D] bg-gradient-to-b from-white to-[#FAF7F3] p-5 shadow-[0_12px_32px_rgba(50,45,41,0.08)] lg:p-6">
               <div className="mb-6 rounded-sm bg-[#F3EEE8] p-2">
@@ -479,7 +479,7 @@ export default function ShopPage({
             ) : filteredProducts.length > 0 ? (
               <div
                 ref={productGridRef}
-                className="grid scroll-mt-28 grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                className="grid scroll-mt-28 grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3"
               >
 
                 {pageProducts.map((product) => (
