@@ -7,12 +7,7 @@ export default function CategoryFilter({
   const categories = ["All", "Men", "Women", "Kids"];
 
   return (
-    <div>
-      <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
-        Category
-      </h3>
-
-      <div className="space-y-3">
+    <div className="space-y-3">
         {categories.map((category) => (
           <label
             key={category}
@@ -30,7 +25,6 @@ export default function CategoryFilter({
             {category}
           </label>
         ))}
-      </div>
     </div>
   );
 }

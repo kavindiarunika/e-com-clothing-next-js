@@ -105,7 +105,7 @@ export default function ShopOfferHero() {
   return (
     <section
       aria-label={offers.length ? "Featured offers" : "Featured collection"}
-      className="user-page-full-bleed w-full pt-5 md:pt-7"
+      className="user-page-full-bleed w-full"
     >
       <div className="relative overflow-hidden shadow-[0_18px_45px_rgba(50,45,41,0.10)]">
         <Swiper
