@@ -107,6 +107,7 @@ export default function CategorySection() {
           (category) =>
             category &&
             category.name &&
+            !category.parent_category_id &&
             category.status !== "inactive"
         );
 
@@ -152,8 +153,8 @@ export default function CategorySection() {
   };
 
   return (
-    <section className="bg-[#FFFFFF] px-[5%] py-10 md:py-12">
-      <div className="mx-auto w-full max-w-[1600px]">
+    <section className="bg-[#FFFFFF] px-0 py-10 md:py-12">
+      <div className="mx-0 w-full max-w-none">
 
         {/* =====================================================
             SECTION HEADER
@@ -161,11 +162,7 @@ export default function CategorySection() {
 
         <div className="mb-8 flex items-end justify-between md:mb-10">
           <div>
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[4px] text-[#C08081]">
-              Explore Our Collection
-            </p>
-
-            <h2 className="font-serif text-3xl font-medium tracking-wide text-[#292524] sm:text-4xl">
+            <h2 className="font-serif text-[32px] font-bold tracking-wide text-[#292524] sm:text-[38px]">
               Shop by Category
             </h2>
           </div>
@@ -265,22 +262,17 @@ export default function CategorySection() {
 
                 {/* CONTENT */}
 
-                <div className="absolute bottom-3 left-3 right-2">
-                  <p className="mb-1 text-[7px] uppercase tracking-[1.5px] text-[#C08081]">
-                    Collection
-                  </p>
-
-                  <h3 className="font-serif text-base italic tracking-wide text-white">
+                <div className="absolute bottom-3 left-3 right-2 flex items-end justify-between gap-2">
+                  <h3 className="min-w-0 font-serif text-base italic tracking-wide text-white">
                     {category.name}
                   </h3>
 
-                  <div className="mt-1 flex items-center gap-1 text-[7px] font-semibold uppercase tracking-[1px] text-white/80">
-                    <span>Shop</span>
-
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  <span
+                    aria-hidden="true"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-sm text-white transition-transform duration-300 group-hover:translate-x-1"
+                  >
                       →
-                    </span>
-                  </div>
+                  </span>
                 </div>
 
               </Link>
@@ -305,7 +297,7 @@ export default function CategorySection() {
             }}
             className="w-full"
           >
-            {categories.map((category, index) => (
+            {categories.map((category) => (
               <SwiperSlide key={category.category_id || category.name}>
                 <Link
                   href={getCategoryLink(category)}
@@ -371,64 +363,24 @@ export default function CategorySection() {
                   "
                 />
 
-                {/* TOP LABEL */}
-
-                <div className="absolute left-6 right-6 top-6 flex items-center justify-between">
-                  <span className="text-[8px] font-semibold uppercase tracking-[2.5px] text-white/80">
-                    VELORA
-                  </span>
-
-                  <span className="h-px w-10 bg-white/50" />
-                </div>
-
-                {/* NUMBER */}
-
-                <div className="absolute right-6 top-6">
-                  <span className="font-serif text-sm italic text-white/70">
-                    0{index + 1}
-                  </span>
-                </div>
-
-                {/* MAIN CONTENT */}
-
-                <div className="absolute bottom-8 left-6 right-6 text-white sm:bottom-10 sm:left-8 sm:right-8">
-
-                  <p className="mb-2 text-[9px] uppercase tracking-[3px] text-[#C08081]">
-                    Discover
-                  </p>
-
-                  <h3 className="font-serif text-3xl italic tracking-wide sm:text-4xl">
-                    {category.name}
-                  </h3>
-
-                  <div className="mt-5 flex items-center justify-between">
-
-                    <span className="text-[9px] font-semibold uppercase tracking-[2px]">
-                      Shop Collection
-                    </span>
-
-                    <span
-                      className="
-                        flex
-                        h-10
-                        w-10
-                        items-center
-                        justify-center
-                        rounded-full
-                        border
-                        border-white/50
-                        text-lg
-                        transition-all
-                        duration-300
-                        group-hover:bg-white
-                        group-hover:text-[#292524]
-                      "
-                    >
-                      →
-                    </span>
-
+                <div className="absolute bottom-8 left-6 right-6 flex items-end justify-between gap-4 text-white sm:bottom-10 sm:left-8 sm:right-8">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-serif text-3xl italic tracking-wide sm:text-4xl">
+                      {category.name}
+                    </h3>
+                    {category.description && (
+                      <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-white/80 sm:text-sm">
+                        {category.description}
+                      </p>
+                    )}
                   </div>
 
+                  <span
+                    aria-hidden="true"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-lg text-white transition-transform duration-300 group-hover:translate-x-1"
+                  >
+                      →
+                  </span>
                 </div>
 
                 </Link>
@@ -508,24 +460,17 @@ export default function CategorySection() {
 
                   {/* CONTENT */}
 
-                  <div className="absolute bottom-3 left-3 right-2">
-
-                    <p className="mb-1 text-[7px] uppercase tracking-[1.5px] text-[#C08081]">
-                      Collection
-                    </p>
-
-                    <h3 className="font-serif text-base italic tracking-wide text-white">
+                  <div className="absolute bottom-3 left-3 right-2 flex items-end justify-between gap-2">
+                    <h3 className="min-w-0 font-serif text-base italic tracking-wide text-white">
                       {category.name}
                     </h3>
 
-                    <div className="mt-1 flex items-center gap-1 text-[7px] font-semibold uppercase tracking-[1px] text-white/80">
-                      <span>Shop</span>
-
-                      <span className="transition-transform duration-300 group-hover:translate-x-1">
+                    <span
+                      aria-hidden="true"
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-sm text-white transition-transform duration-300 group-hover:translate-x-1"
+                    >
                         →
-                      </span>
-                    </div>
-
+                    </span>
                   </div>
 
                 </Link>
@@ -600,28 +545,17 @@ export default function CategorySection() {
 
               {/* CONTENT */}
 
-              <div className="absolute bottom-6 left-6 right-6 text-white">
-
-                <p className="mb-2 text-[8px] uppercase tracking-[2px] text-[#C08081]">
-                  Discover
-                </p>
-
-                <h3 className="font-serif text-3xl italic">
+              <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-4 text-white">
+                <h3 className="min-w-0 font-serif text-3xl italic">
                   {category.name}
                 </h3>
 
-                <div className="mt-3 flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[1.5px]">
-
-                  <span>
-                    Shop Collection
-                  </span>
-
-                  <span className="text-lg transition-transform duration-300 group-hover:translate-x-2">
+                <span
+                  aria-hidden="true"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-lg text-white transition-transform duration-300 group-hover:translate-x-1"
+                >
                     →
-                  </span>
-
-                </div>
-
+                </span>
               </div>
 
             </Link>

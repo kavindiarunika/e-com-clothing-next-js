@@ -118,7 +118,10 @@ export default function PromoBanner() {
   const visibleOffers = activeOffers.length > 0 ? activeOffers : [DEFAULT_PROMO];
 
   return (
-    <section className="user-page-full-bleed w-full">
+    <section
+      aria-label="Current offers"
+      className="promo-card-entry absolute bottom-3 right-3 z-40 w-[calc(100%-1.5rem)] max-w-[500px] sm:bottom-5 sm:right-[5%]"
+    >
 
       <Swiper
         modules={[Autoplay]}
@@ -140,12 +143,15 @@ export default function PromoBanner() {
               className={normalizeClassName(`
                 group
                 relative
-                min-h-[118px]
+                min-h-[240px]
                 w-full
+                rounded-xl
+                border
+                border-white/80
                 overflow-hidden
                 bg-[var(--color-dark)]
-                py-4
-                md:min-h-[104px]
+                py-6
+                shadow-[0_12px_36px_rgba(0,0,0,0.32)]
               `)}
             >
 
@@ -158,7 +164,7 @@ export default function PromoBanner() {
                 alt=""
                 aria-hidden="true"
                 fill
-                sizes="100vw"
+                sizes="(max-width: 640px) calc(100vw - 24px), 500px"
                 className={normalizeClassName(`
                   absolute
                   inset-0
@@ -177,83 +183,60 @@ export default function PromoBanner() {
 
               <div className="absolute inset-0 bg-[var(--color-dark)]/70" />
 
-              <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-dark)]/90 via-[var(--color-dark)]/65 to-[var(--color-dark)]/40" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-dark)]/90 via-[var(--color-dark)]/70 to-[var(--color-dark)]/45" />
 
               {/* =====================================================
                   CONTENT
               ===================================================== */}
 
-                  <div className="relative z-10 flex min-h-[86px] w-full items-center justify-center px-4 sm:px-6 md:min-h-[72px]">
-                    <div className="flex w-full max-w-7xl flex-col items-center justify-center gap-2 sm:flex-row sm:gap-4">
-                  <Sparkles
-                    size={13}
-                    strokeWidth={1.8}
-                        className="hidden shrink-0 text-[var(--color-banner)] md:block"
-                  />
+              <div className="relative z-10 flex min-h-[208px] w-full items-center px-5 py-6 sm:px-7">
+                <div className="flex w-full flex-col items-start gap-4">
+                  <div className="flex items-center gap-2 text-[var(--color-banner)]">
+                    <Sparkles size={15} strokeWidth={1.8} />
+                    <span className="text-[10px] font-semibold uppercase tracking-[2px]">
+                      Exclusive Offer
+                    </span>
+                  </div>
 
-                      <span className="hidden shrink-0 text-[9px] font-semibold uppercase tracking-[1.8px] text-[var(--color-banner)] md:block">
-                    Velora Exclusive
-                  </span>
+                  <div className="w-full">
+                    <h2 className="text-xl font-semibold leading-tight tracking-wide text-white sm:text-2xl">
+                      {offer.title}
+                    </h2>
+                    {offer.description && (
+                      <div
+                        className="mt-2 line-clamp-3 text-sm leading-relaxed text-white/85 sm:text-base"
+                        dangerouslySetInnerHTML={{
+                          __html: sanitizeProductDescription(offer.description),
+                        }}
+                      />
+                    )}
+                  </div>
 
-                      <div className="min-w-0 flex-1 text-center sm:text-left">
-                        <p className="truncate text-xs font-semibold tracking-wide text-white sm:text-sm">
-                          {offer.title}
-                        </p>
-                        {offer.description && (
-                          <div
-                            className="mx-auto mt-1 line-clamp-2 max-w-3xl text-[11px] leading-snug text-white/75 sm:mx-0"
-                            dangerouslySetInnerHTML={{
-                              __html: sanitizeProductDescription(offer.description),
-                            }}
-                          />
-                        )}
-                      </div>
-
+                  <div className="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-white/20 pt-4">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                       {(formatOfferDate(offer.start_date) || formatOfferDate(offer.end_date)) && (
-                        <p className="shrink-0 text-[10px] font-medium text-white/80">
+                        <p className="text-xs font-medium text-white/80">
                           {formatOfferDate(offer.start_date) && formatOfferDate(offer.end_date)
                             ? `Valid ${formatOfferDate(offer.start_date)} - ${formatOfferDate(offer.end_date)}`
                             : `Valid ${formatOfferDate(offer.start_date || offer.end_date)}`}
                         </p>
                       )}
+                    </div>
 
-                  {offer.link && (
-                    <Link
-                      href={offer.link}
-                      className={normalizeClassName(`
-                        group/button
-                        inline-flex
-                        shrink-0
-                        items-center
-                        gap-1.5
-                        border-b
-                        border-white/70
-                        pb-0.5
-                        text-[9px]
-                        font-semibold
-                        uppercase
-                        tracking-[1.2px]
-                        text-white
-                        transition-all
-                        duration-300
-                        hover:border-[var(--color-banner)]
-                        hover:text-[var(--color-banner)]
-                        sm:text-[10px]
-                      `)}
-                    >
-                      <span>Get Offer</span>
-
-                      <ArrowRight
-                        size={12}
-                        strokeWidth={1.8}
-                        className={normalizeClassName(`
-                          transition-transform
-                          duration-300
-                          group-hover/button:translate-x-1
-                        `)}
-                      />
-                    </Link>
-                  )}
+                    {offer.link && (
+                      <Link
+                        href={offer.link}
+                        className="group/button inline-flex min-h-10 items-center gap-2 bg-[var(--color-banner)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#c92f50] sm:text-xs"
+                      >
+                        <span>Get Offer</span>
+                        <ArrowRight
+                          size={14}
+                          strokeWidth={1.8}
+                          className="transition-transform duration-300 group-hover/button:translate-x-1"
+                        />
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </div>
 

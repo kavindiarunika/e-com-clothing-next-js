@@ -47,7 +47,7 @@ export default function FilterSidebar({
               name="price"
               checked={selectedPrice === "under5000"}
               onChange={() => setSelectedPrice("under5000")}
-              className="h-4 w-4 accent-[#C08081]"
+              className="h-4 w-4 accent-[#e63e62]"
             />
             Under Rs. 5,000
           </label>
@@ -58,7 +58,7 @@ export default function FilterSidebar({
               name="price"
               checked={selectedPrice === "5000-10000"}
               onChange={() => setSelectedPrice("5000-10000")}
-              className="h-4 w-4 accent-[#C08081]"
+              className="h-4 w-4 accent-[#e63e62]"
             />
             Rs. 5,000 - 10,000
           </label>
@@ -69,7 +69,7 @@ export default function FilterSidebar({
               name="price"
               checked={selectedPrice === "above10000"}
               onChange={() => setSelectedPrice("above10000")}
-              className="h-4 w-4 accent-[#C08081]"
+              className="h-4 w-4 accent-[#e63e62]"
             />
             Above Rs. 10,000
           </label>
@@ -91,8 +91,8 @@ export default function FilterSidebar({
               onClick={() => toggleSize(size)}
               className={`border px-3 py-2 text-xs transition ${
                 selectedSizes.includes(size)
-                  ? "border-[#C08081] bg-[#C08081] text-white"
-                  : "border-[#E7DEDC] bg-white text-[#5D554F] hover:border-[#C08081]"
+                  ? "border-[#e63e62] bg-[#e63e62] text-white"
+                  : "border-[#E7DEDC] bg-white text-[#5D554F] hover:border-[#e63e62]"
               }`}
             >
               {size}
@@ -116,7 +116,7 @@ export default function FilterSidebar({
               name="availability"
               checked={selectedAvailability === "all"}
               onChange={() => setSelectedAvailability("all")}
-              className="h-4 w-4 accent-[#C08081]"
+              className="h-4 w-4 accent-[#e63e62]"
             />
             All Products
           </label>
@@ -128,7 +128,7 @@ export default function FilterSidebar({
               name="availability"
               checked={selectedAvailability === "available"}
               onChange={() => setSelectedAvailability("available")}
-              className="h-4 w-4 accent-[#C08081]"
+              className="h-4 w-4 accent-[#e63e62]"
             />
             In Stock
           </label>
@@ -140,7 +140,7 @@ export default function FilterSidebar({
               name="availability"
               checked={selectedAvailability === "soldout"}
               onChange={() => setSelectedAvailability("soldout")}
-              className="h-4 w-4 accent-[#C08081]"
+              className="h-4 w-4 accent-[#e63e62]"
             />
             Sold Out
           </label>

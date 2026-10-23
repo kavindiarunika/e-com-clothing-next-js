@@ -416,7 +416,7 @@ export default function ShopPage({
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs text-[#C08081] hover:underline"
+                  className="text-xs text-[#e63e62] hover:underline"
                 >
                   Clear
                 </button>
@@ -471,7 +471,7 @@ export default function ShopPage({
               </div>
             ) : productLoadError ? (
               <div className="flex min-h-[350px] items-center justify-center bg-white px-6 text-center">
-                <p className="text-sm text-[#C08081]">{productLoadError}</p>
+                <p className="text-sm text-[#e63e62]">{productLoadError}</p>
               </div>
             ) : filteredProducts.length > 0 ? (
               <div
@@ -503,7 +503,7 @@ export default function ShopPage({
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-6 bg-[#C08081] px-6 py-3 text-xs font-medium uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
+                  className="mt-6 bg-[#e63e62] px-6 py-3 text-xs font-medium uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
                 >
                   Clear Filters
                 </button>
@@ -526,7 +526,7 @@ export default function ShopPage({
                     onClick={() => changePage(activePage - 1)}
                     disabled={activePage === 1}
                     aria-label="Go to previous page"
-                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#C08081] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
                   >
                     <ChevronLeft size={17} />
                   </button>
@@ -541,8 +541,8 @@ export default function ShopPage({
                         aria-current={activePage === item ? "page" : undefined}
                         className={`h-9 min-w-9 px-3 text-xs font-semibold transition ${
                           activePage === item
-                            ? "bg-[#C08081] text-white shadow-sm"
-                            : "text-[#292524] hover:bg-[#F8F5F2] hover:text-[#C08081]"
+                            ? "bg-[#e63e62] text-white shadow-sm"
+                            : "text-[#292524] hover:bg-[#F8F5F2] hover:text-[#e63e62]"
                         }`}
                       >
                         {item}
@@ -563,7 +563,7 @@ export default function ShopPage({
                     onClick={() => changePage(activePage + 1)}
                     disabled={activePage === pageCount}
                     aria-label="Go to next page"
-                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#C08081] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
                   >
                     <ChevronRight size={17} />
                   </button>
@@ -644,7 +644,7 @@ export default function ShopPage({
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs text-[#C08081] hover:underline"
+                  className="text-xs text-[#e63e62] hover:underline"
                 >
                   Clear All
                 </button>
@@ -685,7 +685,7 @@ export default function ShopPage({
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="mt-8 w-full bg-[#C08081] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
+                className="mt-8 w-full bg-[#e63e62] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
               >
                 Show {filteredProducts.length} Products
               </button>

@@ -132,7 +132,7 @@ export default function CheckoutPage() {
         <div className="mx-auto max-w-2xl text-center">
           <ShoppingBag
             size={50}
-            className="mx-auto text-[#C08081]"
+            className="mx-auto text-[#e63e62]"
           />
 
           <h1 className="mt-6 font-serif text-4xl text-[#292524]">
@@ -145,7 +145,7 @@ export default function CheckoutPage() {
 
           <Link
             href="/shop"
-            className="mt-8 inline-block bg-[#C08081] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+            className="mt-8 inline-block bg-[#e63e62] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
           >
             Continue Shopping
           </Link>
@@ -161,13 +161,13 @@ export default function CheckoutPage() {
         <div className="mx-auto w-[92%] max-w-300 py-10 md:py-14">
           <Link
             href="/cart"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[1.5px] text-[#6B625C] transition hover:text-[#C08081]"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-[1.5px] text-[#6B625C] transition hover:text-[#e63e62]"
           >
             <ArrowLeft size={15} />
             Back to Cart
           </Link>
 
-          <p className="mt-8 text-xs font-semibold uppercase tracking-[3px] text-[#C08081]">
+          <p className="mt-8 text-xs font-semibold uppercase tracking-[3px] text-[#e63e62]">
             Velora
           </p>
 
@@ -192,7 +192,7 @@ export default function CheckoutPage() {
             {/* 01 Shipping Address */}
             <section className="bg-white p-6 md:p-8">
               <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#C08081]">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
                   01
                 </p>
 
@@ -222,7 +222,7 @@ export default function CheckoutPage() {
                     value={formData.firstName}
                     onChange={handleChange}
                     placeholder="Enter first name"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
+                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
                     required
                   />
                 </div>
@@ -243,7 +243,7 @@ export default function CheckoutPage() {
                     value={formData.lastName}
                     onChange={handleChange}
                     placeholder="Enter last name"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
+                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
                     required
                   />
                 </div>
@@ -264,7 +264,7 @@ export default function CheckoutPage() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="07XXXXXXXX"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
+                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
                     required
                   />
                 </div>
@@ -285,7 +285,7 @@ export default function CheckoutPage() {
                     value={formData.postalCode}
                     onChange={handleChange}
                     placeholder="Postal code"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
+                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
                     required
                   />
                 </div>
@@ -306,7 +306,7 @@ export default function CheckoutPage() {
                     value={formData.address}
                     onChange={handleChange}
                     placeholder="House number, street, area..."
-                    className="w-full resize-none border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
+                    className="w-full resize-none border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
                     required
                   />
                 </div>
@@ -327,7 +327,7 @@ export default function CheckoutPage() {
                     value={formData.city}
                     onChange={handleChange}
                     placeholder="Enter city"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
+                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
                     required
                   />
                 </div>
@@ -346,7 +346,7 @@ export default function CheckoutPage() {
                     name="district"
                     value={formData.district}
                     onChange={handleChange}
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
+                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
                     required
                   >
                     <option value="">
@@ -395,7 +395,7 @@ export default function CheckoutPage() {
             {/* 02 Delivery */}
             <section className="bg-white p-6 md:p-8">
               <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#C08081]">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
                   02
                 </p>
 
@@ -404,7 +404,7 @@ export default function CheckoutPage() {
                 </h2>
               </div>
 
-              <div className="border border-[#C08081] bg-[#FAF6F5] p-4">
+              <div className="border border-[#e63e62] bg-[#FAF6F5] p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-[#292524]">
@@ -416,7 +416,7 @@ export default function CheckoutPage() {
                     </p>
                   </div>
 
-                  <span className="text-sm font-semibold text-[#C08081]">
+                  <span className="text-sm font-semibold text-[#e63e62]">
                     Rs. {shippingCost.toLocaleString()}
                   </span>
                 </div>
@@ -426,7 +426,7 @@ export default function CheckoutPage() {
             {/* 03 Payment */}
             <section className="bg-white p-6 md:p-8">
               <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#C08081]">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
                   03
                 </p>
 
@@ -436,7 +436,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* ONLY CASH ON DELIVERY */}
-              <div className="border border-[#C08081] bg-[#FAF6F5] p-4">
+              <div className="border border-[#e63e62] bg-[#FAF6F5] p-4">
                 <label className="flex cursor-pointer items-center gap-3">
                   <input
                     type="radio"
@@ -448,7 +448,7 @@ export default function CheckoutPage() {
                     onChange={(e) =>
                       setPaymentMethod(e.target.value)
                     }
-                    className="h-4 w-4 accent-[#C08081]"
+                    className="h-4 w-4 accent-[#e63e62]"
                   />
 
                   <div>
@@ -463,7 +463,7 @@ export default function CheckoutPage() {
 
                   <CheckCircle
                     size={18}
-                    className="ml-auto text-[#C08081]"
+                    className="ml-auto text-[#e63e62]"
                   />
                 </label>
               </div>
@@ -475,7 +475,7 @@ export default function CheckoutPage() {
             <section className="sticky top-24 bg-white p-6 md:p-8">
               {/* Order Summary */}
               <div className="border-b border-[#E7DEDC] pb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#C08081]">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
                   04
                 </p>
 
@@ -529,7 +529,7 @@ export default function CheckoutPage() {
 
                     {/* Price */}
                     <div className="text-right">
-                      <p className="text-sm font-medium text-[#C08081]">
+                      <p className="text-sm font-medium text-[#e63e62]">
                         Rs.{" "}
                         {(
                           Number(item.price) *
@@ -570,7 +570,7 @@ export default function CheckoutPage() {
                   Total
                 </span>
 
-                <span className="text-2xl font-semibold text-[#C08081]">
+                <span className="text-2xl font-semibold text-[#e63e62]">
                   Rs. {total.toLocaleString()}
                 </span>
               </div>
@@ -580,7 +580,7 @@ export default function CheckoutPage() {
                 <div className="flex items-start gap-3">
                   <CheckCircle
                     size={18}
-                    className="mt-0.5 shrink-0 text-[#C08081]"
+                    className="mt-0.5 shrink-0 text-[#e63e62]"
                   />
 
                   <div>
@@ -600,7 +600,7 @@ export default function CheckoutPage() {
               {/* Place Order */}
               <button
                 type="submit"
-                className="mt-7 w-full bg-[#C08081] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+                className="mt-7 w-full bg-[#e63e62] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
               >
                 Place Order
               </button>

@@ -17,7 +17,7 @@ export default function TermsPage() {
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#FFFFFF] hover:text-[#C08081]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] hover:text-[#e63e62]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -28,7 +28,7 @@ export default function TermsPage() {
       <section className="mx-auto max-w-4xl px-5 py-16">
 
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C08081]">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#e63e62]">
             VELORA
           </p>
 

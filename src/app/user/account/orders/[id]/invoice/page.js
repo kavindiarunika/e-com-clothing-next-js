@@ -123,7 +123,7 @@ export default function InvoicePage() {
 
           <Link
             href="/user/account/orders"
-            className="mt-6 inline-flex rounded-full bg-[#C08081] px-6 py-3 text-sm font-medium text-white transition hover:bg-[#A96870]"
+            className="mt-6 inline-flex rounded-full bg-[#e63e62] px-6 py-3 text-sm font-medium text-white transition hover:bg-[#A96870]"
           >
             Back to Orders
           </Link>
@@ -179,7 +179,7 @@ export default function InvoicePage() {
           {/* Save as PDF */}
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 rounded-full bg-[#C08081] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#A96870]"
+            className="inline-flex items-center gap-2 rounded-full bg-[#e63e62] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#A96870]"
           >
             <Download size={17} />
             Save as PDF
@@ -218,7 +218,7 @@ export default function InvoicePage() {
 
               {/* Invoice Information */}
               <div className="sm:text-right">
-                <p className="text-xs uppercase tracking-[0.2em] text-[#C08081]">
+                <p className="text-xs uppercase tracking-[0.2em] text-[#e63e62]">
                   Invoice
                 </p>
 
@@ -244,7 +244,7 @@ export default function InvoicePage() {
 
             {/* Customer */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C08081]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e63e62]">
                 Bill To
               </p>
 
@@ -277,7 +277,7 @@ export default function InvoicePage() {
 
             {/* Payment */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C08081]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e63e62]">
                 Payment Information
               </p>
 
@@ -332,7 +332,7 @@ export default function InvoicePage() {
           ================================================== */}
           <div className="p-6 sm:p-10">
 
-            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-[#C08081]">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-[#e63e62]">
               Order Items
             </p>
 
@@ -422,7 +422,7 @@ export default function InvoicePage() {
               <div className="flex items-center justify-between text-lg font-semibold">
                 <span>Total</span>
 
-                <span className="text-[#C08081]">
+                <span className="text-[#e63e62]">
                   Rs. {order.total_amount.toLocaleString()}
                 </span>
               </div>

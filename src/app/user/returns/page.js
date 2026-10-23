@@ -27,7 +27,7 @@ export default function ReturnsPage() {
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#FFFFFF] transition hover:text-[#C08081]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] transition hover:text-[#e63e62]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -41,7 +41,7 @@ export default function ReturnsPage() {
 
         <div className="text-center">
 
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C08081]">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#e63e62]">
             Customer Care
           </p>
 
@@ -135,7 +135,7 @@ export default function ReturnsPage() {
 
           <Link
             href="/user/account/returns"
-            className="mt-7 inline-flex items-center gap-2 bg-[#C08081] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#A96870]"
+            className="mt-7 inline-flex items-center gap-2 bg-[#e63e62] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#A96870]"
           >
             View My Requests
           </Link>
@@ -143,7 +143,7 @@ export default function ReturnsPage() {
         </div>
 
         {/* Important Information */}
-        <div className="mt-8 rounded-2xl border border-[#C08081]/15 bg-[#C08081]/5 p-6">
+        <div className="mt-8 rounded-2xl border border-[#e63e62]/15 bg-[#e63e62]/5 p-6">
 
           <h3 className="font-semibold">
             Important Information
@@ -167,11 +167,11 @@ function ReturnStep({ number, icon, title, children }) {
   return (
     <div className="flex gap-5 rounded-3xl bg-white p-7 shadow-sm">
 
-      <div className="pt-2 text-sm font-semibold tracking-wider text-[#C08081]">
+      <div className="pt-2 text-sm font-semibold tracking-wider text-[#e63e62]">
         {number}
       </div>
 
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-[#e63e62]">
         {icon}
       </div>
 

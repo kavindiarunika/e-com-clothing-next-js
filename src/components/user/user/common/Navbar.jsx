@@ -155,7 +155,7 @@ export default function Navbar() {
 
           <Link
             href="/user"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#C08081]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#e63e62]"
           >
             Home
           </Link>
@@ -164,7 +164,7 @@ export default function Navbar() {
 
           <Link
             href="/user/shop"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#C08081]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#e63e62]"
           >
             Shop
           </Link>
@@ -181,7 +181,7 @@ export default function Navbar() {
 
             <Link
               href="/user/shop"
-              className="flex items-center gap-1 text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#C08081]"
+              className="flex items-center gap-1 text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#e63e62]"
             >
               Collection
 
@@ -202,7 +202,7 @@ export default function Navbar() {
                   {/* Dropdown Header */}
 
                   <div className="border-b border-[#292524]/10 px-6 pb-3">
-                    <p className="text-[10px] font-medium uppercase tracking-[2px] text-[#C08081]">
+                    <p className="text-[10px] font-medium uppercase tracking-[2px] text-[#e63e62]">
                       Shop Collection
                     </p>
 
@@ -216,7 +216,7 @@ export default function Navbar() {
                   <Link
                     href="/user/shop"
                     onClick={closeMenu}
-                    className="block px-6 py-3 text-sm font-medium transition hover:bg-[#FFFFFF] hover:text-[#C08081]"
+                    className="block px-6 py-3 text-sm font-medium transition hover:bg-[#FFFFFF] hover:text-[#e63e62]"
                   >
                     View All Products
                   </Link>
@@ -249,7 +249,7 @@ export default function Navbar() {
                                 key={item.name}
                                 href={item.href}
                                 onClick={closeMenu}
-                                className="block px-6 py-2 text-sm text-[#292524]/65 transition hover:bg-[#FFFFFF] hover:text-[#C08081]"
+                                className="block px-6 py-2 text-sm text-[#292524]/65 transition hover:bg-[#FFFFFF] hover:text-[#e63e62]"
                               >
                                 {item.name}
                               </Link>
@@ -272,7 +272,7 @@ export default function Navbar() {
 
           <Link
             href="/user/shop?sort=newest"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#C08081]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#e63e62]"
           >
             New Arrivals
           </Link>
@@ -290,7 +290,7 @@ export default function Navbar() {
           <Link
             href="/user/shop"
             aria-label="Search"
-            className="transition hover:text-[#C08081]"
+            className="transition hover:text-[#e63e62]"
           >
             <Search
               size={20}
@@ -303,7 +303,7 @@ export default function Navbar() {
           <Link
             href="/user/wishlist"
             aria-label="Wishlist"
-            className="transition hover:text-[#C08081]"
+            className="transition hover:text-[#e63e62]"
           >
             <Heart
               size={20}
@@ -316,14 +316,14 @@ export default function Navbar() {
           <Link
             href="/user/cart"
             aria-label="Shopping Cart"
-            className="relative transition hover:text-[#C08081]"
+            className="relative transition hover:text-[#e63e62]"
           >
             <ShoppingBag
               size={20}
               strokeWidth={1.7}
             />
 
-            <span className="absolute -right-2 -top-2 flex h-3.75 w-3.75 items-center justify-center rounded-full bg-[#C08081] text-[9px] font-bold text-white">
+            <span className="absolute -right-2 -top-2 flex h-3.75 w-3.75 items-center justify-center rounded-full bg-[#e63e62] text-[9px] font-bold text-white">
               {cartCount}
             </span>
           </Link>
@@ -334,7 +334,7 @@ export default function Navbar() {
             href="/user/account"
             onClick={handleAccountClick}
             aria-label="Account"
-            className="transition hover:text-[#C08081]"
+            className="transition hover:text-[#e63e62]"
           >
             <User
               size={20}
@@ -385,7 +385,7 @@ export default function Navbar() {
             <Link
               href="/user"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#C08081]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#e63e62]"
             >
               Home
             </Link>
@@ -395,7 +395,7 @@ export default function Navbar() {
             <Link
               href="/user/shop"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#C08081]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#e63e62]"
             >
               Shop
             </Link>
@@ -433,7 +433,7 @@ export default function Navbar() {
                   <Link
                     href="/user/shop"
                     onClick={closeMenu}
-                    className="block py-2 text-sm font-medium text-[#C08081]"
+                    className="block py-2 text-sm font-medium text-[#e63e62]"
                   >
                     View All Products
                   </Link>
@@ -459,7 +459,7 @@ export default function Navbar() {
                             key={item.name}
                             href={item.href}
                             onClick={closeMenu}
-                            className="block py-1.5 pl-4 text-sm text-white/60 transition hover:text-[#C08081]"
+                            className="block py-1.5 pl-4 text-sm text-white/60 transition hover:text-[#e63e62]"
                           >
                             {item.name}
                           </Link>
@@ -481,7 +481,7 @@ export default function Navbar() {
             <Link
               href="/user/shop?sort=newest"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#C08081]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#e63e62]"
             >
               New Arrivals
             </Link>
@@ -499,7 +499,7 @@ export default function Navbar() {
             <Link
               href="/user/wishlist"
               onClick={closeMenu}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#C08081]"
+              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#e63e62]"
             >
               <Heart
                 size={18}
@@ -514,7 +514,7 @@ export default function Navbar() {
             <Link
               href="/user/cart"
               onClick={closeMenu}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#C08081]"
+              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#e63e62]"
             >
               <ShoppingBag
                 size={18}
@@ -524,7 +524,7 @@ export default function Navbar() {
               Cart
 
               {cartCount > 0 && (
-                <span className="ml-auto rounded-full bg-[#C08081] px-2 py-0.5 text-[10px]">
+                <span className="ml-auto rounded-full bg-[#e63e62] px-2 py-0.5 text-[10px]">
                   {cartCount}
                 </span>
               )}
@@ -535,7 +535,7 @@ export default function Navbar() {
             <Link
               href="/user/account"
               onClick={handleAccountClick}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#C08081]"
+              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#e63e62]"
             >
               <User
                 size={18}

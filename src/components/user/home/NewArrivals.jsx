@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import ProductCard from "../product/ProductCard";
 
 export default function NewArrivals() {
@@ -62,22 +63,21 @@ export default function NewArrivals() {
   }, []);
 
   return (
-    <section className="bg-[#FFFFFF] px-4 py-10 sm:px-6 md:py-12 lg:px-8">
-      <div className="mx-auto max-w-350">
+    <section className="bg-[#FFFFFF] px-0 py-10 md:py-12">
+      <div className="mx-0 w-full max-w-none">
 
         {/* Heading */}
-        <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end md:mb-10">
-          <div>
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[4px] text-[#C08081]">
-              Just In
-            </p>
-
-            <h2 className="font-serif text-3xl font-medium tracking-wide text-[#292524] sm:text-4xl">
-              New Arrivals
-            </h2>
-
-            <div className="mt-5 h-px w-12 bg-[#C08081]" />
-          </div>
+        <div className="mb-8 flex items-end justify-between md:mb-10">
+          <h2 className="font-serif text-[32px] font-bold tracking-wide text-[#292524] sm:text-[38px]">
+            New Arrivals
+          </h2>
+          <Link
+            href="/user/shop?sort=newest"
+            className="inline-flex shrink-0 items-center gap-3 bg-[#e63e62] px-4 py-3 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#c92f50] sm:min-h-[50px] sm:px-5 sm:text-sm"
+          >
+            View All Products
+            <ArrowRight size={16} strokeWidth={1.8} aria-hidden="true" />
+          </Link>
         </div>
 
         {/* 4 Product Cards Horizontally */}
@@ -97,17 +97,6 @@ export default function NewArrivals() {
             No new products available right now.
           </p>
         )}
-
-        {/* View All Products Button */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/user/shop?sort=newest"
-            className="inline-flex items-center gap-3 border border-[#C08081] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.5px] text-[#C08081] transition duration-300 hover:bg-[#C08081] hover:text-white"
-          >
-            View All Products
-            <span>→</span>
-          </Link>
-        </div>
 
       </div>
     </section>

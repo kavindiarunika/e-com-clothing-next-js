@@ -170,7 +170,7 @@ export default function ReturnsPage() {
 
           <Link
             href="/user/account"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#C08081]"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#e63e62]"
           >
             <ArrowLeft size={15} />
             My Account
@@ -186,7 +186,7 @@ export default function ReturnsPage() {
         {/* TITLE */}
         <div className="mb-10">
 
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
             Customer Account
           </p>
 
@@ -207,7 +207,7 @@ export default function ReturnsPage() {
 
             <Link
               href="/user/account/orders"
-              className="inline-flex items-center justify-center border border-[#C08081] px-5 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#C08081] transition hover:bg-[#C08081] hover:text-white"
+              className="inline-flex items-center justify-center border border-[#e63e62] px-5 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#e63e62] transition hover:bg-[#e63e62] hover:text-white"
             >
               My Orders
             </Link>
@@ -219,7 +219,7 @@ export default function ReturnsPage() {
         {/* ORDERS */}
         <div className="mb-14">
           <div className="mb-6">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
               Start a Request
             </p>
             <h2 className="font-serif text-2xl sm:text-3xl">
@@ -306,7 +306,7 @@ export default function ReturnsPage() {
                             <div className="flex flex-wrap gap-2">
                               <Link
                                 href={`/user/account/returns/request?orderId=${order.order_id}&orderItemId=${item.order_item_id}&type=return`}
-                                className="inline-flex items-center justify-center gap-2 border border-[#C08081] px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[1px] text-[#C08081] transition hover:bg-[#C08081] hover:text-white"
+                                className="inline-flex items-center justify-center gap-2 border border-[#e63e62] px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[1px] text-[#e63e62] transition hover:bg-[#e63e62] hover:text-white"
                               >
                                 <RotateCcw size={14} />
                                 Return
@@ -400,7 +400,7 @@ export default function ReturnsPage() {
 
                       <div>
 
-                        <p className="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#C08081]">
+                        <p className="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#e63e62]">
                           Request #{request.return_id}
                         </p>
 
@@ -522,7 +522,7 @@ export default function ReturnsPage() {
 
                     <Link
                       href={`/user/account/orders/${request.order_id}`}
-                      className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.2px] text-[#C08081] hover:underline"
+                      className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.2px] text-[#e63e62] hover:underline"
                     >
                       View Order
                       <ArrowLeft

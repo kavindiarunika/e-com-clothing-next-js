@@ -268,7 +268,7 @@ export default function CategoryPage({
 
         <div className="mx-auto w-[92%] max-w-300 py-12 md:py-16">
 
-          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#C08081]">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#e63e62]">
             Velora Collection
           </p>
 
@@ -276,7 +276,7 @@ export default function CategoryPage({
 
             <Link
               href="/"
-              className="transition hover:text-[#C08081]"
+              className="transition hover:text-[#e63e62]"
             >
               Home
             </Link>
@@ -368,8 +368,8 @@ export default function CategoryPage({
                   className={`whitespace-nowrap border px-5 py-2.5 text-xs uppercase tracking-[1px] transition ${
                     selectedSubcategory ===
                     subcategoryItem
-                      ? "border-[#C08081] bg-[#C08081] text-white"
-                      : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#C08081]"
+                      ? "border-[#e63e62] bg-[#e63e62] text-white"
+                      : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#e63e62]"
                   }`}
                 >
                   {subcategoryItem}
@@ -450,7 +450,7 @@ export default function CategoryPage({
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="mt-5 bg-[#C08081] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
+                    className="mt-5 bg-[#e63e62] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
                   >
                     Clear Filters
                   </button>
@@ -540,7 +540,7 @@ export default function CategoryPage({
               onClick={() =>
                 setMobileFiltersOpen(false)
               }
-              className="mt-6 w-full bg-[#C08081] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
+              className="mt-6 w-full bg-[#e63e62] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
             >
               View {filteredProducts.length} Products
             </button>

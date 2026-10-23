@@ -228,7 +228,7 @@ export default function ShopPage() {
       <section className="border-b border-[#E7DEDC] bg-[#FFFFFF]">
         <div className="mx-auto w-[92%] max-w-[1200px] py-12 md:py-16">
 
-          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#C08081]">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#e63e62]">
             Velora Collection
           </p>
 
@@ -292,7 +292,7 @@ export default function ShopPage() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs text-[#C08081] hover:underline"
+                  className="text-xs text-[#e63e62] hover:underline"
                 >
                   Clear
                 </button>
@@ -382,7 +382,7 @@ export default function ShopPage() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-6 bg-[#C08081] px-6 py-3 text-xs font-medium uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
+                  className="mt-6 bg-[#e63e62] px-6 py-3 text-xs font-medium uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
                 >
                   Clear Filters
                 </button>
@@ -436,7 +436,7 @@ export default function ShopPage() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs text-[#C08081] hover:underline"
+                  className="text-xs text-[#e63e62] hover:underline"
                 >
                   Clear All
                 </button>
@@ -473,7 +473,7 @@ export default function ShopPage() {
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="mt-8 w-full bg-[#C08081] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
+                className="mt-8 w-full bg-[#e63e62] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
               >
                 Show {filteredProducts.length} Products
               </button>

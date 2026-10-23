@@ -99,12 +99,12 @@ export default function LoginPage() {
                 VELORA
               </Link>
 
-              <div className="mx-auto mt-4 h-px w-8 bg-[#C08081]" />
+              <div className="mx-auto mt-4 h-px w-8 bg-[#e63e62]" />
             </div>
 
             {/* TITLE */}
             <div className="mb-5">
-              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
+              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
                 Welcome Back
               </p>
 
@@ -227,7 +227,7 @@ export default function LoginPage() {
                       outline-none
                       transition
                       placeholder:text-[#A69C94]
-                      focus:border-[#C08081]
+                      focus:border-[#e63e62]
                     "
                   />
                 </div>
@@ -248,7 +248,7 @@ export default function LoginPage() {
                     className="
                       text-[11px]
                       font-medium
-                      text-[#C08081]
+                      text-[#e63e62]
                       transition
                       hover:text-[#A96870]
                     "
@@ -283,7 +283,7 @@ export default function LoginPage() {
                       outline-none
                       transition
                       placeholder:text-[#A69C94]
-                      focus:border-[#C08081]
+                      focus:border-[#e63e62]
                     "
                   />
 
@@ -299,7 +299,7 @@ export default function LoginPage() {
                       -translate-y-1/2
                       text-[#8B817A]
                       transition
-                      hover:text-[#C08081]
+                      hover:text-[#e63e62]
                     "
                     aria-label={
                       showPassword
@@ -336,7 +336,7 @@ export default function LoginPage() {
                   text-white
                   transition
                   duration-300
-                  hover:bg-[#C08081]
+                  hover:bg-[#e63e62]
                   disabled:cursor-not-allowed
                   disabled:opacity-60
                 "
@@ -369,7 +369,7 @@ export default function LoginPage() {
                   inline-block
                   text-sm
                   font-semibold
-                  text-[#C08081]
+                  text-[#e63e62]
                   transition
                   hover:text-[#A96870]
                 "

@@ -119,7 +119,7 @@ export default function HeroBanner() {
                   }`}
                 >
                   <div className="mb-4 flex items-center gap-2.5">
-                    <span className="h-px w-8 bg-[#C08081]" />
+                    <span className="h-px w-8 bg-[#e63e62]" />
                     <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#FAF6F5]">
                       Velora
                     </span>
@@ -136,7 +136,7 @@ export default function HeroBanner() {
                   <div className="mt-7">
                     <Link
                       href={slide.buttonLink || "/user/shop"}
-                      className="group relative inline-flex h-11 items-center gap-2.5 overflow-hidden bg-[#C08081] px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-white transition-colors duration-300 hover:bg-[#A96870]"
+                      className="group relative inline-flex h-11 items-center gap-2.5 overflow-hidden bg-[#e63e62] px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-white transition-colors duration-300 hover:bg-[#A96870]"
                     >
                       <ShoppingBag
                         size={14}

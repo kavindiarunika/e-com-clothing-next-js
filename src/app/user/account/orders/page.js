@@ -122,7 +122,7 @@ export default function OrdersPage() {
 
           <Link
             href="/user/account"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#C08081]"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#e63e62]"
           >
             <ArrowLeft size={15} />
             My Account
@@ -138,7 +138,7 @@ export default function OrdersPage() {
         {/* TITLE */}
         <div className="mb-10">
 
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
             Purchase History
           </p>
 
@@ -172,7 +172,7 @@ export default function OrdersPage() {
             <Link
               key={order.id}
               href={`/user/account/orders/${order.id}`}
-              className="group block border border-[#E7DEDC] bg-[#FAF6F5] transition hover:border-[#C08081] hover:shadow-sm"
+              className="group block border border-[#E7DEDC] bg-[#FAF6F5] transition hover:border-[#e63e62] hover:shadow-sm"
             >
 
               <div className="space-y-3 p-5 sm:p-6">
@@ -204,18 +204,18 @@ export default function OrdersPage() {
                     <span>{order.date}</span>
                     <span className="inline-flex items-center gap-1.5">
                       {order.statusType === "shipped" ? (
-                        <Truck size={14} className="text-[#C08081]" />
+                        <Truck size={14} className="text-[#e63e62]" />
                       ) : (
                         <CheckCircle2 size={14} className="text-[#547454]" />
                       )}
-                      <span className={order.statusType === "delivered" ? "text-[#547454]" : "text-[#C08081]"}>
+                      <span className={order.statusType === "delivered" ? "text-[#547454]" : "text-[#e63e62]"}>
                         {order.status}
                       </span>
                     </span>
                     <span className="font-semibold text-[#292524]">{order.total}</span>
                   </div>
 
-                  <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524] group-hover:text-[#C08081]">
+                  <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524] group-hover:text-[#e63e62]">
                     View Order
                     <ChevronRight
                       size={15}
@@ -251,7 +251,7 @@ export default function OrdersPage() {
 
             <Link
               href="/user"
-              className="mt-6 inline-block bg-[#292524] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#C08081]"
+              className="mt-6 inline-block bg-[#292524] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#e63e62]"
             >
               Start Shopping
             </Link>

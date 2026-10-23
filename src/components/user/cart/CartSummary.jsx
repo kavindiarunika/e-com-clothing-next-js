@@ -45,7 +45,7 @@ export default function CartSummary({
           <PriceRow
             label="Product discount"
             value={`- Rs. ${productDiscount.toLocaleString()}`}
-            valueClassName="text-[#C08081]"
+            valueClassName="text-[#e63e62]"
           />
         )}
 
@@ -53,7 +53,7 @@ export default function CartSummary({
           <PriceRow
             label={`Coupon (${selectedCoupon.code})`}
             value={`- Rs. ${couponDiscount.toLocaleString()}`}
-            valueClassName="text-[#C08081]"
+            valueClassName="text-[#e63e62]"
           />
         )}
 
@@ -68,7 +68,7 @@ export default function CartSummary({
           Total
         </span>
 
-        <span className="shrink-0 text-right text-xl font-semibold tabular-nums text-[#C08081]">
+        <span className="shrink-0 text-right text-xl font-semibold tabular-nums text-[#e63e62]">
           Rs. {total.toLocaleString()}
         </span>
       </div>
@@ -84,7 +84,7 @@ export default function CartSummary({
             Checking available coupons...
           </p>
         ) : couponLoadError ? (
-          <p role="alert" className="mt-3 text-sm text-[#C08081]">
+          <p role="alert" className="mt-3 text-sm text-[#e63e62]">
             {couponLoadError}
           </p>
         ) : coupons.length > 0 ? (
@@ -165,7 +165,7 @@ export default function CartSummary({
         className={`mt-7 block w-full px-6 py-4 text-center text-xs font-semibold uppercase tracking-[1.5px] text-white transition ${
           selectedItems.length === 0
             ? "cursor-not-allowed bg-[#8B817A]"
-            : "bg-[#C08081] hover:bg-[#A96870]"
+            : "bg-[#e63e62] hover:bg-[#A96870]"
         }`}
       >
         Proceed to Checkout

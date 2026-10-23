@@ -167,10 +167,10 @@ export default function CartPage() {
         <div className="mx-auto w-[92%] max-w-175 text-center">
           <ShoppingBag
             size={50}
-            className="mx-auto text-[#C08081]"
+            className="mx-auto text-[#e63e62]"
           />
 
-          <p className="mt-6 text-xs uppercase tracking-[3px] text-[#C08081]">
+          <p className="mt-6 text-xs uppercase tracking-[3px] text-[#e63e62]">
             Velora
           </p>
 
@@ -184,7 +184,7 @@ export default function CartPage() {
 
           <Link
             href="/shop"
-            className="mt-8 inline-flex items-center gap-2 bg-[#C08081] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#A96870]"
+            className="mt-8 inline-flex items-center gap-2 bg-[#e63e62] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#A96870]"
           >
             <ArrowLeft size={15} />
             Continue Shopping
@@ -200,7 +200,7 @@ export default function CartPage() {
 
         {/* Header */}
         <div className="mb-10">
-          <p className="text-xs uppercase tracking-[3px] text-[#C08081]">
+          <p className="text-xs uppercase tracking-[3px] text-[#e63e62]">
             Velora
           </p>
 
@@ -241,7 +241,7 @@ export default function CartPage() {
             {/* Continue Shopping */}
             <Link
               href="/shop"
-              className="my-6 inline-flex items-center gap-2 text-xs uppercase tracking-[1px] text-[#C08081] hover:underline"
+              className="my-6 inline-flex items-center gap-2 text-xs uppercase tracking-[1px] text-[#e63e62] hover:underline"
             >
               <ArrowLeft size={14} />
               Continue Shopping

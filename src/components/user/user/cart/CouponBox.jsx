@@ -21,13 +21,13 @@ export default function CouponBox({ onApplyCoupon }) {
           value={coupon}
           onChange={(e) => setCoupon(e.target.value)}
           placeholder="Enter coupon"
-          className="min-w-0 flex-1 border border-[#E7DEDC] bg-white px-4 py-3 text-sm outline-none focus:border-[#C08081]"
+          className="min-w-0 flex-1 border border-[#E7DEDC] bg-white px-4 py-3 text-sm outline-none focus:border-[#e63e62]"
         />
 
         <button
           type="button"
           onClick={handleApply}
-          className="bg-[#C08081] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
+          className="bg-[#e63e62] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
         >
           Apply
         </button>

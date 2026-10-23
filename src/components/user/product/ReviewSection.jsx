@@ -156,7 +156,7 @@ export default function ReviewSection({ product }) {
                 disabled={isLoading || isSubmitting}
                 aria-label={`Rate ${star} stars`}
                 aria-pressed={selectedRating === star}
-                className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-[#FAF6F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C08081] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-[#FAF6F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e63e62] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Star
                   size={20}
@@ -164,7 +164,7 @@ export default function ReviewSection({ product }) {
                   className={
                     star <=
                     (selectedRating ?? Math.round(ratingSummary.averageRating))
-                      ? "fill-[#C08081] text-[#C08081]"
+                      ? "fill-[#e63e62] text-[#e63e62]"
                       : "text-[#E7DEDC]"
                   }
                 />
@@ -184,7 +184,7 @@ export default function ReviewSection({ product }) {
               type="button"
               onClick={() => void submitRating()}
               disabled={isSubmitting || hasSubmittedReview}
-              className="mt-3 inline-flex min-h-10 items-center justify-center rounded-full bg-[#C08081] px-5 py-2 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#5E2B30] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C08081] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-3 inline-flex min-h-10 items-center justify-center rounded-full bg-[#e63e62] px-5 py-2 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#5E2B30] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e63e62] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting
                 ? "Submitting..."
@@ -221,7 +221,7 @@ export default function ReviewSection({ product }) {
                 <span className="w-3 text-right">{star}</span>
                 <Star
                   size={14}
-                  className="shrink-0 fill-[#C08081] text-[#C08081]"
+                  className="shrink-0 fill-[#e63e62] text-[#e63e62]"
                   aria-hidden="true"
                 />
                 <div
@@ -230,7 +230,7 @@ export default function ReviewSection({ product }) {
                   aria-label={`${star} stars: ${count} reviews`}
                 >
                   <div
-                    className="h-full rounded-full bg-[#C08081]"
+                    className="h-full rounded-full bg-[#e63e62]"
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
@@ -239,7 +239,7 @@ export default function ReviewSection({ product }) {
             );
           })}
           {loadError && (
-            <p role="alert" className="text-sm text-[#C08081]">
+            <p role="alert" className="text-sm text-[#e63e62]">
               {loadError}
             </p>
           )}

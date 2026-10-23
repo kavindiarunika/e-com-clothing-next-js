@@ -90,7 +90,7 @@ export default function ReviewSection({ product }) {
 
       {/* ================= HEADER ================= */}
       <div className="mb-10">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[3px] text-[#C08081]">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[3px] text-[#e63e62]">
           Customer Feedback
         </p>
 
@@ -98,7 +98,7 @@ export default function ReviewSection({ product }) {
           Reviews & Ratings
         </h2>
 
-        <div className="mt-5 h-px w-12 bg-[#C08081]" />
+        <div className="mt-5 h-px w-12 bg-[#e63e62]" />
       </div>
 
       {/* ================= RATING SUMMARY ================= */}
@@ -120,7 +120,7 @@ export default function ReviewSection({ product }) {
                 className={
                   star <=
                   Math.round(Number(averageRating))
-                    ? "fill-[#C08081] text-[#C08081]"
+                    ? "fill-[#e63e62] text-[#e63e62]"
                     : "text-[#E7DEDC]"
                 }
               />
@@ -139,7 +139,7 @@ export default function ReviewSection({ product }) {
 
         <div className="mb-6">
 
-          <p className="text-xs font-semibold uppercase tracking-[2px] text-[#C08081]">
+          <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
             Share Your Experience
           </p>
 
@@ -172,7 +172,7 @@ export default function ReviewSection({ product }) {
                 setName(e.target.value)
               }
               placeholder="Enter your name"
-              className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
+              className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
             />
 
           </div>
@@ -199,7 +199,7 @@ export default function ReviewSection({ product }) {
                     size={23}
                     className={
                       star <= rating
-                        ? "fill-[#C08081] text-[#C08081]"
+                        ? "fill-[#e63e62] text-[#e63e62]"
                         : "text-[#E7DEDC]"
                     }
                   />
@@ -230,7 +230,7 @@ export default function ReviewSection({ product }) {
                 setComment(e.target.value)
               }
               placeholder="Share your experience with this product..."
-              className="w-full resize-none border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
+              className="w-full resize-none border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
             />
 
           </div>
@@ -238,7 +238,7 @@ export default function ReviewSection({ product }) {
           {/* SUBMIT */}
           <button
             type="submit"
-            className="bg-[#C08081] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+            className="bg-[#e63e62] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
           >
             Submit Review
           </button>
@@ -267,7 +267,7 @@ export default function ReviewSection({ product }) {
               No customer reviews yet.
             </p>
 
-            <p className="mt-2 text-xs text-[#C08081]">
+            <p className="mt-2 text-xs text-[#e63e62]">
               Be the first to share your experience.
             </p>
 
@@ -302,7 +302,7 @@ export default function ReviewSection({ product }) {
                           size={14}
                           className={
                             star <= review.rating
-                              ? "fill-[#C08081] text-[#C08081]"
+                              ? "fill-[#e63e62] text-[#e63e62]"
                               : "text-[#E7DEDC]"
                           }
                         />
@@ -312,7 +312,7 @@ export default function ReviewSection({ product }) {
 
                   </div>
 
-                  <span className="text-xs text-[#C08081]">
+                  <span className="text-xs text-[#e63e62]">
                     {review.date}
                   </span>
 

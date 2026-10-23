@@ -81,12 +81,12 @@ export default function WishlistPage() {
         <div className="flex items-center gap-3">
           <Heart
             size={24}
-            className="text-[#C08081]"
-            fill="#C08081"
+            className="text-[#e63e62]"
+            fill="#e63e62"
           />
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[3px] text-[#C08081]">
+            <p className="text-xs font-semibold uppercase tracking-[3px] text-[#e63e62]">
               Your Collection
             </p>
 
@@ -122,7 +122,7 @@ export default function WishlistPage() {
             </h2>
             <Link
               href="/user/login?next=%2Fuser%2Fwishlist"
-              className="mt-6 inline-flex items-center gap-2 bg-[#C08081] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+              className="mt-6 inline-flex items-center gap-2 bg-[#e63e62] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
             >
               Sign In
             </Link>
@@ -143,7 +143,7 @@ export default function WishlistPage() {
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#FFFFFF]">
               <Heart
                 size={28}
-                className="text-[#C08081]"
+                className="text-[#e63e62]"
               />
             </div>
 
@@ -158,7 +158,7 @@ export default function WishlistPage() {
 
             <Link
               href="/user/shop"
-              className="mt-6 inline-flex items-center gap-2 bg-[#C08081] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+              className="mt-6 inline-flex items-center gap-2 bg-[#e63e62] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
             >
               <ArrowLeft size={15} />
               Continue Shopping

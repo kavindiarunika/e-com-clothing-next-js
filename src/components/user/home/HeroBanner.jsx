@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ShoppingBag } from "lucide-react";
+import PromoBanner from "./PromoBanner";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
@@ -62,12 +63,17 @@ export default function HeroBanner() {
     return (
       <section className="user-page-full-bleed relative h-[400px] w-full overflow-hidden bg-[#292524]">
         <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622]" />
+        <PromoBanner />
       </section>
     );
   }
 
   if (!slides.length) {
-    return null;
+    return (
+      <section className="user-page-full-bleed relative min-h-[240px] w-full bg-[#292524]">
+        <PromoBanner />
+      </section>
+    );
   }
 
   return (
@@ -119,7 +125,7 @@ export default function HeroBanner() {
                   }`}
                 >
                   <div className="mb-4 flex items-center gap-2.5">
-                    <span className="h-px w-8 bg-[#C08081]" />
+                    <span className="h-px w-8 bg-[#e63e62]" />
                     <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#FAF6F5]">
                       Velora
                     </span>
@@ -136,7 +142,7 @@ export default function HeroBanner() {
                   <div className="mt-7">
                     <Link
                       href={slide.buttonLink || "/user/shop"}
-                      className="group relative inline-flex h-11 items-center gap-2.5 overflow-hidden bg-[#C08081] px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-white transition-colors duration-300 hover:bg-[#A96870]"
+                      className="group relative inline-flex h-11 items-center gap-2.5 overflow-hidden bg-[#e63e62] px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-white transition-colors duration-300 hover:bg-[#A96870]"
                     >
                       <ShoppingBag
                         size={14}
@@ -168,6 +174,8 @@ export default function HeroBanner() {
           </SwiperSlide>
         ))}
       </Swiper>
+
+      <PromoBanner />
 
       {/* NAVIGATION */}
       {slides.length > 1 && (

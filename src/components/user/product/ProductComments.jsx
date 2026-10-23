@@ -176,14 +176,14 @@ export default function ProductComments({ product }) {
     return (
       <article
         key={comment.comment_id}
-        className={`border border-[#E7DEDC] bg-white p-5 ${depth > 0 ? "ml-4 border-l-2 border-l-[#C08081] sm:ml-8" : ""}`}
+        className={`border border-[#E7DEDC] bg-white p-5 ${depth > 0 ? "ml-4 border-l-2 border-l-[#e63e62] sm:ml-8" : ""}`}
       >
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-sm font-medium text-[#292524]">
               {comment.commenter_name || "Customer"}
             </p>
-            <time className="mt-1 block text-xs text-[#C08081]">
+            <time className="mt-1 block text-xs text-[#e63e62]">
               {new Date(comment.created_at).toLocaleDateString()}
             </time>
           </div>
@@ -197,7 +197,7 @@ export default function ProductComments({ product }) {
                 setReplyText("");
                 setSubmitError("");
               }}
-              className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-[#C08081] hover:underline"
+              className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-[#e63e62] hover:underline"
               aria-label={`Reply to ${comment.commenter_name || "customer"}`}
             >
               <Reply size={14} />
@@ -252,12 +252,12 @@ export default function ProductComments({ product }) {
               rows={3}
               required
               placeholder="Write a reply..."
-              className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none focus:border-[#C08081]"
+              className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none focus:border-[#e63e62]"
             />
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-[#C08081] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870] disabled:cursor-not-allowed disabled:opacity-60"
+              className="bg-[#e63e62] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? "Submitting..." : "Submit Reply"}
             </button>
@@ -337,7 +337,7 @@ export default function ProductComments({ product }) {
                     ? "Write your comment..."
                     : "Sign in to add a comment..."
                 }
-                className="min-h-12 flex-1 resize-y rounded-xl border border-[#FAF6F5] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition placeholder:text-[#C08081] focus:border-[#C08081] focus:ring-2 focus:ring-[#C08081]/10 disabled:cursor-not-allowed disabled:opacity-75"
+                className="min-h-12 flex-1 resize-y rounded-xl border border-[#FAF6F5] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition placeholder:text-[#e63e62] focus:border-[#e63e62] focus:ring-2 focus:ring-[#e63e62]/10 disabled:cursor-not-allowed disabled:opacity-75"
               />
               {isAuthenticated && (
                 <>
@@ -353,7 +353,7 @@ export default function ProductComments({ product }) {
                   <label
                     htmlFor={`product-comment-images-${product.id}`}
                     title="Attach up to two images"
-                    className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#E7DEDC] text-[#C08081] transition focus-within:ring-2 focus-within:ring-[#C08081] focus-within:ring-offset-2 ${isSubmitting ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-[#C08081] hover:bg-[#FAF6F5]"}`}
+                    className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#E7DEDC] text-[#e63e62] transition focus-within:ring-2 focus-within:ring-[#e63e62] focus-within:ring-offset-2 ${isSubmitting ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-[#e63e62] hover:bg-[#FAF6F5]"}`}
                   >
                     <ImagePlus size={19} aria-hidden="true" />
                     <span className="sr-only">Attach up to two images</span>
@@ -363,7 +363,7 @@ export default function ProductComments({ product }) {
                     disabled={isSubmitting}
                     aria-label={isSubmitting ? "Sending comment" : "Send comment"}
                     title={isSubmitting ? "Sending comment" : "Send comment"}
-                    className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#C08081] text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#5E2B30] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C08081] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#5E2B30] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e63e62] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <Send size={18} aria-hidden="true" />
                   </button>
@@ -372,7 +372,7 @@ export default function ProductComments({ product }) {
               {!isAuthenticated && (
                 <Link
                   href={`/user/login?next=%2Fuser%2Fproduct%2F${encodeURIComponent(product.id)}`}
-                  className="group inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#C08081] px-5 text-xs font-semibold uppercase tracking-[1px] text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#5E2B30] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C08081] focus-visible:ring-offset-2"
+                  className="group inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#e63e62] px-5 text-xs font-semibold uppercase tracking-[1px] text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#5E2B30] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e63e62] focus-visible:ring-offset-2"
                 >
                   Sign in
                   <ArrowRight
@@ -386,7 +386,7 @@ export default function ProductComments({ product }) {
           </form>
         )}
         {submitError && (
-          <p role="alert" className="mt-3 text-sm text-[#C08081]">
+          <p role="alert" className="mt-3 text-sm text-[#e63e62]">
             {submitError}
           </p>
         )}
@@ -394,7 +394,7 @@ export default function ProductComments({ product }) {
 
       <div className="mt-4">
         {loadError ? (
-          <div role="alert" className="border border-[#E7DEDC] bg-white p-5 text-sm text-[#C08081]">
+          <div role="alert" className="border border-[#E7DEDC] bg-white p-5 text-sm text-[#e63e62]">
             {loadError}
           </div>
         ) : loading ? (

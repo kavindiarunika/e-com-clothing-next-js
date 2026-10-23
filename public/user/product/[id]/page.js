@@ -400,7 +400,7 @@ export default function ProductPage({ params }) {
 
             {/* Category */}
 
-            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#C08081]">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#e63e62]">
               {product.category}
             </p>
 
@@ -424,7 +424,7 @@ export default function ProductPage({ params }) {
 
             <div className="mt-6 flex items-center gap-3">
 
-              <span className="text-3xl font-semibold text-[#C08081]">
+              <span className="text-3xl font-semibold text-[#e63e62]">
                 Rs.{" "}
                 {Math.round(
                   discountedPrice
@@ -439,7 +439,7 @@ export default function ProductPage({ params }) {
               )}
 
               {hasDiscount && (
-                <span className="bg-[#C08081] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                <span className="bg-[#e63e62] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
                   {product.discount}% OFF
                 </span>
               )}
@@ -542,7 +542,7 @@ export default function ProductPage({ params }) {
                       items available
                     </>
                   ) : (
-                    <span className="font-medium text-[#C08081]">
+                    <span className="font-medium text-[#e63e62]">
                       This combination is sold out
                     </span>
                   )}
@@ -566,7 +566,7 @@ export default function ProductPage({ params }) {
                   !selectedVariant ||
                   availableStock <= 0
                 }
-                className="bg-[#C08081] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition duration-300 hover:bg-[#A96870] disabled:cursor-not-allowed disabled:opacity-50"
+                className="bg-[#e63e62] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition duration-300 hover:bg-[#A96870] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Buy Now
               </button>
@@ -580,7 +580,7 @@ export default function ProductPage({ params }) {
                   !selectedVariant ||
                   availableStock <= 0
                 }
-                className="border border-[#C08081] bg-white px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#C08081] transition duration-300 hover:bg-[#C08081] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="border border-[#e63e62] bg-white px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#e63e62] transition duration-300 hover:bg-[#e63e62] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Add to Cart
               </button>
@@ -592,8 +592,8 @@ export default function ProductPage({ params }) {
                 onClick={handleWishlist}
                 className={`flex items-center justify-center gap-2 border px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] transition duration-300 sm:col-span-2 ${
                   isWishlisted
-                    ? "border-[#C08081] bg-[#C08081] text-white"
-                    : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#C08081] hover:text-[#C08081]"
+                    ? "border-[#e63e62] bg-[#e63e62] text-white"
+                    : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#e63e62] hover:text-[#e63e62]"
                 }`}
               >
 

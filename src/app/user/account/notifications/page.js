@@ -68,7 +68,7 @@ export default function NotificationsPage() {
       
                 <Link
                   href="/user/account"
-                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#C08081]"
+                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#e63e62]"
                 >
                   <ArrowLeft size={15} />
                   My Account
@@ -79,7 +79,7 @@ export default function NotificationsPage() {
 
       <div className="mx-auto max-w-4xl px-5 py-12">
         <div className="mb-8">
-          <p className="text-sm uppercase tracking-[0.2em] text-[#C08081]">
+          <p className="text-sm uppercase tracking-[0.2em] text-[#e63e62]">
             Account
           </p>
 
@@ -98,12 +98,12 @@ export default function NotificationsPage() {
               key={notification.notification_id}
               className={`rounded-2xl bg-white p-5 shadow-sm ${
                 !notification.is_read
-                  ? "border-l-4 border-[#C08081]"
+                  ? "border-l-4 border-[#e63e62]"
                   : ""
               }`}
             >
               <div className="flex gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-[#e63e62]">
                   {notification.type === "return" ? (
                     <RotateCcw size={20} />
                   ) : notification.type === "exchange" ? (
@@ -129,7 +129,7 @@ export default function NotificationsPage() {
                   </p>
 
                   {!notification.is_read && (
-                    <span className="mt-3 inline-block rounded-full bg-[#C08081] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
+                    <span className="mt-3 inline-block rounded-full bg-[#e63e62] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
                       New
                     </span>
                   )}

@@ -57,7 +57,7 @@ export default function SizeSelector({
           <button
             type="button"
             onClick={() => setIsSizeChartOpen(true)}
-            className="text-xs text-[#C08081] underline underline-offset-2 transition hover:text-[#292524]"
+            className="text-xs text-[#e63e62] underline underline-offset-2 transition hover:text-[#292524]"
           >
             Size Guide
           </button>
@@ -68,7 +68,7 @@ export default function SizeSelector({
           aria-label="Select size"
           value={selectedSize || ""}
           onChange={(event) => setSelectedSize(event.target.value)}
-          className="w-full max-w-xs border border-[#E7DEDC] bg-white px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
+          className="w-full max-w-xs border border-[#E7DEDC] bg-white px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
         >
           <option value="" disabled>
             Select size

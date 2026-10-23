@@ -72,7 +72,7 @@ export default function OffersPage() {
     <div className="min-h-screen bg-[#FFFFFF]">
       <section className="mx-auto w-[92%] max-w-[1200px] py-10 md:py-14">
         <div className="mb-8 md:mb-10">
-          <p className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[3px] text-[#C08081]">
+          <p className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[3px] text-[#e63e62]">
             <Tag size={14} />
             Velora
           </p>
@@ -89,7 +89,7 @@ export default function OffersPage() {
             Loading offers...
           </div>
         ) : error ? (
-          <div role="alert" className="bg-white px-6 py-12 text-center text-sm text-[#C08081] shadow-sm">
+          <div role="alert" className="bg-white px-6 py-12 text-center text-sm text-[#e63e62] shadow-sm">
             {error}
           </div>
         ) : offers.length ? (
@@ -165,7 +165,7 @@ export default function OffersPage() {
                           ? `/user/offers/${offer.offer_id}`
                           : offer.link || "/user/shop"
                       }
-                      className="mt-6 inline-flex items-center gap-2 bg-[#C08081] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+                      className="mt-6 inline-flex items-center gap-2 bg-[#e63e62] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
                     >
                       Explore Offer
                       <ArrowRight size={15} />
@@ -185,7 +185,7 @@ export default function OffersPage() {
             </p>
             <Link
               href="/user/shop"
-              className="mt-6 inline-flex items-center gap-2 border border-[#C08081] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1.5px] text-[#C08081] transition hover:bg-[#C08081] hover:text-white"
+              className="mt-6 inline-flex items-center gap-2 border border-[#e63e62] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1.5px] text-[#e63e62] transition hover:bg-[#e63e62] hover:text-white"
             >
               Shop Collection
               <ArrowRight size={15} />

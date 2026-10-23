@@ -122,7 +122,7 @@ export default function SizeSelector({
           <button
             type="button"
             onClick={() => setIsSizeChartOpen(true)}
-            className="text-xs text-[#C08081] underline underline-offset-2 transition hover:text-[#292524]"
+            className="text-xs text-[#e63e62] underline underline-offset-2 transition hover:text-[#292524]"
           >
             Size Guide
           </button>
@@ -144,8 +144,8 @@ export default function SizeSelector({
                 aria-label={`${size}${isOutOfStock ? ", unavailable" : ""}`}
                 className={`relative flex h-11 min-w-11 flex-col items-center justify-center border px-3 text-sm font-medium transition ${
                   isSelected
-                    ? "border-[#C08081] bg-[#C08081] text-white"
-                    : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#C08081]"
+                    ? "border-[#e63e62] bg-[#e63e62] text-white"
+                    : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#e63e62]"
                 } disabled:cursor-not-allowed disabled:border-[#E4DED7] disabled:bg-[#F3F0EC] disabled:text-[#B7AFA7] disabled:before:absolute disabled:before:inset-x-1 disabled:before:top-1/2 disabled:before:h-px disabled:before:rotate-[-35deg] disabled:before:bg-[#B7AFA7]`}
               >
                 <span>{String(size).toUpperCase()}</span>

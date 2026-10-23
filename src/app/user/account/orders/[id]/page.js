@@ -159,7 +159,7 @@ export default function OrderDetailsPage() {
 
           <Link
             href="/user/account/orders"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#C08081]"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#e63e62]"
           >
             <ArrowLeft size={15} />
             My Orders
@@ -175,7 +175,7 @@ export default function OrderDetailsPage() {
         {/* TITLE */}
         <div className="mb-10">
 
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
             Order Details
           </p>
 
@@ -196,7 +196,7 @@ export default function OrderDetailsPage() {
             <div className="flex flex-wrap items-center gap-3">
 
               {/* STATUS */}
-              <div className="flex items-center gap-2 text-sm font-semibold text-[#C08081]">
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#e63e62]">
 
                 <Truck size={18} />
 
@@ -207,7 +207,7 @@ export default function OrderDetailsPage() {
               {/* INVOICE */}
               <Link
                 href={`/user/account/orders/${order.id}/invoice`}
-                className="inline-flex items-center gap-2 border border-[#C08081] bg-[#C08081] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+                className="inline-flex items-center gap-2 border border-[#e63e62] bg-[#e63e62] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
               >
                 <FileText size={15} />
                 Invoice
@@ -222,7 +222,7 @@ export default function OrderDetailsPage() {
         {/* ORDER PROGRESS */}
         <div className="mb-8 border border-[#E7DEDC] bg-[#FAF6F5] p-6 sm:p-8">
 
-          <p className="mb-7 text-[10px] font-semibold uppercase tracking-[2px] text-[#C08081]">
+          <p className="mb-7 text-[10px] font-semibold uppercase tracking-[2px] text-[#e63e62]">
             Order Progress
           </p>
 
@@ -278,7 +278,7 @@ export default function OrderDetailsPage() {
               <div
                 className={`mx-auto flex h-10 w-10 items-center justify-center rounded-full ${
                   currentStatus === "shipped"
-                    ? "bg-[#C08081] text-white"
+                    ? "bg-[#e63e62] text-white"
                     : currentStatus === "delivered"
                     ? "bg-[#547454] text-white"
                     : "border border-[#E7DEDC] bg-[#FFFFFF] text-[#9A9088]"
@@ -298,7 +298,7 @@ export default function OrderDetailsPage() {
               <p
                 className={`mt-3 text-[10px] font-semibold uppercase tracking-[1px] ${
                   currentStatus === "shipped"
-                    ? "text-[#C08081]"
+                    ? "text-[#e63e62]"
                     : currentStatus === "delivered"
                     ? "text-[#292524]"
                     : "text-[#9A9088]"
@@ -315,7 +315,7 @@ export default function OrderDetailsPage() {
               <div
                 className={`mx-auto flex h-10 w-10 items-center justify-center rounded-full ${
                   currentStatus === "delivered"
-                    ? "bg-[#C08081] text-white"
+                    ? "bg-[#e63e62] text-white"
                     : "border border-[#E7DEDC] bg-[#FFFFFF] text-[#9A9088]"
                 }`}
               >
@@ -331,7 +331,7 @@ export default function OrderDetailsPage() {
               <p
                 className={`mt-3 text-[10px] font-semibold uppercase tracking-[1px] ${
                   currentStatus === "delivered"
-                    ? "text-[#C08081]"
+                    ? "text-[#e63e62]"
                     : "text-[#9A9088]"
                 }`}
               >
@@ -426,7 +426,7 @@ export default function OrderDetailsPage() {
 
                             <Link
                               href={`/user/account/returns/request?orderId=${order.id}&orderItemId=${item.id}&type=return`}
-                              className="inline-flex items-center gap-2 border border-[#C08081] px-4 py-2 text-[10px] font-semibold uppercase tracking-[1.2px] text-[#C08081] transition hover:bg-[#C08081] hover:text-white"
+                              className="inline-flex items-center gap-2 border border-[#e63e62] px-4 py-2 text-[10px] font-semibold uppercase tracking-[1.2px] text-[#e63e62] transition hover:bg-[#e63e62] hover:text-white"
                             >
 
                               <RotateCcw size={13} />
@@ -515,7 +515,7 @@ export default function OrderDetailsPage() {
 
                 <div className="flex items-start gap-4">
 
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#C08081] text-white">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-white">
 
                     <RefreshCw size={18} />
 
@@ -535,7 +535,7 @@ export default function OrderDetailsPage() {
 
                     <Link
                       href="/user/account/returns"
-                      className="mt-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#C08081] hover:underline"
+                      className="mt-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#e63e62] hover:underline"
                     >
 
                       View Return & Exchange Requests
@@ -648,7 +648,7 @@ export default function OrderDetailsPage() {
             {/* HELP */}
             <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-6">
 
-              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[#C08081]">
+              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[#e63e62]">
                 Need Help?
               </p>
 

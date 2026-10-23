@@ -27,7 +27,7 @@ export default function ShippingPage() {
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#FFFFFF] transition hover:text-[#C08081]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] transition hover:text-[#e63e62]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -41,7 +41,7 @@ export default function ShippingPage() {
 
         <div className="text-center">
 
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C08081]">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#e63e62]">
             Customer Care
           </p>
 
@@ -91,7 +91,7 @@ export default function ShippingPage() {
           {/* Delivery Information */}
           <div className="rounded-3xl bg-white p-7 shadow-sm sm:p-9">
 
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF] text-[#e63e62]">
               <MapPin size={22} />
             </div>
 
@@ -122,7 +122,7 @@ export default function ShippingPage() {
           {/* Order Tracking */}
           <div className="rounded-3xl bg-white p-7 shadow-sm sm:p-9">
 
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF] text-[#e63e62]">
               <Truck size={22} />
             </div>
 
@@ -138,7 +138,7 @@ export default function ShippingPage() {
 
             <Link
               href="/user/account/orders"
-              className="mt-6 inline-flex items-center gap-2 bg-[#C08081] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#A96870]"
+              className="mt-6 inline-flex items-center gap-2 bg-[#e63e62] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#A96870]"
             >
               View My Orders
             </Link>
@@ -148,7 +148,7 @@ export default function ShippingPage() {
         </div>
 
         {/* Important Note */}
-        <div className="mt-8 rounded-2xl border border-[#C08081]/15 bg-[#C08081]/5 p-6">
+        <div className="mt-8 rounded-2xl border border-[#e63e62]/15 bg-[#e63e62]/5 p-6">
 
           <h3 className="font-semibold">
             Important
@@ -171,7 +171,7 @@ function ShippingCard({ icon, title, children }) {
   return (
     <div className="rounded-3xl bg-white p-7 text-center shadow-sm">
 
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#FFFFFF] text-[#e63e62]">
         {icon}
       </div>
 

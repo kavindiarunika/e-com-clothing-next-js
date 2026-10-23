@@ -23,9 +23,9 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="w-full bg-[var(--color-white)] py-10 sm:py-14">
+    <section className="mb-6 w-full bg-black py-10 sm:mb-8 sm:py-14">
       <div className="mx-auto max-w-360 px-4 sm:px-6 lg:px-8">
-        <div className="grid overflow-hidden rounded-xl bg-[var(--color-bg)] md:grid-cols-2">
+        <div className="grid overflow-hidden rounded-2xl bg-black md:grid-cols-2">
 
           {/* ================= IMAGE ================= */}
           <div className="relative min-h-[240px] sm:min-h-[300px] md:min-h-[330px]">
@@ -42,24 +42,24 @@ export default function Newsletter() {
           </div>
 
           {/* ================= CONTENT ================= */}
-          <div className="flex items-center px-7 py-10 sm:px-10 sm:py-12 lg:px-14">
+          <div className="flex items-center px-7 py-10 text-white sm:px-10 sm:py-12 lg:px-14">
 
             <div className="w-full max-w-xl">
 
               {/* Small label */}
-              <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.25em] text-[var(--color-dark)]/60">
+              <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.25em] text-white/65">
                 Get 10% Off Your First Order
               </p>
 
               {/* Heading */}
-              <h2 className="font-serif text-3xl leading-tight text-[var(--color-dark)] sm:text-4xl lg:text-5xl">
+              <h2 className="font-serif text-3xl leading-tight text-white sm:text-4xl lg:text-5xl">
                 Join Our
                 <br />
                 <span className="italic">Style List</span>
               </h2>
 
               {/* Description */}
-              <p className="mt-4 max-w-md text-sm leading-6 text-[var(--color-dark)]/65 sm:text-base">
+              <p className="mt-4 max-w-md text-sm leading-6 text-white/70 sm:text-base">
                 Sign up for exclusive offers, new arrivals,
                 and style inspiration delivered straight to
                 your inbox.
@@ -77,7 +77,7 @@ export default function Newsletter() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     required
-                    className="h-12 min-w-0 flex-1 rounded-md border border-[var(--color-dark)]/10 bg-white px-4 text-sm text-[var(--color-dark)] outline-none transition placeholder:text-gray-400 focus:border-[var(--color-primary)]"
+                    className="h-12 min-w-0 flex-1 rounded-md border border-white/20 bg-white/5 px-4 text-sm text-white outline-none transition placeholder:text-white/45 focus:border-[var(--color-primary)]"
                   />
 
                   <button
@@ -93,19 +93,19 @@ export default function Newsletter() {
                   </button>
                 </form>
               ) : (
-                <div className="mt-7 flex items-center gap-3 rounded-md bg-white px-4 py-3">
+                <div className="mt-7 flex items-center gap-3 rounded-md border border-white/15 bg-white/5 px-4 py-3">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
                     <Check size={15} />
                   </div>
 
-                  <p className="text-sm text-[var(--color-dark)]">
+                  <p className="text-sm text-white">
                     Thank you for joining the Velora community!
                   </p>
                 </div>
               )}
 
               {/* Small text */}
-              <p className="mt-3 text-[10px] text-[var(--color-dark)]/45">
+              <p className="mt-3 text-[10px] text-white/50">
                 By subscribing, you agree to receive updates from Velora.
               </p>
 

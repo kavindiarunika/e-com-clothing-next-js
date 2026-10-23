@@ -48,8 +48,8 @@ export default function ColorSelector({
                 duration-200
                 ${
                   isSelected
-                    ? "ring-2 ring-[#C08081] ring-offset-2"
-                    : "hover:ring-2 hover:ring-[#C08081] hover:ring-offset-2"
+                    ? "ring-2 ring-[#e63e62] ring-offset-2"
+                    : "hover:ring-2 hover:ring-[#e63e62] hover:ring-offset-2"
                 }
               `}
             >

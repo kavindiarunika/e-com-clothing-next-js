@@ -168,7 +168,7 @@ export default function PromoBanner() {
                             sm:text-[10px]
                           "
                         >
-                          Velora Exclusive
+                          Exclusive Offer
                         </span>
                       </div>
 
@@ -488,4 +488,3 @@ export default function PromoBanner() {
     </section>
   );
 }
-

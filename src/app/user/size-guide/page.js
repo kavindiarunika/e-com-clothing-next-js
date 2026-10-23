@@ -54,7 +54,7 @@ export default function SizeGuidePage() {
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#FFFFFF] transition hover:text-[#C08081]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] transition hover:text-[#e63e62]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -69,11 +69,11 @@ export default function SizeGuidePage() {
         {/* Hero */}
         <div className="text-center">
 
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#C08081] shadow-sm">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#e63e62] shadow-sm">
             <Ruler size={25} />
           </div>
 
-          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#C08081]">
+          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#e63e62]">
             Find Your Fit
           </p>
 
@@ -190,7 +190,7 @@ export default function SizeGuidePage() {
         </div>
 
         {/* Tip */}
-        <div className="mt-6 rounded-2xl border border-[#C08081]/15 bg-[#C08081]/5 p-6">
+        <div className="mt-6 rounded-2xl border border-[#e63e62]/15 bg-[#e63e62]/5 p-6">
 
           <h3 className="font-semibold">
             Fit Tip
@@ -214,7 +214,7 @@ function MeasureItem({ number, title, text }) {
   return (
     <div className="flex gap-4">
 
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-xs font-semibold text-[#C08081]">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-xs font-semibold text-[#e63e62]">
         {number}
       </div>
 

@@ -74,6 +74,7 @@ export default function CategorySection() {
           (category) =>
             category &&
             category.name &&
+            !category.parent_category_id &&
             category.status !== "inactive"
         );
 
@@ -95,15 +96,11 @@ export default function CategorySection() {
     <section className="bg-[#FFFFFF] px-[4%] py-12 md:py-14">
       <div className="mx-auto max-w-[1200px]">
         <div className="mb-10 text-left md:mb-14">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[4px] text-[#C08081]">
-            Explore Our Collection
-          </p>
-
-          <h2 className="font-serif text-3xl font-medium tracking-wide text-[#292524] sm:text-4xl md:text-5xl">
+          <h2 className="font-serif text-[32px] font-bold tracking-wide text-[#292524] sm:text-[38px] md:text-[50px]">
             Shop by Category
           </h2>
 
-          <div className="mt-5 h-px w-12 bg-[#C08081]" />
+          <div className="mt-5 h-px w-12 bg-[#e63e62]" />
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
@@ -126,7 +123,7 @@ export default function CategorySection() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#292524]/80 via-[#292524]/20 to-transparent transition duration-500 group-hover:from-[#292524]/90" />
 
               <div className="absolute inset-x-0 bottom-0 p-7 text-white md:p-8">
-                <p className="mb-2 text-[10px] uppercase tracking-[3px] text-[#C08081]">
+                <p className="mb-2 text-[10px] uppercase tracking-[3px] text-[#e63e62]">
                   Discover
                 </p>
 

@@ -60,7 +60,7 @@ export default function SizeChart({
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center text-[#292524] transition hover:text-[#C08081]"
+          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center text-[#292524] transition hover:text-[#e63e62]"
           aria-label="Close size chart"
         >
           <X size={20} />
@@ -68,7 +68,7 @@ export default function SizeChart({
 
         {/* Header */}
         <div className="mb-6 pr-8">
-          <p className="text-xs font-semibold uppercase tracking-[2px] text-[#C08081]">
+          <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
             Size Guide
           </p>
 
@@ -115,7 +115,7 @@ export default function SizeChart({
         </div>
 
         {/* Note */}
-        <p className="mt-5 text-xs leading-5 text-[#C08081]">
+        <p className="mt-5 text-xs leading-5 text-[#e63e62]">
           Measurements are approximate. For the best fit, compare these
           measurements with a garment you already own.
         </p>

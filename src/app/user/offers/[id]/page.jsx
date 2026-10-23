@@ -343,7 +343,7 @@ export default function OfferDetailPage() {
     return (
       <main className="min-h-screen bg-[#FFFFFF] px-5 py-12">
         <div className="mx-auto max-w-xl bg-white p-8 text-center shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-[3px] text-[#C08081]">
+          <p className="text-xs font-semibold uppercase tracking-[3px] text-[#e63e62]">
             Offer unavailable
           </p>
           <h1 className="mt-4 font-serif text-3xl text-[#292524]">We couldn’t find this offer</h1>
@@ -352,7 +352,7 @@ export default function OfferDetailPage() {
           </p>
           <Link
             href="/user/offers"
-            className="mt-6 inline-flex items-center gap-2 bg-[#C08081] px-5 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+            className="mt-6 inline-flex items-center gap-2 bg-[#e63e62] px-5 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
           >
             <ArrowLeft size={15} />
             Back to offers
@@ -367,7 +367,7 @@ export default function OfferDetailPage() {
       <div className="mx-auto w-[92%] max-w-[1440px] py-4">
         <Link
           href="/user/offers"
-          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[2px] text-[#C08081] transition hover:text-[#292524]"
+          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[2px] text-[#e63e62] transition hover:text-[#292524]"
         >
           <ArrowLeft size={15} />
           Back to offers
@@ -470,7 +470,7 @@ export default function OfferDetailPage() {
             id="offer-filter-sidebar"
             className="hidden w-[220px] shrink-0 md:block lg:w-[250px]"
           >
-            <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto border border-[#E7DEDC] border-t-2 border-t-[#C08081] bg-gradient-to-b from-white to-[#FAF6F5] p-5 shadow-[0_12px_32px_rgba(50,45,41,0.08)] lg:p-6">
+            <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto border border-[#E7DEDC] border-t-2 border-t-[#e63e62] bg-gradient-to-b from-white to-[#FAF6F5] p-5 shadow-[0_12px_32px_rgba(50,45,41,0.08)] lg:p-6">
               <div className="mb-6 rounded-sm bg-[#FAF6F5] p-2">
                 <SearchBar
                   value={searchTerm}
@@ -483,7 +483,7 @@ export default function OfferDetailPage() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs text-[#C08081] hover:underline"
+                  className="text-xs text-[#e63e62] hover:underline"
                 >
                   Clear
                 </button>
@@ -538,7 +538,7 @@ export default function OfferDetailPage() {
                       className="object-cover transition duration-300 group-hover:scale-[1.04]"
                     />
                     {discountPercent > 0 && !soldOut && (
-                      <span className="absolute left-2 top-2 bg-[#C08081] px-2 py-1 text-[9px] font-semibold uppercase tracking-wider text-white">
+                      <span className="absolute left-2 top-2 bg-[#e63e62] px-2 py-1 text-[9px] font-semibold uppercase tracking-wider text-white">
                         -{discountPercent}%
                       </span>
                     )}
@@ -551,7 +551,7 @@ export default function OfferDetailPage() {
 
                   <div className="p-3.5">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[9px] font-semibold uppercase tracking-[2px] text-[#C08081]">
+                      <span className="text-[9px] font-semibold uppercase tracking-[2px] text-[#e63e62]">
                         {product.category_name || "Featured"}
                       </span>
                       <span className={`text-[9px] font-semibold uppercase tracking-[2px] ${stock > 0 ? "text-[#1F6F4A]" : "text-[#8B3A41]"}`}>
@@ -560,7 +560,7 @@ export default function OfferDetailPage() {
                     </div>
 
                     <Link href={`/user/product/${product.item_id}`}>
-                      <h3 className="mt-2 line-clamp-2 font-serif text-xl leading-tight text-[#292524] hover:text-[#C08081]">
+                      <h3 className="mt-2 line-clamp-2 font-serif text-xl leading-tight text-[#292524] hover:text-[#e63e62]">
                         {product.title}
                       </h3>
                     </Link>
@@ -575,7 +575,7 @@ export default function OfferDetailPage() {
                     <div className="mt-3 flex gap-2">
                       <Link
                         href={`/user/product/${product.item_id}`}
-                        className="inline-flex flex-1 items-center justify-center gap-1.5 border border-[#C08081] px-2.5 py-2 text-[9px] font-semibold uppercase tracking-[1.4px] text-[#C08081] transition hover:bg-[#C08081] hover:text-white"
+                        className="inline-flex flex-1 items-center justify-center gap-1.5 border border-[#e63e62] px-2.5 py-2 text-[9px] font-semibold uppercase tracking-[1.4px] text-[#e63e62] transition hover:bg-[#e63e62] hover:text-white"
                       >
                         View
                         <ArrowRight size={12} />
@@ -585,7 +585,7 @@ export default function OfferDetailPage() {
                         <button
                           type="button"
                           onClick={() => handleQuickAddToCart(product)}
-                          className="inline-flex items-center justify-center bg-[#292524] p-2.5 text-white transition hover:bg-[#C08081]"
+                          className="inline-flex items-center justify-center bg-[#292524] p-2.5 text-white transition hover:bg-[#e63e62]"
                           aria-label={`Quick add ${product.title} to cart`}
                         >
                           <ShoppingBag size={14} />
@@ -608,7 +608,7 @@ export default function OfferDetailPage() {
               <button
                 type="button"
                 onClick={clearFilters}
-                className="mt-5 bg-[#C08081] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
+                className="mt-5 bg-[#e63e62] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
               >
                 Clear Filters
               </button>
@@ -625,10 +625,10 @@ export default function OfferDetailPage() {
         <section className="mx-auto w-[92%] max-w-[1200px] pb-14">
           <div className="mb-6 flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[3px] text-[#C08081]">Recommended</p>
+              <p className="text-xs font-semibold uppercase tracking-[3px] text-[#e63e62]">Recommended</p>
               <h2 className="mt-2 font-serif text-3xl text-[#292524]">More styles you may like</h2>
             </div>
-            <Link href="/user/shop" className="text-xs font-semibold uppercase tracking-[2px] text-[#C08081] hover:text-[#292524]">
+            <Link href="/user/shop" className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62] hover:text-[#292524]">
               View all
             </Link>
           </div>
@@ -651,7 +651,7 @@ export default function OfferDetailPage() {
                       className="object-cover transition duration-300 group-hover:scale-[1.04]"
                     />
                     {discountPercent > 0 && (
-                      <span className="absolute left-2 top-2 bg-[#C08081] px-2 py-1 text-[9px] font-semibold uppercase tracking-wider text-white">
+                      <span className="absolute left-2 top-2 bg-[#e63e62] px-2 py-1 text-[9px] font-semibold uppercase tracking-wider text-white">
                         -{discountPercent}%
                       </span>
                     )}
@@ -659,7 +659,7 @@ export default function OfferDetailPage() {
 
                   <div className="p-3.5">
                     <Link href={`/user/product/${product.item_id}`}>
-                      <h3 className="line-clamp-2 font-serif text-xl leading-tight text-[#292524] hover:text-[#C08081]">{product.title}</h3>
+                      <h3 className="line-clamp-2 font-serif text-xl leading-tight text-[#292524] hover:text-[#e63e62]">{product.title}</h3>
                     </Link>
                     <div className="mt-2 flex items-end gap-2">
                       <span className="text-base font-semibold text-[#292524]">{formatPrice(discounted)}</span>
@@ -669,7 +669,7 @@ export default function OfferDetailPage() {
                     </div>
                     <Link
                       href={`/user/product/${product.item_id}`}
-                      className="mt-3 inline-flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[1.4px] text-[#C08081]"
+                      className="mt-3 inline-flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[1.4px] text-[#e63e62]"
                     >
                       View Product
                       <ArrowRight size={12} />
@@ -727,7 +727,7 @@ export default function OfferDetailPage() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs text-[#C08081] hover:underline"
+                  className="text-xs text-[#e63e62] hover:underline"
                 >
                   Clear All
                 </button>
@@ -747,7 +747,7 @@ export default function OfferDetailPage() {
               <button
                 type="button"
                 onClick={() => setMobileFiltersOpen(false)}
-                className="mt-8 w-full bg-[#C08081] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
+                className="mt-8 w-full bg-[#e63e62] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
               >
                 Show {filteredProducts.length} Products
               </button>

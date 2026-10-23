@@ -2,6 +2,27 @@
 
 @import "tailwindcss";
 
+@keyframes promo-card-entry {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.promo-card-entry {
+  animation: promo-card-entry 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-card-entry {
+    animation: none;
+  }
+}
+
 .font-sans {
   font-family: "Poppins", sans-serif;
 }
@@ -35,7 +56,7 @@ button {
   font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
-  background-color: #C08081;
+  background-color: #e63e62;
   color: #FFFFFF;
   transition: background-color 200ms ease;
 }
@@ -69,7 +90,7 @@ button {
   min-height: 106px;
   overflow: hidden;
   border-radius: 6px;
-  background: #C08081;
+  background: #e63e62;
   background-image:
     radial-gradient(circle at 0 7px, #fff 4px, transparent 4.5px),
     radial-gradient(circle at 100% 7px, #fff 4px, transparent 4.5px);
@@ -85,9 +106,9 @@ button {
   justify-content: center;
   gap: 2px;
   padding: 12px 10px;
-  border-right: 1px dashed #C08081;
+  border-right: 1px dashed #e63e62;
   background: #fff;
-  color: #C08081;
+  color: #e63e62;
   text-align: center;
 }
 
@@ -1087,9 +1108,9 @@ margin: 0;
 /* Velora dashboard theme */
 
 :root {
-  --admin-sidebar: #C08081;
+  --admin-sidebar: #e63e62;
   --admin-background: #FFFFFF;
-  --admin-button: #C08081;
+  --admin-button: #e63e62;
   --admin-ink: #292524;
   --admin-soft-ink: #766d67;
   --admin-line: #E7DEDC;
@@ -1626,11 +1647,11 @@ textarea,
 ========================================= */
 :root {
   --color-dark: #292524;
-  --color-primary: #C08081;
+  --color-primary: #e63e62;
   --color-primary-hover: #A96870;
   --color-blush: #FAF6F5;
   --color-background: #FFFFFF;
-  --color-banner: #C08081;
+  --color-banner: #e63e62;
   --color-white: #FFFFFF;
   --color-text-light: #6B625D;
   --color-border: #E7DEDC;
@@ -1669,9 +1690,9 @@ button {
   --font-subtitle: "Poppins", sans-serif;
   --font-display: "Outfit", sans-serif;
 
-  --admin-sidebar: #C08081;
+  --admin-sidebar: #e63e62;
   --admin-background: #FFFFFF;
-  --admin-button: #C08081;
+  --admin-button: #e63e62;
   --admin-ink: #292524;
   --admin-soft-ink: #766d67;
   --admin-line: #ded5cc;
@@ -3193,7 +3214,7 @@ margin: 0;
 /* Different stat accents */
 
 .customers-card .stat-card-icon {
-  color: #C08081;
+  color: #e63e62;
 }
 
 .orders-card .stat-card-icon {
@@ -5137,7 +5158,7 @@ margin: 0;
 
 .categories-table th {
   padding: 15px 18px;
-  background: #C08081;
+  background: #e63e62;
   text-align: left;
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
@@ -5380,7 +5401,7 @@ margin: 0;
 .category-form-group input:focus,
 .category-form-group textarea:focus,
 .category-form-group select:focus {
-  border-color: #C08081;
+  border-color: #e63e62;
 }
 
 .category-upload {
@@ -8680,7 +8701,7 @@ margin: 0;
 .orders-table-card{overflow:hidden;background:#fff;border:1px solid #ded5cc;border-radius:10px}
 .orders-table-wrapper{width:100%;overflow-x:auto}
 .orders-table{width:100%;min-width:1050px;border-collapse:collapse}
-.orders-table th{padding:15px 18px;background:#C08081;text-align:left;font-family:var(--font-poppins),sans-serif;font-size:12px;font-weight:600;color:#292524;white-space:nowrap}
+.orders-table th{padding:15px 18px;background:#e63e62;text-align:left;font-family:var(--font-poppins),sans-serif;font-size:12px;font-weight:600;color:#292524;white-space:nowrap}
 .orders-table td{padding:15px 18px;border-top:1px solid #ded5cc;font-family:var(--font-inter),sans-serif;font-size:13px;color:#6b625d;vertical-align:middle}
 .orders-table tbody tr:hover{background:#FAF6F5}
 .order-number{font-family:var(--font-poppins),sans-serif;font-size:13px;font-weight:600;color:#292524}
@@ -8711,7 +8732,7 @@ margin: 0;
 .order-status-controls select{width:100%;padding:10px 12px;border:1px solid #ded5cc;border-radius:6px;background:#fff;font-family:var(--font-inter),sans-serif;font-size:13px;color:#292524;outline:0}
 .order-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;padding:25px}
 .order-info-card{padding:18px;background:#FAF6F5;border:1px solid #ded5cc;border-radius:8px}
-.order-info-title,.order-section-title{display:flex;align-items:center;gap:8px;color:#C08081}
+.order-info-title,.order-section-title{display:flex;align-items:center;gap:8px;color:#e63e62}
 .order-info-title{margin-bottom:12px}
 .order-info-title h3,.order-section-title h3{margin:0;font-family:var(--font-poppins),sans-serif;font-weight:600;color:#292524}
 .order-info-title h3{font-size:13px}
@@ -8723,7 +8744,7 @@ margin: 0;
 .order-section-title h3{font-size:15px}
 .order-items-table-wrapper{overflow-x:auto;border:1px solid #ded5cc;border-radius:8px}
 .order-items-table{width:100%;min-width:700px;border-collapse:collapse}
-.order-items-table th{padding:12px;background:#C08081;text-align:left;font-family:var(--font-poppins),sans-serif;font-size:11px;color:#292524}
+.order-items-table th{padding:12px;background:#e63e62;text-align:left;font-family:var(--font-poppins),sans-serif;font-size:11px;color:#292524}
 .order-items-table td{padding:12px;border-top:1px solid #ded5cc;font-family:var(--font-inter),sans-serif;font-size:12px;color:#6b625d}
 .order-item-product{display:flex;align-items:center;gap:10px}
 .order-item-product img,.order-item-image-placeholder{width:45px;height:45px;flex-shrink:0;object-fit:cover;border-radius:5px}
@@ -11972,8 +11993,8 @@ margin: 0;
 }
 
 .sales-report-export-btn:hover {
-  background: #C08081;
-  border-color: #C08081;
+  background: #e63e62;
+  border-color: #e63e62;
 }
 
 @media (max-width: 768px) {
@@ -12386,7 +12407,7 @@ margin: 0;
 ========================================================= */
 
 .offer-link {
-  color: #C08081;
+  color: #e63e62;
 
   font-family: var(--font-inter), sans-serif;
   font-size: 12px;
@@ -12516,7 +12537,7 @@ margin: 0;
 
 .offers-empty svg {
   margin-bottom: 15px;
-  color: #C08081;
+  color: #e63e62;
 }
 
 .offers-empty h3 {
@@ -12688,7 +12709,7 @@ margin: 0;
 .offer-form-group input:focus,
 .offer-form-group textarea:focus,
 .offer-form-group select:focus {
-  border-color: #C08081;
+  border-color: #e63e62;
 
   box-shadow:
     0 0 0 3px rgba(192, 128, 129, 0.08);
@@ -12924,7 +12945,7 @@ product image */
 }
 
 .primary-button:hover {
-  background: #C08081;
+  background: #e63e62;
 }
 
 .primary-button:disabled {
@@ -13158,7 +13179,7 @@ product image */
   font-size: 10px;
   font-weight: 600;
 
-  color: #C08081;
+  color: #e63e62;
 }
 
 /* =========================================================
@@ -13225,7 +13246,7 @@ product image */
 
 .type-badge.best-selling {
   background: #f3e1e1;
-  color: #C08081;
+  color: #e63e62;
 }
 
 .type-none {
@@ -13397,7 +13418,7 @@ product image */
 }
 
 .modal-close:hover {
-  background: #C08081;
+  background: #e63e62;
   color: #ffffff;
 }
 
@@ -13478,7 +13499,7 @@ product image */
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-  border-color: #C08081;
+  border-color: #e63e62;
   box-shadow: 0 0 0 2px rgba(192, 128, 129, 0.08);
 }
 
@@ -13516,13 +13537,13 @@ product image */
 }
 
 .checkbox-card:hover {
-  border-color: #C08081;
+  border-color: #e63e62;
   background: #fcfaf8;
 }
 
 .checkbox-card input {
   margin-top: 3px;
-  accent-color: #C08081;
+  accent-color: #e63e62;
 }
 
 .checkbox-card strong {
@@ -13576,7 +13597,7 @@ product image */
 }
 
 .upload-box:hover {
-  border-color: #C08081;
+  border-color: #e63e62;
   background: #fcf8f7;
 }
 
@@ -13651,7 +13672,7 @@ product image */
 }
 
 .main-image-preview button:hover {
-  background: #C08081;
+  background: #e63e62;
 }
 
 /* =========================================================
@@ -13839,7 +13860,7 @@ product image */
 
   margin-top: 6px;
 
-  color: #C08081;
+  color: #e63e62;
 
   font-size: 8px;
   font-weight: 700;
@@ -13884,7 +13905,7 @@ product image */
 
   background: #f7eeee;
 
-  color: #C08081;
+  color: #e63e62;
 
   font-size: 12px;
 }
@@ -13928,7 +13949,7 @@ product image */
 }
 
 .admin-login-group input:focus {
-  border-color: #C08081;
+  border-color: #e63e62;
 
   box-shadow:
     0 0 0 2px rgba(192, 128, 129, 0.08);
@@ -13946,7 +13967,7 @@ product image */
 
   border-radius: 4px;
 
-  background: #C08081;
+  background: #e63e62;
 
   color: #ffffff;
 
@@ -13987,7 +14008,7 @@ product image */
 }
 
 .admin-back-link:hover {
-  color: #C08081;
+  color: #e63e62;
 }
 
 /* Mobile */
@@ -14070,7 +14091,7 @@ margin: 0;
 }
 
 .primary-btn:hover {
-  background: #C08081;
+  background: #e63e62;
 }
 
 .primary-btn:disabled {
@@ -14100,8 +14121,8 @@ margin: 0;
 }
 
 .secondary-btn:hover {
-  border-color: #C08081;
-  color: #C08081;
+  border-color: #e63e62;
+  color: #e63e62;
 }
 
 .cancel-btn {
@@ -14364,7 +14385,7 @@ margin: 0;
 
   margin-top: 3px;
 
-  color: #C08081;
+  color: #e63e62;
 
   font-size: 11px;
   font-weight: 600;
@@ -14450,7 +14471,7 @@ margin: 0;
 
   background: #f5f1ec;
 
-  color: #C08081;
+  color: #e63e62;
 }
 
 /* =====================================================
@@ -14485,7 +14506,7 @@ margin: 0;
 
 .edit-btn:hover {
   background: #f4eee8;
-  color: #C08081;
+  color: #e63e62;
 }
 
 .delete-btn {
@@ -14616,7 +14637,7 @@ margin: 0;
 }
 
 .modal-close:hover {
-  background: #C08081;
+  background: #e63e62;
   color: #ffffff;
 }
 
@@ -14718,7 +14739,7 @@ margin: 0;
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-  border-color: #C08081;
+  border-color: #e63e62;
   box-shadow: 0 0 0 2px rgba(192, 128, 129, 0.08);
 }
 
@@ -14772,7 +14793,7 @@ margin: 0;
 
 .input-prefix:focus-within,
 .input-suffix:focus-within {
-  border-color: #C08081;
+  border-color: #e63e62;
 }
 
 /* =====================================================
@@ -14805,7 +14826,7 @@ margin: 0;
   width: 16px;
   height: 16px;
 
-  accent-color: #C08081;
+  accent-color: #e63e62;
 }
 
 .checkbox-label span {
@@ -14842,7 +14863,7 @@ margin: 0;
 }
 
 .upload-box:hover {
-  border-color: #C08081;
+  border-color: #e63e62;
   background: #fcf8f8;
 }
 
@@ -14945,7 +14966,7 @@ margin: 0;
 
 .restore-main-image-button {
   margin-top: 10px;
-  color: #C08081;
+  color: #e63e62;
   font-size: 12px;
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -14996,7 +15017,7 @@ margin: 0;
 .rich-text-toolbar button.is-active {
   border-color: #E7DEDC;
   background: #fff;
-  color: #C08081;
+  color: #e63e62;
 }
 
 .rich-text-toolbar button:disabled {
@@ -15010,7 +15031,7 @@ margin: 0;
   margin-left: auto;
   padding: 0 8px;
   border-color: #E7DEDC;
-  color: #C08081;
+  color: #e63e62;
   font-size: 11px;
 }
 
@@ -15073,15 +15094,15 @@ margin: 0;
 .product-description blockquote {
   margin: 14px 0;
   padding: 10px 12px;
-  border-left: 2px solid #C08081;
+  border-left: 2px solid #e63e62;
   background: #FAF6F5;
-  color: #C08081;
+  color: #e63e62;
   font-style: italic;
 }
 
 .rich-text-content .tiptap a,
 .product-description a {
-  color: #C08081;
+  color: #e63e62;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -15320,8 +15341,8 @@ margin: 0;
 .admin-login-page button,
 .admin-login-page input[type="button"],
 .admin-login-page input[type="submit"] {
-  background: #C08081 !important;
+  background: #e63e62 !important;
   background-image: none !important;
-  border-color: #C08081 !important;
+  border-color: #e63e62 !important;
   color: #FFFFFF !important;
 }

@@ -20,7 +20,7 @@ export default function RelatedProducts({
     <section className="mt-20 border-t border-[#E7DEDC] pt-14">
 
       <div className="mb-8 text-center">
-        <p className="mb-2 text-xs uppercase tracking-[3px] text-[#C08081]">
+        <p className="mb-2 text-xs uppercase tracking-[3px] text-[#e63e62]">
           You May Also Like
         </p>
 

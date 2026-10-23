@@ -34,7 +34,7 @@ export default function ProductImageGallery({
             onClick={() => setSelectedImage(index)}
             className={`relative h-20 w-20 shrink-0 overflow-hidden border ${
               selectedImage === index
-                ? "border-[#C08081]"
+                ? "border-[#e63e62]"
                 : "border-[#E7DEDC]"
             }`}
           >

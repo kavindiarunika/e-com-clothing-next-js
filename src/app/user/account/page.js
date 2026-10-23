@@ -96,7 +96,7 @@ export default function AccountPage() {
   return (
     <div>
           <div className="mb-8">
-            <p className="text-sm uppercase tracking-[0.2em] text-[#C08081]">
+            <p className="text-sm uppercase tracking-[0.2em] text-[#e63e62]">
               My Account
             </p>
 
@@ -146,7 +146,7 @@ export default function AccountPage() {
                 <button
                   type="submit"
                   disabled={profileSaving}
-                  className="inline-flex h-11 items-center justify-center gap-2 bg-[#292524] px-5 text-sm font-medium text-white transition hover:bg-[#C08081] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex h-11 items-center justify-center gap-2 bg-[#292524] px-5 text-sm font-medium text-white transition hover:bg-[#e63e62] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {profileSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                   {profileSaving ? "Saving..." : "Save profile"}
@@ -170,7 +170,7 @@ function ProfileInput({ label, name, value, onChange, type = "text", ...inputPro
         type={type}
         value={value || ""}
         onChange={onChange}
-        className="h-11 w-full border border-[#E7DEDC] bg-white px-3 text-sm text-[#292524] outline-none focus:border-[#C08081]"
+        className="h-11 w-full border border-[#E7DEDC] bg-white px-3 text-sm text-[#292524] outline-none focus:border-[#e63e62]"
         {...inputProps}
       />
     </div>

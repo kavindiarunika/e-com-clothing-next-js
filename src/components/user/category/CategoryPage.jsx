@@ -446,7 +446,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
             <Link
               href="/"
-              className="transition hover:text-[#C08081]"
+              className="transition hover:text-[#e63e62]"
             >
               Home
             </Link>
@@ -516,8 +516,8 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
               aria-controls="category-filter-sidebar"
               className={`flex items-center gap-2 border px-4 py-2.5 text-xs font-semibold uppercase tracking-[1px] transition ${
                 desktopFiltersOpen
-                  ? "border-[#C08081] bg-[#C08081] text-white"
-                  : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#C08081] hover:text-[#C08081]"
+                  ? "border-[#e63e62] bg-[#e63e62] text-white"
+                  : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#e63e62] hover:text-[#e63e62]"
               }`}
             >
               <SlidersHorizontal size={15} />
@@ -634,7 +634,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="mt-5 bg-[#C08081] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
+                    className="mt-5 bg-[#e63e62] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
                   >
                     Clear Filters
                   </button>
@@ -659,7 +659,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                     onClick={() => changePage(activePage - 1)}
                     disabled={activePage === 1}
                     aria-label="Go to previous page"
-                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#C08081] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
                   >
                     <ChevronLeft size={17} />
                   </button>
@@ -667,7 +667,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                   <span
                     aria-current="page"
                     aria-label={`Page ${activePage} of ${pageCount}`}
-                    className="flex h-9 min-w-9 items-center justify-center bg-[#C08081] px-3 text-xs font-semibold text-white shadow-sm"
+                    className="flex h-9 min-w-9 items-center justify-center bg-[#e63e62] px-3 text-xs font-semibold text-white shadow-sm"
                   >
                     {activePage}
                   </span>
@@ -677,7 +677,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                     onClick={() => changePage(activePage + 1)}
                     disabled={activePage === pageCount}
                     aria-label="Go to next page"
-                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#C08081] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
                   >
                     <ChevronRight size={17} />
                   </button>
@@ -769,7 +769,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
               onClick={() =>
                 setMobileFiltersOpen(false)
               }
-              className="mt-6 w-full bg-[#C08081] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
+              className="mt-6 w-full bg-[#e63e62] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
             >
               View {filteredProducts.length} Products
             </button>

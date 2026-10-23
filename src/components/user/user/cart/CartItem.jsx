@@ -80,7 +80,7 @@ export default function CartItem({
                   type="button"
                   onClick={() => onDecrease(item)}
                   disabled={quantity <= 1}
-                  className="flex h-9 w-8 items-center justify-center text-[#292524] transition hover:bg-[#FFFFFF] hover:text-[#C08081] disabled:cursor-not-allowed disabled:opacity-25"
+                  className="flex h-9 w-8 items-center justify-center text-[#292524] transition hover:bg-[#FFFFFF] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:opacity-25"
                   aria-label={`Decrease quantity of ${
                     item.name || "item"
                   }`}
@@ -96,7 +96,7 @@ export default function CartItem({
                   type="button"
                   onClick={() => onIncrease(item)}
                   disabled={quantity >= Number(item.stock || 0)}
-                  className="flex h-9 w-8 items-center justify-center text-[#292524] transition hover:bg-[#FFFFFF] hover:text-[#C08081] disabled:cursor-not-allowed disabled:opacity-25"
+                  className="flex h-9 w-8 items-center justify-center text-[#292524] transition hover:bg-[#FFFFFF] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:opacity-25"
                   aria-label={`Increase quantity of ${
                     item.name || "item"
                   }`}
@@ -113,7 +113,7 @@ export default function CartItem({
                   Total
                 </p>
 
-                <p className="mt-1 font-medium text-[#C08081] sm:text-[15px]">
+                <p className="mt-1 font-medium text-[#e63e62] sm:text-[15px]">
                   Rs. {total.toLocaleString()}
                 </p>
               </div>

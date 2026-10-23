@@ -19,7 +19,7 @@ export default function CategoryFilter({
               value={category}
               checked={selectedCategory === category}
               onChange={() => setSelectedCategory(category)}
-              className="h-4 w-4 accent-[#C08081]"
+              className="h-4 w-4 accent-[#e63e62]"
             />
 
             {category}

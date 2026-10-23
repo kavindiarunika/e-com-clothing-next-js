@@ -392,7 +392,7 @@ export default function ProductPage({ params }) {
           </div>
 
           <div className="flex flex-col justify-center">
-            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#C08081]">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#e63e62]">
               {product.category}
             </p>
 
@@ -407,7 +407,7 @@ export default function ProductPage({ params }) {
             </div>
 
             <div className="mt-6 flex items-center gap-3">
-              <span className="text-3xl font-semibold text-[#C08081]">
+              <span className="text-3xl font-semibold text-[#e63e62]">
                 Rs. {Math.round(discountedPrice).toLocaleString()}
               </span>
 
@@ -418,7 +418,7 @@ export default function ProductPage({ params }) {
               )}
 
               {hasDiscount && (
-                <span className="bg-[#C08081] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                <span className="bg-[#e63e62] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
                   {product.discount}% OFF
                 </span>
               )}
@@ -514,7 +514,7 @@ export default function ProductPage({ params }) {
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="flex-1 bg-[#C08081] px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2B30]"
+                  className="flex-1 bg-[#e63e62] px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2B30]"
                 >
                   Add to Cart
                 </button>
@@ -522,7 +522,7 @@ export default function ProductPage({ params }) {
                 <button
                   type="button"
                   onClick={handleBuyNow}
-                  className="flex-1 border border-[#C08081] bg-transparent px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-[#C08081] transition hover:bg-[#F6F1EA]"
+                  className="flex-1 border border-[#e63e62] bg-transparent px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-[#e63e62] transition hover:bg-[#F6F1EA]"
                 >
                   Buy Now
                 </button>
@@ -531,7 +531,7 @@ export default function ProductPage({ params }) {
               <button
                 type="button"
                 onClick={handleWishlist}
-                className="mt-2 self-start text-xs font-medium uppercase tracking-[1.5px] text-[#292524] transition hover:text-[#C08081]"
+                className="mt-2 self-start text-xs font-medium uppercase tracking-[1.5px] text-[#292524] transition hover:text-[#e63e62]"
               >
                 {isWishlisted ? "Saved to wishlist" : "Add to wishlist"}
               </button>

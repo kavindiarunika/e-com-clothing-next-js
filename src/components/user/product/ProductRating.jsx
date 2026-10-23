@@ -75,13 +75,13 @@ export default function ProductRating({ productId }) {
             size={15}
             fill={
               star <= Math.round(ratingSummary.rating)
-                ? "#C08081"
+                ? "#e63e62"
                 : "none"
             }
             className={
               star <= Math.round(ratingSummary.rating)
-                ? "text-[#C08081]"
-                : "text-[#C08081]"
+                ? "text-[#e63e62]"
+                : "text-[#e63e62]"
             }
           />
         ))}

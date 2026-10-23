@@ -45,7 +45,7 @@ export default function EditAddressPage() {
 
           <Link
             href="/user/account/addresses"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] transition hover:text-[#C08081]"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] transition hover:text-[#e63e62]"
           >
             <ArrowLeft size={15} />
             Back to Addresses
@@ -55,7 +55,7 @@ export default function EditAddressPage() {
 
       <section className="mx-auto max-w-3xl px-6 py-12 lg:px-10 lg:py-16">
         <div className="mb-10">
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#C08081]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
             Delivery Details
           </p>
 
@@ -63,7 +63,7 @@ export default function EditAddressPage() {
             EDIT ADDRESS
           </h1>
 
-          <div className="mt-5 h-px w-12 bg-[#C08081]" />
+          <div className="mt-5 h-px w-12 bg-[#e63e62]" />
         </div>
 
         <form
@@ -85,7 +85,7 @@ export default function EditAddressPage() {
                 value={address.name}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#e63e62]"
               />
             </label>
 
@@ -97,7 +97,7 @@ export default function EditAddressPage() {
                 value={address.phone}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#e63e62]"
               />
             </label>
 
@@ -108,7 +108,7 @@ export default function EditAddressPage() {
                 value={address.address}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#e63e62]"
               />
             </label>
 
@@ -119,7 +119,7 @@ export default function EditAddressPage() {
                 value={address.city}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#e63e62]"
               />
             </label>
 
@@ -130,7 +130,7 @@ export default function EditAddressPage() {
                 value={address.district}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#e63e62]"
               />
             </label>
 
@@ -141,7 +141,7 @@ export default function EditAddressPage() {
                 value={address.postalCode}
                 onChange={handleChange}
                 required
-                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#C08081]"
+                className="mt-2 h-11 w-full border border-[#E7DEDC] bg-white px-4 text-sm font-normal normal-case tracking-normal outline-none focus:border-[#e63e62]"
               />
             </label>
           </div>
@@ -156,7 +156,7 @@ export default function EditAddressPage() {
 
             <button
               type="submit"
-              className="flex h-11 items-center justify-center gap-2 bg-[#292524] px-6 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#C08081]"
+              className="flex h-11 items-center justify-center gap-2 bg-[#292524] px-6 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#e63e62]"
             >
               {saved && <Check size={15} />}
               {saved ? "Changes Saved" : "Save Changes"}
