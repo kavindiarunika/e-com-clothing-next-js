@@ -10,8 +10,8 @@ export default function CouponBox({ onApplyCoupon }) {
   };
 
   return (
-    <div className="border-t border-[#D8D0C8] pt-6">
-      <p className="mb-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+    <div className="border-t border-[#E7DEDC] pt-6">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
         Coupon Code
       </p>
 
@@ -21,13 +21,13 @@ export default function CouponBox({ onApplyCoupon }) {
           value={coupon}
           onChange={(e) => setCoupon(e.target.value)}
           placeholder="Enter coupon"
-          className="min-w-0 flex-1 border border-[#D8D0C8] bg-white px-4 py-3 text-sm outline-none focus:border-[#72383D]"
+          className="min-w-0 flex-1 border border-[#E7DEDC] bg-white px-4 py-3 text-sm outline-none focus:border-[#C08081]"
         />
 
         <button
           type="button"
           onClick={handleApply}
-          className="bg-[#322D29] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#72383D]"
+          className="bg-[#C08081] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
         >
           Apply
         </button>

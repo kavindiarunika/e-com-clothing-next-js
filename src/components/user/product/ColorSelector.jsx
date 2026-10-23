@@ -8,14 +8,14 @@ export default function ColorSelector({
   return (
     <div>
       <div className="mb-4">
-        <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+        <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
           Color
         </h3>
 
         {selectedColor && (
           <p className="mt-1 text-xs text-[#6B625C]">
             Selected:{" "}
-            <span className="font-medium text-[#322D29]">
+            <span className="font-medium text-[#292524]">
               {selectedColor.name}
             </span>
           </p>
@@ -28,7 +28,7 @@ export default function ColorSelector({
           const colorName = color.name;
 
           const hexCode =
-            color.hex_code?.trim() || "#D8D0C8";
+            color.hex_code?.trim() || "#E7DEDC";
 
           const isSelected =
             selectedColor?.color_id === colorId;
@@ -48,8 +48,8 @@ export default function ColorSelector({
                 duration-200
                 ${
                   isSelected
-                    ? "ring-2 ring-[#72383D] ring-offset-2"
-                    : "hover:ring-2 hover:ring-[#AC9C8D] hover:ring-offset-2"
+                    ? "ring-2 ring-[#C08081] ring-offset-2"
+                    : "hover:ring-2 hover:ring-[#C08081] hover:ring-offset-2"
                 }
               `}
             >

@@ -8,7 +8,7 @@ import Newsletter from "../../components/user/home/Newsletter";
 
 export default function Home() {
   return (
-     <main className="min-h-screen bg-[#EFE9E1]">
+     <main className="min-h-screen bg-[#FFFFFF]">
       <HeroBanner />
 
       <PromoBanner />

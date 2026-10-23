@@ -9,7 +9,7 @@ export default function SortDropdown({ id, sortBy, setSortBy }) {
         id={id}
         value={sortBy}
         onChange={(e) => setSortBy(e.target.value)}
-        className="w-full appearance-none border border-[#D8D0C8] bg-white py-2.5 pl-3 pr-10 text-sm text-[#322D29] outline-none focus:border-[#72383D]"
+        className="w-full appearance-none border border-[#E7DEDC] bg-white py-2.5 pl-3 pr-10 text-sm text-[#292524] outline-none focus:border-[#C08081]"
       >
         <option value="best-selling">Best Selling</option>
         <option value="newest">Newest</option>
@@ -22,7 +22,7 @@ export default function SortDropdown({ id, sortBy, setSortBy }) {
 
       <ChevronDown
         size={16}
-        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#AC9C8D]"
+        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#C08081]"
       />
     </div>
   );

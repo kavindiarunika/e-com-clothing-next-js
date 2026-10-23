@@ -8,7 +8,7 @@ export default function SearchBar({ value, onChange }) {
       <Search
         size={19}
         strokeWidth={1.7}
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-[#AC9C8D]"
+        className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C08081]"
       />
 
       <input
@@ -16,14 +16,14 @@ export default function SearchBar({ value, onChange }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search products..."
-        className="w-full rounded-none border border-[#D8D0C8] bg-white py-3.5 pl-11 pr-10 text-sm text-[#322D29] outline-none transition focus:border-[#72383D]"
+        className="w-full rounded-none border border-[#E7DEDC] bg-white py-3.5 pl-11 pr-10 text-sm text-[#292524] outline-none transition focus:border-[#C08081]"
       />
 
       {value && (
         <button
           type="button"
           onClick={() => onChange("")}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-[#AC9C8D] hover:text-[#72383D]"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-[#C08081] hover:text-[#C08081]"
         >
           <X size={17} />
         </button>

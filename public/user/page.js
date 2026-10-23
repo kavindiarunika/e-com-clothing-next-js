@@ -7,7 +7,7 @@ import PromoBanner from "../components/user/home/PromoBanner";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#EFE9E1]">
+    <main className="min-h-screen bg-[#FFFFFF]">
       <HeroBanner />
       <CategorySection />
       <FeaturedProducts />

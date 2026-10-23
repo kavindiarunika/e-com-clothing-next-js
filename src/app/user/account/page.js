@@ -96,7 +96,7 @@ export default function AccountPage() {
   return (
     <div>
           <div className="mb-8">
-            <p className="text-sm uppercase tracking-[0.2em] text-[#72383D]">
+            <p className="text-sm uppercase tracking-[0.2em] text-[#C08081]">
               My Account
             </p>
 
@@ -127,7 +127,7 @@ export default function AccountPage() {
             )}
 
             {profileLoading ? (
-              <p className="py-4 text-sm text-[#322D29]/60">Loading profile...</p>
+              <p className="py-4 text-sm text-[#292524]/60">Loading profile...</p>
             ) : (
               <form onSubmit={handleProfileSave} className="space-y-6">
                 <div className="grid gap-5 sm:grid-cols-2">
@@ -146,7 +146,7 @@ export default function AccountPage() {
                 <button
                   type="submit"
                   disabled={profileSaving}
-                  className="inline-flex h-11 items-center justify-center gap-2 bg-[#322D29] px-5 text-sm font-medium text-white transition hover:bg-[#72383D] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex h-11 items-center justify-center gap-2 bg-[#292524] px-5 text-sm font-medium text-white transition hover:bg-[#C08081] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {profileSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                   {profileSaving ? "Saving..." : "Save profile"}
@@ -161,7 +161,7 @@ export default function AccountPage() {
 function ProfileInput({ label, name, value, onChange, type = "text", ...inputProps }) {
   return (
     <div>
-      <label htmlFor={name} className="mb-2 block text-xs font-medium uppercase tracking-wider text-[#322D29]/60">
+      <label htmlFor={name} className="mb-2 block text-xs font-medium uppercase tracking-wider text-[#292524]/60">
         {label}
       </label>
       <input
@@ -170,7 +170,7 @@ function ProfileInput({ label, name, value, onChange, type = "text", ...inputPro
         type={type}
         value={value || ""}
         onChange={onChange}
-        className="h-11 w-full border border-[#D8D0C8] bg-white px-3 text-sm text-[#322D29] outline-none focus:border-[#72383D]"
+        className="h-11 w-full border border-[#E7DEDC] bg-white px-3 text-sm text-[#292524] outline-none focus:border-[#C08081]"
         {...inputProps}
       />
     </div>

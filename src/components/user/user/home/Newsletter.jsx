@@ -82,7 +82,7 @@ export default function Newsletter() {
 
                   <button
                     type="submit"
-                    className="group flex h-12 items-center justify-center gap-2 rounded-md bg-[var(--color-dark)] px-6 text-xs font-medium uppercase tracking-wider text-white transition-all duration-300 hover:bg-[var(--color-primary)]"
+                    className="group flex h-12 items-center justify-center gap-2 rounded-md bg-[var(--color-primary)] px-6 text-xs font-medium uppercase tracking-wider text-white transition-all duration-300 hover:bg-[var(--color-primary-hover)]"
                   >
                     Subscribe
 

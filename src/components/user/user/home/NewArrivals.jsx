@@ -56,21 +56,21 @@ export default function NewArrivals() {
   }, []);
 
   return (
-    <section className="bg-[#EFE9E1] px-[4%] py-12 md:py-14">
+    <section className="bg-[#FFFFFF] px-[4%] py-12 md:py-14">
       <div className="mx-auto max-w-[1200px]">
 
         {/* Heading */}
         <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end md:mb-10">
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[4px] text-[#AC9C8D]">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[4px] text-[#C08081]">
               Just In
             </p>
 
-            <h2 className="font-serif text-3xl font-medium tracking-wide text-[#322D29] sm:text-4xl md:text-5xl">
+            <h2 className="font-serif text-3xl font-medium tracking-wide text-[#292524] sm:text-4xl md:text-5xl">
               New Arrivals
             </h2>
 
-            <div className="mt-5 h-px w-12 bg-[#72383D]" />
+            <div className="mt-5 h-px w-12 bg-[#C08081]" />
           </div>
         </div>
 
@@ -94,7 +94,7 @@ export default function NewArrivals() {
         <div className="mt-12 text-center">
           <a
             href="/user/shop"
-            className="inline-flex items-center gap-3 border border-[#72383D] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.5px] text-[#72383D] transition duration-300 hover:bg-[#72383D] hover:text-white"
+            className="inline-flex items-center gap-3 border border-[#C08081] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.5px] text-[#C08081] transition duration-300 hover:bg-[#C08081] hover:text-white"
           >
             View All Products
             <span>→</span>

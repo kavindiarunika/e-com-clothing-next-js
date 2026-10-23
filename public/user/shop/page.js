@@ -222,17 +222,17 @@ export default function ShopPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1]">
+    <main className="min-h-screen bg-[#FFFFFF]">
 
       {/* Header */}
-      <section className="border-b border-[#D8D0C8] bg-[#EFE9E1]">
+      <section className="border-b border-[#E7DEDC] bg-[#FFFFFF]">
         <div className="mx-auto w-[92%] max-w-[1200px] py-12 md:py-16">
 
-          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#72383D]">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#C08081]">
             Velora Collection
           </p>
 
-          <h1 className="font-serif text-4xl font-medium text-[#322D29] md:text-5xl">
+          <h1 className="font-serif text-4xl font-medium text-[#292524] md:text-5xl">
             Shop
           </h1>
 
@@ -263,7 +263,7 @@ export default function ShopPage() {
             onClick={() =>
               setMobileFiltersOpen(true)
             }
-            className="flex items-center gap-2 border border-[#D8D0C8] bg-white px-4 py-2.5 text-sm text-[#322D29]"
+            className="flex items-center gap-2 border border-[#E7DEDC] bg-white px-4 py-2.5 text-sm text-[#292524]"
           >
             <SlidersHorizontal size={17} />
             Filters
@@ -285,14 +285,14 @@ export default function ShopPage() {
 
               <div className="mb-6 flex items-center justify-between">
 
-                <h2 className="font-serif text-lg text-[#322D29]">
+                <h2 className="font-serif text-lg text-[#292524]">
                   Filters
                 </h2>
 
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs text-[#72383D] hover:underline"
+                  className="text-xs text-[#C08081] hover:underline"
                 >
                   Clear
                 </button>
@@ -370,7 +370,7 @@ export default function ShopPage() {
             ) : (
               <div className="flex min-h-[350px] flex-col items-center justify-center bg-white px-6 text-center">
 
-                <h2 className="font-serif text-2xl text-[#322D29]">
+                <h2 className="font-serif text-2xl text-[#292524]">
                   No products found
                 </h2>
 
@@ -382,7 +382,7 @@ export default function ShopPage() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-6 bg-[#72383D] px-6 py-3 text-xs font-medium uppercase tracking-[1px] text-white transition hover:bg-[#5E2E33]"
+                  className="mt-6 bg-[#C08081] px-6 py-3 text-xs font-medium uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
                 >
                   Clear Filters
                 </button>
@@ -407,12 +407,12 @@ export default function ShopPage() {
           />
 
           {/* Drawer */}
-          <div className="absolute right-0 top-0 h-full w-[85%] max-w-[360px] overflow-y-auto bg-[#EFE9E1]">
+          <div className="absolute right-0 top-0 h-full w-[85%] max-w-[360px] overflow-y-auto bg-[#FFFFFF]">
 
             {/* Drawer Header */}
-            <div className="flex items-center justify-between border-b border-[#D8D0C8] bg-white px-5 py-5">
+            <div className="flex items-center justify-between border-b border-[#E7DEDC] bg-white px-5 py-5">
 
-              <h2 className="font-serif text-xl text-[#322D29]">
+              <h2 className="font-serif text-xl text-[#292524]">
                 Filters
               </h2>
 
@@ -421,7 +421,7 @@ export default function ShopPage() {
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="text-[#322D29]"
+                className="text-[#292524]"
               >
                 <X size={22} />
               </button>
@@ -436,7 +436,7 @@ export default function ShopPage() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs text-[#72383D] hover:underline"
+                  className="text-xs text-[#C08081] hover:underline"
                 >
                   Clear All
                 </button>
@@ -473,7 +473,7 @@ export default function ShopPage() {
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="mt-8 w-full bg-[#72383D] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
+                className="mt-8 w-full bg-[#C08081] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
               >
                 Show {filteredProducts.length} Products
               </button>

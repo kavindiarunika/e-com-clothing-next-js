@@ -12,22 +12,22 @@ import {
 
 export default function ReturnsPage() {
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
       {/* Header */}
-      <header className="bg-[#322D29]">
+      <header className="bg-[#292524]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
 
           <Link
             href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#EFE9E1]"
+            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
           >
             VELORA
           </Link>
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#EFE9E1] transition hover:text-[#AC9C8D]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] transition hover:text-[#C08081]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -41,7 +41,7 @@ export default function ReturnsPage() {
 
         <div className="text-center">
 
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#72383D]">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C08081]">
             Customer Care
           </p>
 
@@ -49,7 +49,7 @@ export default function ReturnsPage() {
             Returns & Exchanges
           </h1>
 
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#322D29]/60">
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#292524]/60">
             If something isn't right with your order, you can submit a
             return or exchange request from your VELORA account.
           </p>
@@ -104,7 +104,7 @@ export default function ReturnsPage() {
             Request Status
           </h2>
 
-          <p className="mt-3 text-sm leading-7 text-[#322D29]/60">
+          <p className="mt-3 text-sm leading-7 text-[#292524]/60">
             You can check your return or exchange requests from your
             VELORA account.
           </p>
@@ -135,7 +135,7 @@ export default function ReturnsPage() {
 
           <Link
             href="/user/account/returns"
-            className="mt-7 inline-flex items-center gap-2 bg-[#72383D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#432415]"
+            className="mt-7 inline-flex items-center gap-2 bg-[#C08081] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#A96870]"
           >
             View My Requests
           </Link>
@@ -143,13 +143,13 @@ export default function ReturnsPage() {
         </div>
 
         {/* Important Information */}
-        <div className="mt-8 rounded-2xl border border-[#72383D]/15 bg-[#72383D]/5 p-6">
+        <div className="mt-8 rounded-2xl border border-[#C08081]/15 bg-[#C08081]/5 p-6">
 
           <h3 className="font-semibold">
             Important Information
           </h3>
 
-          <ul className="mt-3 space-y-2 text-sm leading-7 text-[#322D29]/65">
+          <ul className="mt-3 space-y-2 text-sm leading-7 text-[#292524]/65">
             <li>• Return and exchange requests are available for eligible delivered orders.</li>
             <li>• Each request is reviewed before approval.</li>
             <li>• Please provide a clear reason when submitting a request.</li>
@@ -167,11 +167,11 @@ function ReturnStep({ number, icon, title, children }) {
   return (
     <div className="flex gap-5 rounded-3xl bg-white p-7 shadow-sm">
 
-      <div className="pt-2 text-sm font-semibold tracking-wider text-[#AC9C8D]">
+      <div className="pt-2 text-sm font-semibold tracking-wider text-[#C08081]">
         {number}
       </div>
 
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#EFE9E1] text-[#72383D]">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
         {icon}
       </div>
 
@@ -180,7 +180,7 @@ function ReturnStep({ number, icon, title, children }) {
           {title}
         </h2>
 
-        <p className="mt-2 text-sm leading-7 text-[#322D29]/60">
+        <p className="mt-2 text-sm leading-7 text-[#292524]/60">
           {children}
         </p>
       </div>

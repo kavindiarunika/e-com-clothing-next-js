@@ -55,8 +55,8 @@ export default function NotificationsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
-      <header className="border-b border-[#D8D0C8]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
+      <header className="border-b border-[#E7DEDC]">
               <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
       
                 <Link
@@ -68,7 +68,7 @@ export default function NotificationsPage() {
       
                 <Link
                   href="/user/account"
-                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#72383D]"
+                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#C08081]"
                 >
                   <ArrowLeft size={15} />
                   My Account
@@ -79,7 +79,7 @@ export default function NotificationsPage() {
 
       <div className="mx-auto max-w-4xl px-5 py-12">
         <div className="mb-8">
-          <p className="text-sm uppercase tracking-[0.2em] text-[#72383D]">
+          <p className="text-sm uppercase tracking-[0.2em] text-[#C08081]">
             Account
           </p>
 
@@ -87,7 +87,7 @@ export default function NotificationsPage() {
             Notifications
           </h1>
 
-          <p className="mt-2 text-[#322D29]/60">
+          <p className="mt-2 text-[#292524]/60">
             Stay updated about your orders and returns.
           </p>
         </div>
@@ -98,12 +98,12 @@ export default function NotificationsPage() {
               key={notification.notification_id}
               className={`rounded-2xl bg-white p-5 shadow-sm ${
                 !notification.is_read
-                  ? "border-l-4 border-[#72383D]"
+                  ? "border-l-4 border-[#C08081]"
                   : ""
               }`}
             >
               <div className="flex gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EFE9E1] text-[#72383D]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-[#C08081]">
                   {notification.type === "return" ? (
                     <RotateCcw size={20} />
                   ) : notification.type === "exchange" ? (
@@ -119,17 +119,17 @@ export default function NotificationsPage() {
                       {notification.title}
                     </h2>
 
-                    <span className="text-xs text-[#322D29]/50">
+                    <span className="text-xs text-[#292524]/50">
                       {formatDate(notification.created_at)}
                     </span>
                   </div>
 
-                  <p className="mt-1 text-sm leading-6 text-[#322D29]/65">
+                  <p className="mt-1 text-sm leading-6 text-[#292524]/65">
                     {notification.message}
                   </p>
 
                   {!notification.is_read && (
-                    <span className="mt-3 inline-block rounded-full bg-[#72383D] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
+                    <span className="mt-3 inline-block rounded-full bg-[#C08081] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
                       New
                     </span>
                   )}
@@ -140,7 +140,7 @@ export default function NotificationsPage() {
         </div>
 
         {loading && (
-          <div className="rounded-3xl bg-white px-6 py-16 text-center text-sm text-[#322D29]/60">
+          <div className="rounded-3xl bg-white px-6 py-16 text-center text-sm text-[#292524]/60">
             Loading notifications...
           </div>
         )}
@@ -158,14 +158,14 @@ export default function NotificationsPage() {
           <div className="rounded-3xl bg-white px-6 py-16 text-center">
             <Bell
               size={40}
-              className="mx-auto text-[#322D29]/30"
+              className="mx-auto text-[#292524]/30"
             />
 
             <h2 className="mt-4 text-xl font-semibold">
               No notifications
             </h2>
 
-            <p className="mt-2 text-sm text-[#322D29]/60">
+            <p className="mt-2 text-sm text-[#292524]/60">
               You are all caught up.
             </p>
           </div>

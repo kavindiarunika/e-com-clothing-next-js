@@ -376,7 +376,7 @@ export default function ProductPage({ params }) {
   */
 
   return (
-    <main className="bg-[#EFE9E1]">
+    <main className="bg-[#FFFFFF]">
 
       {/* ================= PRODUCT SECTION ================= */}
 
@@ -400,13 +400,13 @@ export default function ProductPage({ params }) {
 
             {/* Category */}
 
-            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#72383D]">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#C08081]">
               {product.category}
             </p>
 
             {/* Product Name */}
 
-            <h1 className="font-serif text-4xl leading-tight text-[#322D29] md:text-5xl">
+            <h1 className="font-serif text-4xl leading-tight text-[#292524] md:text-5xl">
               {product.name}
             </h1>
 
@@ -424,7 +424,7 @@ export default function ProductPage({ params }) {
 
             <div className="mt-6 flex items-center gap-3">
 
-              <span className="text-3xl font-semibold text-[#72383D]">
+              <span className="text-3xl font-semibold text-[#C08081]">
                 Rs.{" "}
                 {Math.round(
                   discountedPrice
@@ -439,7 +439,7 @@ export default function ProductPage({ params }) {
               )}
 
               {hasDiscount && (
-                <span className="bg-[#72383D] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                <span className="bg-[#C08081] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
                   {product.discount}% OFF
                 </span>
               )}
@@ -484,11 +484,11 @@ export default function ProductPage({ params }) {
 
               <div>
 
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
                   Quantity
                 </p>
 
-                <div className="flex w-fit items-center border border-[#D8D0C8] bg-white">
+                <div className="flex w-fit items-center border border-[#E7DEDC] bg-white">
 
                   {/* MINUS */}
 
@@ -500,14 +500,14 @@ export default function ProductPage({ params }) {
                       availableStock <= 0
                     }
                     aria-label="Decrease quantity"
-                    className="flex h-11 w-11 items-center justify-center text-xl text-[#322D29] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-11 w-11 items-center justify-center text-xl text-[#292524] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     −
                   </button>
 
                   {/* NUMBER */}
 
-                  <span className="flex h-11 w-14 items-center justify-center text-sm font-medium text-[#322D29]">
+                  <span className="flex h-11 w-14 items-center justify-center text-sm font-medium text-[#292524]">
                     {quantity}
                   </span>
 
@@ -522,7 +522,7 @@ export default function ProductPage({ params }) {
                       quantity >= availableStock
                     }
                     aria-label="Increase quantity"
-                    className="flex h-11 w-11 items-center justify-center text-xl text-[#322D29] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-11 w-11 items-center justify-center text-xl text-[#292524] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     +
                   </button>
@@ -542,7 +542,7 @@ export default function ProductPage({ params }) {
                       items available
                     </>
                   ) : (
-                    <span className="font-medium text-[#72383D]">
+                    <span className="font-medium text-[#C08081]">
                       This combination is sold out
                     </span>
                   )}
@@ -566,7 +566,7 @@ export default function ProductPage({ params }) {
                   !selectedVariant ||
                   availableStock <= 0
                 }
-                className="bg-[#72383D] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition duration-300 hover:bg-[#322D29] disabled:cursor-not-allowed disabled:opacity-50"
+                className="bg-[#C08081] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition duration-300 hover:bg-[#A96870] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Buy Now
               </button>
@@ -580,7 +580,7 @@ export default function ProductPage({ params }) {
                   !selectedVariant ||
                   availableStock <= 0
                 }
-                className="border border-[#72383D] bg-white px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#72383D] transition duration-300 hover:bg-[#72383D] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="border border-[#C08081] bg-white px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#C08081] transition duration-300 hover:bg-[#C08081] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Add to Cart
               </button>
@@ -592,8 +592,8 @@ export default function ProductPage({ params }) {
                 onClick={handleWishlist}
                 className={`flex items-center justify-center gap-2 border px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] transition duration-300 sm:col-span-2 ${
                   isWishlisted
-                    ? "border-[#72383D] bg-[#72383D] text-white"
-                    : "border-[#D8D0C8] bg-white text-[#322D29] hover:border-[#72383D] hover:text-[#72383D]"
+                    ? "border-[#C08081] bg-[#C08081] text-white"
+                    : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#C08081] hover:text-[#C08081]"
                 }`}
               >
 
@@ -613,9 +613,9 @@ export default function ProductPage({ params }) {
 
             {/* PRODUCT DETAILS */}
 
-            <div className="mt-8 border-t border-[#D8D0C8] pt-5">
+            <div className="mt-8 border-t border-[#E7DEDC] pt-5">
 
-              <p className="text-[14px] uppercase tracking-[2px] text-[#322D29]">
+              <p className="text-[14px] uppercase tracking-[2px] text-[#292524]">
                 Product Details
               </p>
 

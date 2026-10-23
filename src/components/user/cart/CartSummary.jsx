@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-function PriceRow({ label, value, valueClassName = "text-[#322D29]" }) {
+function PriceRow({ label, value, valueClassName = "text-[#292524]" }) {
   return (
     <div className="flex items-center justify-between gap-4">
       <span className="text-[#6B625C]">{label}</span>
@@ -30,7 +30,7 @@ export default function CartSummary({
 }) {
   return (
     <div className="bg-white p-5 md:p-7 lg:p-8">
-      <h2 className="font-serif text-2xl text-[#322D29] md:text-[2rem]">
+      <h2 className="font-serif text-2xl text-[#292524] md:text-[2rem]">
         Cart Summary
       </h2>
 
@@ -45,7 +45,7 @@ export default function CartSummary({
           <PriceRow
             label="Product discount"
             value={`- Rs. ${productDiscount.toLocaleString()}`}
-            valueClassName="text-[#72383D]"
+            valueClassName="text-[#C08081]"
           />
         )}
 
@@ -53,29 +53,29 @@ export default function CartSummary({
           <PriceRow
             label={`Coupon (${selectedCoupon.code})`}
             value={`- Rs. ${couponDiscount.toLocaleString()}`}
-            valueClassName="text-[#72383D]"
+            valueClassName="text-[#C08081]"
           />
         )}
 
         <PriceRow label="Shipping" value={`Rs. ${shipping.toLocaleString()}`} />
       </div>
 
-      <div className="my-6 border-t border-[#D8D0C8]" />
+      <div className="my-6 border-t border-[#E7DEDC]" />
 
       {/* Total */}
       <div className="flex items-center justify-between gap-4">
-        <span className="text-sm font-semibold uppercase tracking-[1px] text-[#322D29]">
+        <span className="text-sm font-semibold uppercase tracking-[1px] text-[#292524]">
           Total
         </span>
 
-        <span className="shrink-0 text-right text-xl font-semibold tabular-nums text-[#72383D]">
+        <span className="shrink-0 text-right text-xl font-semibold tabular-nums text-[#C08081]">
           Rs. {total.toLocaleString()}
         </span>
       </div>
 
       {/* Available coupons */}
-      <section className="mt-7 border-t border-[#D8D0C8] pt-6">
-        <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+      <section className="mt-7 border-t border-[#E7DEDC] pt-6">
+        <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
           Coupons you can use
         </h3>
 
@@ -84,7 +84,7 @@ export default function CartSummary({
             Checking available coupons...
           </p>
         ) : couponLoadError ? (
-          <p role="alert" className="mt-3 text-sm text-[#72383D]">
+          <p role="alert" className="mt-3 text-sm text-[#C08081]">
             {couponLoadError}
           </p>
         ) : coupons.length > 0 ? (
@@ -100,7 +100,7 @@ export default function CartSummary({
                 onClick={() => onSelectCoupon(coupon.coupon_id)}
                 className={`checkout-coupon-ticket w-full cursor-pointer text-left transition ${
                   String(selectedCouponId) === String(coupon.coupon_id)
-                    ? "ring-2 ring-[#322D29] ring-offset-2"
+                    ? "ring-2 ring-[#292524] ring-offset-2"
                     : "hover:brightness-95"
                 }`}
               >
@@ -165,7 +165,7 @@ export default function CartSummary({
         className={`mt-7 block w-full px-6 py-4 text-center text-xs font-semibold uppercase tracking-[1.5px] text-white transition ${
           selectedItems.length === 0
             ? "cursor-not-allowed bg-[#8B817A]"
-            : "bg-[#72383D] hover:bg-[#5E2E33]"
+            : "bg-[#C08081] hover:bg-[#A96870]"
         }`}
       >
         Proceed to Checkout

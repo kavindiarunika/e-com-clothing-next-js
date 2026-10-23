@@ -115,14 +115,14 @@ export default function SizeSelector({
     <>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#322D29]">
+          <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
             Size
           </h3>
 
           <button
             type="button"
             onClick={() => setIsSizeChartOpen(true)}
-            className="text-xs text-[#72383D] underline underline-offset-2 transition hover:text-[#322D29]"
+            className="text-xs text-[#C08081] underline underline-offset-2 transition hover:text-[#292524]"
           >
             Size Guide
           </button>
@@ -144,8 +144,8 @@ export default function SizeSelector({
                 aria-label={`${size}${isOutOfStock ? ", unavailable" : ""}`}
                 className={`relative flex h-11 min-w-11 flex-col items-center justify-center border px-3 text-sm font-medium transition ${
                   isSelected
-                    ? "border-[#72383D] bg-[#72383D] text-white"
-                    : "border-[#D8D0C8] bg-white text-[#322D29] hover:border-[#72383D]"
+                    ? "border-[#C08081] bg-[#C08081] text-white"
+                    : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#C08081]"
                 } disabled:cursor-not-allowed disabled:border-[#E4DED7] disabled:bg-[#F3F0EC] disabled:text-[#B7AFA7] disabled:before:absolute disabled:before:inset-x-1 disabled:before:top-1/2 disabled:before:h-px disabled:before:rotate-[-35deg] disabled:before:bg-[#B7AFA7]`}
               >
                 <span>{String(size).toUpperCase()}</span>
@@ -160,7 +160,7 @@ export default function SizeSelector({
         {selectedColor && (
           <p className="mt-3 text-xs text-[#6B625C]">
             Available stock shown for{" "}
-            <span className="font-medium text-[#322D29]">
+            <span className="font-medium text-[#292524]">
               {typeof selectedColor === "object"
                 ? selectedColor.name
                 : selectedColor}
@@ -170,7 +170,7 @@ export default function SizeSelector({
 
         {selectedOptionList.length > 0 && (
           <p className="mt-2 text-xs text-[#6B625C]">
-            <span className="font-medium text-[#322D29]">
+            <span className="font-medium text-[#292524]">
               {selectedOptionList.map((size) => size.toUpperCase()).join(", ")}
             </span>{" "}
             has {selectedStock} item{selectedStock === 1 ? "" : "s"} available

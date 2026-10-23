@@ -105,7 +105,7 @@ export default function ShopOfferHero() {
   return (
     <section
       aria-label={offers.length ? "Featured offers" : "Featured collection"}
-      className="user-page-full-bleed w-full pt-5 md:pt-7"
+      className="w-full px-4 md:px-6 xl:px-8"
     >
       <div className="relative overflow-hidden shadow-[0_18px_45px_rgba(50,45,41,0.10)]">
         <Swiper
@@ -137,7 +137,7 @@ export default function ShopOfferHero() {
 
             return (
               <SwiperSlide key={offer.offer_id}>
-                <article className="group relative isolate overflow-hidden bg-[#322D29]">
+                <article className="group relative isolate overflow-hidden bg-[#292524]">
                   {/* Keep wide banners full-width while capping their height. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -155,16 +155,16 @@ export default function ShopOfferHero() {
                       <Sparkles
                         size={11}
                         strokeWidth={1.5}
-                        className="text-[#C7AE9A]"
+                        className="text-[#C08081]"
                       />
 
-                      <p className="text-[8px] font-medium uppercase tracking-[0.32em] text-[#E3DCD1]">
+                      <p className="text-[8px] font-medium uppercase tracking-[0.32em] text-[#FAF6F5]">
                         {isFallback
                           ? "New Season Collection"
                           : "Velora Exclusive"}
                       </p>
 
-                      <span className="h-px w-8 bg-[#C7AE9A]/60" />
+                      <span className="h-px w-8 bg-[#C08081]/60" />
                     </div>
 
                     <h2 className="max-w-xl font-serif text-[22px] font-medium leading-[1.05] tracking-[-0.02em] text-white sm:text-[26px] md:text-[32px]">
@@ -189,7 +189,7 @@ export default function ShopOfferHero() {
                           String(offer.offer_id)
                         )}`
                       }
-                      className="group/cta mt-3 inline-flex h-8 w-fit items-center gap-2 bg-[#F7F3ED] px-4 text-[8px] font-semibold uppercase tracking-[0.18em] text-[#322D29] shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-300 hover:bg-[#C7AE9A] hover:shadow-[0_10px_25px_rgba(0,0,0,0.22)] sm:h-9 sm:px-5"
+                      className="group/cta mt-3 inline-flex h-8 w-fit items-center gap-2 bg-[#C08081] px-4 text-[8px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-300 hover:bg-[#A96870] hover:shadow-[0_10px_25px_rgba(0,0,0,0.22)] sm:h-9 sm:px-5"
                     >
                       {isFallback ? "Shop Collection" : "Discover Offer"}
 
@@ -238,7 +238,7 @@ export default function ShopOfferHero() {
                   <span
                     className={`rounded-full transition-all duration-500 ${
                       activeIndex === index
-                        ? "h-1.5 w-5 bg-[#F7F3ED]"
+                        ? "h-1.5 w-5 bg-[#C08081]"
                         : "h-1.5 w-1.5 bg-white/40 hover:bg-white/70"
                     }`}
                   />

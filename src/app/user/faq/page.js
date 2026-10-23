@@ -47,20 +47,20 @@ export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState(null);
 
   return (
-    <main className="min-h-screen bg-[#EFE9E1] text-[#322D29]">
+    <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
-      <header className="bg-[#322D29]">
+      <header className="bg-[#292524]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
           <Link
             href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#EFE9E1]"
+            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
           >
             VELORA
           </Link>
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#EFE9E1] hover:text-[#AC9C8D]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] hover:text-[#C08081]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -71,7 +71,7 @@ export default function FAQPage() {
       <section className="mx-auto max-w-3xl px-5 py-16">
 
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#72383D]">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C08081]">
             Customer Care
           </p>
 
@@ -79,7 +79,7 @@ export default function FAQPage() {
             Frequently Asked Questions
           </h1>
 
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#322D29]/60">
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#292524]/60">
             Find answers to some of the most common questions about VELORA.
           </p>
         </div>
@@ -106,15 +106,15 @@ export default function FAQPage() {
 
                   <Plus
                     size={19}
-                    className={`shrink-0 text-[#72383D] transition ${
+                    className={`shrink-0 text-[#C08081] transition ${
                       isOpen ? "rotate-45" : ""
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="border-t border-[#322D29]/10 px-6 pb-6 pt-4">
-                    <p className="text-sm leading-7 text-[#322D29]/60">
+                  <div className="border-t border-[#292524]/10 px-6 pb-6 pt-4">
+                    <p className="text-sm leading-7 text-[#292524]/60">
                       {faq.answer}
                     </p>
                   </div>

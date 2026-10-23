@@ -24,9 +24,9 @@ export default function SalesChart({
           <Line
             type="monotone"
             dataKey="sales"
-            stroke="#72383D"
+            stroke="#C08081"
             strokeWidth={3}
-            dot={{ fill: "#72383D", strokeWidth: 0, r: 3 }}
+            dot={{ fill: "#C08081", strokeWidth: 0, r: 3 }}
           />
         </LineChart>
       </ResponsiveContainer>

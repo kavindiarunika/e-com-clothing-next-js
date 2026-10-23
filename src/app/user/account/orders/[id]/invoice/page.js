@@ -103,7 +103,7 @@ export default function InvoicePage() {
 
   if (isLoading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#EFE9E1] px-5 text-sm text-[#322D29]/60">
+      <main className="flex min-h-screen items-center justify-center bg-[#FFFFFF] px-5 text-sm text-[#292524]/60">
         Loading invoice...
       </main>
     );
@@ -111,19 +111,19 @@ export default function InvoicePage() {
 
   if (!order) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#EFE9E1] px-5">
+      <main className="flex min-h-screen items-center justify-center bg-[#FFFFFF] px-5">
         <div className="w-full max-w-md rounded-3xl bg-white p-10 text-center shadow-sm">
-          <h1 className="text-2xl font-semibold text-[#322D29]">
+          <h1 className="text-2xl font-semibold text-[#292524]">
             Invoice Not Found
           </h1>
 
-          <p className="mt-3 text-sm text-[#322D29]/60">
+          <p className="mt-3 text-sm text-[#292524]/60">
             {loadError || "We couldn't find the invoice for this order."}
           </p>
 
           <Link
             href="/user/account/orders"
-            className="mt-6 inline-flex rounded-full bg-[#72383D] px-6 py-3 text-sm font-medium text-white transition hover:bg-[#432415]"
+            className="mt-6 inline-flex rounded-full bg-[#C08081] px-6 py-3 text-sm font-medium text-white transition hover:bg-[#A96870]"
           >
             Back to Orders
           </Link>
@@ -137,16 +137,16 @@ export default function InvoicePage() {
   };
 
   return (
-    <main className="invoice-page min-h-screen bg-[#EFE9E1] text-[#322D29]">
+    <main className="invoice-page min-h-screen bg-[#FFFFFF] text-[#292524]">
       {/* =====================================================
           HEADER
           Hidden when printing / saving PDF
       ====================================================== */}
-      <header className="print:hidden bg-[#322D29]">
+      <header className="print:hidden bg-[#292524]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
           <Link
             href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#EFE9E1]"
+            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
           >
             VELORA
           </Link>
@@ -170,7 +170,7 @@ export default function InvoicePage() {
           {/* Print */}
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 rounded-full border border-[#322D29]/20 bg-white px-5 py-3 text-sm font-medium transition hover:bg-[#322D29] hover:text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-[#292524]/20 bg-white px-5 py-3 text-sm font-medium transition hover:bg-[#A96870] hover:text-white"
           >
             <Printer size={17} />
             Print
@@ -179,7 +179,7 @@ export default function InvoicePage() {
           {/* Save as PDF */}
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 rounded-full bg-[#72383D] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#432415]"
+            className="inline-flex items-center gap-2 rounded-full bg-[#C08081] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#A96870]"
           >
             <Download size={17} />
             Save as PDF
@@ -196,20 +196,20 @@ export default function InvoicePage() {
           {/* =================================================
               INVOICE HEADER
           ================================================== */}
-          <div className="border-b border-[#322D29]/10 p-6 sm:p-10">
+          <div className="border-b border-[#292524]/10 p-6 sm:p-10">
             <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
 
               {/* Company */}
               <div>
-                <h1 className="text-3xl font-semibold tracking-[0.15em] text-[#322D29]">
+                <h1 className="text-3xl font-semibold tracking-[0.15em] text-[#292524]">
                   VELORA
                 </h1>
 
-                <p className="mt-2 text-sm text-[#322D29]/55">
+                <p className="mt-2 text-sm text-[#292524]/55">
                   Fashion & Lifestyle
                 </p>
 
-                <div className="mt-5 space-y-1 text-sm text-[#322D29]/65">
+                <div className="mt-5 space-y-1 text-sm text-[#292524]/65">
                   <p>Colombo, Sri Lanka</p>
                   <p>+94 77 123 4567</p>
                   <p>hello@velora.com</p>
@@ -218,7 +218,7 @@ export default function InvoicePage() {
 
               {/* Invoice Information */}
               <div className="sm:text-right">
-                <p className="text-xs uppercase tracking-[0.2em] text-[#72383D]">
+                <p className="text-xs uppercase tracking-[0.2em] text-[#C08081]">
                   Invoice
                 </p>
 
@@ -226,11 +226,11 @@ export default function InvoicePage() {
                   INV-{order.order_id}
                 </h2>
 
-                <p className="mt-2 text-sm text-[#322D29]/60">
+                <p className="mt-2 text-sm text-[#292524]/60">
                   Order #{order.order_id}
                 </p>
 
-                <p className="mt-1 text-sm text-[#322D29]/60">
+                <p className="mt-1 text-sm text-[#292524]/60">
                   {order.order_date}
                 </p>
               </div>
@@ -240,11 +240,11 @@ export default function InvoicePage() {
           {/* =================================================
               CUSTOMER + PAYMENT
           ================================================== */}
-          <div className="grid gap-8 border-b border-[#322D29]/10 p-6 sm:grid-cols-2 sm:p-10">
+          <div className="grid gap-8 border-b border-[#292524]/10 p-6 sm:grid-cols-2 sm:p-10">
 
             {/* Customer */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#72383D]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C08081]">
                 Bill To
               </p>
 
@@ -253,7 +253,7 @@ export default function InvoicePage() {
                   {order.shipping_address.name}
                 </h3>
 
-                <div className="mt-3 space-y-2 text-sm text-[#322D29]/65">
+                <div className="mt-3 space-y-2 text-sm text-[#292524]/65">
                   <p className="flex items-start gap-2">
                     <MapPin size={16} className="mt-0.5 shrink-0" />
 
@@ -277,7 +277,7 @@ export default function InvoicePage() {
 
             {/* Payment */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#72383D]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#C08081]">
                 Payment Information
               </p>
 
@@ -285,7 +285,7 @@ export default function InvoicePage() {
 
                 {/* Payment Method */}
                 <div className="flex items-center justify-between gap-5 text-sm">
-                  <span className="text-[#322D29]/55">
+                  <span className="text-[#292524]/55">
                     Payment Method
                   </span>
 
@@ -296,7 +296,7 @@ export default function InvoicePage() {
 
                 {/* Payment Status */}
                 <div className="flex items-center justify-between gap-5 text-sm">
-                  <span className="text-[#322D29]/55">
+                  <span className="text-[#292524]/55">
                     Payment Status
                   </span>
 
@@ -315,7 +315,7 @@ export default function InvoicePage() {
 
                 {/* Order Status */}
                 <div className="flex items-center justify-between gap-5 text-sm">
-                  <span className="text-[#322D29]/55">
+                  <span className="text-[#292524]/55">
                     Order Status
                   </span>
 
@@ -332,12 +332,12 @@ export default function InvoicePage() {
           ================================================== */}
           <div className="p-6 sm:p-10">
 
-            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-[#72383D]">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-[#C08081]">
               Order Items
             </p>
 
             {/* Desktop Header */}
-            <div className="hidden border-b border-[#322D29]/10 pb-3 text-xs uppercase tracking-wider text-[#322D29]/50 sm:grid sm:grid-cols-[1fr_80px_120px_120px] sm:gap-4">
+            <div className="hidden border-b border-[#292524]/10 pb-3 text-xs uppercase tracking-wider text-[#292524]/50 sm:grid sm:grid-cols-[1fr_80px_120px_120px] sm:gap-4">
               <span>Product</span>
               <span className="text-center">Qty</span>
               <span className="text-right">Unit Price</span>
@@ -345,7 +345,7 @@ export default function InvoicePage() {
             </div>
 
             {/* Products */}
-            <div className="divide-y divide-[#322D29]/10">
+            <div className="divide-y divide-[#292524]/10">
               {order.items.map((item) => (
                 <div
                   key={item.order_item_id}
@@ -357,14 +357,14 @@ export default function InvoicePage() {
                       {item.product_name}
                     </p>
 
-                    <p className="mt-1 text-sm text-[#322D29]/55">
+                    <p className="mt-1 text-sm text-[#292524]/55">
                       {item.variant}
                     </p>
                   </div>
 
                   {/* Quantity */}
                   <div className="flex justify-between text-sm sm:block sm:text-center">
-                    <span className="text-[#322D29]/50 sm:hidden">
+                    <span className="text-[#292524]/50 sm:hidden">
                       Qty
                     </span>
 
@@ -373,7 +373,7 @@ export default function InvoicePage() {
 
                   {/* Unit Price */}
                   <div className="flex justify-between text-sm sm:block sm:text-right">
-                    <span className="text-[#322D29]/50 sm:hidden">
+                    <span className="text-[#292524]/50 sm:hidden">
                       Unit Price
                     </span>
 
@@ -384,7 +384,7 @@ export default function InvoicePage() {
 
                   {/* Total */}
                   <div className="flex justify-between font-medium sm:block sm:text-right">
-                    <span className="text-[#322D29]/50 sm:hidden">
+                    <span className="text-[#292524]/50 sm:hidden">
                       Total
                     </span>
 
@@ -399,7 +399,7 @@ export default function InvoicePage() {
             {/* =================================================
                 SUMMARY
             ================================================== */}
-            <div className="mt-8 ml-auto max-w-sm border-t border-[#322D29]/10 pt-5">
+            <div className="mt-8 ml-auto max-w-sm border-t border-[#292524]/10 pt-5">
 
               <SummaryRow
                 label="Subtotal"
@@ -417,12 +417,12 @@ export default function InvoicePage() {
                 value={order.shipping_fee}
               />
 
-              <div className="my-4 border-t border-[#322D29]/10" />
+              <div className="my-4 border-t border-[#292524]/10" />
 
               <div className="flex items-center justify-between text-lg font-semibold">
                 <span>Total</span>
 
-                <span className="text-[#72383D]">
+                <span className="text-[#C08081]">
                   Rs. {order.total_amount.toLocaleString()}
                 </span>
               </div>
@@ -435,16 +435,16 @@ export default function InvoicePage() {
               Visible on website.
               Hidden when printing / saving PDF.
           ================================================== */}
-          <div className="print:hidden border-t border-[#322D29]/10 bg-[#EFE9E1]/50 px-6 py-8 text-center sm:px-10">
+          <div className="print:hidden border-t border-[#292524]/10 bg-[#FFFFFF]/50 px-6 py-8 text-center sm:px-10">
             <p className="font-medium">
               Thank you for shopping with VELORA
             </p>
 
-            <p className="mt-2 text-sm text-[#322D29]/55">
+            <p className="mt-2 text-sm text-[#292524]/55">
               We appreciate your support and hope to see you again.
             </p>
 
-            <div className="mt-4 flex flex-wrap justify-center gap-5 text-xs text-[#322D29]/50">
+            <div className="mt-4 flex flex-wrap justify-center gap-5 text-xs text-[#292524]/50">
               <span className="flex items-center gap-1.5">
                 <Mail size={14} />
                 hello@velora.com
@@ -503,7 +503,7 @@ export default function InvoicePage() {
 function SummaryRow({ label, value, negative = false }) {
   return (
     <div className="mb-3 flex items-center justify-between text-sm">
-      <span className="text-[#322D29]/60">
+      <span className="text-[#292524]/60">
         {label}
       </span>
 

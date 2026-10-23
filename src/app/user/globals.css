@@ -1,16 +1,6 @@
 @import "tailwindcss";
 
 
-:root {
-  --color-dark: #322D29;
-  --color-primary: #72383D;
-  --color-background: #EFE9E1;
-  --color-banner: #AC9C8D;
-  --color-white: #FFFFFF;
-  --color-text-light: #6B625D;
-  --color-border: #D8CEC5;
-}
-
 * {
   box-sizing: border-box;
 }
@@ -23,7 +13,13 @@ body {
   margin: 0;
   background: var(--color-background);
   color: var(--color-dark);
-  font-family: Arial, sans-serif;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+}
+
+button {
+  font-family: "Outfit", sans-serif;
+  font-weight: 500;
 }
 
 .user-page-gutter {
