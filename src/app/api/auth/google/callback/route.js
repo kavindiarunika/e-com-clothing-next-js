@@ -5,14 +5,26 @@ import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { createCustomerToken, CUSTOMER_COOKIE_NAME } from "@/lib/auth";
 
-const STATE_COOKIE_NAME = "velora_google_oauth_state";
-const NEXT_COOKIE_NAME = "velora_google_oauth_next";
+const STATE_COOKIE_PREFIX = "velora_google_oauth_state_";
+const NEXT_COOKIE_PREFIX = "velora_google_oauth_next_";
 const GOOGLE_JWKS = createRemoteJWKSet(
   new URL("https://www.googleapis.com/oauth2/v3/certs")
 );
 
-function loginRedirect(request, status, reason) {
-  const nextPath = request.cookies.get(NEXT_COOKIE_NAME)?.value;
+function getFlowCookieNames(state) {
+  if (!/^[a-f0-9]{64}$/.test(state || "")) return null;
+
+  return {
+    state: `${STATE_COOKIE_PREFIX}${state}`,
+    next: `${NEXT_COOKIE_PREFIX}${state}`,
+  };
+}
+
+function loginRedirect(request, status, reason, state) {
+  const cookieNames = getFlowCookieNames(state);
+  const nextPath = cookieNames
+    ? request.cookies.get(cookieNames.next)?.value
+    : undefined;
   const redirectUri = process.env.GOOGLE_REDIRECT_URI;
   const appOrigin = redirectUri
     ? new URL(redirectUri).origin
@@ -30,27 +42,32 @@ function loginRedirect(request, status, reason) {
     loginUrl.searchParams.set("next", nextPath);
   }
   const response = NextResponse.redirect(loginUrl);
-  response.cookies.set(STATE_COOKIE_NAME, "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/api/auth/google/callback",
-    maxAge: 0,
-  });
-  response.cookies.set(NEXT_COOKIE_NAME, "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/api/auth/google/callback",
-    maxAge: 0,
-  });
+  if (cookieNames) {
+    response.cookies.set(cookieNames.state, "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/api/auth/google/callback",
+      maxAge: 0,
+    });
+    response.cookies.set(cookieNames.next, "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/api/auth/google/callback",
+      maxAge: 0,
+    });
+  }
   return response;
 }
 
 export async function GET(request) {
   const params = request.nextUrl.searchParams;
   const state = params.get("state");
-  const savedState = request.cookies.get(STATE_COOKIE_NAME)?.value;
+  const cookieNames = getFlowCookieNames(state);
+  const savedState = cookieNames
+    ? request.cookies.get(cookieNames.state)?.value
+    : undefined;
   const code = params.get("code");
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -61,6 +78,7 @@ export async function GET(request) {
   const callbackFailures = [];
   if (params.has("error")) callbackFailures.push("provider_error");
   if (!state) callbackFailures.push("missing_state");
+  if (state && !cookieNames) callbackFailures.push("invalid_state");
   if (!savedState) callbackFailures.push("missing_state_cookie");
   if (state && savedState && state !== savedState) {
     callbackFailures.push("state_mismatch");
@@ -80,7 +98,7 @@ export async function GET(request) {
       "Google sign-in callback validation failed:",
       callbackFailures.join(", ")
     );
-    return loginRedirect(request, "error", reason);
+    return loginRedirect(request, "error", reason, state);
   }
 
   let failureReason = "token_exchange";
@@ -142,7 +160,7 @@ export async function GET(request) {
       console.error(
         "Google sign-in rejected: matching account is not an active customer."
       );
-      return loginRedirect(request, "error", "account_inactive");
+      return loginRedirect(request, "error", "account_inactive", state);
     }
 
     if (!user) {
@@ -171,7 +189,7 @@ export async function GET(request) {
       };
     }
 
-    const response = loginRedirect(request, "success");
+    const response = loginRedirect(request, "success", undefined, state);
     response.cookies.set(CUSTOMER_COOKIE_NAME, createCustomerToken(user), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -183,6 +201,6 @@ export async function GET(request) {
     return response;
   } catch (error) {
     console.error("Google sign-in error:", error);
-    return loginRedirect(request, "error", failureReason);
+    return loginRedirect(request, "error", failureReason, state);
   }
 }
