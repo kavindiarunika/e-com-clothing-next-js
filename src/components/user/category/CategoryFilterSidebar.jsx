@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 export default function CategoryFilterSidebar({
   subcategories = [],
@@ -13,6 +14,7 @@ export default function CategoryFilterSidebar({
   selectedAvailability,
   setSelectedAvailability,
   onClear,
+  showHeader = true,
 }) {
   const [sizes, setSizes] = useState([]);
   const [isLoadingSizes, setIsLoadingSizes] = useState(true);
@@ -63,12 +65,20 @@ export default function CategoryFilterSidebar({
     );
   };
 
-  return (
-    <aside className="hidden w-57.5 shrink-0 lg:block">
-      <div className="sticky top-28 bg-white p-6">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="font-serif text-lg text-[#292524]">Filters</h2>
+  const sectionClass = "group border-b border-[#E7DEDC]";
+  const summaryClass =
+    "flex min-h-[67px] cursor-pointer list-none items-center justify-between text-sm font-semibold uppercase tracking-wide text-[#292524] [&::-webkit-details-marker]:hidden";
+  const contentClass = "pb-5 pt-1";
+  const optionClass =
+    "flex cursor-pointer items-center gap-3 text-sm text-[#5D554F]";
 
+  return (
+    <aside>
+      {showHeader && (
+        <div className="mb-5 flex items-center justify-between border-b border-[#E5E5E5] pb-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#292524]">
+            Filters
+          </h2>
           <button
             type="button"
             onClick={onClear}
@@ -77,149 +87,132 @@ export default function CategoryFilterSidebar({
             Clear
           </button>
         </div>
+      )}
 
-        <div className="space-y-8">
-          <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
-              Category
-            </h3>
-
-            <div className="space-y-3">
-              {subcategories.map((subcategory) => (
-                <label
-                  key={subcategory}
-                  className="flex cursor-pointer items-center gap-3 text-sm text-[#5D554F]"
-                >
-                  <input
-                    type="radio"
-                    name="subcategory"
-                    checked={selectedSubcategory === subcategory}
-                    onChange={() => setSelectedSubcategory(subcategory)}
-                    className="h-4 w-4 accent-[#e63e62]"
-                  />
-                  {subcategory}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
-              Price
-            </h3>
-
-            <div className="space-y-3">
-              <label className="flex cursor-pointer items-center gap-3 text-sm text-[#5D554F]">
+      <details className={sectionClass}>
+        <summary className={summaryClass}>
+          Availability
+          <ChevronDown
+            size={16}
+            className="transition-transform group-open:rotate-180"
+          />
+        </summary>
+        <div className={contentClass}>
+          <div className="space-y-3">
+            {[
+              ["all", "All Products"],
+              ["available", "In Stock"],
+              ["soldout", "Sold Out"],
+            ].map(([value, label]) => (
+              <label key={value} className={optionClass}>
                 <input
                   type="radio"
-                  name="price"
-                  checked={selectedPrice === "under5000"}
-                  onChange={() => setSelectedPrice("under5000")}
+                  name="category-availability"
+                  checked={selectedAvailability === value}
+                  onChange={() => setSelectedAvailability(value)}
                   className="h-4 w-4 accent-[#e63e62]"
                 />
-                Under Rs. 5,000
+                {label}
               </label>
-
-              <label className="flex cursor-pointer items-center gap-3 text-sm text-[#5D554F]">
-                <input
-                  type="radio"
-                  name="price"
-                  checked={selectedPrice === "5000-10000"}
-                  onChange={() => setSelectedPrice("5000-10000")}
-                  className="h-4 w-4 accent-[#e63e62]"
-                />
-                Rs. 5,000 - 10,000
-              </label>
-
-              <label className="flex cursor-pointer items-center gap-3 text-sm text-[#5D554F]">
-                <input
-                  type="radio"
-                  name="price"
-                  checked={selectedPrice === "above10000"}
-                  onChange={() => setSelectedPrice("above10000")}
-                  className="h-4 w-4 accent-[#e63e62]"
-                />
-                Above Rs. 10,000
-              </label>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
-              Size
-            </h3>
-
-            {isLoadingSizes ? (
-              <p className="text-sm text-[#6B625C]">Loading sizes...</p>
-            ) : sizesError ? (
-              <p role="alert" className="text-sm text-[#e63e62]">
-                {sizesError}
-              </p>
-            ) : sizes.length > 0 ? (
-              <div className="grid grid-cols-3 gap-2">
-                {sizes.map((size) => (
-                  <button
-                    key={size}
-                    type="button"
-                    aria-pressed={selectedSizes.includes(size)}
-                    onClick={() => toggleSize(size)}
-                    className={`border px-3 py-2 text-xs transition ${
-                      selectedSizes.includes(size)
-                        ? "border-[#e63e62] bg-[#e63e62] text-white"
-                        : "border-[#E7DEDC] bg-white text-[#5D554F] hover:border-[#e63e62]"
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-[#6B625C]">No sizes available.</p>
-            )}
-          </div>
-
-          <div>
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
-              Availability
-            </h3>
-
-            <div className="space-y-3">
-              <label className="flex cursor-pointer items-center gap-3 text-sm text-[#5D554F]">
-                <input
-                  type="radio"
-                  name="availability"
-                  checked={selectedAvailability === "all"}
-                  onChange={() => setSelectedAvailability("all")}
-                  className="h-4 w-4 accent-[#e63e62]"
-                />
-                All Products
-              </label>
-
-              <label className="flex cursor-pointer items-center gap-3 text-sm text-[#5D554F]">
-                <input
-                  type="radio"
-                  name="availability"
-                  checked={selectedAvailability === "available"}
-                  onChange={() => setSelectedAvailability("available")}
-                  className="h-4 w-4 accent-[#e63e62]"
-                />
-                In Stock
-              </label>
-
-              <label className="flex cursor-pointer items-center gap-3 text-sm text-[#5D554F]">
-                <input
-                  type="radio"
-                  name="availability"
-                  checked={selectedAvailability === "soldout"}
-                  onChange={() => setSelectedAvailability("soldout")}
-                  className="h-4 w-4 accent-[#e63e62]"
-                />
-                Sold Out
-              </label>
-            </div>
+            ))}
           </div>
         </div>
-      </div>
+      </details>
+
+      <details className={sectionClass}>
+        <summary className={summaryClass}>
+          Price
+          <ChevronDown
+            size={16}
+            className="transition-transform group-open:rotate-180"
+          />
+        </summary>
+        <div className={contentClass}>
+          <div className="space-y-3">
+            {[
+              ["under5000", "Under Rs. 5,000"],
+              ["5000-10000", "Rs. 5,000 - 10,000"],
+              ["above10000", "Above Rs. 10,000"],
+            ].map(([value, label]) => (
+              <label key={value} className={optionClass}>
+                <input
+                  type="radio"
+                  name="category-price"
+                  checked={selectedPrice === value}
+                  onChange={() => setSelectedPrice(value)}
+                  className="h-4 w-4 accent-[#e63e62]"
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+        </div>
+      </details>
+
+      <details className={sectionClass}>
+        <summary className={summaryClass}>
+          Size
+          <ChevronDown
+            size={16}
+            className="transition-transform group-open:rotate-180"
+          />
+        </summary>
+        <div className={contentClass}>
+          {isLoadingSizes ? (
+            <p className="text-sm text-[#6B625C]">Loading sizes...</p>
+          ) : sizesError ? (
+            <p role="alert" className="text-sm text-[#e63e62]">
+              {sizesError}
+            </p>
+          ) : sizes.length > 0 ? (
+            <div className="grid grid-cols-3 gap-2">
+              {sizes.map((size) => (
+                <button
+                  key={size}
+                  type="button"
+                  aria-pressed={selectedSizes.includes(size)}
+                  onClick={() => toggleSize(size)}
+                  className={`border px-3 py-2 text-xs transition ${
+                    selectedSizes.includes(size)
+                      ? "border-[#e63e62] bg-[#e63e62] text-white"
+                      : "border-[#E7DEDC] bg-white text-[#5D554F] hover:border-[#e63e62]"
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-[#6B625C]">No sizes available.</p>
+          )}
+        </div>
+      </details>
+
+      <details className={sectionClass}>
+        <summary className={summaryClass}>
+          Category
+          <ChevronDown
+            size={16}
+            className="transition-transform group-open:rotate-180"
+          />
+        </summary>
+        <div className={contentClass}>
+          <div className="space-y-3">
+            {subcategories.map((subcategory) => (
+              <label key={subcategory} className={optionClass}>
+                <input
+                  type="radio"
+                  name="category-subcategory"
+                  checked={selectedSubcategory === subcategory}
+                  onChange={() => setSelectedSubcategory(subcategory)}
+                  className="h-4 w-4 accent-[#e63e62]"
+                />
+                {subcategory}
+              </label>
+            ))}
+          </div>
+        </div>
+      </details>
     </aside>
   );
 }
