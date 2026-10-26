@@ -1,8 +1,8 @@
 import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 
-const STATE_COOKIE_NAME = "velora_google_oauth_state";
-const NEXT_COOKIE_NAME = "velora_google_oauth_next";
+const STATE_COOKIE_PREFIX = "velora_google_oauth_state_";
+const NEXT_COOKIE_PREFIX = "velora_google_oauth_next_";
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "0.0.0.0"]);
 
 function getSafeNextPath(value) {
@@ -16,20 +16,24 @@ export async function GET(request) {
   const redirectUri =
     process.env.GOOGLE_REDIRECT_URI ||
     `${request.nextUrl.origin}/api/auth/google/callback`;
-  const redirectHost = new URL(redirectUri).hostname.toLowerCase();
-  const requestHost = request.headers
-    .get("host")
-    ?.replace(/:\d+$/, "")
-    .toLowerCase();
+  const redirectUrl = new URL(redirectUri);
+  const requestUrl = request.nextUrl;
+  const redirectHost = redirectUrl.hostname.toLowerCase();
+  const requestHost = requestUrl.hostname.toLowerCase();
+  const requestAuthority = (
+    request.headers.get("host") || requestUrl.host
+  ).toLowerCase();
 
   if (
     process.env.NODE_ENV !== "production" &&
     LOCAL_HOSTS.has(requestHost) &&
     LOCAL_HOSTS.has(redirectHost) &&
-    requestHost !== redirectHost
+    (requestAuthority !== redirectUrl.host.toLowerCase() ||
+      requestUrl.protocol !== redirectUrl.protocol)
   ) {
     const localUrl = new URL(request.url);
-    localUrl.hostname = redirectHost;
+    localUrl.protocol = redirectUrl.protocol;
+    localUrl.host = redirectUrl.host;
     return NextResponse.redirect(localUrl);
   }
 
@@ -54,7 +58,11 @@ export async function GET(request) {
   }).toString();
 
   const response = NextResponse.redirect(googleUrl);
-  response.cookies.set(STATE_COOKIE_NAME, state, {
+  const cookieNames = {
+    state: `${STATE_COOKIE_PREFIX}${state}`,
+    next: `${NEXT_COOKIE_PREFIX}${state}`,
+  };
+  response.cookies.set(cookieNames.state, state, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -62,7 +70,7 @@ export async function GET(request) {
     maxAge: 600,
   });
   response.cookies.set(
-    NEXT_COOKIE_NAME,
+    cookieNames.next,
     getSafeNextPath(request.nextUrl.searchParams.get("next")),
     {
       httpOnly: true,
