@@ -3,6 +3,7 @@
 
 import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   Eye,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -102,6 +104,10 @@ export default function LoginPage() {
     const googleUrl = new URL("/api/auth/google", window.location.origin);
     googleUrl.searchParams.set("next", getPostLoginPath());
     window.location.assign(googleUrl);
+  };
+
+  const handleGuestCheckout = () => {
+    router.push("/user/checkout?guest=true");
   };
 
   return (
@@ -413,6 +419,26 @@ export default function LoginPage() {
                 )}
               </button>
             </form>
+
+            <div className="mt-5">
+              <div className="mb-4 flex items-center gap-4">
+                <span className="h-px flex-1 bg-[#E7DEDC]" />
+                <span className="text-[10px] uppercase tracking-[2px] text-[#A69C94]">
+                  Or
+                </span>
+                <span className="h-px flex-1 bg-[#E7DEDC]" />
+              </div>
+              <button
+                type="button"
+                onClick={handleGuestCheckout}
+                className="h-11 w-full border border-[#292524] bg-white text-xs font-semibold uppercase tracking-[1.5px] text-[#292524] transition hover:bg-[#FAF6F5]"
+              >
+                Continue as Guest
+              </button>
+              <p className="mt-2 text-center text-xs text-[#6B625C]">
+                No account, email, or password needed.
+              </p>
+            </div>
 
             {/* REGISTER */}
             <div className="mt-6 border-t border-[#E7DEDC] pt-5 text-center">

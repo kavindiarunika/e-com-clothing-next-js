@@ -22,6 +22,7 @@ export default function CheckoutPage() {
   const [isLoadingCoupons, setIsLoadingCoupons] = useState(true);
   const [couponLoadError, setCouponLoadError] = useState("");
   const [isBuyNowCheckout, setIsBuyNowCheckout] = useState(false);
+  const [isGuestCheckout, setIsGuestCheckout] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderError, setOrderError] = useState("");
@@ -91,6 +92,9 @@ export default function CheckoutPage() {
           : sessionStorage.getItem("velora-selected-coupon")
       );
       setCart(checkoutCart);
+      const guestCheckoutRequested =
+        new URLSearchParams(window.location.search).get("guest") === "true";
+      setIsGuestCheckout(guestCheckoutRequested);
 
       if (checkoutCart.length === 0) {
         setIsLoading(false);
@@ -106,9 +110,11 @@ export default function CheckoutPage() {
 
         if (response.status === 401) {
           localStorage.removeItem("velora-user-session");
-          router.replace(
-            `/user/login?next=${encodeURIComponent("/user/checkout")}`
-          );
+          if (!guestCheckoutRequested) {
+            router.replace(
+              `/user/login?next=${encodeURIComponent("/user/checkout")}`
+            );
+          }
           return;
         }
 
@@ -117,6 +123,7 @@ export default function CheckoutPage() {
         }
 
         const profile = result.data;
+        setIsGuestCheckout(false);
         setFormData((current) => ({
           ...current,
           firstName: profile.first_name || "",
@@ -236,20 +243,47 @@ export default function CheckoutPage() {
 
     if (
       !formData.firstName ||
-      !formData.lastName ||
       !formData.phone ||
       !formData.address ||
-      !formData.city ||
-      !formData.district ||
-      !formData.postalCode
+      (!isGuestCheckout &&
+        (!formData.lastName ||
+          !formData.city ||
+          !formData.district ||
+          !formData.postalCode))
     ) {
-      alert("Please fill in all shipping details.");
+      alert(
+        isGuestCheckout
+          ? "Please fill in your first name, phone, and address."
+          : "Please fill in all shipping details."
+      );
       return;
     }
 
     setIsSubmitting(true);
 
     try {
+      if (isGuestCheckout) {
+        const guestResponse = await fetch("/api/auth/guest-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            district: formData.district,
+            postalCode: formData.postalCode,
+          }),
+        });
+        const guestResult = await guestResponse.json();
+        if (!guestResponse.ok || !guestResult.success) {
+          throw new Error(
+            guestResult.message || "Unable to start guest checkout."
+          );
+        }
+      }
+
       const response = await fetch("/api/user/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -444,7 +478,7 @@ export default function CheckoutPage() {
                     onChange={handleChange}
                     placeholder="Enter last name"
                     className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
-                    required
+                    required={!isGuestCheckout}
                   />
                 </div>
 
@@ -486,7 +520,7 @@ export default function CheckoutPage() {
                     onChange={handleChange}
                     placeholder="Postal code"
                     className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
-                    required
+                    required={!isGuestCheckout}
                   />
                 </div>
 
@@ -528,7 +562,7 @@ export default function CheckoutPage() {
                     onChange={handleChange}
                     placeholder="Enter city"
                     className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
-                    required
+                    required={!isGuestCheckout}
                   />
                 </div>
 
@@ -549,7 +583,7 @@ export default function CheckoutPage() {
                     onChange={handleChange}
                     placeholder="Enter district"
                     className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
-                    required
+                    required={!isGuestCheckout}
                   />
                 </div>
               </div>
