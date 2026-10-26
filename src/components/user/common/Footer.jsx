@@ -229,10 +229,10 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/user/size-guide"
+                  href="/user/privacy"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
                 >
-                  Size Guide
+                  Privacy Policy
                   <span className="opacity-0 transition group-hover:opacity-100">
                     ↗
                   </span>
@@ -241,10 +241,10 @@ export default function Footer() {
 
               <li>
                 <Link
-                  href="/user/faq"
+                  href="/user/terms"
                   className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
                 >
-                  FAQ
+                  Terms & Conditions
                   <span className="opacity-0 transition group-hover:opacity-100">
                     ↗
                   </span>
