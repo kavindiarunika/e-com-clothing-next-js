@@ -1,23 +1,15 @@
-"use client";
-
-import { useState } from "react";
-import SizeChart from "./SizeChart";
-
 export default function SizeSelector({
   sizes = [],
   selectedSize,
   setSelectedSize,
   selectedSizes = [],
   setSelectedSizes,
-  category,
   variants = [],
   selectedColor,
   productQty = 0,
   defaultSize = "",
   allowMultiple = false,
 }) {
-  const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
-
   const normalizeText = (value) =>
     String(value ?? "").trim().toLowerCase();
 
@@ -118,14 +110,6 @@ export default function SizeSelector({
           <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
             Size
           </h3>
-
-          <button
-            type="button"
-            onClick={() => setIsSizeChartOpen(true)}
-            className="text-xs text-[#e63e62] underline underline-offset-2 transition hover:text-[#292524]"
-          >
-            Size Guide
-          </button>
         </div>
 
         <div role="group" aria-label="Select size" className="flex flex-wrap gap-2">
@@ -177,12 +161,6 @@ export default function SizeSelector({
           </p>
         )}
       </div>
-
-      <SizeChart
-        isOpen={isSizeChartOpen}
-        onClose={() => setIsSizeChartOpen(false)}
-        category={category}
-      />
     </>
   );
 }

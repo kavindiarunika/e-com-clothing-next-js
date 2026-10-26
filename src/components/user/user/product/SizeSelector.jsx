@@ -1,20 +1,10 @@
-"use client";
-
-import { useState } from "react";
-import SizeChart from "./SizeChart";
-
 export default function SizeSelector({
   sizes = [],
   selectedSize,
   setSelectedSize,
-  category,
-  sizeGuide,
   variants = [],
   selectedColor,
 }) {
-  const [isSizeChartOpen, setIsSizeChartOpen] =
-    useState(false);
-
   // =========================
   // Check Size Stock
   // =========================
@@ -48,22 +38,12 @@ export default function SizeSelector({
   return (
     <>
       <div>
-        {/* Title */}
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
             Size
           </h3>
-
-          <button
-            type="button"
-            onClick={() => setIsSizeChartOpen(true)}
-            className="text-xs text-[#e63e62] underline underline-offset-2 transition hover:text-[#292524]"
-          >
-            Size Guide
-          </button>
         </div>
 
-        {/* Sizes */}
         <select
           aria-label="Select size"
           value={selectedSize || ""}
@@ -84,7 +64,6 @@ export default function SizeSelector({
           })}
         </select>
 
-        {/* Selected Color Info */}
         {selectedColor && (
           <p className="mt-3 text-xs text-[#6B625C]">
             Available stock shown for{" "}
@@ -96,14 +75,6 @@ export default function SizeSelector({
           </p>
         )}
       </div>
-
-      {/* Size Chart */}
-      <SizeChart
-        isOpen={isSizeChartOpen}
-        onClose={() => setIsSizeChartOpen(false)}
-        category={category}
-        sizeGuide={sizeGuide}
-      />
     </>
   );
 }
