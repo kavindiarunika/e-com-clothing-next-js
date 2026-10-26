@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from "lucide-react";
 
 import ProductCard from "@/components/user/product/ProductCard";
 import CategoryFilterSidebar from "@/components/user/category/CategoryFilterSidebar";
@@ -39,6 +39,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
   const [sortBy, setSortBy] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
   const pageSize = 8;
   const productGridRef = useRef(null);
 
@@ -494,10 +495,22 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
         {/* Desktop Toolbar */}
         <div className="mb-6 hidden items-center justify-between md:flex">
-          <p className="text-sm text-[#6B625C]">
-            {filteredProducts.length}{" "}
-            {filteredProducts.length === 1 ? "product" : "products"}
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-sm text-[#6B625C]">
+              {filteredProducts.length}{" "}
+              {filteredProducts.length === 1 ? "product" : "products"}
+            </p>
+            <button
+              type="button"
+              onClick={() => setDesktopFiltersOpen((open) => !open)}
+              aria-expanded={desktopFiltersOpen}
+              aria-controls="category-filter-sidebar"
+              className="flex items-center gap-2 text-sm text-[#292524] hover:text-[#e63e62]"
+            >
+              <SlidersHorizontal size={16} />
+              {desktopFiltersOpen ? "Hide filters" : "Show filters"}
+            </button>
+          </div>
 
           <div className="flex items-center gap-3">
             <SortDropdown
@@ -516,11 +529,22 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
           {/* SIDEBAR */}
 
-          <aside
+          {desktopFiltersOpen && <aside
             id="category-filter-sidebar"
             className="hidden w-[230px] shrink-0 self-start md:block lg:w-[260px]"
           >
             <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
+              <div className="mb-4 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setDesktopFiltersOpen(false)}
+                  aria-label="Close filters"
+                  className="flex items-center gap-1 text-xs text-[#6B625C] hover:text-[#e63e62]"
+                >
+                  <X size={16} />
+                  Close
+                </button>
+              </div>
               <div className="mb-6">
                 <SearchBar
                   value={searchTerm}
@@ -555,7 +579,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                 onClear={clearFilters}
               />
             </div>
-          </aside>
+          </aside>}
 
           {/* PRODUCTS */}
 
@@ -574,7 +598,11 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
             ) : filteredProducts.length > 0 ? (
               <div
                 ref={productGridRef}
-                className="grid scroll-mt-28 grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-2 lg:grid-cols-3"
+                className={`grid scroll-mt-28 grid-cols-2 gap-x-3 gap-y-8 ${
+                  desktopFiltersOpen
+                    ? "md:grid-cols-2 lg:grid-cols-3"
+                    : "md:grid-cols-3 xl:grid-cols-4"
+                }`}
               >
 
                 {pageProducts.map(

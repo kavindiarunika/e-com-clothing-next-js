@@ -27,6 +27,7 @@ export default function ShopPage({
 
   const [sortBy, setSortBy] = useState(initialSort);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
   const productGridRef = useRef(null);
@@ -393,11 +394,22 @@ export default function ShopPage({
         <div className="flex items-start gap-6 lg:gap-8">
 
           {/* Desktop Sidebar */}
-          <aside
+          {desktopFiltersOpen && <aside
             id="shop-filter-sidebar"
             className="hidden w-[230px] shrink-0 self-start md:block lg:w-[260px]"
           >
             <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
+              <div className="mb-4 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setDesktopFiltersOpen(false)}
+                  aria-label="Close filters"
+                  className="flex items-center gap-1 text-xs text-[#6B625C] hover:text-[#e63e62]"
+                >
+                  <X size={16} />
+                  Close
+                </button>
+              </div>
               <div className="mb-6">
                 <SearchBar
                   value={searchTerm}
@@ -445,15 +457,27 @@ export default function ShopPage({
                 }}
               />
             </div>
-          </aside>
+          </aside>}
 
           {/* Products */}
           <div className="min-w-0 flex-1">
 
             <div className="mb-5 hidden min-h-12 items-center justify-between gap-4 md:flex">
-              <p className="text-sm text-[#777]">
-                {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
-              </p>
+              <div className="flex items-center gap-4">
+                <p className="text-sm text-[#777]">
+                  {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setDesktopFiltersOpen((open) => !open)}
+                  aria-expanded={desktopFiltersOpen}
+                  aria-controls="shop-filter-sidebar"
+                  className="flex items-center gap-2 text-sm text-[#292524] hover:text-[#e63e62]"
+                >
+                  <SlidersHorizontal size={16} />
+                  {desktopFiltersOpen ? "Hide filters" : "Show filters"}
+                </button>
+              </div>
               <SortDropdown
                 id="shop-sort-desktop"
                 sortBy={sortBy}
@@ -476,7 +500,11 @@ export default function ShopPage({
             ) : filteredProducts.length > 0 ? (
               <div
                 ref={productGridRef}
-                className="grid scroll-mt-28 grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-4"
+                className={`grid scroll-mt-28 grid-cols-2 gap-x-3 gap-y-8 lg:gap-x-4 ${
+                  desktopFiltersOpen
+                    ? "md:grid-cols-2 lg:grid-cols-3"
+                    : "md:grid-cols-3 xl:grid-cols-4"
+                }`}
               >
 
                 {pageProducts.map((product) => (

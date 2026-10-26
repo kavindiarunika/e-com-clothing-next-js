@@ -89,6 +89,7 @@ export default function OfferDetailPage() {
   const [selectedAvailability, setSelectedAvailability] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
 
   useEffect(() => {
     if (!offerId) return;
@@ -446,7 +447,25 @@ export default function OfferDetailPage() {
           <div>
             <h2 className="font-serif text-3xl text-[#292524]">Products included in this offer</h2>
           </div>
-          <div className="text-sm text-[#6B625C]">{filteredProducts.length} items</div>
+          <div className="hidden items-center gap-4 md:flex">
+            <span className="text-sm text-[#6B625C]">{filteredProducts.length} items</span>
+            <button
+              type="button"
+              onClick={() => setDesktopFiltersOpen((open) => !open)}
+              aria-expanded={desktopFiltersOpen}
+              aria-controls="offer-filter-sidebar"
+              className="flex items-center gap-2 text-sm text-[#292524] hover:text-[#e63e62]"
+            >
+              <SlidersHorizontal size={16} />
+              {desktopFiltersOpen ? "Hide filters" : "Show filters"}
+            </button>
+            <div className="w-48">
+              <SortDropdown sortBy={sortBy} setSortBy={setSortBy} />
+            </div>
+          </div>
+          <span className="text-sm text-[#6B625C] md:hidden">
+            {filteredProducts.length} items
+          </span>
         </div>
 
         <div className="mb-6 flex items-center justify-between gap-3 md:hidden">
@@ -466,7 +485,7 @@ export default function OfferDetailPage() {
         </div>
 
         <div className="flex gap-6 lg:gap-8">
-          <aside
+          {desktopFiltersOpen && <aside
             id="offer-filter-sidebar"
             className="hidden w-[220px] shrink-0 md:block lg:w-[250px]"
           >
@@ -480,27 +499,23 @@ export default function OfferDetailPage() {
 
               <div className="mb-6 flex items-center justify-between">
                 <h3 className="font-serif text-lg text-[#292524]">Filters</h3>
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="text-xs text-[#e63e62] hover:underline"
-                >
-                  Clear
-                </button>
-              </div>
-
-              <div className="mb-6 border-b border-[#E7DEDC] pb-6">
-                <label
-                  htmlFor="offer-sort-desktop"
-                  className="mb-3 block text-[10px] font-semibold uppercase tracking-[1.5px] text-[#786E66]"
-                >
-                  Sort by
-                </label>
-                <SortDropdown
-                  id="offer-sort-desktop"
-                  sortBy={sortBy}
-                  setSortBy={setSortBy}
-                />
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="text-xs text-[#e63e62] hover:underline"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDesktopFiltersOpen(false)}
+                    aria-label="Close filters"
+                    className="text-[#6B625C] hover:text-[#e63e62]"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
               </div>
 
               <FilterSidebar
@@ -514,11 +529,15 @@ export default function OfferDetailPage() {
                 setSelectedAvailability={setSelectedAvailability}
               />
             </div>
-          </aside>
+          </aside>}
 
           <div className="min-w-0 flex-1">
         {filteredProducts.length ? (
-          <div className="grid gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className={`grid gap-4 grid-cols-2 ${
+            desktopFiltersOpen
+              ? "lg:grid-cols-3 xl:grid-cols-3"
+              : "md:grid-cols-3 xl:grid-cols-4"
+          }`}>
             {filteredProducts.map((product) => {
               const stock = getProductStock(product);
               const soldOut = stock <= 0;

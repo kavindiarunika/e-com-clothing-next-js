@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronRight, SlidersHorizontal, X } from "lucide-react";
 
 import ProductCard from "@/components/user/product/ProductCard";
 import CategoryFilterSidebar from "@/components/user/category/CategoryFilterSidebar";
@@ -33,6 +33,7 @@ export default function CategoryPage({
 
   const [mobileFiltersOpen, setMobileFiltersOpen] =
     useState(false);
+  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
 
   // ---------------------------------------
   // Update URL subcategory
@@ -350,6 +351,16 @@ export default function CategoryPage({
             <span className="text-sm text-[#6B625C]">
               {filteredProducts.length} products
             </span>
+            <button
+              type="button"
+              onClick={() => setDesktopFiltersOpen((open) => !open)}
+              aria-expanded={desktopFiltersOpen}
+              aria-controls="legacy-category-filter-sidebar"
+              className="hidden items-center gap-2 text-sm text-[#292524] hover:text-[#e63e62] lg:flex"
+            >
+              <SlidersHorizontal size={16} />
+              {desktopFiltersOpen ? "Hide filters" : "Show filters"}
+            </button>
 
           </div>
 
@@ -387,41 +398,43 @@ export default function CategoryPage({
 
           {/* SIDEBAR */}
 
-          <CategoryFilterSidebar
-            subcategories={subcategories}
-            selectedSubcategory={
-              selectedSubcategory
-            }
-            setSelectedSubcategory={
-              setSelectedSubcategory
-            }
-            selectedPrice={
-              selectedPrice
-            }
-            setSelectedPrice={
-              setSelectedPrice
-            }
-            selectedSizes={
-              selectedSizes
-            }
-            setSelectedSizes={
-              setSelectedSizes
-            }
-            selectedAvailability={
-              selectedAvailability
-            }
-            setSelectedAvailability={
-              setSelectedAvailability
-            }
-            onClear={clearFilters}
-          />
+          {desktopFiltersOpen && (
+            <div id="legacy-category-filter-sidebar" className="hidden lg:block">
+              <div className="mb-3 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setDesktopFiltersOpen(false)}
+                  aria-label="Close filters"
+                  className="text-[#6B625C] hover:text-[#e63e62]"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <CategoryFilterSidebar
+                subcategories={subcategories}
+                selectedSubcategory={selectedSubcategory}
+                setSelectedSubcategory={setSelectedSubcategory}
+                selectedPrice={selectedPrice}
+                setSelectedPrice={setSelectedPrice}
+                selectedSizes={selectedSizes}
+                setSelectedSizes={setSelectedSizes}
+                selectedAvailability={selectedAvailability}
+                setSelectedAvailability={setSelectedAvailability}
+                onClear={clearFilters}
+              />
+            </div>
+          )}
 
           {/* PRODUCTS */}
 
           <div className="min-w-0 flex-1">
 
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+              <div className={`grid grid-cols-2 gap-4 ${
+                desktopFiltersOpen
+                  ? "md:grid-cols-3"
+                  : "md:grid-cols-3 xl:grid-cols-4"
+              }`}>
 
                 {filteredProducts.map(
                   (product) => (
