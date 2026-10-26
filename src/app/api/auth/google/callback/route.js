@@ -3,7 +3,11 @@ import bcrypt from "bcryptjs";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
-import { createCustomerToken, CUSTOMER_COOKIE_NAME } from "@/lib/auth";
+import {
+  createCustomerToken,
+  CUSTOMER_COOKIE_NAME,
+  GUEST_COOKIE_NAME,
+} from "@/lib/auth";
 
 const STATE_COOKIE_NAME = "velora_google_oauth_state";
 const NEXT_COOKIE_NAME = "velora_google_oauth_next";
@@ -178,6 +182,13 @@ export async function GET(request) {
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
+    });
+    response.cookies.set(GUEST_COOKIE_NAME, "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
     });
 
     return response;

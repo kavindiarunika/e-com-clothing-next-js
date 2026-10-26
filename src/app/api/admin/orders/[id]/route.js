@@ -24,14 +24,19 @@ export async function GET(request, { params }) {
       SELECT
         o.*,
 
-        CONCAT_WS(' ', u.first_name, u.last_name) AS customer_name,
-        u.email AS customer_email,
-        u.phone AS customer_phone
+        COALESCE(
+          NULLIF(CONCAT_WS(' ', u.first_name, u.last_name), ''),
+          NULLIF(CONCAT_WS(' ', g.first_name, g.last_name), '')
+        ) AS customer_name,
+        COALESCE(u.email, g.email) AS customer_email,
+        COALESCE(u.phone, g.phone) AS customer_phone
 
       FROM orders o
 
       LEFT JOIN users u
         ON o.user_id = u.user_id
+      LEFT JOIN guest_customers g
+        ON o.guest_id = g.guest_id
 
       WHERE o.order_id = ?
       `,
@@ -143,7 +148,7 @@ export async function PUT(request, { params }) {
 
     const [existing] = await pool.query(
       `
-      SELECT order_id, user_id
+      SELECT order_id, user_id, guest_id
       FROM orders
       WHERE order_id = ?
       `,
@@ -233,7 +238,7 @@ export async function PUT(request, { params }) {
     }
 
     const [updatedOrders] = await pool.query(
-      `SELECT order_id, user_id, order_status, payment_status
+      `SELECT order_id, user_id, guest_id, order_status, payment_status
        FROM orders
        WHERE order_id = ?`,
       [id]
@@ -241,16 +246,21 @@ export async function PUT(request, { params }) {
     const updatedOrder = updatedOrders[0];
     const orderUpdate = {
       order_id: String(updatedOrder.order_id),
-      user_id: String(updatedOrder.user_id),
+      user_id: updatedOrder.user_id ? String(updatedOrder.user_id) : null,
+      guest_id: updatedOrder.guest_id ? String(updatedOrder.guest_id) : null,
       order_status: updatedOrder.order_status,
       payment_status: updatedOrder.payment_status,
     };
 
-    publishRealtime(
-      `customer:${updatedOrder.user_id}`,
-      "order:updated",
-      orderUpdate
-    );
+    if (updatedOrder.user_id) {
+      publishRealtime(
+        `customer:${updatedOrder.user_id}`,
+        "order:updated",
+        orderUpdate
+      );
+    } else if (updatedOrder.guest_id) {
+      publishRealtime(`guest:${updatedOrder.guest_id}`, "order:updated", orderUpdate);
+    }
     publishRealtime("admins", "orders:updated", orderUpdate);
 
     return NextResponse.json({

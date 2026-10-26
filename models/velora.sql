@@ -23,6 +23,28 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+
+
+CREATE TABLE guest_customers (
+    guest_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100),
+    email VARCHAR(150),
+    phone VARCHAR(20) NOT NULL,
+    whatsapp_number VARCHAR(20),
+
+    postal_code VARCHAR(20),
+    address_line1 VARCHAR(255) NOT NULL,
+    address_line2 VARCHAR(255),
+    city VARCHAR(100),
+    district VARCHAR(100),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+);
+
 -- =====================================================
 -- 2. CATEGORIES
 -- =====================================================
@@ -343,6 +365,7 @@ CREATE TABLE coupons (
 CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NULL,
+    guest_id INT NULL,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
@@ -376,6 +399,10 @@ CREATE TABLE orders (
 
     FOREIGN KEY (user_id)
         REFERENCES users(user_id)
+        ON DELETE SET NULL,
+
+    FOREIGN KEY (guest_id)
+        REFERENCES guest_customers(guest_id)
         ON DELETE SET NULL,
 
     FOREIGN KEY (coupon_id)

@@ -1,7 +1,11 @@
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
-import { createCustomerToken, CUSTOMER_COOKIE_NAME } from "@/lib/auth";
+import {
+  createCustomerToken,
+  CUSTOMER_COOKIE_NAME,
+  GUEST_COOKIE_NAME,
+} from "@/lib/auth";
 
 export async function POST(request) {
   try {
@@ -54,6 +58,13 @@ export async function POST(request) {
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
+    });
+    response.cookies.set(GUEST_COOKIE_NAME, "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
     });
 
     return response;

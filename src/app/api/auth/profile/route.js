@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { CUSTOMER_COOKIE_NAME, verifyCustomerToken } from "@/lib/auth";
+import {
+  CUSTOMER_COOKIE_NAME,
+  GUEST_COOKIE_NAME,
+  verifyCustomerToken,
+  verifyGuestToken,
+} from "@/lib/auth";
 import { query } from "@/lib/db";
 
 const PROFILE_FIELDS = [
@@ -33,6 +38,11 @@ function getCustomer(request) {
   return token ? verifyCustomerToken(token) : null;
 }
 
+function getGuest(request) {
+  const token = request.cookies.get(GUEST_COOKIE_NAME)?.value;
+  return token ? verifyGuestToken(token) : null;
+}
+
 function unauthorized() {
   return NextResponse.json(
     { success: false, message: "Please sign in to view your profile." },
@@ -42,19 +52,26 @@ function unauthorized() {
 
 export async function GET(request) {
   const customer = getCustomer(request);
-  if (!customer) return unauthorized();
+  const guest = customer ? null : getGuest(request);
+  if (!customer && !guest) return unauthorized();
 
   try {
-    const users = await query(
-      `SELECT ${PROFILE_FIELDS.join(", ")} FROM users
-       WHERE user_id = ? AND role = 'customer' AND status = 'active'
-       LIMIT 1`,
-      [customer.user_id]
-    );
+    const profiles = customer
+      ? await query(
+        `SELECT ${PROFILE_FIELDS.join(", ")} FROM users
+         WHERE user_id = ? AND role = 'customer' AND status = 'active'
+         LIMIT 1`,
+        [customer.user_id]
+      )
+      : await query(
+        `SELECT ${PROFILE_FIELDS.join(", ")} FROM guest_customers
+         WHERE guest_id = ? LIMIT 1`,
+        [guest.guest_id]
+      );
 
-    if (!users.length) return unauthorized();
+    if (!profiles.length) return unauthorized();
 
-    return NextResponse.json({ success: true, data: users[0] });
+    return NextResponse.json({ success: true, data: profiles[0] });
   } catch (error) {
     console.error("Get customer profile error:", error);
     return NextResponse.json(
@@ -66,7 +83,8 @@ export async function GET(request) {
 
 export async function PATCH(request) {
   const customer = getCustomer(request);
-  if (!customer) return unauthorized();
+  const guest = customer ? null : getGuest(request);
+  if (!customer && !guest) return unauthorized();
 
   try {
     const body = await request.json();
@@ -77,14 +95,19 @@ export async function PATCH(request) {
       PROFILE_FIELDS.map((field, index) => [field, values[index]])
     );
 
-    if (!profile.first_name || !profile.email) {
+    if (!profile.first_name || (customer && !profile.email)) {
       return NextResponse.json(
-        { success: false, message: "First name and email are required." },
+        {
+          success: false,
+          message: customer
+            ? "First name and email are required."
+            : "First name is required.",
+        },
         { status: 400 }
       );
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email)) {
+    if (profile.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email)) {
       return NextResponse.json(
         { success: false, message: "Please enter a valid email address." },
         { status: 400 }
@@ -101,23 +124,39 @@ export async function PATCH(request) {
       );
     }
 
-    const existingUsers = await query(
-      "SELECT user_id FROM users WHERE email = ? AND user_id <> ? LIMIT 1",
-      [profile.email.toLowerCase(), customer.user_id]
-    );
-    if (existingUsers.length) {
-      return NextResponse.json(
-        { success: false, message: "That email is already in use." },
-        { status: 409 }
+    profile.email = profile.email.toLowerCase();
+    if (customer) {
+      const existingUsers = await query(
+        "SELECT user_id FROM users WHERE email = ? AND user_id <> ? LIMIT 1",
+        [profile.email, customer.user_id]
+      );
+      if (existingUsers.length) {
+        return NextResponse.json(
+          { success: false, message: "That email is already in use." },
+          { status: 409 }
+        );
+      }
+
+      await query(
+        `UPDATE users SET ${PROFILE_FIELDS.map((field) => `${field} = ?`).join(", ")}
+         WHERE user_id = ? AND role = 'customer'`,
+        [...PROFILE_FIELDS.map((field) => profile[field]), customer.user_id]
+      );
+    } else {
+      if (!profile.phone || !profile.address_line1) {
+        return NextResponse.json(
+          { success: false, message: "Phone and address line 1 are required." },
+          { status: 400 }
+        );
+      }
+
+      await query(
+        `UPDATE guest_customers
+         SET ${PROFILE_FIELDS.map((field) => `${field} = ?`).join(", ")}
+         WHERE guest_id = ?`,
+        [...PROFILE_FIELDS.map((field) => profile[field] || null), guest.guest_id]
       );
     }
-
-    profile.email = profile.email.toLowerCase();
-    await query(
-      `UPDATE users SET ${PROFILE_FIELDS.map((field) => `${field} = ?`).join(", ")}
-       WHERE user_id = ? AND role = 'customer'`,
-      [...PROFILE_FIELDS.map((field) => profile[field]), customer.user_id]
-    );
 
     return NextResponse.json({
       success: true,

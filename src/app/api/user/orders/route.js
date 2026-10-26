@@ -2,15 +2,19 @@ import { NextResponse } from "next/server";
 import { getPool, query } from "@/lib/db";
 import {
   CUSTOMER_COOKIE_NAME,
+  GUEST_COOKIE_NAME,
   verifyCustomerToken,
+  verifyGuestToken,
 } from "@/lib/auth";
 import { publishRealtime } from "@/lib/realtime.mjs";
 
 export async function GET(request) {
-  const token = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
-  const customer = token ? verifyCustomerToken(token) : null;
+  const customerToken = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
+  const customer = customerToken ? verifyCustomerToken(customerToken) : null;
+  const guestToken = request.cookies.get(GUEST_COOKIE_NAME)?.value;
+  const guest = customer || !guestToken ? null : verifyGuestToken(guestToken);
 
-  if (!customer) {
+  if (!customer && !guest) {
     return NextResponse.json(
       { success: false, message: "Please sign in to view your orders." },
       { status: 401 }
@@ -38,10 +42,10 @@ export async function GET(request) {
           FROM order_items oi
           WHERE oi.order_id = o.order_id
         ) AS item_count
-      FROM orders o
-      WHERE o.user_id = ?
-      ORDER BY o.order_id DESC
-    `, [customer.user_id]);
+        FROM orders o
+        WHERE ${customer ? "o.user_id" : "o.guest_id"} = ?
+        ORDER BY o.order_id DESC
+    `, [customer ? customer.user_id : guest.guest_id]);
 
     return NextResponse.json({
       success: true,
@@ -65,19 +69,21 @@ export async function POST(request) {
   let connection;
 
   try {
-    const token = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
-    const customer = token ? verifyCustomerToken(token) : null;
+    const customerToken = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
+    const customer = customerToken ? verifyCustomerToken(customerToken) : null;
+    const guestToken = request.cookies.get(GUEST_COOKIE_NAME)?.value;
+    const guest = customer || !guestToken ? null : verifyGuestToken(guestToken);
 
-    if (!customer) {
+    if (!customer && !guest) {
       return NextResponse.json(
-        { success: false, message: "Please sign in before placing an order." },
+        { success: false, message: "Please start checkout before placing an order." },
         { status: 401 }
       );
     }
 
     const body = await request.json();
-    const address = body.shippingAddress || {};
-    const requiredAddressFields = [
+    let address = body.shippingAddress || {};
+    const requiredAddressFields = customer ? [
       "firstName",
       "lastName",
       "phone",
@@ -85,13 +91,13 @@ export async function POST(request) {
       "city",
       "district",
       "postalCode",
-    ];
+    ] : ["firstName", "phone", "address"];
 
-    if (
+    if (customer && (
       requiredAddressFields.some(
         (field) => !String(address[field] || "").trim()
       )
-    ) {
+    )) {
       return NextResponse.json(
         { success: false, message: "Complete all shipping details before ordering." },
         { status: 400 }
@@ -156,16 +162,57 @@ export async function POST(request) {
     connection = await pool.getConnection();
     await connection.beginTransaction();
 
-    const [activeUsers] = await connection.execute(
-      "SELECT user_id FROM users WHERE user_id = ? AND role = 'customer' AND status = 'active' LIMIT 1",
-      [customer.user_id]
-    );
-    if (!activeUsers.length) {
-      await connection.rollback();
-      return NextResponse.json(
-        { success: false, message: "Your account is not active." },
-        { status: 403 }
+    if (customer) {
+      const [activeUsers] = await connection.execute(
+        "SELECT user_id FROM users WHERE user_id = ? AND role = 'customer' AND status = 'active' LIMIT 1",
+        [customer.user_id]
       );
+      if (!activeUsers.length) {
+        await connection.rollback();
+        return NextResponse.json(
+          { success: false, message: "Your account is not active." },
+          { status: 403 }
+        );
+      }
+    } else {
+      const [guestCustomers] = await connection.execute(
+        `SELECT first_name, last_name, email, phone, whatsapp_number,
+                postal_code, address_line1, address_line2, city, district
+         FROM guest_customers WHERE guest_id = ? LIMIT 1`,
+        [guest.guest_id]
+      );
+      const guestProfile = guestCustomers[0];
+      if (!guestProfile) {
+        await connection.rollback();
+        return NextResponse.json(
+          { success: false, message: "Your guest checkout session has expired." },
+          { status: 401 }
+        );
+      }
+
+      address = {
+        firstName: address.firstName || guestProfile.first_name,
+        lastName: address.lastName || guestProfile.last_name || "",
+        phone: address.phone || guestProfile.phone,
+        address: address.address || [
+          guestProfile.address_line1,
+          guestProfile.address_line2,
+        ].filter(Boolean).join("\n"),
+        city: address.city || guestProfile.city || "",
+        district: address.district || guestProfile.district || "",
+        postalCode: address.postalCode || guestProfile.postal_code || "",
+      };
+      if (
+        requiredAddressFields.some(
+          (field) => !String(address[field] || "").trim()
+        )
+      ) {
+        await connection.rollback();
+        return NextResponse.json(
+          { success: false, message: "Complete the required shipping details before ordering." },
+          { status: 400 }
+        );
+      }
     }
 
     let subtotal = 0;
@@ -425,11 +472,12 @@ export async function POST(request) {
 
     const [orderResult] = await connection.execute(
       `INSERT INTO orders (
-         user_id, subtotal, discount, shipping_fee, total_amount,
+         user_id, guest_id, subtotal, discount, shipping_fee, total_amount,
          coupon_id, payment_status, order_status, shipping_address, billing_address
-       ) VALUES (?, ?, ?, ?, ?, ?, 'pending', 'pending', ?, ?)`,
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', 'pending', ?, ?)`,
       [
-        customer.user_id,
+        customer ? customer.user_id : null,
+        guest ? guest.guest_id : null,
         subtotal,
         discountTotal,
         shippingFee,
@@ -488,11 +536,16 @@ export async function POST(request) {
 
     const orderUpdate = {
       order_id: String(orderId),
-      user_id: String(customer.user_id),
+      user_id: customer ? String(customer.user_id) : null,
+      guest_id: guest ? String(guest.guest_id) : null,
       order_status: "pending",
       payment_status: "pending",
     };
-    publishRealtime(`customer:${customer.user_id}`, "orders:created", orderUpdate);
+    if (customer) {
+      publishRealtime(`customer:${customer.user_id}`, "orders:created", orderUpdate);
+    } else {
+      publishRealtime(`guest:${guest.guest_id}`, "orders:created", orderUpdate);
+    }
     publishRealtime("admins", "orders:created", orderUpdate);
 
     return NextResponse.json(

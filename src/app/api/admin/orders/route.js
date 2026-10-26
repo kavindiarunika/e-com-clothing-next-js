@@ -11,6 +11,7 @@ export async function GET() {
       SELECT
         o.order_id,
         o.user_id,
+        o.guest_id,
         o.order_date,
 
         o.subtotal,
@@ -31,14 +32,20 @@ export async function GET() {
 
         COUNT(oi.order_item_id) AS item_count,
 
-        CONCAT_WS(' ', u.first_name, u.last_name) AS customer_name,
-        u.email AS customer_email,
-        u.phone AS customer_phone
+        COALESCE(
+          NULLIF(CONCAT_WS(' ', u.first_name, u.last_name), ''),
+          NULLIF(CONCAT_WS(' ', g.first_name, g.last_name), '')
+        ) AS customer_name,
+        COALESCE(u.email, g.email) AS customer_email,
+        COALESCE(u.phone, g.phone) AS customer_phone
 
       FROM orders o
 
       LEFT JOIN users u
         ON o.user_id = u.user_id
+
+      LEFT JOIN guest_customers g
+        ON o.guest_id = g.guest_id
 
       LEFT JOIN order_items oi
         ON o.order_id = oi.order_id
@@ -46,6 +53,7 @@ export async function GET() {
       GROUP BY
         o.order_id,
         o.user_id,
+        o.guest_id,
         o.order_date,
         o.subtotal,
         o.discount,
@@ -61,7 +69,11 @@ export async function GET() {
         u.first_name,
         u.last_name,
         u.email,
-        u.phone
+        u.phone,
+        g.first_name,
+        g.last_name,
+        g.email,
+        g.phone
 
       ORDER BY o.order_id DESC
     `);
