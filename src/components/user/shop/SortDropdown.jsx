@@ -11,6 +11,7 @@ export default function SortDropdown({ id, sortBy, setSortBy }) {
         onChange={(e) => setSortBy(e.target.value)}
         className="w-full appearance-none border border-[#E7DEDC] bg-white py-2.5 pl-3 pr-10 text-sm text-[#292524] outline-none focus:border-[#e63e62]"
       >
+        <option value="">Sort by</option>
         <option value="best-selling">Best Selling</option>
         <option value="newest">Newest</option>
         <option value="featured">Featured</option>

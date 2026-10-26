@@ -36,7 +36,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [sortBy, setSortBy] = useState("best-selling");
+  const [sortBy, setSortBy] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
@@ -416,7 +416,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
     setSelectedSizes([]);
     setSelectedAvailability("all");
     setSearchTerm("");
-    setSortBy("best-selling");
+    setSortBy("");
     setCurrentPage(1);
   };
 

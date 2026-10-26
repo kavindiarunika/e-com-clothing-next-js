@@ -29,7 +29,7 @@ export default function CategoryPage({
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [sortBy, setSortBy] = useState("featured");
+  const [sortBy, setSortBy] = useState("");
 
   const [mobileFiltersOpen, setMobileFiltersOpen] =
     useState(false);
@@ -246,7 +246,7 @@ export default function CategoryPage({
     setSelectedSizes([]);
     setSelectedAvailability("all");
     setSearchTerm("");
-    setSortBy("featured");
+    setSortBy("");
   };
 
   const categoryDescription = {
