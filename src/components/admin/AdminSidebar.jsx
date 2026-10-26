@@ -215,7 +215,7 @@ export default function AdminSidebar({
       </nav>
 
       <button
-        className="sidebar-logout"
+        className="primary-button sidebar-logout"
         onClick={handleLogout}
       >
         <LogOut size={18} />

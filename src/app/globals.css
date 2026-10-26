@@ -15332,6 +15332,30 @@ margin: 0;
   background: #000000;
 }
 
+.admin-shell .admin-navbar {
+  background: #000000;
+  border-bottom-color: #292524;
+}
+
+.admin-shell .navbar-title,
+.admin-shell .admin-profile strong {
+  color: #ffffff;
+}
+
+.admin-shell .admin-profile span {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.admin-shell .navbar-search {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: #171717;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.admin-shell .navbar-search input {
+  color: #ffffff;
+}
+
 .admin-shell button,
 .admin-shell input[type="button"],
 .admin-shell input[type="submit"],
