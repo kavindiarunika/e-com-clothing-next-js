@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { sanitizeProductDescription } from "@/lib/productDescription";
 
 import "swiper/css";
 
@@ -369,9 +370,14 @@ export default function CategorySection() {
                       {category.name}
                     </h3>
                     {category.description && (
-                      <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-white/80 sm:text-sm">
-                        {category.description}
-                      </p>
+                      <div
+                        className="mt-1 line-clamp-2 text-xs leading-relaxed text-white/80 sm:text-sm"
+                        dangerouslySetInnerHTML={{
+                          __html: sanitizeProductDescription(
+                            category.description
+                          ),
+                        }}
+                      />
                     )}
                   </div>
 
