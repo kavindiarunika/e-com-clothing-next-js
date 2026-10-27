@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Search,
   Plus,
@@ -14,7 +14,7 @@ import {
 
 export default function CustomersPage() {
   const [customers, setCustomers] = useState([]);
-  const [filteredCustomers, setFilteredCustomers] = useState([]);
+  const [guestCustomers, setGuestCustomers] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -56,6 +56,7 @@ export default function CustomersPage() {
       }
 
       setCustomers(data.customers || []);
+      setGuestCustomers(data.guestCustomers || []);
     } catch (error) {
       console.error("Load customers error:", error);
       alert(error.message);
@@ -72,7 +73,7 @@ export default function CustomersPage() {
      FILTER CUSTOMERS
   ========================================= */
 
-  useEffect(() => {
+  const filteredCustomers = useMemo(() => {
     let result = [...customers];
 
     if (search.trim()) {
@@ -102,8 +103,38 @@ export default function CustomersPage() {
       );
     }
 
-    setFilteredCustomers(result);
+    return result;
   }, [search, statusFilter, customers]);
+
+  const filteredGuestCustomers = useMemo(() => {
+    if (!search.trim()) {
+      return guestCustomers;
+    }
+
+    const searchValue = search.toLowerCase();
+
+    return guestCustomers.filter((customer) =>
+      [
+        customer.guest_id,
+        customer.first_name,
+        customer.last_name,
+        customer.email,
+        customer.phone,
+        customer.whatsapp_number,
+        customer.postal_code,
+        customer.address_line1,
+        customer.address_line2,
+        customer.city,
+        customer.district,
+      ]
+        .filter(Boolean)
+        .some((value) =>
+          String(value)
+            .toLowerCase()
+            .includes(searchValue)
+        )
+    );
+  }, [search, guestCustomers]);
 
   /* =========================================
      OPEN ADD MODAL
@@ -674,6 +705,97 @@ export default function CustomersPage() {
 
         </div>
 
+      </div>
+
+      <div className="customer-section-header">
+        <div>
+          <h2>Guest Customers</h2>
+          <p>Customers who checked out without creating an account.</p>
+        </div>
+        <span>{guestCustomers.length} total</span>
+      </div>
+
+      <div className="customer-table-card">
+        <div className="customer-table-wrapper">
+          <table className="customer-table">
+            <thead>
+              <tr>
+                <th>Guest</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>WhatsApp</th>
+                <th>Address</th>
+                <th>Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="6" className="customer-empty">
+                    Loading guest customers...
+                  </td>
+                </tr>
+              ) : filteredGuestCustomers.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="customer-empty">
+                    <Users size={30} />
+                    <span>No guest customers found.</span>
+                  </td>
+                </tr>
+              ) : (
+                filteredGuestCustomers.map((customer) => {
+                  const address = [
+                    customer.address_line1,
+                    customer.address_line2,
+                    [customer.city, customer.district]
+                      .filter(Boolean)
+                      .join(", "),
+                    customer.postal_code,
+                  ]
+                    .filter(Boolean)
+                    .join(", ");
+
+                  return (
+                    <tr key={customer.guest_id}>
+                      <td>
+                        <div className="customer-info">
+                          <div className="customer-avatar">
+                            {getInitials(customer)}
+                          </div>
+                          <div className="customer-details">
+                            <strong>{getCustomerName(customer)}</strong>
+                            <span>Guest #{customer.guest_id}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="customer-email">
+                          {customer.email || "-"}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="customer-phone">
+                          {customer.phone || "-"}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="customer-phone">
+                          {customer.whatsapp_number || "-"}
+                        </span>
+                      </td>
+                      <td>{address || "-"}</td>
+                      <td>
+                        <span className="customer-date">
+                          {formatDate(customer.created_at)}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* =========================================

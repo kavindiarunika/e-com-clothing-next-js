@@ -107,25 +107,47 @@ export async function GET() {
 
     const pool = getPool();
 
-    const [customers] = await pool.query(
-      `
-      SELECT
-        user_id,
-        first_name,
-        last_name,
-        email,
-        phone,
-        status,
-        created_at
-      FROM users
-      WHERE role = 'customer'
-      ORDER BY user_id DESC
-      `
-    );
+    const [customers, guestCustomers] = await Promise.all([
+      pool.query(
+        `
+        SELECT
+          user_id,
+          first_name,
+          last_name,
+          email,
+          phone,
+          status,
+          created_at
+        FROM users
+        WHERE role = 'customer'
+        ORDER BY user_id DESC
+        `
+      ),
+      pool.query(
+        `
+        SELECT
+          guest_id,
+          first_name,
+          last_name,
+          email,
+          phone,
+          whatsapp_number,
+          postal_code,
+          address_line1,
+          address_line2,
+          city,
+          district,
+          created_at
+        FROM guest_customers
+        ORDER BY guest_id DESC
+        `
+      ),
+    ]);
 
     return Response.json({
       success: true,
-      customers,
+      customers: customers[0],
+      guestCustomers: guestCustomers[0],
     });
   } catch (error) {
     console.error(

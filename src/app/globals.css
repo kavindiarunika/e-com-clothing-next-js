@@ -9774,6 +9774,30 @@ margin: 0;
   font-size: 13px;
 }
 
+.customer-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 28px 0 14px;
+}
+
+.customer-section-header h2 {
+  margin: 0 0 5px;
+  color: #292524;
+  font-family: var(--font-poppins);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.customer-section-header p,
+.customer-section-header span {
+  margin: 0;
+  color: #77706a;
+  font-family: var(--font-inter);
+  font-size: 12px;
+}
+
 .customer-header-actions {
   display: flex;
   align-items: center;

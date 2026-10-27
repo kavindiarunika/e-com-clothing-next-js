@@ -661,3 +661,28 @@ CREATE TABLE comment_images (
 
     INDEX idx_comment_images_comment (comment_id)
 );
+
+CREATE TABLE guest_customers (
+    guest_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100),
+    email VARCHAR(150),
+    phone VARCHAR(20) NOT NULL,
+    whatsapp_number VARCHAR(20),
+
+    postal_code VARCHAR(20),
+    address_line1 VARCHAR(255) NOT NULL,
+    address_line2 VARCHAR(255),
+    city VARCHAR(100),
+    district VARCHAR(100),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+);
+ALTER TABLE orders
+  ADD COLUMN guest_id INT NULL AFTER user_id,
+  ADD CONSTRAINT fk_orders_guest_customers
+    FOREIGN KEY (guest_id) REFERENCES guest_customers(guest_id)
+    ON DELETE SET NULL;
