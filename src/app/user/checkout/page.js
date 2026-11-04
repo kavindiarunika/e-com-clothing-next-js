@@ -349,7 +349,7 @@ export default function CheckoutPage() {
         <div className="mx-auto max-w-2xl text-center">
           <ShoppingBag
             size={50}
-            className="mx-auto text-[#e63e62]"
+            className="mx-auto text-[var(--color-primary)]"
           />
 
           <h1 className="mt-6 font-serif text-4xl text-[#292524]">
@@ -362,7 +362,7 @@ export default function CheckoutPage() {
 
           <Link
             href="/user/shop"
-            className="mt-8 inline-block bg-[#e63e62] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+            className="mt-8 inline-block bg-[var(--color-primary)] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[var(--color-primary-hover)]"
           >
             Continue Shopping
           </Link>
@@ -374,17 +374,17 @@ export default function CheckoutPage() {
   return (
     <main className="min-h-screen bg-[#FFFFFF]">
       {/* Header */}
-      <section className="border-b border-[#E7DEDC] bg-[#FFFFFF]">
+      <section className="border-b border-[#E5E5E5] bg-[#FFFFFF]">
         <div className="mx-auto w-[92%] max-w-300 py-10 md:py-14">
           <Link
             href="/user/cart"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[1.5px] text-[#6B625C] transition hover:text-[#e63e62]"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-[1.5px] text-[#6B625C] transition hover:text-[var(--color-primary)]"
           >
             <ArrowLeft size={15} />
             Back to Cart
           </Link>
 
-          <p className="mt-8 text-xs font-semibold uppercase tracking-[3px] text-[#e63e62]">
+          <p className="mt-8 text-xs font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
             Velora
           </p>
 
@@ -426,7 +426,7 @@ export default function CheckoutPage() {
             {/* 01 Shipping Address */}
             <section className="bg-white p-6 md:p-8">
               <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                   01
                 </p>
 
@@ -456,7 +456,7 @@ export default function CheckoutPage() {
                     value={formData.firstName}
                     onChange={handleChange}
                     placeholder="Enter first name"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="w-full border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)]"
                     required
                   />
                 </div>
@@ -477,7 +477,7 @@ export default function CheckoutPage() {
                     value={formData.lastName}
                     onChange={handleChange}
                     placeholder="Enter last name"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="w-full border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)]"
                     required={!isGuestCheckout}
                   />
                 </div>
@@ -498,7 +498,7 @@ export default function CheckoutPage() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="07XXXXXXXX"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="w-full border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)]"
                     required
                   />
                 </div>
@@ -519,7 +519,7 @@ export default function CheckoutPage() {
                     value={formData.postalCode}
                     onChange={handleChange}
                     placeholder="Postal code"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="w-full border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)]"
                     required={!isGuestCheckout}
                   />
                 </div>
@@ -540,7 +540,7 @@ export default function CheckoutPage() {
                     value={formData.address}
                     onChange={handleChange}
                     placeholder="House number, street, area..."
-                    className="w-full resize-none border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="w-full resize-none border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)]"
                     required
                   />
                 </div>
@@ -561,7 +561,7 @@ export default function CheckoutPage() {
                     value={formData.city}
                     onChange={handleChange}
                     placeholder="Enter city"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="w-full border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)]"
                     required={!isGuestCheckout}
                   />
                 </div>
@@ -582,7 +582,7 @@ export default function CheckoutPage() {
                     value={formData.district}
                     onChange={handleChange}
                     placeholder="Enter district"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="w-full border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)]"
                     required={!isGuestCheckout}
                   />
                 </div>
@@ -592,7 +592,7 @@ export default function CheckoutPage() {
             {/* 02 Delivery */}
             <section className="bg-white p-6 md:p-8">
               <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                   02
                 </p>
 
@@ -601,7 +601,7 @@ export default function CheckoutPage() {
                 </h2>
               </div>
 
-              <div className="border border-[#e63e62] bg-[#FAF6F5] p-4">
+              <div className="border border-[var(--color-primary)] bg-[#F5F5F5] p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-[#292524]">
@@ -613,7 +613,7 @@ export default function CheckoutPage() {
                     </p>
                   </div>
 
-                  <span className="text-sm font-semibold text-[#e63e62]">
+                  <span className="text-sm font-semibold text-[var(--color-primary)]">
                     Rs. {shippingCost.toLocaleString()}
                   </span>
                 </div>
@@ -623,7 +623,7 @@ export default function CheckoutPage() {
             {/* 03 Payment */}
             <section className="bg-white p-6 md:p-8">
               <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                   03
                 </p>
 
@@ -633,7 +633,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* ONLY CASH ON DELIVERY */}
-              <div className="border border-[#e63e62] bg-[#FAF6F5] p-4">
+              <div className="border border-[var(--color-primary)] bg-[#F5F5F5] p-4">
                 <label className="flex cursor-pointer items-center gap-3">
                   <input
                     type="radio"
@@ -645,7 +645,7 @@ export default function CheckoutPage() {
                     onChange={(e) =>
                       setPaymentMethod(e.target.value)
                     }
-                    className="h-4 w-4 accent-[#e63e62]"
+                    className="h-4 w-4 accent-[var(--color-primary)]"
                   />
 
                   <div>
@@ -660,7 +660,7 @@ export default function CheckoutPage() {
 
                   <CheckCircle
                     size={18}
-                    className="ml-auto text-[#e63e62]"
+                    className="ml-auto text-[var(--color-primary)]"
                   />
                 </label>
               </div>
@@ -671,8 +671,8 @@ export default function CheckoutPage() {
           <div>
             <section className="sticky top-24 bg-white p-6 md:p-8">
               {/* Order Summary */}
-              <div className="border-b border-[#E7DEDC] pb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
+              <div className="border-b border-[#E5E5E5] pb-6">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                   04
                 </p>
 
@@ -726,7 +726,7 @@ export default function CheckoutPage() {
 
                     {/* Price */}
                     <div className="text-right">
-                      <p className="text-sm font-medium text-[#e63e62]">
+                      <p className="text-sm font-medium text-[var(--color-primary)]">
                         Rs.{" "}
                         {(
                           Number(item.price) *
@@ -739,7 +739,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Price Details */}
-              <div className="mt-8 space-y-4 border-t border-[#E7DEDC] pt-6">
+              <div className="mt-8 space-y-4 border-t border-[#E5E5E5] pt-6">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-[#6B625C]">
                     Subtotal
@@ -766,7 +766,7 @@ export default function CheckoutPage() {
                       Coupon ({selectedCoupon.code})
                     </span>
 
-                    <span className="font-medium text-[#e63e62]">
+                    <span className="font-medium text-[var(--color-primary)]">
                       - Rs. {couponDiscount.toLocaleString()}
                     </span>
                   </div>
@@ -774,18 +774,18 @@ export default function CheckoutPage() {
               </div>
 
               {/* Total */}
-              <div className="mt-5 flex items-center justify-between border-t border-[#E7DEDC] pt-5">
+              <div className="mt-5 flex items-center justify-between border-t border-[#E5E5E5] pt-5">
                 <span className="text-base font-semibold uppercase tracking-[1px] text-[#292524]">
                   Total
                 </span>
 
-                <span className="text-2xl font-semibold text-[#e63e62]">
+                <span className="text-2xl font-semibold text-[var(--color-primary)]">
                   Rs. {total.toLocaleString()}
                 </span>
               </div>
 
               {/* Eligible Coupons */}
-              <section className="mt-6 border-t border-[#E7DEDC] pt-5">
+              <section className="mt-6 border-t border-[#E5E5E5] pt-5">
                 <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
                   Coupons you can use
                 </h3>
@@ -795,7 +795,7 @@ export default function CheckoutPage() {
                     Checking available coupons...
                   </p>
                 ) : couponLoadError ? (
-                  <p role="alert" className="mt-3 text-sm text-[#e63e62]">
+                  <p role="alert" className="mt-3 text-sm text-[var(--color-primary)]">
                     {couponLoadError}
                   </p>
                 ) : eligibleCoupons.length > 0 ? (
@@ -858,11 +858,11 @@ export default function CheckoutPage() {
               </section>
 
               {/* Payment Info */}
-              <div className="mt-6 bg-[#FAF6F5] p-4">
+              <div className="mt-6 bg-[#F5F5F5] p-4">
                 <div className="flex items-start gap-3">
                   <CheckCircle
                     size={18}
-                    className="mt-0.5 shrink-0 text-[#e63e62]"
+                    className="mt-0.5 shrink-0 text-[var(--color-primary)]"
                   />
 
                   <div>
@@ -883,7 +883,7 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-7 w-full bg-[#e63e62] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870] disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-7 w-full bg-[var(--color-primary)] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting ? "Placing Order..." : "Place Order"}
               </button>

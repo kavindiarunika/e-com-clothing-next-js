@@ -86,11 +86,11 @@ export default function ReviewSection({ product }) {
   };
 
   return (
-    <section className="border-t border-[#E7DEDC] pt-14 md:pt-20">
+    <section className="border-t border-[#E5E5E5] pt-14 md:pt-20">
 
       {/* ================= HEADER ================= */}
       <div className="mb-10">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[3px] text-[#e63e62]">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
           Customer Feedback
         </p>
 
@@ -98,11 +98,11 @@ export default function ReviewSection({ product }) {
           Reviews & Ratings
         </h2>
 
-        <div className="mt-5 h-px w-12 bg-[#e63e62]" />
+        <div className="mt-5 h-px w-12 bg-[var(--color-primary)]" />
       </div>
 
       {/* ================= RATING SUMMARY ================= */}
-      <div className="border border-[#E7DEDC] bg-white p-6 md:p-8">
+      <div className="border border-[#E5E5E5] bg-white p-6 md:p-8">
 
         <div className="flex flex-col items-center text-center">
 
@@ -120,8 +120,8 @@ export default function ReviewSection({ product }) {
                 className={
                   star <=
                   Math.round(Number(averageRating))
-                    ? "fill-[#e63e62] text-[#e63e62]"
-                    : "text-[#E7DEDC]"
+                    ? "fill-yellow-400 text-yellow-400"
+                    : "text-[#E5E5E5]"
                 }
               />
             ))}
@@ -135,11 +135,11 @@ export default function ReviewSection({ product }) {
         </div>
       </div>
        {/* ================= WRITE REVIEW ================= */}
-      <div className="mt-12 border border-[#E7DEDC] bg-white p-6 md:p-8">
+      <div className="mt-12 border border-[#E5E5E5] bg-white p-6 md:p-8">
 
         <div className="mb-6">
 
-          <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
+          <p className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
             Share Your Experience
           </p>
 
@@ -172,7 +172,7 @@ export default function ReviewSection({ product }) {
                 setName(e.target.value)
               }
               placeholder="Enter your name"
-              className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+              className="w-full border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)]"
             />
 
           </div>
@@ -199,8 +199,8 @@ export default function ReviewSection({ product }) {
                     size={23}
                     className={
                       star <= rating
-                        ? "fill-[#e63e62] text-[#e63e62]"
-                        : "text-[#E7DEDC]"
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "text-[#E5E5E5]"
                     }
                   />
 
@@ -230,7 +230,7 @@ export default function ReviewSection({ product }) {
                 setComment(e.target.value)
               }
               placeholder="Share your experience with this product..."
-              className="w-full resize-none border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+              className="w-full resize-none border border-[#E5E5E5] bg-[#F5F5F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)]"
             />
 
           </div>
@@ -238,7 +238,7 @@ export default function ReviewSection({ product }) {
           {/* SUBMIT */}
           <button
             type="submit"
-            className="bg-[#e63e62] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+            className="bg-[var(--color-primary)] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[var(--color-primary-hover)]"
           >
             Submit Review
           </button>
@@ -261,13 +261,13 @@ export default function ReviewSection({ product }) {
 
         {reviews.length === 0 ? (
 
-          <div className="border border-[#E7DEDC] bg-white p-8 text-center">
+          <div className="border border-[#E5E5E5] bg-white p-8 text-center">
 
             <p className="text-sm text-[#6B625C]">
               No customer reviews yet.
             </p>
 
-            <p className="mt-2 text-xs text-[#e63e62]">
+            <p className="mt-2 text-xs text-[var(--color-primary)]">
               Be the first to share your experience.
             </p>
 
@@ -281,7 +281,7 @@ export default function ReviewSection({ product }) {
 
               <div
                 key={review.id}
-                className="border border-[#E7DEDC] bg-white p-6"
+                className="border border-[#E5E5E5] bg-white p-6"
               >
 
                 {/* Review Header */}
@@ -302,8 +302,8 @@ export default function ReviewSection({ product }) {
                           size={14}
                           className={
                             star <= review.rating
-                              ? "fill-[#e63e62] text-[#e63e62]"
-                              : "text-[#E7DEDC]"
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-[#E5E5E5]"
                           }
                         />
                       ))}
@@ -312,7 +312,7 @@ export default function ReviewSection({ product }) {
 
                   </div>
 
-                  <span className="text-xs text-[#e63e62]">
+                  <span className="text-xs text-[var(--color-primary)]">
                     {review.date}
                   </span>
 
@@ -337,4 +337,3 @@ export default function ReviewSection({ product }) {
     </section>
   );
 }
-

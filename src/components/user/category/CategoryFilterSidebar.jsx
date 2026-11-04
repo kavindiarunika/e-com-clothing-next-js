@@ -65,7 +65,7 @@ export default function CategoryFilterSidebar({
     );
   };
 
-  const sectionClass = "group border-b border-[#E7DEDC]";
+  const sectionClass = "group border-b border-[#E5E5E5]";
   const summaryClass =
     "flex min-h-[67px] cursor-pointer list-none items-center justify-between text-sm font-semibold uppercase tracking-wide text-[#292524] [&::-webkit-details-marker]:hidden";
   const contentClass = "pb-5 pt-1";
@@ -82,7 +82,7 @@ export default function CategoryFilterSidebar({
           <button
             type="button"
             onClick={onClear}
-            className="text-xs text-[#e63e62] hover:underline"
+            className="text-xs text-[var(--color-primary)] hover:underline"
           >
             Clear
           </button>
@@ -110,7 +110,7 @@ export default function CategoryFilterSidebar({
                   name="category-availability"
                   checked={selectedAvailability === value}
                   onChange={() => setSelectedAvailability(value)}
-                  className="h-4 w-4 accent-[#e63e62]"
+                  className="h-4 w-4 accent-[var(--color-primary)]"
                 />
                 {label}
               </label>
@@ -140,7 +140,7 @@ export default function CategoryFilterSidebar({
                   name="category-price"
                   checked={selectedPrice === value}
                   onChange={() => setSelectedPrice(value)}
-                  className="h-4 w-4 accent-[#e63e62]"
+                  className="h-4 w-4 accent-[var(--color-primary)]"
                 />
                 {label}
               </label>
@@ -161,7 +161,7 @@ export default function CategoryFilterSidebar({
           {isLoadingSizes ? (
             <p className="text-sm text-[#6B625C]">Loading sizes...</p>
           ) : sizesError ? (
-            <p role="alert" className="text-sm text-[#e63e62]">
+            <p role="alert" className="text-sm text-[var(--color-primary)]">
               {sizesError}
             </p>
           ) : sizes.length > 0 ? (
@@ -174,8 +174,8 @@ export default function CategoryFilterSidebar({
                   onClick={() => toggleSize(size)}
                   className={`border px-3 py-2 text-xs transition ${
                     selectedSizes.includes(size)
-                      ? "border-[#e63e62] bg-[#e63e62] text-white"
-                      : "border-[#E7DEDC] bg-white text-[#5D554F] hover:border-[#e63e62]"
+                      ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
+                      : "border-[#E5E5E5] bg-white text-[#5D554F] hover:border-[var(--color-primary)]"
                   }`}
                 >
                   {size}
@@ -205,7 +205,7 @@ export default function CategoryFilterSidebar({
                   name="category-subcategory"
                   checked={selectedSubcategory === subcategory}
                   onChange={() => setSelectedSubcategory(subcategory)}
-                  className="h-4 w-4 accent-[#e63e62]"
+                  className="h-4 w-4 accent-[var(--color-primary)]"
                 />
                 {subcategory}
               </label>

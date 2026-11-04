@@ -60,7 +60,7 @@ export default function SizeChart({
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center text-[#292524] transition hover:text-[#e63e62]"
+          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center text-[#292524] transition hover:text-[var(--color-primary)]"
           aria-label="Close size chart"
         >
           <X size={20} />
@@ -68,7 +68,7 @@ export default function SizeChart({
 
         {/* Header */}
         <div className="mb-6 pr-8">
-          <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
+          <p className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
             Size Guide
           </p>
 
@@ -89,7 +89,7 @@ export default function SizeChart({
                 {chart.headers.map((header) => (
                   <th
                     key={header}
-                    className="border border-[#E7DEDC] px-4 py-3 text-left text-xs font-semibold uppercase tracking-[1px] text-[#292524]"
+                    className="border border-[#E5E5E5] px-4 py-3 text-left text-xs font-semibold uppercase tracking-[1px] text-[#292524]"
                   >
                     {header}
                   </th>
@@ -103,7 +103,7 @@ export default function SizeChart({
                   {row.map((value, valueIndex) => (
                     <td
                       key={valueIndex}
-                      className="border border-[#E7DEDC] px-4 py-3 text-sm text-[#6B625C]"
+                      className="border border-[#E5E5E5] px-4 py-3 text-sm text-[#6B625C]"
                     >
                       {value}
                     </td>
@@ -115,7 +115,7 @@ export default function SizeChart({
         </div>
 
         {/* Note */}
-        <p className="mt-5 text-xs leading-5 text-[#e63e62]">
+        <p className="mt-5 text-xs leading-5 text-[var(--color-primary)]">
           Measurements are approximate. For the best fit, compare these
           measurements with a garment you already own.
         </p>

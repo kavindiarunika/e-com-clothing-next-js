@@ -302,10 +302,10 @@ export default function CartPage() {
         <div className="mx-auto w-[92%] max-w-175 text-center">
           <ShoppingBag
             size={50}
-            className="mx-auto text-[#e63e62]"
+            className="mx-auto text-[var(--color-primary)]"
           />
 
-          <p className="mt-6 text-xs uppercase tracking-[3px] text-[#e63e62]">
+          <p className="mt-6 text-xs uppercase tracking-[3px] text-[var(--color-primary)]">
             Velora
           </p>
 
@@ -319,7 +319,7 @@ export default function CartPage() {
 
           <Link
             href="/user/shop"
-            className="mt-8 inline-flex items-center gap-2 bg-[#e63e62] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#A96870]"
+            className="mt-8 inline-flex items-center gap-2 bg-[var(--color-primary)] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[var(--color-primary-hover)]"
           >
             <ArrowLeft size={15} />
             Continue Shopping
@@ -335,7 +335,7 @@ export default function CartPage() {
 
         {/* Header */}
         <div className="mb-10">
-          <p className="text-xs uppercase tracking-[3px] text-[#e63e62]">
+          <p className="text-xs uppercase tracking-[3px] text-[var(--color-primary)]">
             Velora
           </p>
 
@@ -357,13 +357,13 @@ export default function CartPage() {
 
           {/* Cart Items */}
           <section className="bg-white px-4 md:px-6 lg:px-8">
-            <div className="flex items-center justify-between border-b border-[#E7DEDC] py-3 text-[10px] font-semibold uppercase tracking-[1.8px] text-[#6B625C] md:py-4 md:text-[11px]">
+            <div className="flex items-center justify-between border-b border-[#E5E5E5] py-3 text-[10px] font-semibold uppercase tracking-[1.8px] text-[#6B625C] md:py-4 md:text-[11px]">
               <label className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   checked={allSelected}
                   onChange={toggleSelectAll}
-                  className="h-4 w-4 accent-[#e63e62]"
+                  className="h-4 w-4 accent-[var(--color-primary)]"
                 />
                 <span>Select all</span>
               </label>
@@ -373,7 +373,7 @@ export default function CartPage() {
 
             <div className="max-h-[72vh] overflow-y-auto pr-1 md:pr-2">
               {/* Desktop Header */}
-              <div className="hidden border-b border-[#E7DEDC] py-4 text-[10px] font-semibold uppercase tracking-[2px] text-[#6B625C] sm:grid sm:grid-cols-[minmax(0,1fr)_110px_160px] md:text-[11px]">
+              <div className="hidden border-b border-[#E5E5E5] py-4 text-[10px] font-semibold uppercase tracking-[2px] text-[#6B625C] sm:grid sm:grid-cols-[minmax(0,1fr)_110px_160px] md:text-[11px]">
                 <span>Product</span>
 
                 <span className="text-center">
@@ -402,7 +402,7 @@ export default function CartPage() {
             {/* Continue Shopping */}
             <Link
               href="/user/shop"
-              className="my-6 inline-flex items-center gap-2 text-xs uppercase tracking-[1px] text-[#e63e62] hover:underline"
+              className="my-6 inline-flex items-center gap-2 text-xs uppercase tracking-[1px] text-[var(--color-primary)] hover:underline"
             >
               <ArrowLeft size={14} />
               Continue Shopping

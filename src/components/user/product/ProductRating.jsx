@@ -75,14 +75,10 @@ export default function ProductRating({ productId }) {
             size={15}
             fill={
               star <= Math.round(ratingSummary.rating)
-                ? "#e63e62"
+                ? "#FACC15"
                 : "none"
             }
-            className={
-              star <= Math.round(ratingSummary.rating)
-                ? "text-[#e63e62]"
-                : "text-[#e63e62]"
-            }
+            className="text-yellow-400"
           />
         ))}
       </div>

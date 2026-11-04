@@ -56,7 +56,7 @@ export default function NotificationsPage() {
 
   return (
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
-      <header className="border-b border-[#E7DEDC]">
+      <header className="border-b border-[#E5E5E5]">
               <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
       
                 <Link
@@ -68,7 +68,7 @@ export default function NotificationsPage() {
       
                 <Link
                   href="/user/account"
-                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#e63e62]"
+                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[var(--color-primary)]"
                 >
                   <ArrowLeft size={15} />
                   My Account
@@ -79,7 +79,7 @@ export default function NotificationsPage() {
 
       <div className="mx-auto max-w-4xl px-5 py-12">
         <div className="mb-8">
-          <p className="text-sm uppercase tracking-[0.2em] text-[#e63e62]">
+          <p className="text-sm uppercase tracking-[0.2em] text-[var(--color-primary)]">
             Account
           </p>
 
@@ -98,12 +98,12 @@ export default function NotificationsPage() {
               key={notification.notification_id}
               className={`rounded-2xl bg-white p-5 shadow-sm ${
                 !notification.is_read
-                  ? "border-l-4 border-[#e63e62]"
+                  ? "border-l-4 border-[var(--color-primary)]"
                   : ""
               }`}
             >
               <div className="flex gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-[#e63e62]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-[var(--color-primary)]">
                   {notification.type === "return" ? (
                     <RotateCcw size={20} />
                   ) : notification.type === "exchange" ? (
@@ -129,7 +129,7 @@ export default function NotificationsPage() {
                   </p>
 
                   {!notification.is_read && (
-                    <span className="mt-3 inline-block rounded-full bg-[#e63e62] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
+                    <span className="mt-3 inline-block rounded-full bg-[var(--color-primary)] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
                       New
                     </span>
                   )}

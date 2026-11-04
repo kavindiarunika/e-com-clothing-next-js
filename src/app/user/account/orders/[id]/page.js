@@ -146,7 +146,7 @@ export default function OrderDetailsPage() {
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
       {/* HEADER */}
-      <header className="border-b border-[#E7DEDC]">
+      <header className="border-b border-[#E5E5E5]">
 
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
 
@@ -159,7 +159,7 @@ export default function OrderDetailsPage() {
 
           <Link
             href="/user/account/orders"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#e63e62]"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[var(--color-primary)]"
           >
             <ArrowLeft size={15} />
             My Orders
@@ -175,7 +175,7 @@ export default function OrderDetailsPage() {
         {/* TITLE */}
         <div className="mb-10">
 
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
             Order Details
           </p>
 
@@ -196,7 +196,7 @@ export default function OrderDetailsPage() {
             <div className="flex flex-wrap items-center gap-3">
 
               {/* STATUS */}
-              <div className="flex items-center gap-2 text-sm font-semibold text-[#e63e62]">
+              <div className="flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)]">
 
                 <Truck size={18} />
 
@@ -207,7 +207,7 @@ export default function OrderDetailsPage() {
               {/* INVOICE */}
               <Link
                 href={`/user/account/orders/${order.id}/invoice`}
-                className="inline-flex items-center gap-2 border border-[#e63e62] bg-[#e63e62] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+                className="inline-flex items-center gap-2 border border-[var(--color-primary)] bg-[var(--color-primary)] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[var(--color-primary-hover)]"
               >
                 <FileText size={15} />
                 Invoice
@@ -220,9 +220,9 @@ export default function OrderDetailsPage() {
         </div>
 
         {/* ORDER PROGRESS */}
-        <div className="mb-8 border border-[#E7DEDC] bg-[#FAF6F5] p-6 sm:p-8">
+        <div className="mb-8 border border-[#E5E5E5] bg-[#F5F5F5] p-6 sm:p-8">
 
-          <p className="mb-7 text-[10px] font-semibold uppercase tracking-[2px] text-[#e63e62]">
+          <p className="mb-7 text-[10px] font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
             Order Progress
           </p>
 
@@ -247,7 +247,7 @@ export default function OrderDetailsPage() {
               <div
                 className={`mx-auto flex h-10 w-10 items-center justify-center rounded-full ${
                   currentStatus === "pending"
-                    ? "border border-[#E7DEDC] bg-[#FFFFFF] text-[#9A9088]"
+                    ? "border border-[#E5E5E5] bg-[#FFFFFF] text-[#9A9088]"
                     : "bg-[#547454] text-white"
                 }`}
               >
@@ -278,10 +278,10 @@ export default function OrderDetailsPage() {
               <div
                 className={`mx-auto flex h-10 w-10 items-center justify-center rounded-full ${
                   currentStatus === "shipped"
-                    ? "bg-[#e63e62] text-white"
+                    ? "bg-[var(--color-primary)] text-white"
                     : currentStatus === "delivered"
                     ? "bg-[#547454] text-white"
-                    : "border border-[#E7DEDC] bg-[#FFFFFF] text-[#9A9088]"
+                    : "border border-[#E5E5E5] bg-[#FFFFFF] text-[#9A9088]"
                 }`}
               >
 
@@ -298,7 +298,7 @@ export default function OrderDetailsPage() {
               <p
                 className={`mt-3 text-[10px] font-semibold uppercase tracking-[1px] ${
                   currentStatus === "shipped"
-                    ? "text-[#e63e62]"
+                    ? "text-[var(--color-primary)]"
                     : currentStatus === "delivered"
                     ? "text-[#292524]"
                     : "text-[#9A9088]"
@@ -315,8 +315,8 @@ export default function OrderDetailsPage() {
               <div
                 className={`mx-auto flex h-10 w-10 items-center justify-center rounded-full ${
                   currentStatus === "delivered"
-                    ? "bg-[#e63e62] text-white"
-                    : "border border-[#E7DEDC] bg-[#FFFFFF] text-[#9A9088]"
+                    ? "bg-[var(--color-primary)] text-white"
+                    : "border border-[#E5E5E5] bg-[#FFFFFF] text-[#9A9088]"
                 }`}
               >
 
@@ -331,7 +331,7 @@ export default function OrderDetailsPage() {
               <p
                 className={`mt-3 text-[10px] font-semibold uppercase tracking-[1px] ${
                   currentStatus === "delivered"
-                    ? "text-[#e63e62]"
+                    ? "text-[var(--color-primary)]"
                     : "text-[#9A9088]"
                 }`}
               >
@@ -350,9 +350,9 @@ export default function OrderDetailsPage() {
           <div className="space-y-8">
 
             {/* PRODUCTS */}
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5]">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5]">
 
-              <div className="border-b border-[#E7DEDC] p-6">
+              <div className="border-b border-[#E5E5E5] p-6">
 
                 <h2 className="font-serif text-2xl">
                   Ordered Items
@@ -360,7 +360,7 @@ export default function OrderDetailsPage() {
 
               </div>
 
-              <div className="divide-y divide-[#E7DEDC]">
+              <div className="divide-y divide-[#E5E5E5]">
 
                 {order.items.map((item) => (
 
@@ -370,7 +370,7 @@ export default function OrderDetailsPage() {
                   >
 
                     {/* IMAGE */}
-                    <div className="h-28 w-24 flex-shrink-0 overflow-hidden bg-[#FAF6F5] sm:h-32 sm:w-28">
+                    <div className="h-28 w-24 flex-shrink-0 overflow-hidden bg-[#F5F5F5] sm:h-32 sm:w-28">
 
                       {item.image ? (
                         <img
@@ -426,7 +426,7 @@ export default function OrderDetailsPage() {
 
                             <Link
                               href={`/user/account/returns/request?orderId=${order.id}&orderItemId=${item.id}&type=return`}
-                              className="inline-flex items-center gap-2 border border-[#e63e62] px-4 py-2 text-[10px] font-semibold uppercase tracking-[1.2px] text-[#e63e62] transition hover:bg-[#e63e62] hover:text-white"
+                              className="inline-flex items-center gap-2 border border-[var(--color-primary)] px-4 py-2 text-[10px] font-semibold uppercase tracking-[1.2px] text-[var(--color-primary)] transition hover:bg-[var(--color-primary)] hover:text-white"
                             >
 
                               <RotateCcw size={13} />
@@ -437,7 +437,7 @@ export default function OrderDetailsPage() {
 
                             <Link
                               href={`/user/account/returns/request?orderId=${order.id}&orderItemId=${item.id}&type=exchange`}
-                              className="inline-flex items-center gap-2 border border-[#292524] px-4 py-2 text-[10px] font-semibold uppercase tracking-[1.2px] text-[#292524] transition hover:bg-[#A96870] hover:text-white"
+                              className="inline-flex items-center gap-2 border border-[#292524] px-4 py-2 text-[10px] font-semibold uppercase tracking-[1.2px] text-[#292524] transition hover:bg-[var(--color-primary-hover)] hover:text-white"
                             >
 
                               <RefreshCw size={13} />
@@ -463,9 +463,9 @@ export default function OrderDetailsPage() {
             </div>
 
             {/* DELIVERY ADDRESS */}
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5]">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5]">
 
-              <div className="border-b border-[#E7DEDC] p-6">
+              <div className="border-b border-[#E5E5E5] p-6">
 
                 <div className="flex items-center gap-3">
 
@@ -511,11 +511,11 @@ export default function OrderDetailsPage() {
             {/* RETURN / EXCHANGE INFO */}
             {isDelivered && (
 
-              <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-6">
+              <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-6">
 
                 <div className="flex items-start gap-4">
 
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-white">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-white">
 
                     <RefreshCw size={18} />
 
@@ -535,7 +535,7 @@ export default function OrderDetailsPage() {
 
                     <Link
                       href="/user/account/returns"
-                      className="mt-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#e63e62] hover:underline"
+                      className="mt-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[var(--color-primary)] hover:underline"
                     >
 
                       View Return & Exchange Requests
@@ -561,9 +561,9 @@ export default function OrderDetailsPage() {
           <aside className="space-y-8">
 
             {/* SUMMARY */}
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5]">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5]">
 
-              <div className="border-b border-[#E7DEDC] p-6">
+              <div className="border-b border-[#E5E5E5] p-6">
 
                 <h2 className="font-serif text-2xl">
                   Order Summary
@@ -597,7 +597,7 @@ export default function OrderDetailsPage() {
 
                 </div>
 
-                <div className="border-t border-[#E7DEDC] pt-4">
+                <div className="border-t border-[#E5E5E5] pt-4">
 
                   <div className="flex justify-between">
 
@@ -618,7 +618,7 @@ export default function OrderDetailsPage() {
             </div>
 
             {/* PAYMENT */}
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-6">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-6">
 
               <div className="flex items-center gap-3">
 
@@ -646,9 +646,9 @@ export default function OrderDetailsPage() {
             </div>
 
             {/* HELP */}
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-6">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-6">
 
-              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[#e63e62]">
+              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                 Need Help?
               </p>
 
@@ -663,7 +663,7 @@ export default function OrderDetailsPage() {
 
               <Link
                 href="/user/contact"
-                className="mt-5 border border-[#292524] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1.5px] transition hover:bg-[#A96870] hover:text-white"
+                className="mt-5 border border-[#292524] px-5 py-2.5 text-xs font-semibold uppercase tracking-[1.5px] transition hover:bg-[var(--color-primary-hover)] hover:text-white"
               >
                 Contact Us
               </Link>
