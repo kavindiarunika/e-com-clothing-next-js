@@ -315,11 +315,7 @@ export default function ProductCard({
           <button
             type="button"
             onClick={handleAddToCart}
-<<<<<<< HEAD
-            className="absolute bottom-0 left-0 right-0 z-30 flex translate-y-full items-center justify-center gap-2 bg-[#e63e62] py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition-transform duration-300 hover:bg-[#A96870] group-hover:translate-y-0 font-bold"
-=======
-            className="absolute bottom-0 left-0 right-0 z-30 flex translate-y-full items-center justify-center gap-2 bg-[var(--color-primary)] py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition-transform duration-300 hover:bg-[var(--color-primary-hover)] group-hover:translate-y-0"
->>>>>>> 3491e1565e547a01e556a06f4b199da5ed6a56ea
+            className="absolute bottom-0 left-0 right-0 z-30 flex min-h-11 translate-y-0 items-center justify-center gap-1 bg-[var(--color-primary)] px-1 py-2 text-[10px] font-semibold uppercase tracking-wide text-white transition-transform duration-300 hover:bg-[var(--color-primary-hover)] [@media(hover:hover)]:translate-y-full [@media(hover:hover)]:group-hover:translate-y-0 sm:gap-2 sm:py-3 sm:text-xs sm:tracking-[1.5px]"
           >
             <ShoppingBag
               size={16}
@@ -344,7 +340,7 @@ export default function ProductCard({
           href={`/user/product/${product.id}`}
         >
           <h3
-            className="text-sm font-medium text-[#292524] transition-colors hover:text-[var(--color-primary)]"
+            className="line-clamp-2 min-h-10 text-xs font-medium leading-5 text-[#292524] transition-colors hover:text-[var(--color-primary)] sm:text-sm"
           >
             {product.name}
           </h3>

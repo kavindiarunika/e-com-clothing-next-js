@@ -73,11 +73,7 @@ export default function NewArrivals() {
           </h2>
           <Link
             href="/user/shop?sort=newest"
-<<<<<<< HEAD
             className="group/button hidden min-h-10 items-center gap-2 bg-[var(--color-banner)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#A96870] sm:inline-flex sm:text-xs"
-=======
-            className="inline-flex shrink-0 items-center gap-3 bg-[var(--color-primary)] px-4 py-3 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[var(--color-primary-hover)] sm:min-h-[50px] sm:px-5 sm:text-sm"
->>>>>>> 3491e1565e547a01e556a06f4b199da5ed6a56ea
           >
             View All Products
             <ArrowRight

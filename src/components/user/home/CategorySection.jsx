@@ -169,16 +169,12 @@ export default function CategorySection() {
           </div>
 
           {categories.length > 1 && (
-            <div className="flex gap-2">
+            <div className="flex gap-2 self-end sm:self-auto">
               <button
                 type="button"
                 onClick={() => swiperRef.current?.slidePrev()}
                 aria-label="Previous categories"
-<<<<<<< HEAD
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition hover:bg-[#A96870] hover:text-white sm:h-10 sm:w-10"
-=======
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E5E5] text-[#292524] transition hover:bg-[var(--color-primary-hover)] hover:text-white"
->>>>>>> 3491e1565e547a01e556a06f4b199da5ed6a56ea
               >
                 <ArrowLeft size={18} />
               </button>
@@ -186,11 +182,7 @@ export default function CategorySection() {
                 type="button"
                 onClick={() => swiperRef.current?.slideNext()}
                 aria-label="Next categories"
-<<<<<<< HEAD
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition hover:bg-[#A96870] hover:text-white sm:h-10 sm:w-10"
-=======
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E5E5] text-[#292524] transition hover:bg-[var(--color-primary-hover)] hover:text-white"
->>>>>>> 3491e1565e547a01e556a06f4b199da5ed6a56ea
               >
                 <ArrowRight size={18} />
               </button>
@@ -200,7 +192,7 @@ export default function CategorySection() {
 
         {/* Four featured categories */}
 
-        <div         className="flex min-w-0 items-center justify-center gap-4 lg:gap-5">
+        <div className="flex min-w-0 items-center justify-center gap-4 lg:gap-5">
 
           {/* ===================================================
               LEFT SIDE - 3 SMALL CARDS
@@ -317,8 +309,8 @@ export default function CategorySection() {
                   h-[300px]
                   w-full
                   overflow-hidden
-                  rounded-tr-[3rem]
-                  rounded-bl-[3rem]
+                  rounded-tr-[2rem]
+                  rounded-bl-[2rem]
                   bg-[#EFECE6]
                   shadow-[0_10px_35px_rgba(50,45,41,0.12)]
                   cursor-pointer

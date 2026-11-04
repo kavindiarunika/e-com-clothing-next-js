@@ -374,7 +374,7 @@ export default function ShopPage({
             onClick={() =>
               setMobileFiltersOpen(true)
             }
-            className="flex items-center gap-2 border border-[#E5E5E5] bg-white px-4 py-2.5 text-sm text-[#292524]"
+            className="flex min-h-11 items-center gap-2 border border-[#E5E5E5] bg-white px-4 py-2.5 text-sm text-[#292524]"
           >
             <SlidersHorizontal size={17} />
             Filters
@@ -616,10 +616,10 @@ export default function ShopPage({
           />
 
           {/* Drawer */}
-          <div className="absolute right-0 top-0 h-full w-[85%] max-w-[360px] overflow-y-auto bg-[#FFFFFF]">
+          <div className="absolute right-0 top-0 h-dvh w-[85%] max-w-[360px] overflow-y-auto bg-[#FFFFFF]">
 
             {/* Drawer Header */}
-            <div className="flex items-center justify-between border-b border-[#E5E5E5] bg-white px-5 py-5">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#E5E5E5] bg-white px-5 py-2.5">
 
               <h2 className="font-serif text-xl text-[#292524]">
                 Filters
@@ -630,7 +630,7 @@ export default function ShopPage({
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="text-[#292524]"
+                className="flex h-11 w-11 items-center justify-center text-[#292524]"
               >
                 <X size={22} />
               </button>
@@ -706,18 +706,19 @@ export default function ShopPage({
                   setCurrentPage(1);
                 }}
               />
+            </div>
 
-              {/* Apply */}
+            {/* Apply */}
+            <div className="sticky bottom-0 z-10 border-t border-[#E5E5E5] bg-white px-6 py-3">
               <button
                 type="button"
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="mt-8 w-full bg-[var(--color-primary)] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
+                className="min-h-11 w-full bg-[var(--color-primary)] px-4 py-3 text-xs font-medium uppercase tracking-[1px] text-white"
               >
                 Show {filteredProducts.length} Products
               </button>
-
             </div>
           </div>
         </div>

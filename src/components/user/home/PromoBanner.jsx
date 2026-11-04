@@ -189,15 +189,9 @@ export default function PromoBanner() {
                   CONTENT
               ===================================================== */}
 
-<<<<<<< HEAD
-              <div className="relative z-10 flex min-h-[168px] w-full items-center px-4 py-4 sm:min-h-[208px] sm:px-7 sm:py-6">
+              <div className="relative z-10 flex min-h-[188px] w-full items-center px-4 py-4 sm:min-h-[208px] sm:px-7 sm:py-6">
                 <div className="flex w-full flex-col items-start gap-3 sm:gap-4">
                   <div className="flex items-center gap-2 text-[var(--color-banner)]">
-=======
-              <div className="relative z-10 flex min-h-[208px] w-full items-center px-5 py-6 sm:px-7">
-                <div className="flex w-full flex-col items-start gap-4">
-                  <div className="flex items-center gap-2 text-white">
->>>>>>> 3491e1565e547a01e556a06f4b199da5ed6a56ea
                     <Sparkles size={15} strokeWidth={1.8} />
                     <span className="text-[10px] font-semibold uppercase tracking-[2px]">
                       Exclusive Offer
@@ -205,12 +199,12 @@ export default function PromoBanner() {
                   </div>
 
                   <div className="w-full">
-                    <h2 className="text-xl font-semibold leading-tight tracking-wide text-white sm:text-2xl">
+                    <h2 className="text-lg font-semibold leading-tight tracking-wide text-white sm:text-2xl">
                       {offer.title}
                     </h2>
                     {offer.description && (
                       <div
-                        className="mt-2 line-clamp-3 text-sm leading-relaxed text-white/85 sm:text-base"
+                        className="mt-2 line-clamp-2 text-xs leading-relaxed text-white/85 sm:line-clamp-3 sm:text-base"
                         dangerouslySetInnerHTML={{
                           __html: sanitizeProductDescription(offer.description),
                         }}
@@ -232,11 +226,7 @@ export default function PromoBanner() {
                     {offer.link && (
                       <Link
                         href={offer.link}
-<<<<<<< HEAD
                         className="group/button inline-flex min-h-10 items-center gap-2 bg-[var(--color-banner)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#A96870] sm:text-xs"
-=======
-                        className="group/button inline-flex min-h-10 items-center gap-2 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-black transition-colors duration-300 hover:bg-[#E5E5E5] sm:text-xs"
->>>>>>> 3491e1565e547a01e556a06f4b199da5ed6a56ea
                       >
                         <span>Get Offer</span>
                         <ArrowRight

@@ -239,7 +239,7 @@ export default function Navbar() {
           MAIN NAVBAR
       ===================================================== */}
 
-      <div className="mx-auto flex h-19 w-[92%] max-w-300 items-center justify-between">
+      <div className="mx-auto flex h-16 w-[94%] max-w-300 items-center justify-between gap-2 sm:h-19 sm:w-[92%]">
 
         {/* =====================================================
             LOGO
@@ -248,7 +248,7 @@ export default function Navbar() {
         <Link
           href="/user"
           onClick={closeMenu}
-          className={`flex items-center gap-2 ${searchOpen ? "hidden" : ""}`}
+          className={`flex min-w-0 items-center gap-1 sm:gap-2 ${searchOpen ? "hidden" : ""}`}
         >
           <Image
             src="/images/logo/logo.png"
@@ -256,10 +256,10 @@ export default function Navbar() {
             width={70}
             height={70}
             priority
-            className="h-17.5 w-17.5 object-contain"
+            className="h-13 w-13 shrink-0 object-contain sm:h-17.5 sm:w-17.5"
           />
 
-          <span className="font-serif text-[24px] font-bold tracking-[3px] text-white">
+          <span className="font-serif text-xl font-bold tracking-[2px] text-white sm:text-[24px] sm:tracking-[3px]">
             VELORA
           </span>
         </Link>
@@ -267,7 +267,7 @@ export default function Navbar() {
         {searchOpen && (
           <form
             onSubmit={submitSearch}
-            className="flex h-11 min-w-0 flex-1 items-center gap-3 rounded-md border border-[#E5DDD5] bg-white px-3 text-[#292524] shadow-sm sm:mx-6 sm:h-12 sm:px-4"
+            className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-md border border-[#E5DDD5] bg-white px-2.5 text-[#292524] shadow-sm sm:mx-6 sm:h-12 sm:gap-3 sm:px-4"
           >
             <Search size={19} className="shrink-0 text-[var(--color-primary)]" />
             <input
@@ -540,12 +540,12 @@ export default function Navbar() {
             MOBILE MENU BUTTON
         ===================================================== */}
 
-        <div className={`flex items-center gap-5 md:hidden ${searchOpen ? "hidden" : ""}`}>
+        <div className={`flex shrink-0 items-center gap-3 sm:gap-5 md:hidden ${searchOpen ? "hidden" : ""}`}>
           <button
             type="button"
             onClick={openSearch}
             aria-label="Search products"
-            className="flex items-center justify-center transition hover:text-white"
+            className="flex h-11 w-11 items-center justify-center transition hover:text-white"
           >
             <Search size={21} strokeWidth={1.7} />
           </button>
@@ -554,7 +554,7 @@ export default function Navbar() {
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
-            className="flex items-center justify-center"
+            className="flex h-11 w-11 items-center justify-center"
           >
             {mobileMenuOpen ? (
               <X size={25} strokeWidth={1.7} />
@@ -571,7 +571,7 @@ export default function Navbar() {
       ===================================================== */}
 
       {mobileMenuOpen && (
-        <div className="border-t border-white/10 bg-black px-[6%] pb-6 md:hidden">
+        <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-white/10 bg-black px-[6%] pb-6 md:hidden">
 
           <nav className="flex flex-col">
 
