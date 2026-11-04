@@ -315,7 +315,7 @@ export default function ProductCard({
           <button
             type="button"
             onClick={handleAddToCart}
-            className="absolute bottom-0 left-0 right-0 z-30 flex translate-y-full items-center justify-center gap-2 bg-[#e63e62] py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition-transform duration-300 hover:bg-[#A96870] group-hover:translate-y-0"
+            className="absolute bottom-0 left-0 right-0 z-30 flex translate-y-full items-center justify-center gap-2 bg-[#e63e62] py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition-transform duration-300 hover:bg-[#A96870] group-hover:translate-y-0 font-bold"
           >
             <ShoppingBag
               size={16}

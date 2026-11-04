@@ -7,10 +7,10 @@ import Newsletter from "../../components/user/home/Newsletter";
 
 export default function Home() {
   return (
-     <main className="min-h-screen bg-[#FFFFFF]">
+     <main className="min-h-screen overflow-x-clip bg-[#FFFFFF]">
       <HeroBanner />
 
-      <div className="mx-[4px]">
+      <div className="mx-3 sm:mx-[4px]">
         <CategorySection />
         <FeaturedProducts />
         <NewArrivals />

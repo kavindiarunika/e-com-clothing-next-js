@@ -154,16 +154,16 @@ export default function CategorySection() {
   };
 
   return (
-    <section className="bg-[#FFFFFF] px-0 py-10 md:py-12">
+    <section className="bg-[#FFFFFF] px-0 py-7 sm:py-10 md:py-12">
       <div className="mx-0 w-full max-w-none">
 
         {/* =====================================================
             SECTION HEADER
         ===================================================== */}
 
-        <div className="mb-8 flex items-end justify-between md:mb-10">
+        <div className="mb-5 flex items-end justify-between gap-3 sm:mb-8 md:mb-10">
           <div>
-            <h2 className="font-serif text-[32px] font-bold tracking-wide text-[#292524] sm:text-[38px]">
+            <h2 className="font-serif text-2xl font-bold leading-tight tracking-wide text-[#292524] sm:text-[38px]">
               Shop by Category
             </h2>
           </div>
@@ -174,7 +174,7 @@ export default function CategorySection() {
                 type="button"
                 onClick={() => swiperRef.current?.slidePrev()}
                 aria-label="Previous categories"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition hover:bg-[#A96870] hover:text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition hover:bg-[#A96870] hover:text-white sm:h-10 sm:w-10"
               >
                 <ArrowLeft size={18} />
               </button>
@@ -182,7 +182,7 @@ export default function CategorySection() {
                 type="button"
                 onClick={() => swiperRef.current?.slideNext()}
                 aria-label="Next categories"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition hover:bg-[#A96870] hover:text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition hover:bg-[#A96870] hover:text-white sm:h-10 sm:w-10"
               >
                 <ArrowRight size={18} />
               </button>
@@ -192,7 +192,7 @@ export default function CategorySection() {
 
         {/* Four featured categories */}
 
-        <div className="flex items-center justify-center gap-4 lg:gap-5">
+        <div         className="flex min-w-0 items-center justify-center gap-4 lg:gap-5">
 
           {/* ===================================================
               LEFT SIDE - 3 SMALL CARDS
@@ -296,7 +296,7 @@ export default function CategorySection() {
               1024: { slidesPerView: 3, spaceBetween: 20 },
               1280: { slidesPerView: 4, spaceBetween: 20 },
             }}
-            className="w-full"
+            className="w-full min-w-0"
           >
             {categories.map((category) => (
               <SwiperSlide key={category.category_id || category.name}>
@@ -306,7 +306,7 @@ export default function CategorySection() {
                   group
                   relative
                   block
-                  h-[360px]
+                  h-[300px]
                   w-full
                   overflow-hidden
                   rounded-tr-[3rem]
@@ -314,7 +314,8 @@ export default function CategorySection() {
                   bg-[#EFECE6]
                   shadow-[0_10px_35px_rgba(50,45,41,0.12)]
                   cursor-pointer
-                  sm:h-[400px]
+                  sm:h-[360px]
+                  md:h-[400px]
                   xl:h-[440px]
                   "
                 >

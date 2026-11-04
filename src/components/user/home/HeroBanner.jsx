@@ -61,8 +61,8 @@ export default function HeroBanner() {
   // Skeleton while fetching — avoids a jarring layout pop-in
   if (loading) {
     return (
-      <section className="user-page-full-bleed relative h-[400px] w-full overflow-hidden bg-[#292524]">
-        <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622]" />
+      <section className="user-page-full-bleed relative w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
+        <div className="h-[400px] w-full animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622] sm:absolute sm:inset-0 sm:h-full" />
         <PromoBanner />
       </section>
     );
@@ -70,36 +70,37 @@ export default function HeroBanner() {
 
   if (!slides.length) {
     return (
-      <section className="user-page-full-bleed relative min-h-[240px] w-full bg-[#292524]">
+      <section className="user-page-full-bleed relative min-h-[240px] w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
         <PromoBanner />
       </section>
     );
   }
 
   return (
-    <section className="user-page-full-bleed relative h-[400px] w-full overflow-hidden bg-[#292524]">
-      <Swiper
-        modules={[Autoplay, EffectFade, Navigation, Pagination]}
-        effect="fade"
-        fadeEffect={{ crossFade: true }}
-        loop={slides.length > 1}
-        speed={700}
-        autoplay={{
-          delay: AUTOPLAY_DELAY,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        }}
-        navigation={{ prevEl: ".velora-prev", nextEl: ".velora-next" }}
-        pagination={{ el: ".velora-pagination", clickable: true }}
-        onSwiper={(swiper) => {
-          swiperRef.current = swiper;
-        }}
-        onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-        className="h-full w-full"
-      >
-        {slides.map((slide, index) => (
-          <SwiperSlide key={`${slide.id || slide.image}-${index}`}>
-            <div className="relative h-[400px] w-full">
+    <section className="user-page-full-bleed relative w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
+      <div className="relative h-[400px] w-full sm:h-full">
+        <Swiper
+          modules={[Autoplay, EffectFade, Navigation, Pagination]}
+          effect="fade"
+          fadeEffect={{ crossFade: true }}
+          loop={slides.length > 1}
+          speed={700}
+          autoplay={{
+            delay: AUTOPLAY_DELAY,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          navigation={{ prevEl: ".velora-prev", nextEl: ".velora-next" }}
+          pagination={{ el: ".velora-pagination", clickable: true }}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+          className="h-full w-full"
+        >
+          {slides.map((slide, index) => (
+            <SwiperSlide key={`${slide.id || slide.image}-${index}`}>
+              <div className="relative h-full w-full">
               {/* IMAGE — slow Ken Burns drift, only while active */}
               <img
                 src={slide.image}
@@ -116,7 +117,7 @@ export default function HeroBanner() {
               <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#060302]/50 to-transparent" />
 
               {/* CONTENT */}
-              <div className="relative z-10 mx-auto flex h-full max-w-[1200px] items-center px-[5%]">
+              <div className="relative z-10 mx-auto flex h-full max-w-[1200px] items-center px-5 sm:px-[5%]">
                 <div
                   className={`max-w-[520px] text-white transition-all duration-700 ease-out ${
                     activeIndex === index
@@ -124,22 +125,22 @@ export default function HeroBanner() {
                       : "translate-y-6 opacity-0"
                   }`}
                 >
-                  <div className="mb-4 flex items-center gap-2.5">
+                  <div className="mb-3 flex items-center gap-2.5 sm:mb-4">
                     <span className="h-px w-8 bg-[#e63e62]" />
                     <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#FAF6F5]">
                       Velora
                     </span>
                   </div>
 
-                  <h1 className="max-w-[500px] font-serif text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl md:text-[48px]">
+                  <h1 className="max-w-[500px] text-[2rem] font-semibold leading-[1.08] tracking-tight [word-spacing:0.1em] text-white sm:text-4xl md:text-[48px]">
                     {slide.title}
                   </h1>
 
-                  <p className="mt-4 max-w-[440px] text-[13px] leading-6 text-white/70 sm:text-sm">
+                  <p className="mt-3 max-w-[440px] text-[13px] leading-5 text-white/70 sm:mt-4 sm:text-sm sm:leading-6">
                     {slide.subtitle}
                   </p>
 
-                  <div className="mt-7">
+                  <div className="mt-5 sm:mt-7">
                     <Link
                       href={slide.buttonLink || "/user/shop"}
                       className="group relative inline-flex h-11 items-center gap-2.5 overflow-hidden bg-[#e63e62] px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-white transition-colors duration-300 hover:bg-[#A96870]"
@@ -171,15 +172,13 @@ export default function HeroBanner() {
                 </span>
               </div>
             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-
-      <PromoBanner />
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
       {/* NAVIGATION */}
       {slides.length > 1 && (
-        <div className="absolute bottom-6 left-[5%] z-30 flex gap-2">
+        <div className="absolute bottom-5 left-5 z-30 flex gap-2 sm:bottom-6 sm:left-[5%]">
           <button
             type="button"
             aria-label="Previous slide"
@@ -199,7 +198,9 @@ export default function HeroBanner() {
 
       {/* PAGINATION — custom bullets, active one elongates */}
       <div className="velora-pagination absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 gap-2" />
+      </div>
 
+      <PromoBanner />
       <style jsx global>{`
         .velora-pagination .swiper-pagination-bullet {
           width: 6px;
