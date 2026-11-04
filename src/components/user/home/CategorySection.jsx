@@ -161,15 +161,15 @@ export default function CategorySection() {
             SECTION HEADER
         ===================================================== */}
 
-        <div className="mb-8 flex items-end justify-between md:mb-10">
+        <div className="mb-6 flex flex-col items-start gap-3 sm:mb-8 sm:flex-row sm:items-end sm:justify-between md:mb-10">
           <div>
-            <h2 className="font-serif text-[32px] font-bold tracking-wide text-[#292524] sm:text-[38px]">
+            <h2 className="font-serif text-2xl font-bold tracking-wide text-[#292524] sm:text-[38px]">
               Shop by Category
             </h2>
           </div>
 
           {categories.length > 1 && (
-            <div className="flex gap-2">
+            <div className="flex gap-2 self-end sm:self-auto">
               <button
                 type="button"
                 onClick={() => swiperRef.current?.slidePrev()}
@@ -192,7 +192,7 @@ export default function CategorySection() {
 
         {/* Four featured categories */}
 
-        <div className="flex items-center justify-center gap-4 lg:gap-5">
+        <div className="flex min-w-0 items-center justify-center gap-4 lg:gap-5">
 
           {/* ===================================================
               LEFT SIDE - 3 SMALL CARDS
@@ -306,15 +306,16 @@ export default function CategorySection() {
                   group
                   relative
                   block
-                  h-[360px]
+                  h-[280px]
                   w-full
                   overflow-hidden
-                  rounded-tr-[3rem]
-                  rounded-bl-[3rem]
+                  rounded-tr-[2rem]
+                  rounded-bl-[2rem]
                   bg-[#EFECE6]
                   shadow-[0_10px_35px_rgba(50,45,41,0.12)]
                   cursor-pointer
-                  sm:h-[400px]
+                  sm:h-[360px]
+                  md:h-[400px]
                   xl:h-[440px]
                   "
                 >

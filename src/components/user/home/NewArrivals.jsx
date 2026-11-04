@@ -67,13 +67,13 @@ export default function NewArrivals() {
       <div className="mx-0 w-full max-w-none">
 
         {/* Heading */}
-        <div className="mb-8 flex items-end justify-between md:mb-10">
-          <h2 className="font-serif text-[32px] font-bold tracking-wide text-[#292524] sm:text-[38px]">
+        <div className="mb-6 flex flex-col items-start gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between md:mb-10">
+          <h2 className="font-serif text-2xl font-bold tracking-wide text-[#292524] sm:text-[38px]">
             New Arrivals
           </h2>
           <Link
             href="/user/shop?sort=newest"
-            className="inline-flex shrink-0 items-center gap-3 bg-[var(--color-primary)] px-4 py-3 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[var(--color-primary-hover)] sm:min-h-[50px] sm:px-5 sm:text-sm"
+            className="inline-flex min-h-11 shrink-0 items-center gap-2 bg-[var(--color-primary)] px-3 py-3 text-[10px] font-bold uppercase tracking-[1px] text-white transition-colors duration-300 hover:bg-[var(--color-primary-hover)] sm:gap-3 sm:px-5 sm:text-sm sm:tracking-[1.2px]"
           >
             View All Products
             <ArrowRight size={16} strokeWidth={1.8} aria-hidden="true" />

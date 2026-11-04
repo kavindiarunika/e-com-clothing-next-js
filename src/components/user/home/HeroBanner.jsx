@@ -61,8 +61,10 @@ export default function HeroBanner() {
   // Skeleton while fetching — avoids a jarring layout pop-in
   if (loading) {
     return (
-      <section className="user-page-full-bleed relative h-[400px] w-full overflow-hidden bg-[#292524]">
-        <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622]" />
+      <section className="user-page-full-bleed relative w-full overflow-visible bg-[#292524]">
+        <div className="relative h-[350px] w-full sm:h-[400px]">
+          <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622]" />
+        </div>
         <PromoBanner />
       </section>
     );
@@ -70,14 +72,14 @@ export default function HeroBanner() {
 
   if (!slides.length) {
     return (
-      <section className="user-page-full-bleed relative min-h-[240px] w-full bg-[#292524]">
+      <section className="user-page-full-bleed relative min-h-[220px] w-full bg-[#292524] sm:min-h-[240px]">
         <PromoBanner />
       </section>
     );
   }
 
   return (
-    <section className="user-page-full-bleed relative h-[400px] w-full overflow-hidden bg-[#292524]">
+    <section className="user-page-full-bleed relative w-full overflow-visible bg-[#292524]">
       <Swiper
         modules={[Autoplay, EffectFade, Navigation, Pagination]}
         effect="fade"
@@ -95,11 +97,11 @@ export default function HeroBanner() {
           swiperRef.current = swiper;
         }}
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-        className="h-full w-full"
+        className="h-[350px] w-full sm:h-[400px]"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={`${slide.id || slide.image}-${index}`}>
-            <div className="relative h-[400px] w-full">
+            <div className="relative h-[350px] w-full sm:h-[400px]">
               {/* IMAGE — slow Ken Burns drift, only while active */}
               <img
                 src={slide.image}
@@ -116,7 +118,7 @@ export default function HeroBanner() {
               <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#060302]/50 to-transparent" />
 
               {/* CONTENT */}
-              <div className="relative z-10 mx-auto flex h-full max-w-[1200px] items-center px-[5%]">
+              <div className="relative z-10 mx-auto flex h-full max-w-[1200px] items-center px-5 sm:px-[5%]">
                 <div
                   className={`max-w-[520px] text-white transition-all duration-700 ease-out ${
                     activeIndex === index
@@ -124,7 +126,7 @@ export default function HeroBanner() {
                       : "translate-y-6 opacity-0"
                   }`}
                 >
-                  <div className="mb-4 flex items-center gap-2.5">
+                  <div className="mb-3 flex items-center gap-2.5 sm:mb-4">
                     <span className="h-px w-8 bg-white" />
                     <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#F5F5F5]">
                       Velora
@@ -135,14 +137,14 @@ export default function HeroBanner() {
                     {slide.title}
                   </h1>
 
-                  <p className="mt-4 max-w-[440px] text-[13px] leading-6 text-white/70 sm:text-sm">
+                  <p className="mt-3 max-w-[440px] text-xs leading-5 text-white/80 sm:mt-4 sm:text-sm sm:leading-6">
                     {slide.subtitle}
                   </p>
 
-                  <div className="mt-7">
+                  <div className="mt-5 sm:mt-7">
                     <Link
                       href={slide.buttonLink || "/user/shop"}
-                      className="group relative inline-flex h-11 items-center gap-2.5 overflow-hidden bg-white px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-black transition-colors duration-300 hover:bg-[#E5E5E5]"
+                      className="group relative inline-flex min-h-11 items-center gap-2.5 overflow-hidden bg-white px-5 text-[10px] font-bold uppercase tracking-[1.4px] text-black transition-colors duration-300 hover:bg-[#E5E5E5] sm:px-7 sm:tracking-[1.8px]"
                     >
                       <ShoppingBag
                         size={14}
