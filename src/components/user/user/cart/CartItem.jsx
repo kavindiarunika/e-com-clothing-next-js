@@ -75,12 +75,12 @@ export default function CartItem({
                 Quantity
               </p>
 
-              <div className="flex h-9 items-center border border-[#E7DEDC] bg-[#FAF6F5]">
+              <div className="flex h-9 items-center border border-[#E5E5E5] bg-[#F5F5F5]">
                 <button
                   type="button"
                   onClick={() => onDecrease(item)}
                   disabled={quantity <= 1}
-                  className="flex h-9 w-8 items-center justify-center text-[#292524] transition hover:bg-[#FFFFFF] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:opacity-25"
+                  className="flex h-9 w-8 items-center justify-center text-[#292524] transition hover:bg-[#FFFFFF] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-25"
                   aria-label={`Decrease quantity of ${
                     item.name || "item"
                   }`}
@@ -88,7 +88,7 @@ export default function CartItem({
                   <Minus size={13} strokeWidth={1.7} />
                 </button>
 
-                <span className="flex h-9 min-w-9 items-center justify-center border-x border-[#E7DEDC] px-2 text-xs font-medium text-[#292524]">
+                <span className="flex h-9 min-w-9 items-center justify-center border-x border-[#E5E5E5] px-2 text-xs font-medium text-[#292524]">
                   {quantity}
                 </span>
 
@@ -96,7 +96,7 @@ export default function CartItem({
                   type="button"
                   onClick={() => onIncrease(item)}
                   disabled={quantity >= Number(item.stock || 0)}
-                  className="flex h-9 w-8 items-center justify-center text-[#292524] transition hover:bg-[#FFFFFF] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:opacity-25"
+                  className="flex h-9 w-8 items-center justify-center text-[#292524] transition hover:bg-[#FFFFFF] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-25"
                   aria-label={`Increase quantity of ${
                     item.name || "item"
                   }`}
@@ -113,7 +113,7 @@ export default function CartItem({
                   Total
                 </p>
 
-                <p className="mt-1 font-medium text-[#e63e62] sm:text-[15px]">
+                <p className="mt-1 font-medium text-[var(--color-primary)] sm:text-[15px]">
                   Rs. {total.toLocaleString()}
                 </p>
               </div>

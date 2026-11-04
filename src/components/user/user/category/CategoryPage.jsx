@@ -265,11 +265,11 @@ export default function CategoryPage({
 
       {/* ================= HEADER ================= */}
 
-      <section className="border-b border-[#E7DEDC] bg-[#FFFFFF]">
+      <section className="border-b border-[#E5E5E5] bg-[#FFFFFF]">
 
         <div className="mx-auto w-[92%] max-w-300 py-12 md:py-16">
 
-          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#e63e62]">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[var(--color-primary)]">
             Velora Collection
           </p>
 
@@ -277,7 +277,7 @@ export default function CategoryPage({
 
             <Link
               href="/"
-              className="transition hover:text-[#e63e62]"
+              className="transition hover:text-[var(--color-primary)]"
             >
               Home
             </Link>
@@ -313,7 +313,7 @@ export default function CategoryPage({
             onClick={() =>
               setMobileFiltersOpen(true)
             }
-            className="flex w-full items-center justify-center gap-2 border border-[#E7DEDC] bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-[#292524]"
+            className="flex w-full items-center justify-center gap-2 border border-[#E5E5E5] bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-[#292524]"
           >
             <SlidersHorizontal size={16} />
 
@@ -356,7 +356,7 @@ export default function CategoryPage({
               onClick={() => setDesktopFiltersOpen((open) => !open)}
               aria-expanded={desktopFiltersOpen}
               aria-controls="legacy-category-filter-sidebar"
-              className="hidden items-center gap-2 text-sm text-[#292524] hover:text-[#e63e62] lg:flex"
+              className="hidden items-center gap-2 text-sm text-[#292524] hover:text-[var(--color-primary)] lg:flex"
             >
               <SlidersHorizontal size={16} />
               {desktopFiltersOpen ? "Hide filters" : "Show filters"}
@@ -379,8 +379,8 @@ export default function CategoryPage({
                   className={`whitespace-nowrap border px-5 py-2.5 text-xs uppercase tracking-[1px] transition ${
                     selectedSubcategory ===
                     subcategoryItem
-                      ? "border-[#e63e62] bg-[#e63e62] text-white"
-                      : "border-[#E7DEDC] bg-white text-[#292524] hover:border-[#e63e62]"
+                      ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
+                      : "border-[#E5E5E5] bg-white text-[#292524] hover:border-[var(--color-primary)]"
                   }`}
                 >
                   {subcategoryItem}
@@ -405,7 +405,7 @@ export default function CategoryPage({
                   type="button"
                   onClick={() => setDesktopFiltersOpen(false)}
                   aria-label="Close filters"
-                  className="text-[#6B625C] hover:text-[#e63e62]"
+                  className="text-[#6B625C] hover:text-[var(--color-primary)]"
                 >
                   <X size={18} />
                 </button>
@@ -463,7 +463,7 @@ export default function CategoryPage({
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="mt-5 bg-[#e63e62] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
+                    className="mt-5 bg-[var(--color-primary)] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[var(--color-primary-hover)]"
                   >
                     Clear Filters
                   </button>
@@ -553,7 +553,7 @@ export default function CategoryPage({
               onClick={() =>
                 setMobileFiltersOpen(false)
               }
-              className="mt-6 w-full bg-[#e63e62] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
+              className="mt-6 w-full bg-[var(--color-primary)] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
             >
               View {filteredProducts.length} Products
             </button>

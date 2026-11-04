@@ -436,7 +436,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
       {/* ================= HEADER ================= */}
 
-      <section className="border-b border-[#E7DEDC] bg-[#FFFFFF]">
+      <section className="border-b border-[#E5E5E5] bg-[#FFFFFF]">
 
         <div className="mx-auto w-[92%] max-w-300 py-8 md:py-8">
 
@@ -445,7 +445,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
             <Link
               href="/"
-              className="transition hover:text-[#e63e62]"
+              className="transition hover:text-[var(--color-primary)]"
             >
               Home
             </Link>
@@ -478,7 +478,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
           <button
             type="button"
             onClick={() => setMobileFiltersOpen(true)}
-            className="flex items-center gap-2 border border-[#E7DEDC] bg-white px-4 py-2.5 text-sm text-[#292524]"
+            className="flex items-center gap-2 border border-[#E5E5E5] bg-white px-4 py-2.5 text-sm text-[#292524]"
           >
             <SlidersHorizontal size={17} />
             Filters
@@ -505,7 +505,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
               onClick={() => setDesktopFiltersOpen((open) => !open)}
               aria-expanded={desktopFiltersOpen}
               aria-controls="category-filter-sidebar"
-              className="flex items-center gap-2 text-sm text-[#292524] hover:text-[#e63e62]"
+              className="flex items-center gap-2 text-sm text-[#292524] hover:text-[var(--color-primary)]"
             >
               <SlidersHorizontal size={16} />
               {desktopFiltersOpen ? "Hide filters" : "Show filters"}
@@ -539,7 +539,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                   type="button"
                   onClick={() => setDesktopFiltersOpen(false)}
                   aria-label="Close filters"
-                  className="flex items-center gap-1 text-xs text-[#6B625C] hover:text-[#e63e62]"
+                  className="flex items-center gap-1 text-xs text-[#6B625C] hover:text-[var(--color-primary)]"
                 >
                   <X size={16} />
                   Close
@@ -632,7 +632,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="mt-5 bg-[#e63e62] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
+                    className="mt-5 bg-[var(--color-primary)] px-5 py-3 text-xs font-semibold uppercase tracking-[1px] text-white transition hover:bg-[var(--color-primary-hover)]"
                   >
                     Clear Filters
                   </button>
@@ -645,19 +645,19 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
             {filteredProducts.length > 0 && (
               <nav
                 aria-label="Product pagination"
-                className="mt-10 flex flex-col items-center justify-between gap-5 border-t border-[#E7DEDC] pt-6 sm:flex-row"
+                className="mt-10 flex flex-col items-center justify-between gap-5 border-t border-[#E5E5E5] pt-6 sm:flex-row"
               >
                 <p className="text-sm text-[#6B625C]">
                   Showing <span className="font-semibold text-[#292524]">{firstVisibleProduct}-{lastVisibleProduct}</span> of {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
                 </p>
 
-                <div className="inline-flex items-center gap-1 border border-[#E7DEDC] bg-white p-1 shadow-sm">
+                <div className="inline-flex items-center gap-1 border border-[#E5E5E5] bg-white p-1 shadow-sm">
                   <button
                     type="button"
                     onClick={() => changePage(activePage - 1)}
                     disabled={activePage === 1}
                     aria-label="Go to previous page"
-                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F5F5F5] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
                   >
                     <ChevronLeft size={17} />
                   </button>
@@ -665,7 +665,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                   <span
                     aria-current="page"
                     aria-label={`Page ${activePage} of ${pageCount}`}
-                    className="flex h-9 min-w-9 items-center justify-center bg-[#e63e62] px-3 text-xs font-semibold text-white shadow-sm"
+                    className="flex h-9 min-w-9 items-center justify-center bg-[var(--color-primary)] px-3 text-xs font-semibold text-white shadow-sm"
                   >
                     {activePage}
                   </span>
@@ -675,7 +675,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                     onClick={() => changePage(activePage + 1)}
                     disabled={activePage === pageCount}
                     aria-label="Go to next page"
-                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F5F5F5] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
                   >
                     <ChevronRight size={17} />
                   </button>
@@ -727,7 +727,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
             </div>
 
-            <div className="mb-6 rounded-sm bg-[#FAF6F5] p-2">
+            <div className="mb-6 rounded-sm bg-[#F5F5F5] p-2">
               <SearchBar
                 value={searchTerm}
                 onChange={(value) => {
@@ -741,7 +741,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
               <button
                 type="button"
                 onClick={clearFilters}
-                className="text-xs text-[#e63e62] hover:underline"
+                className="text-xs text-[var(--color-primary)] hover:underline"
               >
                 Clear All
               </button>
@@ -777,7 +777,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
               onClick={() =>
                 setMobileFiltersOpen(false)
               }
-              className="mt-6 w-full bg-[#e63e62] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
+              className="mt-6 w-full bg-[var(--color-primary)] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
             >
               View {filteredProducts.length} Products
             </button>

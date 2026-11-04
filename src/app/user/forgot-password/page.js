@@ -192,7 +192,7 @@ export default function ForgotPasswordPage() {
               VELORA
             </Link>
 
-            <div className="mx-auto mt-5 h-px w-10 bg-[#e63e62]" />
+            <div className="mx-auto mt-5 h-px w-10 bg-[var(--color-primary)]" />
           </div>
 
           {/* =========================
@@ -201,8 +201,8 @@ export default function ForgotPasswordPage() {
           <div
             className="
               border
-              border-[#E7DEDC]
-              bg-[#FAF6F5]
+              border-[#E5E5E5]
+              bg-[#F5F5F5]
               px-6
               py-8
               shadow-[0_20px_60px_rgba(50,45,41,0.08)]
@@ -226,8 +226,8 @@ export default function ForgotPasswordPage() {
               <div
                 className={`h-px w-10 ${
                   step > 1
-                    ? "bg-[#e63e62]"
-                    : "bg-[#E7DEDC]"
+                    ? "bg-[var(--color-primary)]"
+                    : "bg-[#E5E5E5]"
                 }`}
               />
 
@@ -241,8 +241,8 @@ export default function ForgotPasswordPage() {
               <div
                 className={`h-px w-10 ${
                   step > 2
-                    ? "bg-[#e63e62]"
-                    : "bg-[#E7DEDC]"
+                    ? "bg-[var(--color-primary)]"
+                    : "bg-[#E5E5E5]"
                 }`}
               />
 
@@ -272,8 +272,8 @@ export default function ForgotPasswordPage() {
                       items-center
                       justify-center
                       rounded-full
-                      bg-[#FAF6F5]
-                      text-[#e63e62]
+                      bg-[#F5F5F5]
+                      text-[var(--color-primary)]
                     "
                   >
                     <Mail
@@ -289,7 +289,7 @@ export default function ForgotPasswordPage() {
                       font-semibold
                       uppercase
                       tracking-[3px]
-                      text-[#e63e62]
+                      text-[var(--color-primary)]
                     "
                   >
                     Password Recovery
@@ -353,7 +353,7 @@ export default function ForgotPasswordPage() {
                       className="
                         w-full
                         border
-                        border-[#E7DEDC]
+                        border-[#E5E5E5]
                         bg-white
                         px-4
                         py-3.5
@@ -362,7 +362,7 @@ export default function ForgotPasswordPage() {
                         outline-none
                         transition
                         placeholder:text-[#A69C94]
-                        focus:border-[#e63e62]
+                        focus:border-[var(--color-primary)]
                       "
                     />
                   </div>
@@ -389,7 +389,7 @@ export default function ForgotPasswordPage() {
                       text-white
                       transition
                       duration-300
-                      hover:bg-[#e63e62]
+                      hover:bg-[var(--color-primary)]
                       disabled:cursor-not-allowed
                       disabled:opacity-60
                     "
@@ -426,8 +426,8 @@ export default function ForgotPasswordPage() {
                       items-center
                       justify-center
                       rounded-full
-                      bg-[#FAF6F5]
-                      text-[#e63e62]
+                      bg-[#F5F5F5]
+                      text-[var(--color-primary)]
                     "
                   >
                     <ShieldCheck
@@ -443,7 +443,7 @@ export default function ForgotPasswordPage() {
                       font-semibold
                       uppercase
                       tracking-[3px]
-                      text-[#e63e62]
+                      text-[var(--color-primary)]
                     "
                   >
                     Verification
@@ -473,7 +473,7 @@ export default function ForgotPasswordPage() {
                     If an active account exists for this email, a code is on its way.
                   </p>
 
-                  <p className="mt-2 text-xs font-medium text-[#e63e62]">
+                  <p className="mt-2 text-xs font-medium text-[var(--color-primary)]">
                     {email}
                   </p>
                 </div>
@@ -517,7 +517,7 @@ export default function ForgotPasswordPage() {
                       className="
                         w-full
                         border
-                        border-[#E7DEDC]
+                        border-[#E5E5E5]
                         bg-white
                         px-4
                         py-4
@@ -530,7 +530,7 @@ export default function ForgotPasswordPage() {
                         transition
                         placeholder:text-[#A69C94]
                         placeholder:tracking-normal
-                        focus:border-[#e63e62]
+                        focus:border-[var(--color-primary)]
                       "
                     />
                   </div>
@@ -557,7 +557,7 @@ export default function ForgotPasswordPage() {
                       text-white
                       transition
                       duration-300
-                      hover:bg-[#e63e62]
+                      hover:bg-[var(--color-primary)]
                       disabled:cursor-not-allowed
                       disabled:opacity-60
                     "
@@ -588,14 +588,14 @@ export default function ForgotPasswordPage() {
                     className="
                       text-xs
                       font-medium
-                      text-[#e63e62]
-                      hover:text-[#A96870]
+                      text-[var(--color-primary)]
+                      hover:text-[var(--color-primary-hover)]
                     "
                   >
                     Change email
                   </button>
 
-                  <span className="mx-3 text-[#E7DEDC]">
+                  <span className="mx-3 text-[#E5E5E5]">
                     |
                   </span>
 
@@ -606,8 +606,8 @@ export default function ForgotPasswordPage() {
                     className="
                       text-xs
                       font-medium
-                      text-[#e63e62]
-                      hover:text-[#A96870]
+                      text-[var(--color-primary)]
+                      hover:text-[var(--color-primary-hover)]
                       disabled:cursor-not-allowed
                       disabled:opacity-60
                     "
@@ -635,8 +635,8 @@ export default function ForgotPasswordPage() {
                       items-center
                       justify-center
                       rounded-full
-                      bg-[#FAF6F5]
-                      text-[#e63e62]
+                      bg-[#F5F5F5]
+                      text-[var(--color-primary)]
                     "
                   >
                     <KeyRound
@@ -652,7 +652,7 @@ export default function ForgotPasswordPage() {
                       font-semibold
                       uppercase
                       tracking-[3px]
-                      text-[#e63e62]
+                      text-[var(--color-primary)]
                     "
                   >
                     New Password
@@ -723,7 +723,7 @@ export default function ForgotPasswordPage() {
                         className="
                           w-full
                           border
-                          border-[#E7DEDC]
+                          border-[#E5E5E5]
                           bg-white
                           px-4
                           py-3.5
@@ -733,7 +733,7 @@ export default function ForgotPasswordPage() {
                           outline-none
                           transition
                           placeholder:text-[#A69C94]
-                          focus:border-[#e63e62]
+                          focus:border-[var(--color-primary)]
                         "
                       />
 
@@ -750,7 +750,7 @@ export default function ForgotPasswordPage() {
                           top-1/2
                           -translate-y-1/2
                           text-[#8B817A]
-                          hover:text-[#e63e62]
+                          hover:text-[var(--color-primary)]
                         "
                       >
                         {showPassword ? (
@@ -798,7 +798,7 @@ export default function ForgotPasswordPage() {
                         className="
                           w-full
                           border
-                          border-[#E7DEDC]
+                          border-[#E5E5E5]
                           bg-white
                           px-4
                           py-3.5
@@ -808,7 +808,7 @@ export default function ForgotPasswordPage() {
                           outline-none
                           transition
                           placeholder:text-[#A69C94]
-                          focus:border-[#e63e62]
+                          focus:border-[var(--color-primary)]
                         "
                       />
 
@@ -825,7 +825,7 @@ export default function ForgotPasswordPage() {
                           top-1/2
                           -translate-y-1/2
                           text-[#8B817A]
-                          hover:text-[#e63e62]
+                          hover:text-[var(--color-primary)]
                         "
                       >
                         {showConfirmPassword ? (
@@ -841,7 +841,7 @@ export default function ForgotPasswordPage() {
                   <div
                     className="
                       border
-                      border-[#E7DEDC]
+                      border-[#E5E5E5]
                       bg-[#FFFFFF]
                       px-4
                       py-3
@@ -874,7 +874,7 @@ export default function ForgotPasswordPage() {
                       text-white
                       transition
                       duration-300
-                      hover:bg-[#e63e62]
+                      hover:bg-[var(--color-primary)]
                       disabled:cursor-not-allowed
                       disabled:opacity-60
                     "
@@ -910,7 +910,7 @@ export default function ForgotPasswordPage() {
                     items-center
                     justify-center
                     rounded-full
-                    bg-[#e63e62]
+                    bg-[var(--color-primary)]
                     text-white
                   "
                 >
@@ -924,7 +924,7 @@ export default function ForgotPasswordPage() {
                     font-semibold
                     uppercase
                     tracking-[3px]
-                    text-[#e63e62]
+                    text-[var(--color-primary)]
                   "
                 >
                   All Done
@@ -974,7 +974,7 @@ export default function ForgotPasswordPage() {
                     text-white
                     transition
                     duration-300
-                    hover:bg-[#e63e62]
+                    hover:bg-[var(--color-primary)]
                   "
                 >
                   Back to Login
@@ -1008,7 +1008,7 @@ export default function ForgotPasswordPage() {
                   tracking-[1.5px]
                   text-[#6B625C]
                   transition
-                  hover:text-[#e63e62]
+                  hover:text-[var(--color-primary)]
                 "
               >
                 <ArrowLeft size={14} />
@@ -1042,8 +1042,8 @@ function Step({ number, active, completed }) {
         transition
         ${
           active
-            ? "bg-[#e63e62] text-white"
-            : "bg-[#FAF6F5] text-[#8B817A]"
+            ? "bg-[var(--color-primary)] text-white"
+            : "bg-[#F5F5F5] text-[#8B817A]"
         }
       `}
     >

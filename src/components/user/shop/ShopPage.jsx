@@ -374,7 +374,7 @@ export default function ShopPage({
             onClick={() =>
               setMobileFiltersOpen(true)
             }
-            className="flex items-center gap-2 border border-[#E7DEDC] bg-white px-4 py-2.5 text-sm text-[#292524]"
+            className="flex items-center gap-2 border border-[#E5E5E5] bg-white px-4 py-2.5 text-sm text-[#292524]"
           >
             <SlidersHorizontal size={17} />
             Filters
@@ -404,7 +404,7 @@ export default function ShopPage({
                   type="button"
                   onClick={() => setDesktopFiltersOpen(false)}
                   aria-label="Close filters"
-                  className="flex items-center gap-1 text-xs text-[#6B625C] hover:text-[#e63e62]"
+                  className="flex items-center gap-1 text-xs text-[#6B625C] hover:text-[var(--color-primary)]"
                 >
                   <X size={16} />
                   Close
@@ -428,7 +428,7 @@ export default function ShopPage({
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs text-[#e63e62] hover:underline"
+                  className="text-xs text-[var(--color-primary)] hover:underline"
                 >
                   Clear
                 </button>
@@ -472,7 +472,7 @@ export default function ShopPage({
                   onClick={() => setDesktopFiltersOpen((open) => !open)}
                   aria-expanded={desktopFiltersOpen}
                   aria-controls="shop-filter-sidebar"
-                  className="flex items-center gap-2 text-sm text-[#292524] hover:text-[#e63e62]"
+                  className="flex items-center gap-2 text-sm text-[#292524] hover:text-[var(--color-primary)]"
                 >
                   <SlidersHorizontal size={16} />
                   {desktopFiltersOpen ? "Hide filters" : "Show filters"}
@@ -495,7 +495,7 @@ export default function ShopPage({
               </div>
             ) : productLoadError ? (
               <div className="flex min-h-[350px] items-center justify-center bg-white px-6 text-center">
-                <p className="text-sm text-[#e63e62]">{productLoadError}</p>
+                <p className="text-sm text-[var(--color-primary)]">{productLoadError}</p>
               </div>
             ) : filteredProducts.length > 0 ? (
               <div
@@ -531,7 +531,7 @@ export default function ShopPage({
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-6 bg-[#e63e62] px-6 py-3 text-xs font-medium uppercase tracking-[1px] text-white transition hover:bg-[#A96870]"
+                  className="mt-6 bg-[var(--color-primary)] px-6 py-3 text-xs font-medium uppercase tracking-[1px] text-white transition hover:bg-[var(--color-primary-hover)]"
                 >
                   Clear Filters
                 </button>
@@ -542,19 +542,19 @@ export default function ShopPage({
             {filteredProducts.length > 0 && (
               <nav
                 aria-label="Product pagination"
-                className="mt-10 flex flex-col items-center justify-between gap-5 border-t border-[#E7DEDC] pt-6 sm:flex-row"
+                className="mt-10 flex flex-col items-center justify-between gap-5 border-t border-[#E5E5E5] pt-6 sm:flex-row"
               >
                 <p className="text-sm text-[#6B625C]">
                   Showing <span className="font-semibold text-[#292524]">{firstVisibleProduct}-{lastVisibleProduct}</span> of {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
                 </p>
 
-                <div className="inline-flex items-center gap-1 border border-[#E7DEDC] bg-white p-1 shadow-sm">
+                <div className="inline-flex items-center gap-1 border border-[#E5E5E5] bg-white p-1 shadow-sm">
                   <button
                     type="button"
                     onClick={() => changePage(activePage - 1)}
                     disabled={activePage === 1}
                     aria-label="Go to previous page"
-                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F5F5F5] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
                   >
                     <ChevronLeft size={17} />
                   </button>
@@ -569,8 +569,8 @@ export default function ShopPage({
                         aria-current={activePage === item ? "page" : undefined}
                         className={`h-9 min-w-9 px-3 text-xs font-semibold transition ${
                           activePage === item
-                            ? "bg-[#e63e62] text-white shadow-sm"
-                            : "text-[#292524] hover:bg-[#F8F5F2] hover:text-[#e63e62]"
+                            ? "bg-[var(--color-primary)] text-white shadow-sm"
+                            : "text-[#292524] hover:bg-[#F5F5F5] hover:text-[var(--color-primary)]"
                         }`}
                       >
                         {item}
@@ -591,7 +591,7 @@ export default function ShopPage({
                     onClick={() => changePage(activePage + 1)}
                     disabled={activePage === pageCount}
                     aria-label="Go to next page"
-                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F8F5F2] hover:text-[#e63e62] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
+                    className="flex h-9 w-9 items-center justify-center text-[#5D554F] transition hover:bg-[#F5F5F5] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:text-[#C8C0B8] disabled:hover:bg-transparent"
                   >
                     <ChevronRight size={17} />
                   </button>
@@ -619,7 +619,7 @@ export default function ShopPage({
           <div className="absolute right-0 top-0 h-full w-[85%] max-w-[360px] overflow-y-auto bg-[#FFFFFF]">
 
             {/* Drawer Header */}
-            <div className="flex items-center justify-between border-b border-[#E7DEDC] bg-white px-5 py-5">
+            <div className="flex items-center justify-between border-b border-[#E5E5E5] bg-white px-5 py-5">
 
               <h2 className="font-serif text-xl text-[#292524]">
                 Filters
@@ -637,9 +637,9 @@ export default function ShopPage({
 
             </div>
 
-            <div className="bg-gradient-to-b from-white to-[#FAF6F5] p-6">
+            <div className="bg-gradient-to-b from-white to-[#F5F5F5] p-6">
 
-              <div className="mb-6 rounded-sm bg-[#FAF6F5] p-2">
+              <div className="mb-6 rounded-sm bg-[#F5F5F5] p-2">
                 <SearchBar
                   value={searchTerm}
                   onChange={(value) => {
@@ -649,7 +649,7 @@ export default function ShopPage({
                 />
               </div>
 
-              <div className="mb-6 border-b border-[#E7DEDC] pb-6">
+              <div className="mb-6 border-b border-[#E5E5E5] pb-6">
                 <label
                   htmlFor="shop-sort-mobile"
                   className="mb-3 block text-[10px] font-semibold uppercase tracking-[1.5px] text-[#786E66]"
@@ -672,7 +672,7 @@ export default function ShopPage({
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="text-xs text-[#e63e62] hover:underline"
+                  className="text-xs text-[var(--color-primary)] hover:underline"
                 >
                   Clear All
                 </button>
@@ -713,7 +713,7 @@ export default function ShopPage({
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="mt-8 w-full bg-[#e63e62] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
+                className="mt-8 w-full bg-[var(--color-primary)] py-3.5 text-xs font-medium uppercase tracking-[1px] text-white"
               >
                 Show {filteredProducts.length} Products
               </button>

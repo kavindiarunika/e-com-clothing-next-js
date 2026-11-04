@@ -103,7 +103,7 @@ function ReturnExchangeRequestContent() {
       <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
         {/* HEADER */}
-        <header className="border-b border-[#E7DEDC]">
+        <header className="border-b border-[#E5E5E5]">
 
           <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
 
@@ -116,7 +116,7 @@ function ReturnExchangeRequestContent() {
 
             <Link
               href="/user/account/returns"
-              className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#e63e62]"
+              className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[var(--color-primary)]"
             >
               <ArrowLeft size={15} />
               My Requests
@@ -129,7 +129,7 @@ function ReturnExchangeRequestContent() {
         {/* SUCCESS */}
         <section className="mx-auto flex min-h-[calc(100vh-80px)] max-w-3xl items-center justify-center px-6 py-16">
 
-          <div className="w-full border border-[#E7DEDC] bg-[#FAF6F5] p-8 text-center sm:p-12">
+          <div className="w-full border border-[#E5E5E5] bg-[#F5F5F5] p-8 text-center sm:p-12">
 
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#547454] text-white">
 
@@ -137,7 +137,7 @@ function ReturnExchangeRequestContent() {
 
             </div>
 
-            <p className="mt-7 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
+            <p className="mt-7 text-[10px] font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
               Request Submitted
             </p>
 
@@ -155,7 +155,7 @@ function ReturnExchangeRequestContent() {
 
             </p>
 
-            <div className="mx-auto mt-8 max-w-md border border-[#E7DEDC] bg-[#FFFFFF] p-5 text-left">
+            <div className="mx-auto mt-8 max-w-md border border-[#E5E5E5] bg-[#FFFFFF] p-5 text-left">
 
               <div className="flex justify-between text-sm">
 
@@ -211,14 +211,14 @@ function ReturnExchangeRequestContent() {
 
               <Link
                 href="/user/account/returns"
-                className="inline-flex items-center justify-center border border-[#e63e62] bg-[#e63e62] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+                className="inline-flex items-center justify-center border border-[var(--color-primary)] bg-[var(--color-primary)] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[var(--color-primary-hover)]"
               >
                 View My Requests
               </Link>
 
               <Link
                 href="/user/account/orders"
-                className="inline-flex items-center justify-center border border-[#292524] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] transition hover:bg-[#A96870] hover:text-white"
+                className="inline-flex items-center justify-center border border-[#292524] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] transition hover:bg-[var(--color-primary-hover)] hover:text-white"
               >
                 My Orders
               </Link>
@@ -237,7 +237,7 @@ function ReturnExchangeRequestContent() {
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
       {/* HEADER */}
-      <header className="border-b border-[#E7DEDC]">
+      <header className="border-b border-[#E5E5E5]">
 
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
 
@@ -250,7 +250,7 @@ function ReturnExchangeRequestContent() {
 
           <Link
             href={`/user/account/orders/${orderId}`}
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#e63e62]"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[var(--color-primary)]"
           >
             <ArrowLeft size={15} />
             Back to Order
@@ -266,7 +266,7 @@ function ReturnExchangeRequestContent() {
         {/* TITLE */}
         <div className="mb-10">
 
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
             Order #{orderId}
           </p>
 
@@ -288,11 +288,11 @@ function ReturnExchangeRequestContent() {
         >
 
           {/* REQUEST TYPE */}
-          <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-6 sm:p-8">
+          <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-6 sm:p-8">
 
             <div className="mb-6">
 
-              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[#e63e62]">
+              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                 Step 01
               </p>
 
@@ -310,16 +310,16 @@ function ReturnExchangeRequestContent() {
                 onClick={() => setRequestType("return")}
                 className={`flex items-center gap-4 border p-5 text-left transition ${
                   requestType === "return"
-                    ? "border-[#e63e62] bg-[#FAF6F5]"
-                    : "border-[#E7DEDC] bg-[#FFFFFF] hover:border-[#e63e62]"
+                    ? "border-[var(--color-primary)] bg-[#F5F5F5]"
+                    : "border-[#E5E5E5] bg-[#FFFFFF] hover:border-[var(--color-primary)]"
                 }`}
               >
 
                 <div
                   className={`flex h-11 w-11 items-center justify-center rounded-full ${
                     requestType === "return"
-                      ? "bg-[#e63e62] text-white"
-                      : "bg-[#FAF6F5]"
+                      ? "bg-[var(--color-primary)] text-white"
+                      : "bg-[#F5F5F5]"
                   }`}
                 >
                   <RotateCcw size={19} />
@@ -345,16 +345,16 @@ function ReturnExchangeRequestContent() {
                 onClick={() => setRequestType("exchange")}
                 className={`flex items-center gap-4 border p-5 text-left transition ${
                   requestType === "exchange"
-                    ? "border-[#e63e62] bg-[#FAF6F5]"
-                    : "border-[#E7DEDC] bg-[#FFFFFF] hover:border-[#e63e62]"
+                    ? "border-[var(--color-primary)] bg-[#F5F5F5]"
+                    : "border-[#E5E5E5] bg-[#FFFFFF] hover:border-[var(--color-primary)]"
                 }`}
               >
 
                 <div
                   className={`flex h-11 w-11 items-center justify-center rounded-full ${
                     requestType === "exchange"
-                      ? "bg-[#e63e62] text-white"
-                      : "bg-[#FAF6F5]"
+                      ? "bg-[var(--color-primary)] text-white"
+                      : "bg-[#F5F5F5]"
                   }`}
                 >
                   <RefreshCw size={19} />
@@ -379,11 +379,11 @@ function ReturnExchangeRequestContent() {
           </div>
 
           {/* ITEM */}
-          <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-6 sm:p-8">
+          <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-6 sm:p-8">
 
             <div className="mb-6">
 
-              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[#e63e62]">
+              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                 Step 02
               </p>
 
@@ -393,9 +393,9 @@ function ReturnExchangeRequestContent() {
 
             </div>
 
-            <div className="flex items-center gap-4 border border-[#E7DEDC] bg-[#FFFFFF] p-4">
+            <div className="flex items-center gap-4 border border-[#E5E5E5] bg-[#FFFFFF] p-4">
 
-              <div className="flex h-12 w-12 items-center justify-center bg-[#FAF6F5]">
+              <div className="flex h-12 w-12 items-center justify-center bg-[#F5F5F5]">
                 <Package size={20} />
               </div>
 
@@ -416,11 +416,11 @@ function ReturnExchangeRequestContent() {
           </div>
 
           {/* REASON */}
-          <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-6 sm:p-8">
+          <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-6 sm:p-8">
 
             <div className="mb-6">
 
-              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[#e63e62]">
+              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                 Step 03
               </p>
 
@@ -437,7 +437,7 @@ function ReturnExchangeRequestContent() {
             <select
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full border border-[#E7DEDC] bg-[#FFFFFF] px-4 py-3 text-sm outline-none focus:border-[#e63e62]"
+              className="w-full border border-[#E5E5E5] bg-[#FFFFFF] px-4 py-3 text-sm outline-none focus:border-[var(--color-primary)]"
               required
             >
 
@@ -459,11 +459,11 @@ function ReturnExchangeRequestContent() {
           </div>
 
           {/* DESCRIPTION */}
-          <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-6 sm:p-8">
+          <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-6 sm:p-8">
 
             <div className="mb-6">
 
-              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[#e63e62]">
+              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                 Step 04
               </p>
 
@@ -482,7 +482,7 @@ function ReturnExchangeRequestContent() {
               onChange={(e) => setDescription(e.target.value)}
               rows={6}
               placeholder="Please describe the issue or explain what you would like to exchange..."
-              className="w-full resize-none border border-[#E7DEDC] bg-[#FFFFFF] px-4 py-3 text-sm outline-none placeholder:text-[#9A9088] focus:border-[#e63e62]"
+              className="w-full resize-none border border-[#E5E5E5] bg-[#FFFFFF] px-4 py-3 text-sm outline-none placeholder:text-[#9A9088] focus:border-[var(--color-primary)]"
             />
 
             <p className="mt-2 text-xs text-[#8B817A]">
@@ -497,14 +497,14 @@ function ReturnExchangeRequestContent() {
 
             <Link
               href={`/user/account/orders/${orderId}`}
-              className="inline-flex items-center justify-center border border-[#292524] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] transition hover:bg-[#A96870] hover:text-white"
+              className="inline-flex items-center justify-center border border-[#292524] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] transition hover:bg-[var(--color-primary-hover)] hover:text-white"
             >
               Cancel
             </Link>
 
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 bg-[#e63e62] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+              className="inline-flex items-center justify-center gap-2 bg-[var(--color-primary)] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[var(--color-primary-hover)]"
             >
               {requestType === "return"
                 ? "Submit Return Request"

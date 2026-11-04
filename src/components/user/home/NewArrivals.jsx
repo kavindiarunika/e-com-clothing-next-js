@@ -73,7 +73,7 @@ export default function NewArrivals() {
           </h2>
           <Link
             href="/user/shop?sort=newest"
-            className="inline-flex shrink-0 items-center gap-3 bg-[#e63e62] px-4 py-3 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#c92f50] sm:min-h-[50px] sm:px-5 sm:text-sm"
+            className="inline-flex shrink-0 items-center gap-3 bg-[var(--color-primary)] px-4 py-3 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[var(--color-primary-hover)] sm:min-h-[50px] sm:px-5 sm:text-sm"
           >
             View All Products
             <ArrowRight size={16} strokeWidth={1.8} aria-hidden="true" />

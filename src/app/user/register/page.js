@@ -269,14 +269,14 @@ export default function RegisterPage() {
                   VELORA
                 </Link>
 
-                <div className="mx-auto mt-4 h-px w-8 bg-[#e63e62]" />
+                <div className="mx-auto mt-4 h-px w-8 bg-[var(--color-primary)]" />
 
               </div>
 
               {/* TITLE */}
               <div className="mb-5">
 
-                <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
+                <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
                   Join Velora
                 </p>
 
@@ -304,15 +304,15 @@ export default function RegisterPage() {
                   justify-center
                   gap-3
                   border
-                  border-[#E7DEDC]
+                  border-[#E5E5E5]
                   bg-white
                   text-sm
                   font-medium
                   text-[#292524]
                   transition
                   duration-300
-                  hover:border-[#e63e62]
-                  hover:bg-[#FAF6F5]
+                  hover:border-[var(--color-primary)]
+                  hover:bg-[#F5F5F5]
                   disabled:cursor-not-allowed
                   disabled:opacity-60
                 "
@@ -354,13 +354,13 @@ export default function RegisterPage() {
               {/* DIVIDER */}
               <div className="my-5 flex items-center gap-4">
 
-                <div className="h-px flex-1 bg-[#E7DEDC]" />
+                <div className="h-px flex-1 bg-[#E5E5E5]" />
 
                 <span className="text-[10px] uppercase tracking-[2px] text-[#9A9088]">
                   Or continue with email
                 </span>
 
-                <div className="h-px flex-1 bg-[#E7DEDC]" />
+                <div className="h-px flex-1 bg-[#E5E5E5]" />
 
               </div>
 
@@ -407,14 +407,14 @@ export default function RegisterPage() {
                         h-11
                         w-full
                         border
-                        border-[#E7DEDC]
+                        border-[#E5E5E5]
                         bg-white
                         px-4
                         text-sm
                         text-[#292524]
                         outline-none
                         placeholder:text-[#A69C94]
-                        focus:border-[#e63e62]
+                        focus:border-[var(--color-primary)]
                       "
                     />
 
@@ -440,14 +440,14 @@ export default function RegisterPage() {
                         h-11
                         w-full
                         border
-                        border-[#E7DEDC]
+                        border-[#E5E5E5]
                         bg-white
                         px-4
                         text-sm
                         text-[#292524]
                         outline-none
                         placeholder:text-[#A69C94]
-                        focus:border-[#e63e62]
+                        focus:border-[var(--color-primary)]
                       "
                     />
 
@@ -476,14 +476,14 @@ export default function RegisterPage() {
                       h-11
                       w-full
                       border
-                      border-[#E7DEDC]
+                      border-[#E5E5E5]
                       bg-white
                       px-4
                       text-sm
                       text-[#292524]
                       outline-none
                       placeholder:text-[#A69C94]
-                      focus:border-[#e63e62]
+                      focus:border-[var(--color-primary)]
                     "
                   />
 
@@ -510,14 +510,14 @@ export default function RegisterPage() {
                       h-11
                       w-full
                       border
-                      border-[#E7DEDC]
+                      border-[#E5E5E5]
                       bg-white
                       px-4
                       text-sm
                       text-[#292524]
                       outline-none
                       placeholder:text-[#A69C94]
-                      focus:border-[#e63e62]
+                      focus:border-[var(--color-primary)]
                     "
                   />
 
@@ -550,7 +550,7 @@ export default function RegisterPage() {
                         h-11
                         w-full
                         border
-                        border-[#E7DEDC]
+                        border-[#E5E5E5]
                         bg-white
                         px-4
                         pr-12
@@ -558,7 +558,7 @@ export default function RegisterPage() {
                         text-[#292524]
                         outline-none
                         placeholder:text-[#A69C94]
-                        focus:border-[#e63e62]
+                        focus:border-[var(--color-primary)]
                       "
                     />
 
@@ -575,7 +575,7 @@ export default function RegisterPage() {
                         top-1/2
                         -translate-y-1/2
                         text-[#8B817A]
-                        hover:text-[#e63e62]
+                        hover:text-[var(--color-primary)]
                       "
                     >
                       {showPassword ? (
@@ -618,7 +618,7 @@ export default function RegisterPage() {
                         h-11
                         w-full
                         border
-                        border-[#E7DEDC]
+                        border-[#E5E5E5]
                         bg-white
                         px-4
                         pr-12
@@ -626,7 +626,7 @@ export default function RegisterPage() {
                         text-[#292524]
                         outline-none
                         placeholder:text-[#A69C94]
-                        focus:border-[#e63e62]
+                        focus:border-[var(--color-primary)]
                       "
                     />
 
@@ -643,7 +643,7 @@ export default function RegisterPage() {
                         top-1/2
                         -translate-y-1/2
                         text-[#8B817A]
-                        hover:text-[#e63e62]
+                        hover:text-[var(--color-primary)]
                       "
                     >
                       {showConfirmPassword ? (
@@ -677,7 +677,7 @@ export default function RegisterPage() {
                     text-white
                     transition
                     duration-300
-                    hover:bg-[#e63e62]
+                    hover:bg-[var(--color-primary)]
                     disabled:cursor-not-allowed
                     disabled:opacity-60
                   "
@@ -706,7 +706,7 @@ export default function RegisterPage() {
               </form>
 
               {/* LOGIN */}
-              <div className="mt-6 border-t border-[#E7DEDC] pt-5 text-center">
+              <div className="mt-6 border-t border-[#E5E5E5] pt-5 text-center">
 
                 <p className="text-sm text-[#6B625C]">
                   Already have an account?
@@ -714,7 +714,7 @@ export default function RegisterPage() {
 
                 <Link
                   href="/user/login"
-                  className="mt-2 inline-block text-sm font-semibold text-[#e63e62] hover:text-[#A96870]"
+                  className="mt-2 inline-block text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]"
                 >
                   Sign In
                 </Link>
@@ -742,7 +742,7 @@ export default function RegisterPage() {
 
             <div className="absolute bottom-12 left-12 max-w-md text-white">
 
-              <p className="mb-4 text-xs uppercase tracking-[4px] text-[#FAF6F5]">
+              <p className="mb-4 text-xs uppercase tracking-[4px] text-[#F5F5F5]">
                 VELORA COLLECTION
               </p>
 
@@ -778,7 +778,7 @@ export default function RegisterPage() {
       <main className="min-h-screen bg-[#FFFFFF]">
 
         {/* HEADER */}
-        <header className="border-b border-[#E7DEDC]">
+        <header className="border-b border-[#E5E5E5]">
           <div className="flex h-16 items-center justify-center">
 
             <Link
@@ -801,11 +801,11 @@ export default function RegisterPage() {
               <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#F3E8E5]">
                 <Mail
                   size={27}
-                  className="text-[#e63e62]"
+                  className="text-[var(--color-primary)]"
                 />
               </div>
 
-              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
+              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
                 Email Verification
               </p>
 
@@ -825,7 +825,7 @@ export default function RegisterPage() {
             </div>
 
             {/* CARD */}
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-5 sm:p-6">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-5 sm:p-6">
 
               {error && (
                 <div className="mb-5 border border-[#C98B8B] bg-[#F8EAEA] px-4 py-3 text-sm text-[#8B3A3A]">
@@ -865,7 +865,7 @@ export default function RegisterPage() {
                     h-14
                     w-full
                     border
-                    border-[#E7DEDC]
+                    border-[#E5E5E5]
                     bg-white
                     px-4
                     text-center
@@ -875,7 +875,7 @@ export default function RegisterPage() {
                     text-[#292524]
                     outline-none
                     placeholder:text-[#C8BFB8]
-                    focus:border-[#e63e62]
+                    focus:border-[var(--color-primary)]
                   "
                 />
 
@@ -902,7 +902,7 @@ export default function RegisterPage() {
                     tracking-[2px]
                     text-white
                     transition
-                    hover:bg-[#e63e62]
+                    hover:bg-[var(--color-primary)]
                     disabled:cursor-not-allowed
                     disabled:opacity-60
                   "
@@ -938,7 +938,7 @@ export default function RegisterPage() {
                   type="button"
                   onClick={handleResendOtp}
                   disabled={loading}
-                  className="mt-2 text-sm font-semibold text-[#e63e62] hover:text-[#A96870]"
+                  className="mt-2 text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]"
                 >
                   Resend Code
                 </button>
@@ -965,7 +965,7 @@ export default function RegisterPage() {
                   uppercase
                   tracking-[1px]
                   text-[#6B625C]
-                  hover:text-[#e63e62]
+                  hover:text-[var(--color-primary)]
                 "
               >
                 <ArrowLeft size={14} />
@@ -992,7 +992,7 @@ export default function RegisterPage() {
       <main className="min-h-screen bg-[#FFFFFF]">
 
         {/* HEADER */}
-        <header className="border-b border-[#E7DEDC]">
+        <header className="border-b border-[#E5E5E5]">
           <div className="flex h-16 items-center justify-center">
 
             <Link
@@ -1010,7 +1010,7 @@ export default function RegisterPage() {
 
           <div className="w-full max-w-sm">
 
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5] px-5 py-8 text-center sm:px-8">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5] px-5 py-8 text-center sm:px-8">
 
               {/* ICON */}
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#EAF2EA]">
@@ -1022,7 +1022,7 @@ export default function RegisterPage() {
 
               </div>
 
-              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
+              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
                 Email Verified
               </p>
 
@@ -1062,7 +1062,7 @@ export default function RegisterPage() {
                   tracking-[2px]
                   text-white
                   transition
-                  hover:bg-[#e63e62]
+                  hover:bg-[var(--color-primary)]
                   disabled:cursor-not-allowed
                   disabled:opacity-60
                 "
@@ -1107,7 +1107,7 @@ export default function RegisterPage() {
     <main className="min-h-screen bg-[#FFFFFF]">
 
       {/* HEADER */}
-      <header className="border-b border-[#E7DEDC]">
+      <header className="border-b border-[#E5E5E5]">
         <div className="flex h-16 items-center justify-center">
 
           <Link
@@ -1125,7 +1125,7 @@ export default function RegisterPage() {
 
         <div className="w-full max-w-sm">
 
-          <div className="border border-[#E7DEDC] bg-[#FAF6F5] px-5 py-8 text-center sm:px-8">
+          <div className="border border-[#E5E5E5] bg-[#F5F5F5] px-5 py-8 text-center sm:px-8">
 
             {/* SUCCESS ICON */}
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#EAF2EA]">
@@ -1137,7 +1137,7 @@ export default function RegisterPage() {
 
             </div>
 
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
               Welcome to Velora
             </p>
 
@@ -1169,7 +1169,7 @@ export default function RegisterPage() {
                 tracking-[2px]
                 text-white
                 transition
-                hover:bg-[#e63e62]
+                hover:bg-[var(--color-primary)]
               "
             >
               Continue to Sign In
@@ -1183,7 +1183,7 @@ export default function RegisterPage() {
             {/* HOME */}
             <Link
               href="/user"
-              className="mt-5 inline-block text-sm text-[#6B625C] hover:text-[#e63e62]"
+              className="mt-5 inline-block text-sm text-[#6B625C] hover:text-[var(--color-primary)]"
             >
               Return to Home
             </Link>

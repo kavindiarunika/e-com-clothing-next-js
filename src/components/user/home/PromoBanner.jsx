@@ -191,7 +191,7 @@ export default function PromoBanner() {
 
               <div className="relative z-10 flex min-h-[208px] w-full items-center px-5 py-6 sm:px-7">
                 <div className="flex w-full flex-col items-start gap-4">
-                  <div className="flex items-center gap-2 text-[var(--color-banner)]">
+                  <div className="flex items-center gap-2 text-white">
                     <Sparkles size={15} strokeWidth={1.8} />
                     <span className="text-[10px] font-semibold uppercase tracking-[2px]">
                       Exclusive Offer
@@ -226,7 +226,7 @@ export default function PromoBanner() {
                     {offer.link && (
                       <Link
                         href={offer.link}
-                        className="group/button inline-flex min-h-10 items-center gap-2 bg-[var(--color-banner)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#c92f50] sm:text-xs"
+                        className="group/button inline-flex min-h-10 items-center gap-2 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-black transition-colors duration-300 hover:bg-[#E5E5E5] sm:text-xs"
                       >
                         <span>Get Offer</span>
                         <ArrowRight
@@ -249,7 +249,7 @@ export default function PromoBanner() {
                   className={normalizeClassName(`
                     h-full
                     w-1/3
-                    bg-[var(--color-banner)]
+                    bg-white
                     opacity-80
                   `)}
                 />

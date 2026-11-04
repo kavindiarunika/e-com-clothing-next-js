@@ -28,7 +28,7 @@ export default function CartSummary({
         {/* Discount */}
         <div className="flex justify-between">
           <span className="text-[#6B625C]">Discount</span>
-          <span className="font-medium text-[#e63e62]">
+          <span className="font-medium text-[var(--color-primary)]">
             - Rs. {discount.toLocaleString()}
           </span>
         </div>
@@ -42,7 +42,7 @@ export default function CartSummary({
         </div>
       </div>
 
-      <div className="my-6 border-t border-[#E7DEDC]" />
+      <div className="my-6 border-t border-[#E5E5E5]" />
 
       {/* Total */}
       <div className="flex items-center justify-between">
@@ -50,7 +50,7 @@ export default function CartSummary({
           Total
         </span>
 
-        <span className="text-xl font-semibold text-[#e63e62]">
+        <span className="text-xl font-semibold text-[var(--color-primary)]">
           Rs. {total.toLocaleString()}
         </span>
       </div>
@@ -63,7 +63,7 @@ export default function CartSummary({
       {/* Checkout */}
 <Link
   href="/user/checkout"
-  className="mt-7 block w-full bg-[#e63e62] px-6 py-4 text-center text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+  className="mt-7 block w-full bg-[var(--color-primary)] px-6 py-4 text-center text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[var(--color-primary-hover)]"
 >
   Proceed to Checkout
 </Link>

@@ -155,16 +155,16 @@ export default function ShopOfferHero() {
                       <Sparkles
                         size={11}
                         strokeWidth={1.5}
-                        className="text-[#e63e62]"
+                        className="text-white"
                       />
 
-                      <p className="text-[8px] font-medium uppercase tracking-[0.32em] text-[#FAF6F5]">
+                      <p className="text-[8px] font-medium uppercase tracking-[0.32em] text-[#F5F5F5]">
                         {isFallback
                           ? "New Season Collection"
                           : "Velora Exclusive"}
                       </p>
 
-                      <span className="h-px w-8 bg-[#e63e62]/60" />
+                      <span className="h-px w-8 bg-white/60" />
                     </div>
 
                     <h2 className="max-w-xl font-serif text-[22px] font-medium leading-[1.05] tracking-[-0.02em] text-white sm:text-[26px] md:text-[32px]">
@@ -189,7 +189,7 @@ export default function ShopOfferHero() {
                           String(offer.offer_id)
                         )}`
                       }
-                      className="group/cta mt-3 inline-flex h-8 w-fit items-center gap-2 bg-[#e63e62] px-4 text-[8px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-300 hover:bg-[#A96870] hover:shadow-[0_10px_25px_rgba(0,0,0,0.22)] sm:h-9 sm:px-5"
+                      className="group/cta mt-3 inline-flex h-8 w-fit items-center gap-2 bg-white px-4 text-[8px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition-all duration-300 hover:bg-[#E5E5E5] hover:shadow-[0_10px_25px_rgba(0,0,0,0.22)] sm:h-9 sm:px-5"
                     >
                       {isFallback ? "Shop Collection" : "Discover Offer"}
 
@@ -238,7 +238,7 @@ export default function ShopOfferHero() {
                   <span
                     className={`rounded-full transition-all duration-500 ${
                       activeIndex === index
-                        ? "h-1.5 w-5 bg-[#e63e62]"
+                        ? "h-1.5 w-5 bg-white"
                         : "h-1.5 w-1.5 bg-white/40 hover:bg-white/70"
                     }`}
                   />

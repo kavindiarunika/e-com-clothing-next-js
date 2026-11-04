@@ -60,7 +60,7 @@ export default function FAQPage() {
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm text-[#FFFFFF] hover:text-[#e63e62]"
+            className="flex items-center gap-2 text-sm text-[#FFFFFF] hover:text-[var(--color-primary)]"
           >
             <ArrowLeft size={16} />
             Back to Home
@@ -71,7 +71,7 @@ export default function FAQPage() {
       <section className="mx-auto max-w-3xl px-5 py-16">
 
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#e63e62]">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-primary)]">
             Customer Care
           </p>
 
@@ -106,7 +106,7 @@ export default function FAQPage() {
 
                   <Plus
                     size={19}
-                    className={`shrink-0 text-[#e63e62] transition ${
+                    className={`shrink-0 text-[var(--color-primary)] transition ${
                       isOpen ? "rotate-45" : ""
                     }`}
                   />

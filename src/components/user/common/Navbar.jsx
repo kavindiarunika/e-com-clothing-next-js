@@ -269,7 +269,7 @@ export default function Navbar() {
             onSubmit={submitSearch}
             className="flex h-11 min-w-0 flex-1 items-center gap-3 rounded-md border border-[#E5DDD5] bg-white px-3 text-[#292524] shadow-sm sm:mx-6 sm:h-12 sm:px-4"
           >
-            <Search size={19} className="shrink-0 text-[#e63e62]" />
+            <Search size={19} className="shrink-0 text-[var(--color-primary)]" />
             <input
               ref={searchInputRef}
               type="search"
@@ -283,7 +283,7 @@ export default function Navbar() {
               type="button"
               onClick={closeSearch}
               aria-label="Close search"
-              className="shrink-0 rounded-full p-1 text-[#6B625C] transition hover:bg-[#F1ECE6] hover:text-[#e63e62]"
+              className="shrink-0 rounded-full p-1 text-[#6B625C] transition hover:bg-[#F1F1F1] hover:text-[var(--color-primary)]"
             >
               <X size={18} />
             </button>
@@ -300,7 +300,7 @@ export default function Navbar() {
 
           <Link
             href="/user"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#e63e62]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-white"
           >
             Home
           </Link>
@@ -309,14 +309,14 @@ export default function Navbar() {
 
           <Link
             href="/user/shop"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#e63e62]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-white"
           >
             Shop
           </Link>
 
           <Link
             href="/user/offers"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#e63e62]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-white"
           >
             Offers
           </Link>
@@ -333,7 +333,7 @@ export default function Navbar() {
 
             <Link
               href="/user/shop"
-              className="flex items-center gap-1 text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#e63e62]"
+              className="flex items-center gap-1 text-[13px] font-medium uppercase tracking-[1px] transition hover:text-white"
             >
               Collection
 
@@ -348,9 +348,9 @@ export default function Navbar() {
 
             {openCollection && (
               <div className="absolute left-1/2 top-full flex w-[35rem] -translate-x-1/2 items-start gap-2 pt-4">
-                <div className="w-72 shrink-0 overflow-hidden rounded-xl border border-[#F3DCE1] bg-black p-2 text-white shadow-[0_16px_40px_rgba(41,37,36,0.18)]">
-                  <label className="flex h-10 items-center gap-2 rounded-lg bg-[#F8F5F2] px-3 focus-within:ring-1 focus-within:ring-[#e63e62]">
-                    <Search size={15} className="shrink-0 text-[#e63e62]" />
+                <div className="w-72 shrink-0 overflow-hidden rounded-xl border border-[#E5E5E5] bg-black p-2 text-white shadow-[0_16px_40px_rgba(41,37,36,0.18)]">
+                  <label className="flex h-10 items-center gap-2 rounded-lg bg-[#F5F5F5] px-3 focus-within:ring-1 focus-within:ring-[var(--color-primary)]">
+                    <Search size={15} className="shrink-0 text-[var(--color-primary)]" />
                     <input
                       type="search"
                       value={collectionSearchTerm}
@@ -369,7 +369,7 @@ export default function Navbar() {
 
                         return (
                           <div key={collection.id}>
-                            <div className="group flex min-h-12 items-center rounded-lg text-white transition-colors hover:bg-[#FCE8ED] hover:text-[#d52d51]">
+                            <div className="group flex min-h-12 items-center rounded-lg text-white transition-colors hover:bg-[#F1F1F1] hover:text-[var(--color-primary-hover)]">
                               <Link
                                 href={collection.href}
                                 onClick={closeMenu}
@@ -384,7 +384,7 @@ export default function Navbar() {
                                 ) : (
                                   <span
                                     aria-hidden="true"
-                                    className="h-9 w-9 shrink-0 rounded-full bg-[#F8F5F2]"
+                                    className="h-9 w-9 shrink-0 rounded-full bg-[#F5F5F5]"
                                   />
                                 )}
                                 <span className="flex-1">{collection.name}</span>
@@ -399,7 +399,7 @@ export default function Navbar() {
                                       expanded ? null : collection.id
                                     )
                                   }
-                                  className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/15 hover:text-[#e63e62] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e63e62]"
+                                  className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
                                 >
                                   <ChevronRight
                                     size={16}
@@ -423,7 +423,7 @@ export default function Navbar() {
 
                 {expandedCollection && (
                   <div
-                    className="w-64 shrink-0 overflow-hidden rounded-xl border border-[#F3DCE1] bg-black p-2 text-white shadow-[0_16px_40px_rgba(41,37,36,0.18)]"
+                    className="w-64 shrink-0 overflow-hidden rounded-xl border border-[#E5E5E5] bg-black p-2 text-white shadow-[0_16px_40px_rgba(41,37,36,0.18)]"
                     style={{ marginTop: `${56 + expandedCollectionIndex * 48}px` }}
                   >
                     <div className="max-h-80 overflow-y-auto">
@@ -432,7 +432,7 @@ export default function Navbar() {
                           key={subcategory.id}
                           href={subcategory.href}
                           onClick={closeMenu}
-                          className="flex min-h-12 items-center gap-3 rounded-lg px-3 py-2 text-xs text-white transition-colors hover:bg-[#FCE8ED] hover:text-[#d52d51] focus-visible:bg-[#FCE8ED] focus-visible:outline-none"
+                          className="flex min-h-12 items-center gap-3 rounded-lg px-3 py-2 text-xs text-white transition-colors hover:bg-[#F1F1F1] hover:text-[var(--color-primary-hover)] focus-visible:bg-[#F1F1F1] focus-visible:outline-none"
                         >
                           {subcategory.image ? (
                             <img
@@ -443,7 +443,7 @@ export default function Navbar() {
                           ) : (
                             <span
                               aria-hidden="true"
-                              className="h-9 w-9 shrink-0 rounded-full bg-[#F8F5F2]"
+                              className="h-9 w-9 shrink-0 rounded-full bg-[#F5F5F5]"
                             />
                           )}
                           <span>{subcategory.name}</span>
@@ -462,7 +462,7 @@ export default function Navbar() {
 
           <Link
             href="/user/shop?sort=newest"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-[#e63e62]"
+            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-white"
           >
             New Arrivals
           </Link>
@@ -481,7 +481,7 @@ export default function Navbar() {
             type="button"
             onClick={openSearch}
             aria-label="Search"
-            className="transition hover:text-[#e63e62]"
+            className="transition hover:text-white"
           >
             <Search
               size={20}
@@ -494,11 +494,12 @@ export default function Navbar() {
           <Link
             href="/user/wishlist"
             aria-label="Wishlist"
-            className="transition hover:text-[#e63e62]"
+            className="text-red-500 transition hover:text-red-400"
           >
             <Heart
               size={20}
               strokeWidth={1.7}
+              fill="currentColor"
             />
           </Link>
 
@@ -507,14 +508,14 @@ export default function Navbar() {
           <Link
             href="/user/cart"
             aria-label="Shopping Cart"
-            className="relative transition hover:text-[#e63e62]"
+            className="relative transition hover:text-white"
           >
             <ShoppingBag
               size={20}
               strokeWidth={1.7}
             />
 
-            <span className="absolute -right-2 -top-2 flex h-3.75 w-3.75 items-center justify-center rounded-full bg-[#e63e62] text-[9px] font-bold text-white">
+            <span className="absolute -right-2 -top-2 flex h-3.75 w-3.75 items-center justify-center rounded-full bg-white text-[9px] font-bold text-black">
               {cartCount}
             </span>
           </Link>
@@ -525,7 +526,7 @@ export default function Navbar() {
             href="/user/account"
             onClick={handleAccountClick}
             aria-label="Account"
-            className="transition hover:text-[#e63e62]"
+            className="transition hover:text-white"
           >
             <User
               size={20}
@@ -544,7 +545,7 @@ export default function Navbar() {
             type="button"
             onClick={openSearch}
             aria-label="Search products"
-            className="flex items-center justify-center transition hover:text-[#e63e62]"
+            className="flex items-center justify-center transition hover:text-white"
           >
             <Search size={21} strokeWidth={1.7} />
           </button>
@@ -579,7 +580,7 @@ export default function Navbar() {
             <Link
               href="/user"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#e63e62]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-white"
             >
               Home
             </Link>
@@ -589,7 +590,7 @@ export default function Navbar() {
             <Link
               href="/user/shop"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#e63e62]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-white"
             >
               Shop
             </Link>
@@ -597,7 +598,7 @@ export default function Navbar() {
             <Link
               href="/user/offers"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#e63e62]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-white"
             >
               Offers
             </Link>
@@ -628,9 +629,9 @@ export default function Navbar() {
               </button>
 
               {openCollection && (
-                <div className="mb-4 rounded-xl border border-[#F3DCE1] bg-white p-2 text-[#292524] shadow-lg">
-                  <label className="flex h-10 items-center gap-2 rounded-lg bg-[#F8F5F2] px-3 focus-within:ring-1 focus-within:ring-[#e63e62]">
-                    <Search size={15} className="shrink-0 text-[#e63e62]" />
+                <div className="mb-4 rounded-xl border border-[#E5E5E5] bg-white p-2 text-[#292524] shadow-lg">
+                  <label className="flex h-10 items-center gap-2 rounded-lg bg-[#F5F5F5] px-3 focus-within:ring-1 focus-within:ring-[var(--color-primary)]">
+                    <Search size={15} className="shrink-0 text-[var(--color-primary)]" />
                     <input
                       type="search"
                       value={collectionSearchTerm}
@@ -648,7 +649,7 @@ export default function Navbar() {
 
                         return (
                           <div key={collection.id}>
-                            <div className="group flex min-h-12 items-center rounded-lg text-[#292524] transition-colors hover:bg-[#FCE8ED] hover:text-[#d52d51]">
+                            <div className="group flex min-h-12 items-center rounded-lg text-[#292524] transition-colors hover:bg-[#F1F1F1] hover:text-[var(--color-primary-hover)]">
                               <Link
                                 href={collection.href}
                                 onClick={closeMenu}
@@ -663,7 +664,7 @@ export default function Navbar() {
                                 ) : (
                                   <span
                                     aria-hidden="true"
-                                    className="h-9 w-9 shrink-0 rounded-full bg-[#F8F5F2]"
+                                    className="h-9 w-9 shrink-0 rounded-full bg-[#F5F5F5]"
                                   />
                                 )}
                                 <span className="flex-1">{collection.name}</span>
@@ -678,7 +679,7 @@ export default function Navbar() {
                                       expanded ? null : collection.id
                                     )
                                   }
-                                  className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#292524] transition-colors hover:bg-white hover:text-[#e63e62] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e63e62]"
+                                  className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#292524] transition-colors hover:bg-white hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
                                 >
                                   <ChevronRight
                                     size={16}
@@ -690,13 +691,13 @@ export default function Navbar() {
                               )}
                             </div>
                             {expanded && collection.subcategories.length > 0 && (
-                              <div className="ml-7 border-l border-[#F3DCE1] py-1 pl-3">
+                              <div className="ml-7 border-l border-[#E5E5E5] py-1 pl-3">
                                 {filteredSubcategories(collection).map((subcategory) => (
                                   <Link
                                     key={subcategory.id}
                                     href={subcategory.href}
                                     onClick={closeMenu}
-                                    className="flex min-h-12 items-center gap-3 rounded-lg px-3 py-2 text-xs text-[#292524] transition-colors hover:bg-[#FCE8ED] hover:text-[#d52d51] focus-visible:bg-[#FCE8ED] focus-visible:outline-none"
+                                    className="flex min-h-12 items-center gap-3 rounded-lg px-3 py-2 text-xs text-[#292524] transition-colors hover:bg-[#F1F1F1] hover:text-[var(--color-primary-hover)] focus-visible:bg-[#F1F1F1] focus-visible:outline-none"
                                   >
                                     {subcategory.image ? (
                                       <img
@@ -707,7 +708,7 @@ export default function Navbar() {
                                     ) : (
                                       <span
                                         aria-hidden="true"
-                                        className="h-9 w-9 shrink-0 rounded-full bg-[#F8F5F2]"
+                                        className="h-9 w-9 shrink-0 rounded-full bg-[#F5F5F5]"
                                       />
                                     )}
                                     <span>{subcategory.name}</span>
@@ -736,7 +737,7 @@ export default function Navbar() {
             <Link
               href="/user/shop?sort=newest"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-[#e63e62]"
+              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-white"
             >
               New Arrivals
             </Link>
@@ -754,11 +755,12 @@ export default function Navbar() {
             <Link
               href="/user/wishlist"
               onClick={closeMenu}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#e63e62]"
+              className="flex items-center gap-3 py-3 text-sm text-red-500 transition hover:text-red-400"
             >
               <Heart
                 size={18}
                 strokeWidth={1.7}
+                fill="currentColor"
               />
 
               Wishlist
@@ -769,7 +771,7 @@ export default function Navbar() {
             <Link
               href="/user/cart"
               onClick={closeMenu}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#e63e62]"
+              className="flex items-center gap-3 py-3 text-sm transition hover:text-white"
             >
               <ShoppingBag
                 size={18}
@@ -779,7 +781,7 @@ export default function Navbar() {
               Cart
 
               {cartCount > 0 && (
-                <span className="ml-auto rounded-full bg-[#e63e62] px-2 py-0.5 text-[10px]">
+                <span className="ml-auto rounded-full bg-[var(--color-primary)] px-2 py-0.5 text-[10px]">
                   {cartCount}
                 </span>
               )}
@@ -790,7 +792,7 @@ export default function Navbar() {
             <Link
               href="/user/account"
               onClick={handleAccountClick}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-[#e63e62]"
+              className="flex items-center gap-3 py-3 text-sm transition hover:text-white"
             >
               <User
                 size={18}

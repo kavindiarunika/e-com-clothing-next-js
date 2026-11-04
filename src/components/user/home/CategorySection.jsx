@@ -174,7 +174,7 @@ export default function CategorySection() {
                 type="button"
                 onClick={() => swiperRef.current?.slidePrev()}
                 aria-label="Previous categories"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition hover:bg-[#A96870] hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E5E5] text-[#292524] transition hover:bg-[var(--color-primary-hover)] hover:text-white"
               >
                 <ArrowLeft size={18} />
               </button>
@@ -182,7 +182,7 @@ export default function CategorySection() {
                 type="button"
                 onClick={() => swiperRef.current?.slideNext()}
                 aria-label="Next categories"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition hover:bg-[#A96870] hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E5E5] text-[#292524] transition hover:bg-[var(--color-primary-hover)] hover:text-white"
               >
                 <ArrowRight size={18} />
               </button>
@@ -242,7 +242,7 @@ export default function CategorySection() {
                       h-full
                       w-full
                       bg-gradient-to-br
-                      from-[#E7DEDC]
+                      from-[#E5E5E5]
                       to-[#B6A49A]
                     "
                   />
@@ -270,7 +270,7 @@ export default function CategorySection() {
 
                   <span
                     aria-hidden="true"
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-sm text-white transition-transform duration-300 group-hover:translate-x-1"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-sm text-white transition-transform duration-300 group-hover:translate-x-1"
                   >
                       →
                   </span>
@@ -342,7 +342,7 @@ export default function CategorySection() {
                       h-full
                       w-full
                       bg-gradient-to-br
-                      from-[#E7DEDC]
+                      from-[#E5E5E5]
                       to-[#B6A49A]
                     "
                   />
@@ -383,7 +383,7 @@ export default function CategorySection() {
 
                   <span
                     aria-hidden="true"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-lg text-white transition-transform duration-300 group-hover:translate-x-1"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-lg text-white transition-transform duration-300 group-hover:translate-x-1"
                   >
                       →
                   </span>
@@ -445,7 +445,7 @@ export default function CategorySection() {
                         h-full
                         w-full
                         bg-gradient-to-br
-                        from-[#E7DEDC]
+                        from-[#E5E5E5]
                         to-[#B6A49A]
                       "
                     />
@@ -473,7 +473,7 @@ export default function CategorySection() {
 
                     <span
                       aria-hidden="true"
-                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-sm text-white transition-transform duration-300 group-hover:translate-x-1"
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-sm text-white transition-transform duration-300 group-hover:translate-x-1"
                     >
                         →
                     </span>
@@ -530,7 +530,7 @@ export default function CategorySection() {
                     h-full
                     w-full
                     bg-gradient-to-br
-                    from-[#E7DEDC]
+                    from-[#E5E5E5]
                     to-[#B6A49A]
                   "
                 />
@@ -558,7 +558,7 @@ export default function CategorySection() {
 
                 <span
                   aria-hidden="true"
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e63e62] text-lg text-white transition-transform duration-300 group-hover:translate-x-1"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-lg text-white transition-transform duration-300 group-hover:translate-x-1"
                 >
                     →
                 </span>

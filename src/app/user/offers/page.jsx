@@ -109,7 +109,7 @@ export default function OffersPage() {
             Loading offers...
           </div>
         ) : error ? (
-          <div role="alert" className="bg-white px-6 py-12 text-center text-sm text-[#e63e62] shadow-sm">
+          <div role="alert" className="bg-white px-6 py-12 text-center text-sm text-[var(--color-primary)] shadow-sm">
             {error}
           </div>
         ) : visibleOffers.length ? (
@@ -128,7 +128,7 @@ export default function OffersPage() {
                   key={offer.offer_id}
                   className="group flex min-h-[140px] overflow-hidden bg-white shadow-[0_8px_24px_rgba(41,37,36,0.14)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(41,37,36,0.2)] sm:min-h-[150px]"
                 >
-                  <div className="relative w-[36%] shrink-0 overflow-hidden bg-[#E7DEDC] sm:w-[32%] md:w-[28%]">
+                  <div className="relative w-[36%] shrink-0 overflow-hidden bg-[#E5E5E5] sm:w-[32%] md:w-[28%]">
                     {offer.banner_image ? (
                       <div className="absolute inset-0">
                         <Image
@@ -140,8 +140,8 @@ export default function OffersPage() {
                         />
                       </div>
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#F3EEE3] to-[#E7DEDC]">
-                        <Tag size={32} className="text-[#e63e62]/70" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#F3EEE3] to-[#E5E5E5]">
+                        <Tag size={32} className="text-[var(--color-primary)]/70" />
                       </div>
                     )}
 
@@ -180,7 +180,7 @@ export default function OffersPage() {
                           className="mt-1 flex flex-wrap items-center gap-2 text-[11px] font-bold uppercase tracking-[0.8px] text-[#6B625C] sm:text-xs"
                           aria-label={`${status === "upcoming" ? "Starts" : "Ends"} in ${countdown.days} days, ${countdown.hours} hours, ${countdown.minutes} minutes, ${countdown.seconds} seconds`}
                         >
-                          <Clock3 size={16} className="text-[#e63e62]" />
+                          <Clock3 size={16} className="text-[var(--color-primary)]" />
                           <span>{status === "upcoming" ? "Starts in" : "Ends in"}</span>
                           {[
                             ["Days", countdown.days],
@@ -208,7 +208,7 @@ export default function OffersPage() {
                           ? `/user/offers/${offer.offer_id}`
                           : offer.link || "/user/shop"
                       }
-                      className="mt-2 inline-flex shrink-0 self-end items-center gap-2 bg-[#e63e62] px-4 py-2 text-[9px] font-semibold uppercase tracking-[1px] text-white transition hover:bg-[#A96870] sm:mt-0 sm:self-center sm:px-5 sm:py-2.5 sm:text-[10px]"
+                      className="mt-2 inline-flex shrink-0 self-end items-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[9px] font-semibold uppercase tracking-[1px] text-white transition hover:bg-[var(--color-primary-hover)] sm:mt-0 sm:self-center sm:px-5 sm:py-2.5 sm:text-[10px]"
                     >
                       Explore Offer
                       <ArrowRight size={15} />
@@ -228,7 +228,7 @@ export default function OffersPage() {
             </p>
             <Link
               href="/user/shop"
-              className="mt-6 inline-flex items-center gap-2 border border-[#e63e62] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1.5px] text-[#e63e62] transition hover:bg-[#e63e62] hover:text-white"
+              className="mt-6 inline-flex items-center gap-2 border border-[var(--color-primary)] px-5 py-3 text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--color-primary)] transition hover:bg-[var(--color-primary)] hover:text-white"
             >
               Shop Collection
               <ArrowRight size={15} />

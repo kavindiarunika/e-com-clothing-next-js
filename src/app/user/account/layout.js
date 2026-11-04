@@ -114,7 +114,7 @@ export default function AccountLayout({ children }) {
       <div className="mx-auto grid max-w-7xl items-start gap-8 px-5 py-10 lg:grid-cols-[250px_minmax(0,1fr)]">
         <aside className="h-fit rounded-3xl bg-white p-5 shadow-sm lg:sticky lg:top-6">
           <div className="mb-6 border-b border-[#292524]/10 pb-5">
-            <p className="text-xs uppercase tracking-[0.2em] text-[#e63e62]">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--color-primary)]">
               My Account
             </p>
             <h2 className="mt-2 text-xl font-semibold">
@@ -138,7 +138,7 @@ export default function AccountLayout({ children }) {
                 aria-current={active ? "page" : undefined}
                 className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition ${
                   active
-                    ? "bg-[#e63e62] text-white"
+                    ? "bg-[var(--color-primary)] text-white"
                     : "text-[#292524] hover:bg-[#FFFFFF]"
                 }`}
               >

@@ -48,14 +48,10 @@ export default function ProductRating({
             size={15}
             fill={
               star <= Math.round(rating)
-                ? "#e63e62"
+                ? "#FACC15"
                 : "none"
             }
-            className={
-              star <= Math.round(rating)
-                ? "text-[#e63e62]"
-                : "text-[#e63e62]"
-            }
+            className="text-yellow-400"
           />
         ))}
       </div>
@@ -68,4 +64,3 @@ export default function ProductRating({
     </div>
   );
 }
-
