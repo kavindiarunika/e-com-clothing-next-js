@@ -41,18 +41,13 @@ export default function ReturnsPage() {
 
         <div className="text-center">
 
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-primary)]">
-            Customer Care
-          </p>
+          
 
           <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
             Returns & Exchanges
           </h1>
 
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-[#292524]/60">
-            If something isn't right with your order, you can submit a
-            return or exchange request from your VELORA account.
-          </p>
+         
 
         </div>
 

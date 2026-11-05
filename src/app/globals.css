@@ -51,7 +51,7 @@ button,Link {
   font-weight: 500;
 }
 
-.button{
+.button,link{
   font-family: "Outfit", sans-serif;
   font-weight: 500;
   padding: 0.5rem 1rem;

@@ -108,47 +108,19 @@ export default function OrdersPage() {
   return (
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
-      {/* HEADER */}
-      <header className="border-b border-[#E5E5E5]">
-
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
-
-          <Link
-            href="/user"
-            className="font-serif text-3xl tracking-[4px]"
-          >
-            VELORA
-          </Link>
-
-          <Link
-            href="/user/account"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[var(--color-primary)]"
-          >
-            <ArrowLeft size={15} />
-            My Account
-          </Link>
-
-        </div>
-
-      </header>
-
+      
       {/* CONTENT */}
       <section className="mx-auto max-w-5xl px-6 py-12 lg:py-16">
 
         {/* TITLE */}
         <div className="mb-10">
 
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
-            Purchase History
-          </p>
+          
 
-          <h1 className="font-serif text-4xl sm:text-5xl">
+          <h1 className="font-serif text-3xl sm:text-4xl">
             MY ORDERS
           </h1>
 
-          <p className="mt-4 text-sm text-[#6B625C]">
-            View and track all your Velora orders.
-          </p>
 
         </div>
 

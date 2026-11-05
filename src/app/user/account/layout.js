@@ -94,26 +94,10 @@ export default function AccountLayout({ children }) {
 
   return (
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
-      <header className="border-b border-[#292524]/10 bg-[#292524]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5">
-          <Link
-            href="/user"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
-          >
-            VELORA
-          </Link>
-          <Link
-            href="/user/shop"
-            className="rounded-full border border-[#FFFFFF]/40 px-5 py-2 text-sm text-[#FFFFFF] transition hover:bg-[#FFFFFF] hover:text-[#292524]"
-          >
-            Continue Shopping
-          </Link>
-        </div>
-      </header>
 
-      <div className="mx-auto grid max-w-7xl items-start gap-8 px-5 py-10 lg:grid-cols-[250px_minmax(0,1fr)]">
-        <aside className="h-fit rounded-3xl bg-white p-5 shadow-sm lg:sticky lg:top-6">
-          <div className="mb-6 border-b border-[#292524]/10 pb-5">
+      <div className="mx-auto grid max-w-7xl items-start gap-5 px-4 py-6 sm:gap-8 sm:px-5 sm:py-10 lg:grid-cols-[250px_minmax(0,1fr)]">
+        <aside className="min-w-0 rounded-2xl bg-white p-4 shadow-sm sm:rounded-3xl sm:p-5 lg:sticky lg:top-6">
+          <div className="mb-4 border-b border-[#292524]/10 pb-4 sm:mb-6 sm:pb-5">
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--color-primary)]">
               My Account
             </p>
@@ -130,27 +114,31 @@ export default function AccountLayout({ children }) {
             )}
           </div>
 
-          <nav aria-label="Account navigation" className="space-y-1">
+          <nav
+            aria-label="Account navigation"
+            className="-mx-1 flex min-w-0 gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:thin] lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:px-0 lg:pb-0"
+          >
             {accountLinks.map(({ href, label, icon: Icon, active }) => (
               <Link
                 key={href}
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition ${
+                className={`flex min-h-11 shrink-0 items-center gap-2 rounded-xl px-3 py-2.5 text-sm transition sm:gap-3 sm:px-4 lg:w-full ${
                   active
                     ? "bg-[var(--color-primary)] text-white"
                     : "text-[#292524] hover:bg-[#FFFFFF]"
                 }`}
               >
-                <Icon size={18} />
+                <Icon size={18} className="shrink-0" aria-hidden="true" />
                 {label}
               </Link>
             ))}
             <button
+              type="button"
               onClick={handleLogout}
-              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-600 transition hover:bg-red-50"
+              className="flex min-h-11 shrink-0 items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-red-600 transition hover:bg-red-50 sm:gap-3 sm:px-4 lg:w-full"
             >
-              <LogOut size={18} />
+              <LogOut size={18} className="shrink-0" aria-hidden="true" />
               Logout
             </button>
           </nav>

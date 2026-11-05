@@ -86,11 +86,9 @@ export default function WishlistPage() {
           />
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
-              Your Collection
-            </p>
+            
 
-            <h1 className="mt-2 font-serif text-4xl text-[#292524] md:text-5xl">
+            <h1 className="mt-2 font-serif text-3xl text-[#292524] md:text-4xl">
               Wishlist
             </h1>
           </div>
