@@ -62,9 +62,7 @@ export default function HeroBanner() {
   if (loading) {
     return (
       <section className="user-page-full-bleed relative w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
-        <div className="relative h-[350px] w-full sm:h-full">
-          <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622]" />
-        </div>
+        <div className="h-[400px] w-full animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622] sm:absolute sm:inset-0 sm:h-full" />
         <PromoBanner />
       </section>
     );
@@ -72,7 +70,7 @@ export default function HeroBanner() {
 
   if (!slides.length) {
     return (
-      <section className="user-page-full-bleed relative min-h-[220px] w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
+      <section className="user-page-full-bleed relative min-h-[240px] w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
         <PromoBanner />
       </section>
     );
@@ -80,7 +78,7 @@ export default function HeroBanner() {
 
   return (
     <section className="user-page-full-bleed relative w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
-      <div className="relative h-[350px] w-full sm:h-full">
+      <div className="relative h-[400px] w-full sm:h-full">
         <Swiper
           modules={[Autoplay, EffectFade, Navigation, Pagination]}
           effect="fade"
@@ -138,14 +136,14 @@ export default function HeroBanner() {
                     {slide.title}
                   </h1>
 
-                  <p className="mt-3 max-w-[440px] text-xs leading-5 text-white/80 sm:mt-4 sm:text-sm sm:leading-6">
+                  <p className="mt-3 max-w-[440px] text-[13px] leading-5 text-white/70 sm:mt-4 sm:text-sm sm:leading-6">
                     {slide.subtitle}
                   </p>
 
                   <div className="mt-5 sm:mt-7">
                     <Link
                       href={slide.buttonLink || "/user/shop"}
-                      className="group relative inline-flex min-h-11 items-center gap-2.5 overflow-hidden bg-white px-5 text-[10px] font-bold uppercase tracking-[1.4px] text-black transition-colors duration-300 hover:bg-[#E5E5E5] sm:px-7 sm:tracking-[1.8px]"
+                      className="group relative inline-flex h-11 items-center gap-2.5 overflow-hidden bg-white px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-black transition-colors duration-300 hover:bg-[#E5E5E5]"
                     >
                       <ShoppingBag
                         size={14}

@@ -233,13 +233,13 @@ export default function Navbar() {
   const expandedCollection = filteredCollections.find(isCollectionExpanded);
   const expandedCollectionIndex = filteredCollections.findIndex(isCollectionExpanded);
   return (
-    <header className="sticky top-0 z-50 w-full bg-black text-white">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/90 text-white shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-md">
 
       {/* =====================================================
           MAIN NAVBAR
       ===================================================== */}
 
-      <div className="mx-auto flex h-16 w-[94%] max-w-300 items-center justify-between gap-2 sm:h-19 sm:w-[92%]">
+      <div className="mx-auto flex h-16 w-[94%] max-w-300 items-center justify-between gap-3 sm:h-19 sm:w-[92%]">
 
         {/* =====================================================
             LOGO
@@ -248,7 +248,7 @@ export default function Navbar() {
         <Link
           href="/user"
           onClick={closeMenu}
-          className={`flex min-w-0 items-center gap-1 sm:gap-2 ${searchOpen ? "hidden" : ""}`}
+          className={`flex min-w-0 items-center gap-1 transition-opacity sm:gap-2 ${searchOpen ? "hidden" : ""}`}
         >
           <Image
             src="/images/logo/logo.png"
@@ -259,7 +259,7 @@ export default function Navbar() {
             className="h-13 w-13 shrink-0 object-contain sm:h-17.5 sm:w-17.5"
           />
 
-          <span className="font-serif text-xl font-bold tracking-[2px] text-white sm:text-[24px] sm:tracking-[3px]">
+          <span className="font-serif text-xl font-semibold tracking-[2.4px] text-white sm:text-[24px] sm:tracking-[3.2px]">
             VELORA
           </span>
         </Link>
@@ -294,13 +294,13 @@ export default function Navbar() {
             DESKTOP NAVIGATION
         ===================================================== */}
 
-        <nav className={`hidden items-center gap-9 md:flex ${searchOpen ? "!hidden" : ""}`}>
+        <nav className={`hidden items-center gap-6 lg:gap-8 md:flex ${searchOpen ? "!hidden" : ""}`}>
 
           {/* HOME */}
 
           <Link
             href="/user"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-white"
+            className="relative py-2 text-[12px] font-medium uppercase tracking-[1.25px] text-white/85 transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             Home
           </Link>
@@ -309,14 +309,14 @@ export default function Navbar() {
 
           <Link
             href="/user/shop"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-white"
+            className="relative py-2 text-[12px] font-medium uppercase tracking-[1.25px] text-white/85 transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             Shop
           </Link>
 
           <Link
             href="/user/offers"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-white"
+            className="relative py-2 text-[12px] font-medium uppercase tracking-[1.25px] text-white/85 transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             Offers
           </Link>
@@ -333,7 +333,7 @@ export default function Navbar() {
 
             <Link
               href="/user/shop"
-              className="flex items-center gap-1 text-[13px] font-medium uppercase tracking-[1px] transition hover:text-white"
+              className="flex items-center gap-1 py-2 text-[12px] font-medium uppercase tracking-[1.25px] text-white/85 transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               Collection
 
@@ -347,7 +347,7 @@ export default function Navbar() {
             </Link>
 
             {openCollection && (
-              <div className="absolute left-1/2 top-full flex w-[35rem] -translate-x-1/2 items-start gap-2 pt-4">
+              <div className="absolute left-1/2 top-full flex w-[35rem] -translate-x-1/2 items-start gap-2 pt-3">
                 <div className="w-72 shrink-0 overflow-hidden rounded-xl border border-[#E5E5E5] bg-black p-2 text-white shadow-[0_16px_40px_rgba(41,37,36,0.18)]">
                   <label className="flex h-10 items-center gap-2 rounded-lg bg-[#F5F5F5] px-3 focus-within:ring-1 focus-within:ring-[var(--color-primary)]">
                     <Search size={15} className="shrink-0 text-[var(--color-primary)]" />
@@ -357,7 +357,7 @@ export default function Navbar() {
                       onChange={(event) => setCollectionSearchTerm(event.target.value)}
                       placeholder="Search collections..."
                       aria-label="Search collections"
-                      className="min-w-0 flex-1 bg-transparent text-xs text-white outline-none placeholder:text-[#8B817A]"
+                      className="min-w-0 flex-1 bg-transparent text-xs text-[#292524] outline-none placeholder:text-[#8B817A]"
                     />
                     <ChevronDown size={14} className="shrink-0 text-white" />
                   </label>
@@ -462,7 +462,7 @@ export default function Navbar() {
 
           <Link
             href="/user/shop?sort=newest"
-            className="text-[13px] font-medium uppercase tracking-[1px] transition hover:text-white"
+            className="relative py-2 text-[12px] font-medium uppercase tracking-[1.25px] text-white/85 transition-colors duration-200 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             New Arrivals
           </Link>
@@ -473,7 +473,7 @@ export default function Navbar() {
             DESKTOP ACTIONS
         ===================================================== */}
 
-        <div className={`hidden items-center gap-5 md:flex ${searchOpen ? "!hidden" : ""}`}>
+        <div className={`hidden items-center gap-2 md:flex ${searchOpen ? "!hidden" : ""}`}>
 
           {/* Search */}
 
@@ -481,7 +481,7 @@ export default function Navbar() {
             type="button"
             onClick={openSearch}
             aria-label="Search"
-            className="transition hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-white/85 transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             <Search
               size={20}
@@ -494,7 +494,7 @@ export default function Navbar() {
           <Link
             href="/user/wishlist"
             aria-label="Wishlist"
-            className="text-red-500 transition hover:text-red-400"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-red-500 transition-colors duration-200 hover:bg-white/10 hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             <Heart
               size={20}
@@ -508,14 +508,14 @@ export default function Navbar() {
           <Link
             href="/user/cart"
             aria-label="Shopping Cart"
-            className="relative transition hover:text-white"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full text-white/85 transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             <ShoppingBag
               size={20}
               strokeWidth={1.7}
             />
 
-            <span className="absolute -right-2 -top-2 flex h-3.75 w-3.75 items-center justify-center rounded-full bg-white text-[9px] font-bold text-black">
+            <span className="absolute right-0 top-0 flex h-4 min-w-4 -translate-y-0.5 translate-x-0.5 items-center justify-center rounded-full bg-white px-1 text-[9px] font-bold leading-none text-black">
               {cartCount}
             </span>
           </Link>
@@ -526,7 +526,7 @@ export default function Navbar() {
             href="/user/account"
             onClick={handleAccountClick}
             aria-label="Account"
-            className="transition hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-white/85 transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             <User
               size={20}
@@ -545,7 +545,7 @@ export default function Navbar() {
             type="button"
             onClick={openSearch}
             aria-label="Search products"
-            className="flex h-11 w-11 items-center justify-center transition hover:text-white"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-white/90 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             <Search size={21} strokeWidth={1.7} />
           </button>
@@ -553,8 +553,9 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-            className="flex h-11 w-11 items-center justify-center"
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+            className="flex h-11 w-11 items-center justify-center rounded-full text-white/90 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             {mobileMenuOpen ? (
               <X size={25} strokeWidth={1.7} />
@@ -571,7 +572,7 @@ export default function Navbar() {
       ===================================================== */}
 
       {mobileMenuOpen && (
-        <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-white/10 bg-black px-[6%] pb-6 md:hidden">
+        <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-white/10 bg-black px-[6%] pb-6 shadow-[0_16px_30px_rgba(0,0,0,0.18)] md:hidden">
 
           <nav className="flex flex-col">
 
@@ -580,7 +581,7 @@ export default function Navbar() {
             <Link
               href="/user"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-white"
+              className="flex min-h-12 items-center border-b border-white/10 py-3 text-xs font-medium uppercase tracking-[1.4px] text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               Home
             </Link>
@@ -590,7 +591,7 @@ export default function Navbar() {
             <Link
               href="/user/shop"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-white"
+              className="flex min-h-12 items-center border-b border-white/10 py-3 text-xs font-medium uppercase tracking-[1.4px] text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               Shop
             </Link>
@@ -598,7 +599,7 @@ export default function Navbar() {
             <Link
               href="/user/offers"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-white"
+              className="flex min-h-12 items-center border-b border-white/10 py-3 text-xs font-medium uppercase tracking-[1.4px] text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               Offers
             </Link>
@@ -614,7 +615,7 @@ export default function Navbar() {
                 onClick={() =>
                   setOpenCollection(!openCollection)
                 }
-                className="flex w-full items-center justify-between py-4 text-sm uppercase tracking-[1px]"
+                className="flex min-h-12 w-full items-center justify-between py-3 text-xs font-medium uppercase tracking-[1.4px] text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               >
                 Collection
 
@@ -737,7 +738,7 @@ export default function Navbar() {
             <Link
               href="/user/shop?sort=newest"
               onClick={closeMenu}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[1px] transition hover:text-white"
+              className="flex min-h-12 items-center border-b border-white/10 py-3 text-xs font-medium uppercase tracking-[1.4px] text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               New Arrivals
             </Link>
@@ -755,7 +756,7 @@ export default function Navbar() {
             <Link
               href="/user/wishlist"
               onClick={closeMenu}
-              className="flex items-center gap-3 py-3 text-sm text-red-500 transition hover:text-red-400"
+              className="flex min-h-11 items-center gap-3 rounded-md py-2 text-sm text-red-500 transition-colors hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               <Heart
                 size={18}
@@ -771,7 +772,7 @@ export default function Navbar() {
             <Link
               href="/user/cart"
               onClick={closeMenu}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-white"
+              className="flex min-h-11 items-center gap-3 rounded-md py-2 text-sm text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               <ShoppingBag
                 size={18}
@@ -792,7 +793,7 @@ export default function Navbar() {
             <Link
               href="/user/account"
               onClick={handleAccountClick}
-              className="flex items-center gap-3 py-3 text-sm transition hover:text-white"
+              className="flex min-h-11 items-center gap-3 rounded-md py-2 text-sm text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               <User
                 size={18}

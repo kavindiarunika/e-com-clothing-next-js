@@ -315,11 +315,12 @@ export default function ProductCard({
           <button
             type="button"
             onClick={handleAddToCart}
-            className="absolute bottom-0 left-0 right-0 z-30 flex min-h-11 translate-y-0 items-center justify-center gap-1 bg-[var(--color-primary)] px-1 py-2 text-[10px] font-semibold uppercase tracking-wide text-white transition-transform duration-300 hover:bg-[var(--color-primary-hover)] [@media(hover:hover)]:translate-y-full [@media(hover:hover)]:group-hover:translate-y-0 sm:gap-2 sm:py-3 sm:text-xs sm:tracking-[1.5px]"
+            className="group/add-to-cart absolute bottom-0 left-0 right-0 z-30 flex min-h-11 translate-y-0 items-center justify-center gap-1 bg-[var(--color-primary)] px-1 py-2 text-[10px] font-semibold uppercase tracking-wide text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_-4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] [@media(hover:hover)]:translate-y-full [@media(hover:hover)]:group-hover:translate-y-0 motion-reduce:transition-none sm:gap-2 sm:py-3 sm:text-xs sm:tracking-[1.5px]"
           >
             <ShoppingBag
               size={16}
               strokeWidth={1.7}
+              className="transition-transform duration-300 ease-out group-hover/add-to-cart:scale-110 motion-reduce:transition-none"
             />
 
             Add to Cart
@@ -340,7 +341,7 @@ export default function ProductCard({
           href={`/user/product/${product.id}`}
         >
           <h3
-            className="line-clamp-2 min-h-10 text-xs font-medium leading-5 text-[#292524] transition-colors hover:text-[var(--color-primary)] sm:text-sm"
+            className="text-sm font-medium text-[#292524] transition-colors hover:text-[var(--color-primary)]"
           >
             {product.name}
           </h3>

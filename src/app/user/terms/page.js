@@ -6,31 +6,12 @@ export default function TermsPage() {
   return (
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
-      <header className="bg-[#292524]">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
-          <Link
-            href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
-          >
-            VELORA
-          </Link>
-
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-sm text-[#FFFFFF] hover:text-[var(--color-primary)]"
-          >
-            <ArrowLeft size={16} />
-            Back to Home
-          </Link>
-        </div>
-      </header>
+      
 
       <section className="mx-auto max-w-4xl px-5 py-16">
 
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-primary)]">
-            VELORA
-          </p>
+         
 
           <h1 className="mt-3 text-4xl font-semibold">
             Terms & Conditions

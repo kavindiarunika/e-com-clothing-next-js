@@ -73,14 +73,14 @@ export default function NewArrivals() {
           </h2>
           <Link
             href="/user/shop?sort=newest"
-            className="group/button hidden min-h-10 items-center gap-2 bg-[var(--color-banner)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#A96870] sm:inline-flex sm:text-xs"
+            className="group/button hidden min-h-10 items-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] motion-reduce:transition-none sm:inline-flex sm:text-xs sm:active:scale-100"
           >
             View All Products
             <ArrowRight
               size={14}
               strokeWidth={1.8}
               aria-hidden="true"
-              className="transition-transform duration-300 group-hover/button:translate-x-1"
+              className="transition-transform duration-300 group-hover/button:translate-x-1 motion-reduce:transition-none"
             />
           </Link>
         </div>
@@ -117,14 +117,14 @@ export default function NewArrivals() {
         )}
         <Link
           href="/user/shop?sort=newest"
-          className="group/button mt-5 inline-flex min-h-10 w-full items-center justify-center gap-2 bg-[var(--color-banner)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#A96870] sm:hidden"
+          className="group/button mt-5 inline-flex min-h-10 w-full items-center justify-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] motion-reduce:transition-none sm:hidden"
         >
           View All Products
           <ArrowRight
             size={14}
             strokeWidth={1.8}
             aria-hidden="true"
-            className="transition-transform duration-300 group-hover/button:translate-x-1"
+            className="transition-transform duration-300 group-hover/button:translate-x-1 motion-reduce:transition-none"
           />
         </Link>
 

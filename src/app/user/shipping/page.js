@@ -15,26 +15,7 @@ export default function ShippingPage() {
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
       {/* Header */}
-      <header className="bg-[#292524]">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
-
-          <Link
-            href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
-          >
-            VELORA
-          </Link>
-
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-sm text-[#FFFFFF] transition hover:text-[var(--color-primary)]"
-          >
-            <ArrowLeft size={16} />
-            Back to Home
-          </Link>
-
-        </div>
-      </header>
+      
 
       {/* Hero */}
       <section className="mx-auto max-w-5xl px-5 py-16">

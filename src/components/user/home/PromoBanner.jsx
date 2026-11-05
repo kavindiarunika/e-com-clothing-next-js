@@ -189,7 +189,7 @@ export default function PromoBanner() {
                   CONTENT
               ===================================================== */}
 
-              <div className="relative z-10 flex min-h-[188px] w-full items-center px-4 py-4 sm:min-h-[208px] sm:px-7 sm:py-6">
+              <div className="relative z-10 flex min-h-[168px] w-full items-center px-4 py-4 sm:min-h-[208px] sm:px-7 sm:py-6">
                 <div className="flex w-full flex-col items-start gap-3 sm:gap-4">
                   <div className="flex items-center gap-2 text-[var(--color-banner)]">
                     <Sparkles size={15} strokeWidth={1.8} />
@@ -199,12 +199,12 @@ export default function PromoBanner() {
                   </div>
 
                   <div className="w-full">
-                    <h2 className="text-lg font-semibold leading-tight tracking-wide text-white sm:text-2xl">
+                    <h2 className="text-xl font-semibold leading-tight tracking-wide text-white sm:text-2xl">
                       {offer.title}
                     </h2>
                     {offer.description && (
                       <div
-                        className="mt-2 line-clamp-2 text-xs leading-relaxed text-white/85 sm:line-clamp-3 sm:text-base"
+                        className="mt-2 line-clamp-3 text-sm leading-relaxed text-white/85 sm:text-base"
                         dangerouslySetInnerHTML={{
                           __html: sanitizeProductDescription(offer.description),
                         }}
@@ -226,13 +226,13 @@ export default function PromoBanner() {
                     {offer.link && (
                       <Link
                         href={offer.link}
-                        className="group/button inline-flex min-h-10 items-center gap-2 bg-[var(--color-banner)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#A96870] sm:text-xs"
+                        className="group/button inline-flex min-h-10 items-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] motion-reduce:transition-none sm:text-xs sm:active:scale-100"
                       >
                         <span>Get Offer</span>
                         <ArrowRight
                           size={14}
                           strokeWidth={1.8}
-                          className="transition-transform duration-300 group-hover/button:translate-x-1"
+                          className="transition-transform duration-300 group-hover/button:translate-x-1 motion-reduce:transition-none"
                         />
                       </Link>
                     )}
