@@ -364,53 +364,66 @@ export default function ShopPage({
       <ShopOfferHero />
 
       {/* Main */}
-      <section className="w-full max-w-none px-4 py-8 md:px-6 md:py-10 xl:px-8">
+      <section className="mx-auto w-[92%] max-w-[1440px] py-8 sm:py-10 md:py-14">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 sm:mb-6 sm:gap-4">
+          <p className="text-sm text-[#6B625C]">
+            {filteredProducts.length} {filteredProducts.length === 1 ? "item" : "items"}
+          </p>
 
-        {/* Mobile Filter Button */}
-        <div className="mb-6 flex items-center justify-between md:hidden">
+          <div className="hidden items-center gap-4 md:flex">
+            <button
+              type="button"
+              onClick={() => setDesktopFiltersOpen((open) => !open)}
+              aria-expanded={desktopFiltersOpen}
+              aria-controls="shop-filter-sidebar"
+              className="flex items-center gap-2 text-sm text-[#292524] hover:text-[var(--color-primary)]"
+            >
+              <SlidersHorizontal size={16} />
+              {desktopFiltersOpen ? "Hide filters" : "Show filters"}
+            </button>
+            <div className="w-48">
+              <SortDropdown
+                id="shop-sort-desktop"
+                sortBy={sortBy}
+                setSortBy={(value) => {
+                  setSortBy(value);
+                  setCurrentPage(1);
+                }}
+              />
+            </div>
+          </div>
+        </div>
 
+        <div className="mb-5 flex items-center gap-2 md:hidden">
           <button
             type="button"
-            onClick={() =>
-              setMobileFiltersOpen(true)
-            }
-            className="flex min-h-11 items-center gap-2 border border-[#E5E5E5] bg-white px-4 py-2.5 text-sm text-[#292524]"
+            onClick={() => setMobileFiltersOpen(true)}
+            className="flex min-h-11 flex-1 items-center justify-center gap-2 border border-[#E5E5E5] bg-white px-3 py-2.5 text-sm text-[#292524]"
           >
             <SlidersHorizontal size={17} />
             Filters
           </button>
-
-          <SortDropdown
-            sortBy={sortBy}
-            setSortBy={(value) => {
-              setSortBy(value);
-              setCurrentPage(1);
-            }}
-          />
-
+          <div className="min-w-0 flex-1">
+            <SortDropdown
+              id="shop-sort-mobile-toolbar"
+              sortBy={sortBy}
+              setSortBy={(value) => {
+                setSortBy(value);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
         </div>
 
-
-        <div className="flex items-start gap-6 lg:gap-8">
+        <div className="flex min-w-0 gap-6 lg:gap-8">
 
           {/* Desktop Sidebar */}
           {desktopFiltersOpen && <aside
             id="shop-filter-sidebar"
-            className="hidden w-[230px] shrink-0 self-start md:block lg:w-[260px]"
+            className="hidden w-[220px] shrink-0 md:block lg:w-[250px]"
           >
-            <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
-              <div className="mb-4 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setDesktopFiltersOpen(false)}
-                  aria-label="Close filters"
-                  className="flex items-center gap-1 text-xs text-[#6B625C] hover:text-[var(--color-primary)]"
-                >
-                  <X size={16} />
-                  Close
-                </button>
-              </div>
-              <div className="mb-6">
+            <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto border border-[#E5E5E5] border-t-2 border-t-[var(--color-primary)] bg-gradient-to-b from-white to-[#F5F5F5] p-5 shadow-[0_12px_32px_rgba(50,45,41,0.08)] lg:p-6">
+              <div className="mb-6 rounded-sm bg-[#F5F5F5] p-2">
                 <SearchBar
                   value={searchTerm}
                   onChange={(value) => {
@@ -420,18 +433,25 @@ export default function ShopPage({
                 />
               </div>
 
-              <div className="mb-5 flex items-center justify-between border-b border-[#E5E5E5] pb-4">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-[#292524]">
-                  Filters
-                </h2>
-
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="text-xs text-[var(--color-primary)] hover:underline"
-                >
-                  Clear
-                </button>
+              <div className="mb-6 flex items-center justify-between">
+                <h2 className="font-serif text-lg text-[#292524]">Filters</h2>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="text-xs text-[var(--color-primary)] hover:underline"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDesktopFiltersOpen(false)}
+                    aria-label="Close filters"
+                    className="text-[#6B625C] hover:text-[var(--color-primary)]"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
               </div>
 
               <FilterSidebar
@@ -461,32 +481,6 @@ export default function ShopPage({
 
           {/* Products */}
           <div className="min-w-0 flex-1">
-
-            <div className="mb-5 hidden min-h-12 items-center justify-between gap-4 md:flex">
-              <div className="flex items-center gap-4">
-                <p className="text-sm text-[#777]">
-                  {filteredProducts.length} {filteredProducts.length === 1 ? "product" : "products"}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setDesktopFiltersOpen((open) => !open)}
-                  aria-expanded={desktopFiltersOpen}
-                  aria-controls="shop-filter-sidebar"
-                  className="flex items-center gap-2 text-sm text-[#292524] hover:text-[var(--color-primary)]"
-                >
-                  <SlidersHorizontal size={16} />
-                  {desktopFiltersOpen ? "Hide filters" : "Show filters"}
-                </button>
-              </div>
-              <SortDropdown
-                id="shop-sort-desktop"
-                sortBy={sortBy}
-                setSortBy={(value) => {
-                  setSortBy(value);
-                  setCurrentPage(1);
-                }}
-              />
-            </div>
 
             {/* Product Grid */}
             {isLoadingProducts ? (
