@@ -60,8 +60,8 @@ export default function HeroBanner() {
   // Skeleton while fetching — avoids a jarring layout pop-in
   if (loading) {
     return (
-      <section className="user-page-full-bleed relative w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
-        <div className="h-[400px] w-full animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622] sm:absolute sm:inset-0 sm:h-full" />
+      <section className="user-page-full-bleed relative h-[300px] w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden lg:h-[480px]">
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622]" />
         <PromoBanner />
       </section>
     );
@@ -69,15 +69,15 @@ export default function HeroBanner() {
 
   if (!slides.length) {
     return (
-      <section className="user-page-full-bleed relative min-h-[240px] w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
+      <section className="user-page-full-bleed relative min-h-[240px] w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden lg:h-[480px]">
         <PromoBanner />
       </section>
     );
   }
 
   return (
-    <section className="user-page-full-bleed relative w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
-      <div className="relative h-[400px] w-full sm:h-full">
+    <section className="user-page-full-bleed relative h-[300px] w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden lg:h-[480px]">
+      <div className="relative h-full w-full">
         <Swiper
           modules={[Autoplay, EffectFade, Navigation, Pagination]}
           effect="fade"
