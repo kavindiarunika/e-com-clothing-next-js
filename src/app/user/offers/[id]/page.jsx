@@ -87,7 +87,7 @@ export default function OfferDetailPage() {
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedAvailability, setSelectedAvailability] = useState("all");
-  const [sortBy, setSortBy] = useState("newest");
+  const [sortBy, setSortBy] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
 
@@ -251,6 +251,11 @@ export default function OfferDetailPage() {
           new Date(second.created_at || 0).getTime() -
           new Date(first.created_at || 0).getTime()
       );
+    } else if (sortBy === "featured") {
+      result.sort(
+        (first, second) =>
+          Number(second.is_featured || 0) - Number(first.is_featured || 0)
+      );
     } else if (sortBy === "price-low") {
       result.sort(
         (first, second) =>
@@ -289,7 +294,7 @@ export default function OfferDetailPage() {
     setSelectedPrice("");
     setSelectedSizes([]);
     setSelectedAvailability("all");
-    setSortBy("newest");
+    setSortBy("");
   };
 
   const handleQuickAddToCart = (product) => {
@@ -365,7 +370,7 @@ export default function OfferDetailPage() {
 
   return (
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
-      <div className="mx-auto w-[92%] max-w-[1440px] py-4">
+      <div className="mx-auto w-[92%] max-w-[1440px] py-3 sm:py-4">
         <Link
           href="/user/offers"
           className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)] transition hover:text-[#292524]"
@@ -375,7 +380,7 @@ export default function OfferDetailPage() {
         </Link>
       </div>
 
-      <section className="user-page-full-bleed relative isolate h-[400px] w-full overflow-hidden bg-[#292524] text-white">
+      <section className="user-page-full-bleed relative isolate min-h-[360px] w-full overflow-hidden bg-[#292524] text-white sm:h-[400px]">
         {offer.banner_image && (
           <Image
             src={offer.banner_image}
@@ -388,15 +393,15 @@ export default function OfferDetailPage() {
         )}
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#171310]/95 via-[#171310]/75 to-[#171310]/40" />
 
-        <div className="relative mx-auto flex h-full w-[92%] max-w-[1440px] flex-col justify-center pt-10">
+        <div className="relative mx-auto flex min-h-[360px] w-[92%] max-w-[1440px] flex-col justify-center py-8 sm:h-full sm:min-h-0 sm:py-0 sm:pt-10">
           <div className="max-w-3xl">
             {offer.end_date && (
-              <div className="mb-4 w-fit border border-white/20 bg-black/35 px-4 py-3 text-white shadow-xl backdrop-blur-sm sm:px-5 sm:py-3.5">
+              <div className="mb-4 w-fit max-w-full border border-white/20 bg-black/35 px-3 py-2.5 text-white shadow-xl backdrop-blur-sm sm:px-5 sm:py-3.5">
                 <p className="text-[10px] font-semibold uppercase tracking-[2.5px] text-white/75">
                   Offer ends in:
                 </p>
                 <div
-                  className="mt-2 grid grid-cols-4 gap-2 text-center"
+                  className="mt-2 grid grid-cols-4 gap-1.5 text-center sm:gap-2"
                   aria-label={
                     countdown.expired
                       ? "Offer has ended"
@@ -409,11 +414,11 @@ export default function OfferDetailPage() {
                     { label: "Minutes", value: countdown.minutes },
                     { label: "Seconds", value: countdown.seconds },
                   ].map(({ label, value }) => (
-                    <div key={label} className="min-w-12 bg-white/10 px-2 py-1.5">
-                      <span className="block font-serif text-2xl leading-none tabular-nums sm:text-3xl">
+                    <div key={label} className="min-w-0 bg-white/10 px-1.5 py-1.5 sm:min-w-12 sm:px-2">
+                      <span className="block font-serif text-xl leading-none tabular-nums sm:text-3xl">
                         {String(countdown.expired ? 0 : value).padStart(2, "0")}
                       </span>
-                      <span className="mt-1 block text-[8px] font-semibold uppercase tracking-[1.2px] text-white/70 sm:text-[9px]">
+                      <span className="mt-1 block text-[7px] font-semibold uppercase tracking-[0.8px] text-white/70 sm:text-[9px] sm:tracking-[1.2px]">
                         {label}
                       </span>
                     </div>
@@ -425,27 +430,27 @@ export default function OfferDetailPage() {
               </div>
             )}
 
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="inline-flex items-center gap-2 bg-white/15 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[2px] text-white backdrop-blur-sm">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <span className="inline-flex items-center gap-2 bg-white/15 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[1.2px] text-white backdrop-blur-sm sm:px-3 sm:text-[10px] sm:tracking-[2px]">
                   <Tag size={12} />
                   Limited Time Offer
                 </span>
-                <span className="inline-flex items-center gap-2 border border-white/30 bg-black/20 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[2px] text-white backdrop-blur-sm">
+                <span className="inline-flex items-center gap-2 border border-white/30 bg-black/20 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[1.2px] text-white backdrop-blur-sm sm:px-3 sm:text-[10px] sm:tracking-[2px]">
                   {offerStatusLabel}
                 </span>
               </div>
 
-              <h1 className="mt-4 font-serif text-3xl leading-tight text-white sm:text-4xl md:text-5xl">
+              <h1 className="mt-3 break-words font-serif text-3xl leading-tight text-white sm:mt-4 sm:text-4xl md:text-5xl">
                 {offer.title}
               </h1>
           </div>
         </div>
       </section>
 
-      <section id="eligible-products" className="w-full pt-10 pb-8 md:pt-14 md:pb-12">
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <div>
-            <h2 className="font-serif text-3xl text-[#292524]">Products included in this offer</h2>
+      <section id="eligible-products" className="mx-auto w-[92%] max-w-[1440px] pt-8 pb-8 sm:pt-10 md:pt-14 md:pb-12">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3 sm:mb-6 sm:gap-4">
+          <div className="min-w-0">
+            <h2 className="font-serif text-2xl leading-tight text-[#292524] sm:text-3xl">Products included in this offer</h2>
           </div>
           <div className="hidden items-center gap-4 md:flex">
             <span className="text-sm text-[#6B625C]">{filteredProducts.length} items</span>
@@ -468,23 +473,25 @@ export default function OfferDetailPage() {
           </span>
         </div>
 
-        <div className="mb-6 flex items-center justify-between gap-3 md:hidden">
+        <div className="mb-5 flex items-center gap-2 md:hidden">
           <button
             type="button"
             onClick={() => setMobileFiltersOpen(true)}
-            className="flex items-center gap-2 border border-[#E5E5E5] bg-white px-4 py-2.5 text-sm text-[#292524]"
+            className="flex min-h-11 flex-1 items-center justify-center gap-2 border border-[#E5E5E5] bg-white px-3 py-2.5 text-sm text-[#292524]"
           >
             <SlidersHorizontal size={17} />
             Filters
           </button>
 
-          <SortDropdown
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-          />
+          <div className="min-w-0 flex-1">
+            <SortDropdown
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+            />
+          </div>
         </div>
 
-        <div className="flex gap-6 lg:gap-8">
+        <div className="flex min-w-0 gap-6 lg:gap-8">
           {desktopFiltersOpen && <aside
             id="offer-filter-sidebar"
             className="hidden w-[220px] shrink-0 md:block lg:w-[250px]"
@@ -533,7 +540,7 @@ export default function OfferDetailPage() {
 
           <div className="min-w-0 flex-1">
         {filteredProducts.length ? (
-          <div className={`grid gap-4 grid-cols-2 ${
+          <div className={`grid min-w-0 grid-cols-2 gap-3 sm:gap-4 ${
             desktopFiltersOpen
               ? "lg:grid-cols-3 xl:grid-cols-3"
               : "md:grid-cols-3 xl:grid-cols-4"
@@ -547,7 +554,7 @@ export default function OfferDetailPage() {
               const productImage = product.image || product.main_image || "/images/products/shirt1.webp";
 
               return (
-                <article key={product.item_id} className="group overflow-hidden border border-[#F0E6E1] bg-white shadow-sm transition hover:-translate-y-0.5">
+                <article key={product.item_id} className="group min-w-0 overflow-hidden border border-[#F0E6E1] bg-white shadow-sm transition hover:-translate-y-0.5">
                   <div className="relative aspect-[4/5] bg-[#E7E0D9]">
                     <Image
                       src={productImage}
@@ -568,33 +575,33 @@ export default function OfferDetailPage() {
                     )}
                   </div>
 
-                  <div className="p-3.5">
+                  <div className="min-w-0 p-2.5 sm:p-3.5">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[9px] font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
+                      <span className="min-w-0 truncate text-[8px] font-semibold uppercase tracking-[1px] text-[var(--color-primary)] sm:text-[9px] sm:tracking-[2px]">
                         {product.category_name || "Featured"}
                       </span>
-                      <span className={`text-[9px] font-semibold uppercase tracking-[2px] ${stock > 0 ? "text-[#1F6F4A]" : "text-[#8B3A41]"}`}>
+                      <span className={`shrink-0 text-[8px] font-semibold uppercase tracking-wide sm:text-[9px] sm:tracking-[2px] ${stock > 0 ? "text-[#1F6F4A]" : "text-[#8B3A41]"}`}>
                         {stock > 0 ? `${stock} left` : "Out of stock"}
                       </span>
                     </div>
 
                     <Link href={`/user/product/${product.item_id}`}>
-                      <h3 className="mt-2 line-clamp-2 font-serif text-xl leading-tight text-[#292524] hover:text-[var(--color-primary)]">
+                      <h3 className="mt-2 line-clamp-2 break-words font-serif text-base leading-tight text-[#292524] hover:text-[var(--color-primary)] sm:text-xl">
                         {product.title}
                       </h3>
                     </Link>
 
-                    <div className="mt-2 flex items-end gap-2">
-                      <span className="text-base font-semibold text-[#292524]">{formatPrice(discounted)}</span>
+                    <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                      <span className="text-sm font-semibold text-[#292524] sm:text-base">{formatPrice(discounted)}</span>
                       {originalPrice > discounted && (
                         <span className="text-xs text-[#8A8178] line-through">{formatPrice(originalPrice)}</span>
                       )}
                     </div>
 
-                    <div className="mt-3 flex gap-2">
+                    <div className="mt-3 flex gap-1.5 sm:gap-2">
                       <Link
                         href={`/user/product/${product.item_id}`}
-                        className="inline-flex flex-1 items-center justify-center gap-1.5 border border-[var(--color-primary)] px-2.5 py-2 text-[9px] font-semibold uppercase tracking-[1.4px] text-[var(--color-primary)] transition hover:bg-[var(--color-primary)] hover:text-white"
+                        className="inline-flex min-h-10 min-w-0 flex-1 items-center justify-center gap-1 border border-[var(--color-primary)] px-1.5 py-2 text-[8px] font-semibold uppercase tracking-wide text-[var(--color-primary)] transition hover:bg-[var(--color-primary)] hover:text-white sm:gap-1.5 sm:px-2.5 sm:text-[9px] sm:tracking-[1.4px]"
                       >
                         View
                         <ArrowRight size={12} />
@@ -604,7 +611,7 @@ export default function OfferDetailPage() {
                         <button
                           type="button"
                           onClick={() => handleQuickAddToCart(product)}
-                          className="inline-flex items-center justify-center bg-[#292524] p-2.5 text-white transition hover:bg-[var(--color-primary)]"
+                          className="inline-flex h-10 w-10 shrink-0 items-center justify-center bg-[#292524] text-white transition hover:bg-[var(--color-primary)]"
                           aria-label={`Quick add ${product.title} to cart`}
                         >
                           <ShoppingBag size={14} />
@@ -641,18 +648,18 @@ export default function OfferDetailPage() {
       
 
       {recommendedProducts.length > 0 && (
-        <section className="mx-auto w-[92%] max-w-[1200px] pb-14">
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">Recommended</p>
-              <h2 className="mt-2 font-serif text-3xl text-[#292524]">More styles you may like</h2>
+        <section className="mx-auto w-[92%] max-w-[1440px] pt-8 pb-8 sm:pt-10 md:pt-14 md:pb-12">
+          <div className="mb-5 flex items-end justify-between gap-3 sm:mb-6 sm:gap-4">
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-[2px] text-[var(--color-primary)] sm:text-xs sm:tracking-[3px]">Recommended</p>
+              <h2 className="mt-2 font-serif text-2xl leading-tight text-[#292524] sm:text-3xl">More styles you may like</h2>
             </div>
-            <Link href="/user/shop" className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)] hover:text-[#292524]">
+            <Link href="/user/shop" className="hidden text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)] hover:text-[#292524] sm:inline-flex">
               View all
             </Link>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4">
             {recommendedProducts.map((product) => {
               const productImage = product.image || product.main_image || "/images/products/shirt1.webp";
               const discounted = getDiscountedPrice(product);
@@ -660,7 +667,7 @@ export default function OfferDetailPage() {
               const discountPercent = Number(product.discount) || 0;
 
               return (
-                <article key={product.item_id} className="group overflow-hidden border border-[#F0E6E1] bg-white shadow-sm transition hover:-translate-y-0.5">
+                <article key={product.item_id} className="group min-w-0 overflow-hidden border border-[#F0E6E1] bg-white shadow-sm transition hover:-translate-y-0.5">
                   <div className="relative aspect-[4/5] bg-[#E7E0D9]">
                     <Image
                       src={productImage}
@@ -676,12 +683,12 @@ export default function OfferDetailPage() {
                     )}
                   </div>
 
-                  <div className="p-3.5">
+                  <div className="min-w-0 p-2.5 sm:p-3.5">
                     <Link href={`/user/product/${product.item_id}`}>
-                      <h3 className="line-clamp-2 font-serif text-xl leading-tight text-[#292524] hover:text-[var(--color-primary)]">{product.title}</h3>
+                      <h3 className="line-clamp-2 break-words font-serif text-base leading-tight text-[#292524] hover:text-[var(--color-primary)] sm:text-xl">{product.title}</h3>
                     </Link>
-                    <div className="mt-2 flex items-end gap-2">
-                      <span className="text-base font-semibold text-[#292524]">{formatPrice(discounted)}</span>
+                    <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                      <span className="text-sm font-semibold text-[#292524] sm:text-base">{formatPrice(discounted)}</span>
                       {originalPrice > discounted && (
                         <span className="text-xs text-[#8A8178] line-through">{formatPrice(originalPrice)}</span>
                       )}
@@ -698,6 +705,13 @@ export default function OfferDetailPage() {
               );
             })}
           </div>
+          <Link
+            href="/user/shop"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 border border-[var(--color-primary)] px-4 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-[var(--color-primary)] transition hover:bg-[var(--color-primary)] hover:text-white sm:hidden"
+          >
+            View all
+            <ArrowRight size={14} />
+          </Link>
         </section>
       )}
 
@@ -723,7 +737,7 @@ export default function OfferDetailPage() {
               </button>
             </div>
 
-            <div className="bg-gradient-to-b from-white to-[#F5F5F5] p-6">
+            <div className="bg-gradient-to-b from-white to-[#F5F5F5] p-4 sm:p-6">
               <div className="mb-6 rounded-sm bg-[#F5F5F5] p-2">
                 <SearchBar value={searchTerm} onChange={setSearchTerm} />
               </div>

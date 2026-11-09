@@ -97,9 +97,9 @@ export default function OffersPage() {
 
   return (
     <div className="min-h-screen bg-[#FFFFFF]">
-      <section className="user-page-full-bleed w-full max-w-none px-[2%] py-8 md:py-10">
-        <div className="mb-8 md:mb-10">
-          <h1 className="font-serif text-4xl font-medium text-[#292524] md:text-5xl">
+      <section className="user-page-full-bleed w-full max-w-none px-4 py-6 sm:px-[2%] sm:py-8 md:py-10">
+        <div className="mb-6 sm:mb-8 md:mb-10">
+          <h1 className="font-serif text-3xl font-medium text-[#292524] sm:text-4xl md:text-5xl">
             Offers
           </h1>
         </div>
@@ -113,7 +113,7 @@ export default function OffersPage() {
             {error}
           </div>
         ) : visibleOffers.length ? (
-          <div className="flex flex-col gap-5 md:gap-6">
+          <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
             {visibleOffers.map((offer) => {
               const status = getOfferStatus(offer, now);
               const countdownTarget = status === "upcoming"
@@ -126,16 +126,16 @@ export default function OffersPage() {
               return (
                 <article
                   key={offer.offer_id}
-                  className="group flex min-h-[140px] overflow-hidden bg-white shadow-[0_8px_24px_rgba(41,37,36,0.14)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(41,37,36,0.2)] sm:min-h-[150px]"
+                  className="group flex min-w-0 flex-col overflow-hidden bg-white shadow-[0_8px_24px_rgba(41,37,36,0.14)] transition duration-300 hover:shadow-[0_16px_36px_rgba(41,37,36,0.2)] sm:min-h-[150px] sm:flex-row sm:hover:-translate-y-0.5"
                 >
-                  <div className="relative w-[36%] shrink-0 overflow-hidden bg-[#E5E5E5] sm:w-[32%] md:w-[28%]">
+                  <div className="relative h-40 w-full shrink-0 overflow-hidden bg-[#E5E5E5] sm:h-auto sm:min-h-[150px] sm:w-[32%] md:w-[28%]">
                     {offer.banner_image ? (
                       <div className="absolute inset-0">
                         <Image
                           src={offer.banner_image}
                           alt={offer.title}
                           fill
-                          sizes="(max-width: 640px) 36vw, 32vw"
+                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 32vw, 28vw"
                           className="object-cover transition duration-500 group-hover:scale-[1.03]"
                         />
                       </div>
@@ -152,15 +152,15 @@ export default function OffersPage() {
                     )}
                   </div>
 
-                  <div className="flex min-w-0 flex-1 flex-col justify-center p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:p-4 md:p-5">
+                  <div className="flex min-w-0 flex-1 flex-col justify-center gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:p-4 md:p-5">
                     <div className="min-w-0 flex-1">
-                      <h2 className="font-serif text-xl leading-tight text-[#292524] sm:text-2xl md:text-[2rem]">
+                      <h2 className="break-words font-serif text-xl leading-tight text-[#292524] sm:text-2xl md:text-[2rem]">
                         {offer.title}
                       </h2>
 
                       {offer.description && (
                         <div
-                          className="mt-1 line-clamp-2 text-xs leading-5 text-[#6B625C] sm:mt-2 sm:text-sm sm:leading-6"
+                          className="mt-2 line-clamp-3 text-sm leading-5 text-[#6B625C] sm:line-clamp-2 sm:leading-6"
                           dangerouslySetInnerHTML={{
                             __html: sanitizeProductDescription(offer.description),
                           }}
@@ -168,7 +168,7 @@ export default function OffersPage() {
                       )}
 
                       {(offer.start_date || offer.end_date) && (
-                        <p className="mt-1 text-[8px] uppercase tracking-[0.8px] text-[#6B625C] sm:mt-2 sm:text-[10px] sm:tracking-[1px]">
+                        <p className="mt-2 text-[10px] leading-5 text-[#6B625C] sm:text-[10px] sm:uppercase sm:tracking-[1px]">
                           {offer.start_date && `From ${formatOfferDate(offer.start_date)}`}
                           {offer.start_date && offer.end_date && " · "}
                           {offer.end_date && `Until ${formatOfferDate(offer.end_date)}`}
@@ -177,7 +177,7 @@ export default function OffersPage() {
 
                       {countdown ? (
                         <div
-                          className="mt-1 flex flex-wrap items-center gap-2 text-[11px] font-bold uppercase tracking-[0.8px] text-[#6B625C] sm:text-xs"
+                          className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#6B625C] sm:gap-2 sm:text-xs"
                           aria-label={`${status === "upcoming" ? "Starts" : "Ends"} in ${countdown.days} days, ${countdown.hours} hours, ${countdown.minutes} minutes, ${countdown.seconds} seconds`}
                         >
                           <Clock3 size={16} className="text-[var(--color-primary)]" />
@@ -190,7 +190,7 @@ export default function OffersPage() {
                           ].map(([label, value]) => (
                             <span
                               key={label}
-                              className="rounded-sm bg-[#F7F3F3] px-2 py-1.5 text-sm font-bold tabular-nums text-[#292524]"
+                              className="rounded-sm bg-[#F7F3F3] px-1.5 py-1.5 text-xs font-bold tabular-nums text-[#292524] sm:px-2 sm:text-sm"
                             >
                               {String(value).padStart(2, "0")}
                               <span className="ml-0.5 text-[9px] font-bold text-[#8B817A]">
@@ -208,7 +208,7 @@ export default function OffersPage() {
                           ? `/user/offers/${offer.offer_id}`
                           : offer.link || "/user/shop"
                       }
-                      className="mt-2 inline-flex shrink-0 self-end items-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[9px] font-semibold uppercase tracking-[1px] text-white transition hover:bg-[var(--color-primary-hover)] sm:mt-0 sm:self-center sm:px-5 sm:py-2.5 sm:text-[10px]"
+                      className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[10px] font-semibold uppercase tracking-[1px] text-white transition hover:bg-[var(--color-primary-hover)] sm:mt-0 sm:w-auto sm:self-center sm:px-5 sm:py-2.5"
                     >
                       Explore Offer
                       <ArrowRight size={15} />
