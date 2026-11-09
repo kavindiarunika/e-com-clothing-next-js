@@ -59,7 +59,16 @@ export default function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [categories, setCategories] = useState([]);
+  const [isScrolled, setIsScrolled] = useState(false);
   const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    const updateScrollState = () => setIsScrolled(window.scrollY > 20);
+
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrollState);
+  }, []);
 
   // =====================================================
   // CART COUNT
@@ -233,7 +242,13 @@ export default function Navbar() {
   const expandedCollection = filteredCollections.find(isCollectionExpanded);
   const expandedCollectionIndex = filteredCollections.findIndex(isCollectionExpanded);
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/90 text-white shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-md">
+    <header
+      className={`sticky top-0 z-50 w-full border-b text-white backdrop-blur-md transition-colors duration-300 ${
+        isScrolled
+          ? "border-white/5 bg-black/45 shadow-none"
+          : "border-white/10 bg-black/90 shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
+      }`}
+    >
 
       {/* =====================================================
           MAIN NAVBAR
