@@ -42,7 +42,6 @@ export default function HeroBanner() {
               banner.subtitle || "Explore our latest fashion collection.",
             image: banner.image || "",
             buttonText: banner.button_text || "Shop Now",
-            buttonLink: banner.button_link || "/user/shop",
           }))
           .filter((banner) => banner.image);
 
@@ -142,7 +141,7 @@ export default function HeroBanner() {
 
                   <div className="mt-5 sm:mt-7">
                     <Link
-                      href={slide.buttonLink || "/user/shop"}
+                      href="/user/shop"
                       className="group relative inline-flex h-11 items-center gap-2.5 overflow-hidden bg-white px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-black transition-colors duration-300 hover:bg-[#E5E5E5]"
                     >
                       <ShoppingBag
