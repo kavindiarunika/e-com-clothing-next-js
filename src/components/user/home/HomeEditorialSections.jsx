@@ -13,19 +13,19 @@ const styleCategories = [
     name: "Men's",
     href: "/user/men",
     image: "/images/men/01.jpg",
-    className: "row-span-2 min-h-[420px] sm:min-h-[500px]",
+    className: "row-span-2 min-h-[320px] sm:min-h-[500px]",
   },
   {
     name: "Women's",
     href: "/user/women",
     image: "/images/women/05.jpg",
-    className: "min-h-[202px] sm:min-h-[242px]",
+    className: "min-h-[154px] sm:min-h-[242px]",
   },
   {
     name: "Kid's",
     href: "/user/kids",
     image: "/images/kids/02.jpg",
-    className: "min-h-[202px] sm:min-h-[242px]",
+    className: "min-h-[154px] sm:min-h-[242px]",
   },
 ];
 
@@ -100,11 +100,11 @@ export function FindYourStyle() {
               className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-            <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-2 text-white sm:inset-x-6 sm:bottom-6">
-              <h3 className="font-serif text-2xl font-medium sm:text-3xl">
+            <div className="absolute inset-x-3 bottom-3 flex items-end justify-between gap-1 text-white sm:inset-x-6 sm:bottom-6 sm:gap-2">
+              <h3 className="font-serif text-xl font-medium sm:text-3xl">
                 {category.name}
               </h3>
-              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center bg-white text-[#292524] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">
+              <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center bg-white text-[#292524] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 sm:h-9 sm:w-9">
                 <ArrowUpRight size={17} aria-hidden="true" />
               </span>
             </div>
@@ -186,7 +186,7 @@ export default function HomeEditorialSections() {
             <Link
               key={card.name}
               href={card.href}
-              className="group relative block min-h-[280px] overflow-hidden bg-[#E8E4DF] sm:min-h-[360px]"
+              className="group relative block min-h-[220px] overflow-hidden bg-[#E8E4DF] sm:min-h-[360px]"
             >
               <Image
                 src={card.image}
@@ -196,8 +196,8 @@ export default function HomeEditorialSections() {
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-              <div className="absolute inset-x-5 bottom-5 text-white sm:inset-x-6 sm:bottom-6">
-                <h3 className="font-serif text-xl font-medium sm:text-2xl">
+              <div className="absolute inset-x-4 bottom-4 text-white sm:inset-x-6 sm:bottom-6">
+                <h3 className="font-serif text-lg font-medium sm:text-2xl">
                   {card.name}
                 </h3>
                 <p className="mt-1 text-xs text-white/80">{card.description}</p>

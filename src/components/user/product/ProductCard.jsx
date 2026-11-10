@@ -341,7 +341,7 @@ export default function ProductCard({
           href={`/user/product/${product.id}`}
         >
           <h3
-            className="text-sm font-medium text-[#292524] transition-colors hover:text-[var(--color-primary)]"
+            className="line-clamp-2 min-h-10 break-words text-[13px] font-medium leading-5 text-[#292524] transition-colors hover:text-[var(--color-primary)] sm:text-sm"
           >
             {product.name}
           </h3>
@@ -385,12 +385,10 @@ export default function ProductCard({
             PRICE
         ================================== */}
 
-        <div
-          className="mt-2 flex items-center gap-2"
-        >
+        <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
 
           <span
-            className="text-sm font-semibold text-[var(--color-primary)]"
+            className="text-xs font-semibold text-[var(--color-primary)] sm:text-sm"
           >
             Rs.{" "}
             {Math.round(
@@ -400,7 +398,7 @@ export default function ProductCard({
 
           {hasDiscount && (
             <span
-              className="text-xs text-[#6B625D] line-through"
+              className="text-[10px] text-[#6B625D] line-through sm:text-xs"
             >
               Rs.{" "}
               {originalPrice.toLocaleString()}
