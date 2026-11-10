@@ -165,13 +165,18 @@ export default function ProductsPage() {
 
   async function loadVariantOptions() {
     const [sizesResponse, colorsResponse] = await Promise.all([
-      fetch("/api/admin/sizes"),
-      fetch("/api/admin/colors"),
+      fetch("/api/admin/sizes", { credentials: "same-origin" }),
+      fetch("/api/admin/colors", { credentials: "same-origin" }),
     ]);
     const [sizesResult, colorsResult] = await Promise.all([
       sizesResponse.json(),
       colorsResponse.json(),
     ]);
+
+    if (sizesResponse.status === 401 || colorsResponse.status === 401) {
+      router.replace("/admin/login");
+      return false;
+    }
 
     if (!sizesResponse.ok || !sizesResult.success) {
       throw new Error(sizesResult.message || "Failed to load sizes");
@@ -183,6 +188,7 @@ export default function ProductsPage() {
 
     setSizes(Array.isArray(sizesResult.sizes) ? sizesResult.sizes : []);
     setColors(Array.isArray(colorsResult.colors) ? colorsResult.colors : []);
+    return true;
   }
 
   // --------------------------------------------------
@@ -207,10 +213,15 @@ export default function ProductsPage() {
     setSelectedMainImagePreview(null);
   }
 
-  function openAddModal() {
-    void loadVariantOptions().catch((error) => {
+  async function openAddModal() {
+    try {
+      const hasSession = await loadVariantOptions();
+      if (!hasSession) return;
+    } catch (error) {
       console.error("Failed to refresh variant options:", error);
-    });
+      alert("Failed to load size and color options");
+      return;
+    }
 
     setEditingId(null);
 
@@ -243,16 +254,21 @@ export default function ProductsPage() {
   }
 
   async function openEditModal(productId) {
-    void loadVariantOptions().catch((error) => {
-      console.error("Failed to refresh variant options:", error);
-    });
-
     try {
+      const hasSession = await loadVariantOptions();
+      if (!hasSession) return;
+
       const response = await fetch(
-        `/api/admin/products?id=${productId}`
+        `/api/admin/products?id=${productId}`,
+        { credentials: "same-origin" }
       );
 
       const data = await response.json();
+
+      if (response.status === 401) {
+        router.replace("/admin/login");
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to load product");
