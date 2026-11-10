@@ -120,7 +120,7 @@ export default function PromoBanner() {
   return (
     <section
       aria-label="Current offers"
-      className="promo-card-entry relative z-40 mx-auto -mt-5 mb-5 w-[calc(100%-1.5rem)] max-w-[500px] sm:absolute sm:bottom-5 sm:right-[5%] sm:mx-0 sm:mt-0 sm:mb-0"
+      className="promo-card-entry relative z-40 mx-auto -mt-5 mb-5 hidden w-[calc(100%-1.5rem)] max-w-[500px] sm:absolute sm:bottom-5 sm:right-[5%] sm:mx-0 sm:mt-0 sm:mb-0 sm:block"
     >
 
       <Swiper
@@ -143,14 +143,14 @@ export default function PromoBanner() {
               className={normalizeClassName(`
                 group
                 relative
-                min-h-[200px] sm:min-h-[240px]
+                min-h-[160px] sm:min-h-[240px]
                 w-full
                 rounded-xl
                 border
                 border-white/80
                 overflow-hidden
                 bg-[var(--color-dark)]
-                py-4 sm:py-6
+                py-3 sm:py-6
                 shadow-[0_12px_36px_rgba(0,0,0,0.32)]
               `)}
             >
@@ -189,8 +189,8 @@ export default function PromoBanner() {
                   CONTENT
               ===================================================== */}
 
-              <div className="relative z-10 flex min-h-[168px] w-full items-center px-4 py-4 sm:min-h-[208px] sm:px-7 sm:py-6">
-                <div className="flex w-full flex-col items-start gap-3 sm:gap-4">
+              <div className="relative z-10 flex min-h-[136px] w-full items-center px-4 py-3 sm:min-h-[208px] sm:px-7 sm:py-6">
+                <div className="flex w-full flex-col items-start gap-2 sm:gap-4">
                   <div className="flex items-center gap-2 text-[var(--color-banner)]">
                     <Sparkles size={15} strokeWidth={1.8} />
                     <span className="text-[10px] font-semibold uppercase tracking-[2px]">
@@ -199,12 +199,12 @@ export default function PromoBanner() {
                   </div>
 
                   <div className="w-full">
-                    <h2 className="text-xl font-semibold leading-tight tracking-wide text-white sm:text-2xl">
+                    <h2 className="text-lg font-semibold leading-tight tracking-wide text-white sm:text-2xl">
                       {offer.title}
                     </h2>
                     {offer.description && (
                       <div
-                        className="mt-2 line-clamp-3 text-sm leading-relaxed text-white/85 sm:text-base"
+                        className="mt-1 line-clamp-2 text-xs leading-relaxed text-white/85 sm:mt-2 sm:line-clamp-3 sm:text-base"
                         dangerouslySetInnerHTML={{
                           __html: sanitizeProductDescription(offer.description),
                         }}

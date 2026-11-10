@@ -27,7 +27,7 @@ export default function FeaturedProducts() {
         const result = await response.json();
 
         const products = Array.isArray(result.data)
-          ? result.data.slice(0, 4).map((product) => ({
+          ? result.data.map((product) => ({
               id: product.item_id,
               name: product.title,
               category: product.category_name,
@@ -72,7 +72,7 @@ export default function FeaturedProducts() {
             <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-primary)]">
               Handpicked for you
             </p>
-            <h2 className="font-serif text-xl font-bold leading-tight tracking-wide text-[#292524] sm:text-[38px]">
+            <h2 className="font-serif text-2xl font-bold leading-tight tracking-wide text-[#292524] sm:text-[38px]">
               Featured Collection
             </h2>
           </div>

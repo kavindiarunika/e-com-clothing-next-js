@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import AuthModeSwitch from "@/components/user/common/AuthModeSwitch";
 import {
   ArrowRight,
   ArrowLeft,
@@ -257,7 +258,10 @@ export default function RegisterPage() {
 
           <div className="flex items-center justify-center px-6 py-8 sm:px-10">
 
-            <div className="w-full max-w-sm">
+            <div className="flex w-full max-w-[500px] items-center justify-center gap-3">
+              <div className="w-full min-w-0 max-w-sm">
+
+                <AuthModeSwitch activeMode="register" />
 
               {/* BRAND */}
               <div className="mb-7 text-center">
@@ -705,24 +709,9 @@ export default function RegisterPage() {
 
               </form>
 
-              {/* LOGIN */}
-              <div className="mt-6 border-t border-[#E5E5E5] pt-5 text-center">
-
-                <p className="text-sm text-[#6B625C]">
-                  Already have an account?
-                </p>
-
-                <Link
-                  href="/user/login"
-                  className="mt-2 inline-block text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]"
-                >
-                  Sign In
-                </Link>
-
               </div>
-
+              <AuthModeSwitch activeMode="register" />
             </div>
-
           </div>
 
           {/* ================================= */}
@@ -1197,4 +1186,3 @@ export default function RegisterPage() {
     </main>
   );
 }
-
