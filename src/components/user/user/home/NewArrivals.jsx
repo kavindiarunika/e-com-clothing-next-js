@@ -62,7 +62,7 @@ export default function NewArrivals() {
         {/* Heading */}
         <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end md:mb-10">
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[4px] text-[#e63e62]">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[4px] text-[var(--color-primary)]">
               Just In
             </p>
 
@@ -70,7 +70,7 @@ export default function NewArrivals() {
               New Arrivals
             </h2>
 
-            <div className="mt-5 h-px w-12 bg-[#e63e62]" />
+            <div className="mt-5 h-px w-12 bg-[var(--color-primary)]" />
           </div>
         </div>
 
@@ -94,7 +94,7 @@ export default function NewArrivals() {
         <div className="mt-12 text-center">
           <a
             href="/user/shop"
-            className="inline-flex items-center gap-3 border border-[#e63e62] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.5px] text-[#e63e62] transition duration-300 hover:bg-[#e63e62] hover:text-white"
+            className="inline-flex items-center gap-3 border border-[var(--color-primary)] px-7 py-3.5 text-xs font-semibold uppercase tracking-[1.5px] text-[var(--color-primary)] transition duration-300 hover:bg-[var(--color-primary)] hover:text-white"
           >
             View All Products
             <span>→</span>

@@ -18,10 +18,10 @@ export default function RelatedProducts({
   }
 
   return (
-    <section className="mt-20 border-t border-[#E7DEDC] pt-14">
+    <section className="mt-20 border-t border-[#E5E5E5] pt-14">
 
       <div className="mb-8 text-center">
-        <p className="mb-2 text-xs uppercase tracking-[3px] text-[#e63e62]">
+        <p className="mb-2 text-xs uppercase tracking-[3px] text-[var(--color-primary)]">
           You May Also Like
         </p>
 

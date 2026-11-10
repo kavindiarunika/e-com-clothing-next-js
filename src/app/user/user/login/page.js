@@ -66,7 +66,7 @@ export default function LoginPage() {
           <div className="absolute inset-0 bg-[#292524]/40" />
 
           <div className="absolute bottom-12 left-12 max-w-md text-white">
-            <p className="mb-4 text-xs uppercase tracking-[4px] text-[#FAF6F5]">
+            <p className="mb-4 text-xs uppercase tracking-[4px] text-[#F5F5F5]">
               VELORA
             </p>
 
@@ -99,12 +99,12 @@ export default function LoginPage() {
                 VELORA
               </Link>
 
-              <div className="mx-auto mt-4 h-px w-8 bg-[#e63e62]" />
+              <div className="mx-auto mt-4 h-px w-8 bg-[var(--color-primary)]" />
             </div>
 
             {/* TITLE */}
             <div className="mb-5">
-              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
+              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
                 Welcome Back
               </p>
 
@@ -129,7 +129,7 @@ export default function LoginPage() {
                 justify-center
                 gap-3
                 border
-                border-[#E7DEDC]
+                border-[#E5E5E5]
                 bg-white
                 text-xs
                 font-semibold
@@ -139,7 +139,7 @@ export default function LoginPage() {
                 transition
                 duration-300
                 hover:border-[#292524]
-                hover:bg-[#FAF6F5]
+                hover:bg-[#F5F5F5]
               "
             >
               {/* Google Icon */}
@@ -172,13 +172,13 @@ export default function LoginPage() {
 
             {/* DIVIDER */}
             <div className="my-5 flex items-center gap-4">
-              <span className="h-px flex-1 bg-[#E7DEDC]" />
+              <span className="h-px flex-1 bg-[#E5E5E5]" />
 
               <span className="text-[10px] uppercase tracking-[2px] text-[#A69C94]">
                 Or
               </span>
 
-              <span className="h-px flex-1 bg-[#E7DEDC]" />
+              <span className="h-px flex-1 bg-[#E5E5E5]" />
             </div>
 
             {/* LOGIN FORM */}
@@ -218,7 +218,7 @@ export default function LoginPage() {
                     className="
                       w-full
                       border
-                      border-[#E7DEDC]
+                      border-[#E5E5E5]
                       bg-white
                       px-4
                       py-3
@@ -227,7 +227,7 @@ export default function LoginPage() {
                       outline-none
                       transition
                       placeholder:text-[#A69C94]
-                      focus:border-[#e63e62]
+                      focus:border-[var(--color-primary)]
                     "
                   />
                 </div>
@@ -248,9 +248,9 @@ export default function LoginPage() {
                     className="
                       text-[11px]
                       font-medium
-                      text-[#e63e62]
+                      text-[var(--color-primary)]
                       transition
-                      hover:text-[#A96870]
+                      hover:text-[var(--color-primary-hover)]
                     "
                   >
                     Forgot Password?
@@ -273,7 +273,7 @@ export default function LoginPage() {
                     className="
                       w-full
                       border
-                      border-[#E7DEDC]
+                      border-[#E5E5E5]
                       bg-white
                       px-4
                       py-3
@@ -283,7 +283,7 @@ export default function LoginPage() {
                       outline-none
                       transition
                       placeholder:text-[#A69C94]
-                      focus:border-[#e63e62]
+                      focus:border-[var(--color-primary)]
                     "
                   />
 
@@ -299,7 +299,7 @@ export default function LoginPage() {
                       -translate-y-1/2
                       text-[#8B817A]
                       transition
-                      hover:text-[#e63e62]
+                      hover:text-[var(--color-primary)]
                     "
                     aria-label={
                       showPassword
@@ -336,7 +336,7 @@ export default function LoginPage() {
                   text-white
                   transition
                   duration-300
-                  hover:bg-[#e63e62]
+                  hover:bg-[var(--color-primary)]
                   disabled:cursor-not-allowed
                   disabled:opacity-60
                 "
@@ -357,7 +357,7 @@ export default function LoginPage() {
             </form>
 
             {/* REGISTER */}
-            <div className="mt-6 border-t border-[#E7DEDC] pt-5 text-center">
+            <div className="mt-6 border-t border-[#E5E5E5] pt-5 text-center">
               <p className="text-sm text-[#6B625C]">
                 Don&apos;t have an account?
               </p>
@@ -369,9 +369,9 @@ export default function LoginPage() {
                   inline-block
                   text-sm
                   font-semibold
-                  text-[#e63e62]
+                  text-[var(--color-primary)]
                   transition
-                  hover:text-[#A96870]
+                  hover:text-[var(--color-primary-hover)]
                 "
               >
                 Create Account

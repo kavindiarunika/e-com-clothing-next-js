@@ -28,7 +28,7 @@ export default function ColorSelector({
           const colorName = color.name;
 
           const hexCode =
-            color.hex_code?.trim() || "#E7DEDC";
+            color.hex_code?.trim() || "#E5E5E5";
 
           const isSelected =
             selectedColor?.color_id === colorId;
@@ -48,8 +48,8 @@ export default function ColorSelector({
                 duration-200
                 ${
                   isSelected
-                    ? "ring-2 ring-[#e63e62] ring-offset-2"
-                    : "hover:ring-2 hover:ring-[#e63e62] hover:ring-offset-2"
+                    ? "ring-2 ring-[var(--color-primary)] ring-offset-2"
+                    : "hover:ring-2 hover:ring-[var(--color-primary)] hover:ring-offset-2"
                 }
               `}
             >

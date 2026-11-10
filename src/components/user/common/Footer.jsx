@@ -7,10 +7,10 @@ export default function Footer() {
 
       {/* Main Footer */}
       <div className="mx-auto max-w-300 px-[4%] py-7 md:py-8">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-7">
+        <div className="grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-7">
 
           {/* Brand */}
-          <div>
+          <div className="col-span-2 md:col-span-1">
         <Link
   href="/user"
   className="flex items-center gap-3"
@@ -40,7 +40,7 @@ export default function Footer() {
               <a
                 href="#"
                 aria-label="Instagram"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition duration-300 hover:border-[#e63e62] hover:bg-[#e63e62] hover:text-[#292524]"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition duration-300 hover:border-white hover:bg-white hover:text-[#292524]"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +70,7 @@ export default function Footer() {
               <a
                 href="#"
                 aria-label="Facebook"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition duration-300 hover:border-[#e63e62] hover:bg-[#e63e62] hover:text-[#292524]"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition duration-300 hover:border-white hover:bg-white hover:text-[#292524]"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +91,7 @@ export default function Footer() {
               <a
                 href="#"
                 aria-label="WhatsApp"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition duration-300 hover:border-[#e63e62] hover:bg-[#e63e62] hover:text-[#292524]"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition duration-300 hover:border-white hover:bg-white hover:text-[#292524]"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +123,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/user/shop"
-                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
+                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-white"
                 >
                   All Products
                   <span className="opacity-0 transition group-hover:opacity-100">
@@ -135,7 +135,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/user/men"
-                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
+                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-white"
                 >
                   Men
                   <span className="opacity-0 transition group-hover:opacity-100">
@@ -147,7 +147,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/user/women"
-                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
+                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-white"
                 >
                   Women
                   <span className="opacity-0 transition group-hover:opacity-100">
@@ -159,7 +159,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/user/kids"
-                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
+                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-white"
                 >
                   Kids
                   <span className="opacity-0 transition group-hover:opacity-100">
@@ -171,7 +171,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/user/shop?category=new-arrivals"
-                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
+                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-white"
                 >
                   New Arrivals
                   <span className="opacity-0 transition group-hover:opacity-100">
@@ -194,7 +194,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/user/contact"
-                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
+                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-white"
                 >
                   Contact Us
                   <span className="opacity-0 transition group-hover:opacity-100">
@@ -206,7 +206,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/user/shipping"
-                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
+                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-white"
                 >
                   Shipping & Delivery
                   <span className="opacity-0 transition group-hover:opacity-100">
@@ -218,7 +218,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/user/returns"
-                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
+                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-white"
                 >
                   Returns & Exchanges
                   <span className="opacity-0 transition group-hover:opacity-100">
@@ -230,7 +230,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/user/privacy"
-                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
+                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-white"
                 >
                   Privacy Policy
                   <span className="opacity-0 transition group-hover:opacity-100">
@@ -242,7 +242,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/user/terms"
-                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-[#e63e62]"
+                  className="group flex items-center gap-1 text-sm text-white/65 transition hover:text-white"
                 >
                   Terms & Conditions
                   <span className="opacity-0 transition group-hover:opacity-100">
@@ -270,12 +270,12 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="Your email address"
-                className="h-10 w-full border border-white/20 bg-white/5 px-4 text-sm text-white outline-none placeholder:text-white/40 focus:border-[#e63e62]"
+                className="h-10 w-full border border-white/20 bg-white/5 px-4 text-sm text-white outline-none placeholder:text-white/40 focus:border-[var(--color-primary)]"
               />
 
               <button
                 type="button"
-                className="h-10 w-full bg-[#e63e62] px-5 text-sm font-semibold uppercase tracking-wide text-white transition duration-300 hover:bg-[#A96870]"
+                className="h-10 w-full bg-[var(--color-primary)] px-5 text-sm font-semibold uppercase tracking-wide text-white transition duration-300 hover:bg-[var(--color-primary-hover)]"
               >
                 Subscribe
               </button>
@@ -299,14 +299,14 @@ export default function Footer() {
 
             <Link
               href="/user/privacy"
-              className="text-xs text-white/50 transition hover:text-[#e63e62]"
+              className="text-xs text-white/50 transition hover:text-white"
             >
               Privacy Policy
             </Link>
 
             <Link
               href="/user/terms"
-              className="text-xs text-white/50 transition hover:text-[#e63e62]"
+              className="text-xs text-white/50 transition hover:text-white"
             >
               Terms & Conditions
             </Link>

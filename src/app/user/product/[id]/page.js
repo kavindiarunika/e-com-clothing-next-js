@@ -384,7 +384,7 @@ export default function ProductPage({ params }) {
                 selectedVariantImage={selectedVariant?.image || selectedColor?.image || null}
               />
             ) : (
-              <div className="flex aspect-[4/5] flex-col items-center justify-center gap-3 bg-[#FAF6F5] text-[#6B625D]">
+              <div className="flex aspect-[4/5] flex-col items-center justify-center gap-3 bg-[#F5F5F5] text-[#6B625D]">
                 <ImageIcon size={32} strokeWidth={1.4} />
                 <span className="text-xs">No product image available</span>
               </div>
@@ -392,7 +392,7 @@ export default function ProductPage({ params }) {
           </div>
 
           <div className="flex flex-col justify-center">
-            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[#e63e62]">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[var(--color-primary)]">
               {product.category}
             </p>
 
@@ -407,7 +407,7 @@ export default function ProductPage({ params }) {
             </div>
 
             <div className="mt-6 flex items-center gap-3">
-              <span className="text-3xl font-semibold text-[#e63e62]">
+              <span className="text-3xl font-semibold text-[var(--color-primary)]">
                 Rs. {Math.round(discountedPrice).toLocaleString()}
               </span>
 
@@ -418,7 +418,7 @@ export default function ProductPage({ params }) {
               )}
 
               {hasDiscount && (
-                <span className="bg-[#e63e62] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                <span className="bg-[var(--color-primary)] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
                   {product.discount}% OFF
                 </span>
               )}
@@ -483,7 +483,7 @@ export default function ProductPage({ params }) {
                   Quantity
                 </p>
 
-                <div className="flex w-fit items-center border border-[#E7DEDC] bg-white">
+                <div className="flex w-fit items-center border border-[#E5E5E5] bg-white">
                   <button
                     type="button"
                     onClick={decreaseQuantity}
@@ -514,7 +514,7 @@ export default function ProductPage({ params }) {
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="flex-1 bg-[#e63e62] px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2B30]"
+                  className="flex-1 bg-[var(--color-primary)] px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2B30]"
                 >
                   Add to Cart
                 </button>
@@ -522,7 +522,7 @@ export default function ProductPage({ params }) {
                 <button
                   type="button"
                   onClick={handleBuyNow}
-                  className="flex-1 border border-[#e63e62] bg-transparent px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-[#e63e62] transition hover:bg-[#F6F1EA]"
+                  className="flex-1 border border-[var(--color-primary)] bg-transparent px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-[var(--color-primary)] transition hover:bg-[#F6F1EA]"
                 >
                   Buy Now
                 </button>
@@ -531,7 +531,7 @@ export default function ProductPage({ params }) {
               <button
                 type="button"
                 onClick={handleWishlist}
-                className="mt-2 self-start text-xs font-medium uppercase tracking-[1.5px] text-[#292524] transition hover:text-[#e63e62]"
+                className="mt-2 self-start text-xs font-medium uppercase tracking-[1.5px] text-[#292524] transition hover:text-[var(--color-primary)]"
               >
                 {isWishlisted ? "Saved to wishlist" : "Add to wishlist"}
               </button>
@@ -546,7 +546,7 @@ export default function ProductPage({ params }) {
           String(relatedProduct.id) !== String(product.id)
       ) && (
         <section className="mx-auto w-[92%] max-w-[1200px] pb-12">
-          <div className="rounded-[24px] border border-[#FAF6F5] bg-white/60 p-6 md:p-8">
+          <div className="rounded-[24px] border border-[#F5F5F5] bg-white/60 p-6 md:p-8">
             <RelatedProducts
               products={relatedProducts}
               currentProduct={product}

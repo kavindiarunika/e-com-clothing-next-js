@@ -120,7 +120,7 @@ export default function PromoBanner() {
   return (
     <section
       aria-label="Current offers"
-      className="promo-card-entry absolute bottom-3 right-3 z-40 w-[calc(100%-1.5rem)] max-w-[500px] sm:bottom-5 sm:right-[5%]"
+      className="promo-card-entry relative z-40 mx-auto -mt-5 mb-5 w-[calc(100%-1.5rem)] max-w-[500px] sm:absolute sm:bottom-5 sm:right-[5%] sm:mx-0 sm:mt-0 sm:mb-0"
     >
 
       <Swiper
@@ -143,14 +143,14 @@ export default function PromoBanner() {
               className={normalizeClassName(`
                 group
                 relative
-                min-h-[240px]
+                min-h-[200px] sm:min-h-[240px]
                 w-full
                 rounded-xl
                 border
                 border-white/80
                 overflow-hidden
                 bg-[var(--color-dark)]
-                py-6
+                py-4 sm:py-6
                 shadow-[0_12px_36px_rgba(0,0,0,0.32)]
               `)}
             >
@@ -189,8 +189,8 @@ export default function PromoBanner() {
                   CONTENT
               ===================================================== */}
 
-              <div className="relative z-10 flex min-h-[208px] w-full items-center px-5 py-6 sm:px-7">
-                <div className="flex w-full flex-col items-start gap-4">
+              <div className="relative z-10 flex min-h-[168px] w-full items-center px-4 py-4 sm:min-h-[208px] sm:px-7 sm:py-6">
+                <div className="flex w-full flex-col items-start gap-3 sm:gap-4">
                   <div className="flex items-center gap-2 text-[var(--color-banner)]">
                     <Sparkles size={15} strokeWidth={1.8} />
                     <span className="text-[10px] font-semibold uppercase tracking-[2px]">
@@ -226,13 +226,13 @@ export default function PromoBanner() {
                     {offer.link && (
                       <Link
                         href={offer.link}
-                        className="group/button inline-flex min-h-10 items-center gap-2 bg-[var(--color-banner)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#c92f50] sm:text-xs"
+                        className="group/button inline-flex min-h-10 items-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] motion-reduce:transition-none sm:text-xs sm:active:scale-100"
                       >
                         <span>Get Offer</span>
                         <ArrowRight
                           size={14}
                           strokeWidth={1.8}
-                          className="transition-transform duration-300 group-hover/button:translate-x-1"
+                          className="transition-transform duration-300 group-hover/button:translate-x-1 motion-reduce:transition-none"
                         />
                       </Link>
                     )}
@@ -249,7 +249,7 @@ export default function PromoBanner() {
                   className={normalizeClassName(`
                     h-full
                     w-1/3
-                    bg-[var(--color-banner)]
+                    bg-white
                     opacity-80
                   `)}
                 />

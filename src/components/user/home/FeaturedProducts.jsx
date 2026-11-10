@@ -63,20 +63,25 @@ export default function FeaturedProducts() {
   }, []);
 
   return (
-    <section className="bg-[#FFFFFF] px-0 py-10 md:py-12">
+    <section className="bg-[#FFFFFF] px-0 py-7 sm:py-10 md:py-12">
       <div className="mx-0 w-full max-w-none">
 
         {/* Heading */}
-        <div className="mb-8 flex items-end justify-between md:mb-10">
-          <h2 className="font-serif text-[32px] font-bold tracking-wide text-[#292524] sm:text-[38px]">
+        <div className="mb-5 flex flex-col items-start gap-3 sm:mb-8 sm:flex-row sm:items-end sm:justify-between md:mb-10">
+          <h2 className="font-serif text-2xl font-bold leading-tight tracking-wide text-[#292524] sm:text-[38px]">
             Featured Collection
           </h2>
           <Link
             href="/user/shop?sort=featured"
-            className="inline-flex shrink-0 items-center gap-3 bg-[#e63e62] px-4 py-3 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-colors duration-300 hover:bg-[#c92f50] sm:min-h-[50px] sm:px-5 sm:text-sm"
+            className="group/button hidden min-h-10 items-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] motion-reduce:transition-none sm:inline-flex sm:text-xs sm:active:scale-100"
           >
             View All Products
-            <ArrowRight size={16} strokeWidth={1.8} aria-hidden="true" />
+            <ArrowRight
+              size={14}
+              strokeWidth={1.8}
+              aria-hidden="true"
+              className="transition-transform duration-300 group-hover/button:translate-x-1 motion-reduce:transition-none"
+            />
           </Link>
         </div>
 
@@ -100,7 +105,7 @@ export default function FeaturedProducts() {
             {[1, 2, 3, 4].map((n) => (
               <div
                 key={n}
-                className="h-[450px] w-full animate-pulse rounded-tr-[2.5rem] rounded-bl-[2.5rem] bg-[#EFECE6]"
+                className="h-[320px] w-full animate-pulse rounded-tr-[2.5rem] rounded-bl-[2.5rem] bg-[#EFECE6] sm:h-[450px]"
               />
             ))}
           </div>
@@ -112,6 +117,18 @@ export default function FeaturedProducts() {
             No featured products available right now.
           </p>
         )}
+        <Link
+          href="/user/shop?sort=featured"
+          className="group/button mt-5 inline-flex min-h-10 w-full items-center justify-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] motion-reduce:transition-none sm:hidden"
+        >
+          View All Products
+          <ArrowRight
+            size={14}
+            strokeWidth={1.8}
+            aria-hidden="true"
+            className="transition-transform duration-300 group-hover/button:translate-x-1 motion-reduce:transition-none"
+          />
+        </Link>
 
       </div>
     </section>

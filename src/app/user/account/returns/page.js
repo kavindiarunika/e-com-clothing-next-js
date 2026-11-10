@@ -147,7 +147,7 @@ export default function ReturnsPage() {
         return {
           bg: "bg-[#FFFFFF]",
           text: "text-[#292524]",
-          border: "border-[#E7DEDC]",
+          border: "border-[#E5E5E5]",
           icon: <Clock3 size={14} />,
         };
     }
@@ -156,29 +156,8 @@ export default function ReturnsPage() {
   return (
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
-      {/* HEADER */}
-      <header className="border-b border-[#E7DEDC]">
-
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
-
-          <Link
-            href="/user"
-            className="font-serif text-3xl tracking-[4px]"
-          >
-            VELORA
-          </Link>
-
-          <Link
-            href="/user/account"
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#e63e62]"
-          >
-            <ArrowLeft size={15} />
-            My Account
-          </Link>
-
-        </div>
-
-      </header>
+      
+     
 
       {/* CONTENT */}
       <section className="mx-auto max-w-6xl px-6 py-12 lg:px-10 lg:py-16">
@@ -186,28 +165,22 @@ export default function ReturnsPage() {
         {/* TITLE */}
         <div className="mb-10">
 
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
-            Customer Account
-          </p>
+          
 
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
 
             <div>
 
-              <h1 className="font-serif text-4xl sm:text-5xl">
+              <h1 className="font-serif text-3xl sm:text-4xl">
                 RETURNS & EXCHANGES
               </h1>
 
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-[#6B625C]">
-                Track your return and exchange requests
-                and see the latest status from our team.
-              </p>
-
+              
             </div>
 
             <Link
               href="/user/account/orders"
-              className="inline-flex items-center justify-center border border-[#e63e62] px-5 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#e63e62] transition hover:bg-[#e63e62] hover:text-white"
+              className="inline-flex items-center justify-center border border-[var(--color-primary)] px-5 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-[var(--color-primary)] transition hover:bg-[var(--color-primary)] hover:text-white"
             >
               My Orders
             </Link>
@@ -219,16 +192,14 @@ export default function ReturnsPage() {
         {/* ORDERS */}
         <div className="mb-14">
           <div className="mb-6">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[3px] text-[#e63e62]">
-              Start a Request
-            </p>
+            
             <h2 className="font-serif text-2xl sm:text-3xl">
               Your Orders
             </h2>
           </div>
 
           {ordersLoading ? (
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-8 text-center">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-8 text-center">
               <p className="text-sm text-[#6B625C]">Loading your orders...</p>
             </div>
           ) : ordersError ? (
@@ -236,7 +207,7 @@ export default function ReturnsPage() {
               {ordersError}
             </p>
           ) : orders.length === 0 ? (
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-8 text-center">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-8 text-center">
               <Package size={30} className="mx-auto text-[#8B817A]" />
               <p className="mt-3 text-sm text-[#6B625C]">
                 Your orders will appear here when you have placed an order.
@@ -251,9 +222,9 @@ export default function ReturnsPage() {
                 return (
                   <article
                     key={order.order_id}
-                    className="border border-[#E7DEDC] bg-[#FAF6F5]"
+                    className="border border-[#E5E5E5] bg-[#F5F5F5]"
                   >
-                    <div className="flex flex-col gap-2 border-b border-[#E7DEDC] px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-col gap-2 border-b border-[#E5E5E5] px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
                       <p className="text-sm font-semibold">
                         Order #{order.order_id}
                       </p>
@@ -267,14 +238,14 @@ export default function ReturnsPage() {
                       </div>
                     </div>
 
-                    <div className="divide-y divide-[#E7DEDC]">
+                    <div className="divide-y divide-[#E5E5E5]">
                       {order.items.map((item) => (
                         <div
                           key={item.order_item_id}
                           className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center"
                         >
                           <div className="flex min-w-0 flex-1 items-center gap-4">
-                            <div className="relative h-20 w-16 shrink-0 overflow-hidden bg-[#FAF6F5]">
+                            <div className="relative h-20 w-16 shrink-0 overflow-hidden bg-[#F5F5F5]">
                               {item.image ? (
                                 <Image
                                   src={item.image}
@@ -306,7 +277,7 @@ export default function ReturnsPage() {
                             <div className="flex flex-wrap gap-2">
                               <Link
                                 href={`/user/account/returns/request?orderId=${order.order_id}&orderItemId=${item.order_item_id}&type=return`}
-                                className="inline-flex items-center justify-center gap-2 border border-[#e63e62] px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[1px] text-[#e63e62] transition hover:bg-[#e63e62] hover:text-white"
+                                className="inline-flex items-center justify-center gap-2 border border-[var(--color-primary)] px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[1px] text-[var(--color-primary)] transition hover:bg-[var(--color-primary)] hover:text-white"
                               >
                                 <RotateCcw size={14} />
                                 Return
@@ -338,14 +309,14 @@ export default function ReturnsPage() {
         <div className="space-y-5">
 
           {loading ? (
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-12 text-center">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-12 text-center">
               <p className="text-sm text-[#6B625C]">Loading your return requests...</p>
             </div>
           ) : requests.length === 0 ? (
 
-            <div className="border border-[#E7DEDC] bg-[#FAF6F5] p-12 text-center">
+            <div className="border border-[#E5E5E5] bg-[#F5F5F5] p-12 text-center">
 
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#FAF6F5]">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#F5F5F5]">
 
                 <RefreshCw size={22} />
 
@@ -374,18 +345,18 @@ export default function ReturnsPage() {
               return (
                 <div
                   key={request.return_id}
-                  className="border border-[#E7DEDC] bg-[#FAF6F5]"
+                  className="border border-[#E5E5E5] bg-[#F5F5F5]"
                 >
 
                   {/* TOP */}
-                  <div className="flex flex-col gap-5 border-b border-[#E7DEDC] p-6 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-col gap-5 border-b border-[#E5E5E5] p-6 sm:flex-row sm:items-center sm:justify-between">
 
                     <div className="flex items-center gap-4">
 
                       <div
                         className={`flex h-11 w-11 items-center justify-center rounded-full ${
                           isReturn
-                            ? "bg-[#FAF6F5]"
+                            ? "bg-[#F5F5F5]"
                             : "bg-[#E4EAF1]"
                         }`}
                       >
@@ -400,7 +371,7 @@ export default function ReturnsPage() {
 
                       <div>
 
-                        <p className="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#e63e62]">
+                        <p className="text-[10px] font-semibold uppercase tracking-[1.5px] text-[var(--color-primary)]">
                           Request #{request.return_id}
                         </p>
 
@@ -518,11 +489,11 @@ export default function ReturnsPage() {
                   </div>
 
                   {/* FOOTER */}
-                  <div className="border-t border-[#E7DEDC] bg-[#FFFFFF] px-6 py-4">
+                  <div className="border-t border-[#E5E5E5] bg-[#FFFFFF] px-6 py-4">
 
                     <Link
                       href={`/user/account/orders/${request.order_id}`}
-                      className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.2px] text-[#e63e62] hover:underline"
+                      className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.2px] text-[var(--color-primary)] hover:underline"
                     >
                       View Order
                       <ArrowLeft

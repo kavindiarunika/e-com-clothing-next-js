@@ -100,7 +100,7 @@ export default function CategorySection() {
             Shop by Category
           </h2>
 
-          <div className="mt-5 h-px w-12 bg-[#e63e62]" />
+          <div className="mt-5 h-px w-12 bg-[var(--color-primary)]" />
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
@@ -108,7 +108,7 @@ export default function CategorySection() {
             <Link
               key={category.category_id || category.name}
               href={categoryPaths[category.name.trim().toLowerCase()] || "/user/shop"}
-              className="group relative block h-80 overflow-hidden bg-[#E7DEDC] sm:h-87.5"
+              className="group relative block h-80 overflow-hidden bg-[#E5E5E5] sm:h-87.5"
             >
               {category.image ? (
                 <img
@@ -117,13 +117,13 @@ export default function CategorySection() {
                   className="h-full w-full object-cover object-center transition duration-700 ease-out group-hover:scale-105"
                 />
               ) : (
-                <div className="h-full w-full bg-gradient-to-br from-[#E7DEDC] to-[#B6A49A]" />
+                <div className="h-full w-full bg-gradient-to-br from-[#E5E5E5] to-[#B6A49A]" />
               )}
 
               <div className="absolute inset-0 bg-gradient-to-t from-[#292524]/80 via-[#292524]/20 to-transparent transition duration-500 group-hover:from-[#292524]/90" />
 
               <div className="absolute inset-x-0 bottom-0 p-7 text-white md:p-8">
-                <p className="mb-2 text-[10px] uppercase tracking-[3px] text-[#e63e62]">
+                <p className="mb-2 text-[10px] uppercase tracking-[3px] text-[var(--color-primary)]">
                   Discover
                 </p>
 

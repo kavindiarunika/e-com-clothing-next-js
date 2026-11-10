@@ -11,7 +11,7 @@ export default function Home() {
      <main className="min-h-screen bg-[#FFFFFF]">
       <HeroBanner />
 
-      <div className="mx-[4px]">
+      <div className="mx-3 sm:mx-[4px]">
         <CategorySection />
         <FeaturedProducts />
         <NewArrivals />

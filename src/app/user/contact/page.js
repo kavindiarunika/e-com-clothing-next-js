@@ -94,29 +94,12 @@ export default function ContactPage() {
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
 
       {/* Header */}
-      <header className="bg-[#292524]">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
-          <Link
-            href="/"
-            className="text-2xl font-semibold tracking-[0.25em] text-[#FFFFFF]"
-          >
-            VELORA
-          </Link>
-
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-sm text-[#FFFFFF] hover:text-[#e63e62]"
-          >
-            <ArrowLeft size={16} />
-            Back to Home
-          </Link>
-        </div>
-      </header>
+      
 
       {/* Content */}
       <section className="mx-auto max-w-5xl px-5 py-16">
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#e63e62]">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-primary)]">
             Customer Care
           </p>
 
@@ -175,7 +158,7 @@ export default function ContactPage() {
               autoComplete="name"
               aria-label="Your name"
               placeholder="Your Name"
-              className="h-12 border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 text-sm outline-none focus:border-[#e63e62]"
+              className="h-12 border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 text-sm outline-none focus:border-[var(--color-primary)]"
             />
 
             <input
@@ -188,7 +171,7 @@ export default function ContactPage() {
               autoComplete="email"
               aria-label="Email address"
               placeholder="Email Address"
-              className="h-12 border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 text-sm outline-none focus:border-[#e63e62]"
+              className="h-12 border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 text-sm outline-none focus:border-[var(--color-primary)]"
             />
 
             <input
@@ -200,7 +183,7 @@ export default function ContactPage() {
               onChange={handleChange}
               aria-label="Subject"
               placeholder="Subject"
-              className="h-12 border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 text-sm outline-none focus:border-[#e63e62] sm:col-span-2"
+              className="h-12 border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 text-sm outline-none focus:border-[var(--color-primary)] sm:col-span-2"
             />
 
             <textarea
@@ -212,7 +195,7 @@ export default function ContactPage() {
               aria-label="Your message"
               placeholder="Your Message"
               rows={10}
-              className="resize-none border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 py-3 text-sm outline-none focus:border-[#e63e62] sm:col-span-2"
+              className="resize-none border border-[#292524]/15 bg-[#FFFFFF]/40 px-4 py-3 text-sm outline-none focus:border-[var(--color-primary)] sm:col-span-2"
             />
 
             {submissionMessage && (
@@ -227,7 +210,7 @@ export default function ContactPage() {
             <button
               type="submit"
               disabled={isSending}
-              className="h-12 bg-[#e63e62] px-6 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#A96870] disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
+              className="h-12 bg-[var(--color-primary)] px-6 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
             >
               {isSending ? "Sending..." : "Send Message"}
             </button>
@@ -242,7 +225,7 @@ export default function ContactPage() {
 function ContactCard({ icon, title, value }) {
   return (
     <div className="rounded-2xl bg-white p-6 text-center shadow-sm">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF] text-[#e63e62]">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF] text-[var(--color-primary)]">
         {icon}
       </div>
 

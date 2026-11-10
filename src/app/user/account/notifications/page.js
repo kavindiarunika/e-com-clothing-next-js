@@ -56,40 +56,17 @@ export default function NotificationsPage() {
 
   return (
     <main className="min-h-screen bg-[#FFFFFF] text-[#292524]">
-      <header className="border-b border-[#E7DEDC]">
-              <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
-      
-                <Link
-                  href="/user"
-                  className="font-serif text-3xl tracking-[4px]"
-                >
-                  VELORA
-                </Link>
-      
-                <Link
-                  href="/user/account"
-                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[1.5px] text-[#6B625C] hover:text-[#e63e62]"
-                >
-                  <ArrowLeft size={15} />
-                  My Account
-                </Link>
-      
-              </div>
-            </header>
+     
 
       <div className="mx-auto max-w-4xl px-5 py-12">
         <div className="mb-8">
-          <p className="text-sm uppercase tracking-[0.2em] text-[#e63e62]">
-            Account
-          </p>
+         
 
           <h1 className="mt-2 text-4xl font-semibold">
             Notifications
           </h1>
 
-          <p className="mt-2 text-[#292524]/60">
-            Stay updated about your orders and returns.
-          </p>
+          
         </div>
 
         <div className="space-y-3">
@@ -98,12 +75,12 @@ export default function NotificationsPage() {
               key={notification.notification_id}
               className={`rounded-2xl bg-white p-5 shadow-sm ${
                 !notification.is_read
-                  ? "border-l-4 border-[#e63e62]"
+                  ? "border-l-4 border-[var(--color-primary)]"
                   : ""
               }`}
             >
               <div className="flex gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-[#e63e62]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FFFFFF] text-[var(--color-primary)]">
                   {notification.type === "return" ? (
                     <RotateCcw size={20} />
                   ) : notification.type === "exchange" ? (
@@ -129,7 +106,7 @@ export default function NotificationsPage() {
                   </p>
 
                   {!notification.is_read && (
-                    <span className="mt-3 inline-block rounded-full bg-[#e63e62] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
+                    <span className="mt-3 inline-block rounded-full bg-[var(--color-primary)] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
                       New
                     </span>
                   )}

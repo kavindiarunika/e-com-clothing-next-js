@@ -123,7 +123,7 @@ export default function InvoicePage() {
 
           <Link
             href="/user/account/orders"
-            className="mt-6 inline-flex rounded-full bg-[#e63e62] px-6 py-3 text-sm font-medium text-white transition hover:bg-[#A96870]"
+            className="mt-6 inline-flex rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-medium text-white transition hover:bg-[var(--color-primary-hover)]"
           >
             Back to Orders
           </Link>
@@ -170,7 +170,7 @@ export default function InvoicePage() {
           {/* Print */}
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 rounded-full border border-[#292524]/20 bg-white px-5 py-3 text-sm font-medium transition hover:bg-[#A96870] hover:text-white"
+            className="inline-flex items-center gap-2 rounded-full border border-[#292524]/20 bg-white px-5 py-3 text-sm font-medium transition hover:bg-[var(--color-primary-hover)] hover:text-white"
           >
             <Printer size={17} />
             Print
@@ -179,7 +179,7 @@ export default function InvoicePage() {
           {/* Save as PDF */}
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 rounded-full bg-[#e63e62] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#A96870]"
+            className="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)] px-5 py-3 text-sm font-medium text-white transition hover:bg-[var(--color-primary-hover)]"
           >
             <Download size={17} />
             Save as PDF
@@ -218,7 +218,7 @@ export default function InvoicePage() {
 
               {/* Invoice Information */}
               <div className="sm:text-right">
-                <p className="text-xs uppercase tracking-[0.2em] text-[#e63e62]">
+                <p className="text-xs uppercase tracking-[0.2em] text-[var(--color-primary)]">
                   Invoice
                 </p>
 
@@ -244,7 +244,7 @@ export default function InvoicePage() {
 
             {/* Customer */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e63e62]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-primary)]">
                 Bill To
               </p>
 
@@ -277,7 +277,7 @@ export default function InvoicePage() {
 
             {/* Payment */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e63e62]">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-primary)]">
                 Payment Information
               </p>
 
@@ -332,7 +332,7 @@ export default function InvoicePage() {
           ================================================== */}
           <div className="p-6 sm:p-10">
 
-            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-[#e63e62]">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-primary)]">
               Order Items
             </p>
 
@@ -422,7 +422,7 @@ export default function InvoicePage() {
               <div className="flex items-center justify-between text-lg font-semibold">
                 <span>Total</span>
 
-                <span className="text-[#e63e62]">
+                <span className="text-[var(--color-primary)]">
                   Rs. {order.total_amount.toLocaleString()}
                 </span>
               </div>

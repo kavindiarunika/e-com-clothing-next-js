@@ -6,6 +6,18 @@ import { Heart, ArrowLeft } from "lucide-react";
 
 import ProductCard from "@/components/user/product/ProductCard";
 
+function isProductSoldOut(product) {
+  const variantStock = (product.variants || []).reduce(
+    (total, variant) => total + (Number(variant.stock) || 0),
+    0
+  );
+  const availableStock = variantStock > 0
+    ? variantStock
+    : Number(product.stock ?? product.qty ?? 0);
+
+  return availableStock <= 0;
+}
+
 export default function WishlistPage() {
   const [wishlistProducts, setWishlistProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -74,6 +86,10 @@ export default function WishlistPage() {
     ));
   }, []);
 
+  const availableWishlistProducts = wishlistProducts.filter(
+    (product) => !isProductSoldOut(product)
+  );
+
   return (
     <main className="min-h-screen bg-[#FFFFFF]">
       {/* Header */}
@@ -81,16 +97,14 @@ export default function WishlistPage() {
         <div className="flex items-center gap-3">
           <Heart
             size={24}
-            className="text-[#e63e62]"
-            fill="#e63e62"
+            className="text-red-500"
+            fill="currentColor"
           />
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[3px] text-[#e63e62]">
-              Your Collection
-            </p>
+            
 
-            <h1 className="mt-2 font-serif text-4xl text-[#292524] md:text-5xl">
+            <h1 className="mt-2 font-serif text-3xl text-[#292524] md:text-4xl">
               Wishlist
             </h1>
           </div>
@@ -116,34 +130,49 @@ export default function WishlistPage() {
             {loadError}
           </p>
         ) : requiresSignIn ? (
-          <div className="flex min-h-[300px] flex-col items-center justify-center border border-[#E7DEDC] bg-white px-6 text-center">
+          <div className="flex min-h-[300px] flex-col items-center justify-center border border-[#E5E5E5] bg-white px-6 text-center">
             <h2 className="font-serif text-2xl text-[#292524]">
               Sign in to view your wishlist
             </h2>
             <Link
               href="/user/login?next=%2Fuser%2Fwishlist"
-              className="mt-6 inline-flex items-center gap-2 bg-[#e63e62] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+              className="mt-6 inline-flex items-center gap-2 bg-[var(--color-primary)] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[var(--color-primary-hover)]"
             >
               Sign In
             </Link>
           </div>
-        ) : wishlistProducts.length > 0 ? (
+        ) : availableWishlistProducts.length > 0 ? (
           <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
-            {wishlistProducts.map((product) => (
+            {availableWishlistProducts.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
-                showSoldOut
                 onWishlistChange={handleWishlistChange}
               />
             ))}
           </div>
+        ) : wishlistProducts.length > 0 ? (
+          <div className="flex min-h-[300px] flex-col items-center justify-center border border-[#E5E5E5] bg-white px-6 text-center">
+            <h2 className="font-serif text-2xl text-[#292524]">
+              No available products right now
+            </h2>
+            <p className="mt-2 max-w-md text-sm leading-6 text-[#6B625D]">
+              The products in your wishlist are currently sold out. Check back later or browse our latest styles.
+            </p>
+            <Link
+              href="/user/shop"
+              className="mt-6 inline-flex items-center gap-2 bg-[var(--color-primary)] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[var(--color-primary-hover)]"
+            >
+              <ArrowLeft size={15} />
+              Continue Shopping
+            </Link>
+          </div>
         ) : (
-          <div className="flex min-h-[400px] flex-col items-center justify-center border border-[#E7DEDC] bg-white px-6 text-center">
+          <div className="flex min-h-[400px] flex-col items-center justify-center border border-[#E5E5E5] bg-white px-6 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#FFFFFF]">
               <Heart
                 size={28}
-                className="text-[#e63e62]"
+                className="text-red-500"
               />
             </div>
 
@@ -158,7 +187,7 @@ export default function WishlistPage() {
 
             <Link
               href="/user/shop"
-              className="mt-6 inline-flex items-center gap-2 bg-[#e63e62] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+              className="mt-6 inline-flex items-center gap-2 bg-[var(--color-primary)] px-6 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[var(--color-primary-hover)]"
             >
               <ArrowLeft size={15} />
               Continue Shopping

@@ -332,7 +332,7 @@ export default function CheckoutPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-[#FFFFFF] px-6 py-20">
+      <main className="min-h-screen bg-[#FFFFFF] px-4 py-12 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-300 text-center">
           <p className="text-sm text-[#6B625C]">
             Loading checkout...
@@ -345,14 +345,14 @@ export default function CheckoutPage() {
   // Empty cart
   if (cart.length === 0) {
     return (
-      <main className="min-h-screen bg-[#FFFFFF] px-6 py-20">
+      <main className="min-h-screen bg-[#FFFFFF] px-4 py-12 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
           <ShoppingBag
             size={50}
-            className="mx-auto text-[#e63e62]"
+            className="mx-auto text-[var(--color-primary)]"
           />
 
-          <h1 className="mt-6 font-serif text-4xl text-[#292524]">
+          <h1 className="mt-6 font-serif text-3xl leading-tight text-[#292524] sm:text-4xl">
             Your Cart Is Empty
           </h1>
 
@@ -362,7 +362,7 @@ export default function CheckoutPage() {
 
           <Link
             href="/user/shop"
-            className="mt-8 inline-block bg-[#e63e62] px-8 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870]"
+            className="mt-8 inline-flex min-h-12 items-center justify-center bg-[var(--color-primary)] px-6 py-4 text-xs font-semibold uppercase tracking-[1.2px] text-white transition hover:bg-[var(--color-primary-hover)] sm:px-8 sm:tracking-[1.5px]"
           >
             Continue Shopping
           </Link>
@@ -374,34 +374,30 @@ export default function CheckoutPage() {
   return (
     <main className="min-h-screen bg-[#FFFFFF]">
       {/* Header */}
-      <section className="border-b border-[#E7DEDC] bg-[#FFFFFF]">
-        <div className="mx-auto w-[92%] max-w-300 py-10 md:py-14">
+      <section className="border-b border-[#E5E5E5] bg-[#FFFFFF]">
+        <div className="mx-auto w-[94%] max-w-300 pt-3 pb-6 sm:w-[92%] sm:pt-6 sm:pb-10 md:pt-8 md:pb-14">
           <Link
             href="/user/cart"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[1.5px] text-[#6B625C] transition hover:text-[#e63e62]"
+            className="inline-flex min-h-11 items-center gap-2 text-xs uppercase tracking-[1.2px] text-[#6B625C] transition hover:text-[var(--color-primary)] sm:tracking-[1.5px]"
           >
             <ArrowLeft size={15} />
             Back to Cart
           </Link>
 
-          <p className="mt-8 text-xs font-semibold uppercase tracking-[3px] text-[#e63e62]">
-            Velora
-          </p>
+         
 
-          <h1 className="mt-2 font-serif text-4xl text-[#292524] md:text-5xl">
+          <h1 className="mt-2 font-serif text-3xl leading-tight text-[#292524] sm:text-4xl md:text-5xl">
             Checkout
           </h1>
 
-          <p className="mt-3 text-sm text-[#6B625C]">
-            Complete your order with Cash on Delivery.
-          </p>
+          
         </div>
       </section>
 
       {/* Checkout */}
       <form
         onSubmit={handlePlaceOrder}
-        className="mx-auto w-[92%] max-w-300 py-10 md:py-16"
+        className="mx-auto w-[94%] max-w-300 pt-4 pb-6 sm:w-[92%] sm:pt-8 sm:pb-10 md:pt-10 md:pb-16"
       >
         {orderError && (
           <p
@@ -420,26 +416,24 @@ export default function CheckoutPage() {
           </p>
         )}
 
-        <div className="grid gap-8 lg:grid-cols-[1.4fr_0.8fr]">
+        <div className="grid min-w-0 gap-5 sm:gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.8fr)]">
           {/* LEFT SIDE */}
-          <div className="space-y-8">
+          <div className="min-w-0 space-y-5 sm:space-y-8">
             {/* 01 Shipping Address */}
-            <section className="bg-white p-6 md:p-8">
-              <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
+            <section className="min-w-0 bg-white p-4 sm:p-6 md:p-8">
+              <div className="mb-5 sm:mb-6">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                   01
                 </p>
 
-                <h2 className="mt-1 font-serif text-2xl text-[#292524]">
+                <h2 className="mt-1 font-serif text-xl text-[#292524] sm:text-2xl">
                   Shipping Address
                 </h2>
 
-                <p className="mt-2 text-sm text-[#6B625C]">
-                  Enter the address where you want your order delivered.
-                </p>
+               
               </div>
 
-              <div className="grid gap-5 md:grid-cols-2">
+              <div className="grid min-w-0 gap-4 sm:gap-5 md:grid-cols-2">
                 {/* First Name */}
                 <div>
                   <label
@@ -456,7 +450,7 @@ export default function CheckoutPage() {
                     value={formData.firstName}
                     onChange={handleChange}
                     placeholder="Enter first name"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="min-h-11 w-full min-w-0 rounded-md border border-[#E5E5E5] bg-[#F5F5F5] px-3 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/15 sm:px-4"
                     required
                   />
                 </div>
@@ -477,7 +471,7 @@ export default function CheckoutPage() {
                     value={formData.lastName}
                     onChange={handleChange}
                     placeholder="Enter last name"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="min-h-11 w-full min-w-0 rounded-md border border-[#E5E5E5] bg-[#F5F5F5] px-3 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/15 sm:px-4"
                     required={!isGuestCheckout}
                   />
                 </div>
@@ -498,7 +492,7 @@ export default function CheckoutPage() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="07XXXXXXXX"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="min-h-11 w-full min-w-0 rounded-md border border-[#E5E5E5] bg-[#F5F5F5] px-3 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/15 sm:px-4"
                     required
                   />
                 </div>
@@ -519,7 +513,7 @@ export default function CheckoutPage() {
                     value={formData.postalCode}
                     onChange={handleChange}
                     placeholder="Postal code"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="min-h-11 w-full min-w-0 rounded-md border border-[#E5E5E5] bg-[#F5F5F5] px-3 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/15 sm:px-4"
                     required={!isGuestCheckout}
                   />
                 </div>
@@ -540,7 +534,7 @@ export default function CheckoutPage() {
                     value={formData.address}
                     onChange={handleChange}
                     placeholder="House number, street, area..."
-                    className="w-full resize-none border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="min-h-28 w-full min-w-0 resize-y rounded-md border border-[#E5E5E5] bg-[#F5F5F5] px-3 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/15 sm:px-4"
                     required
                   />
                 </div>
@@ -561,7 +555,7 @@ export default function CheckoutPage() {
                     value={formData.city}
                     onChange={handleChange}
                     placeholder="Enter city"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="min-h-11 w-full min-w-0 rounded-md border border-[#E5E5E5] bg-[#F5F5F5] px-3 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/15 sm:px-4"
                     required={!isGuestCheckout}
                   />
                 </div>
@@ -582,7 +576,7 @@ export default function CheckoutPage() {
                     value={formData.district}
                     onChange={handleChange}
                     placeholder="Enter district"
-                    className="w-full border border-[#E7DEDC] bg-[#FAF6F5] px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+                    className="min-h-11 w-full min-w-0 rounded-md border border-[#E5E5E5] bg-[#F5F5F5] px-3 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/15 sm:px-4"
                     required={!isGuestCheckout}
                   />
                 </div>
@@ -590,19 +584,19 @@ export default function CheckoutPage() {
             </section>
 
             {/* 02 Delivery */}
-            <section className="bg-white p-6 md:p-8">
-              <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
+            <section className="min-w-0 bg-white p-4 sm:p-6 md:p-8">
+              <div className="mb-5 sm:mb-6">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                   02
                 </p>
 
-                <h2 className="mt-1 font-serif text-2xl text-[#292524]">
+                <h2 className="mt-1 font-serif text-xl text-[#292524] sm:text-2xl">
                   Delivery
                 </h2>
               </div>
 
-              <div className="border border-[#e63e62] bg-[#FAF6F5] p-4">
-                <div className="flex items-center justify-between">
+              <div className="border border-[var(--color-primary)] bg-[#F5F5F5] p-3 sm:p-4">
+                <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-sm font-medium text-[#292524]">
                       Standard Delivery
@@ -613,7 +607,7 @@ export default function CheckoutPage() {
                     </p>
                   </div>
 
-                  <span className="text-sm font-semibold text-[#e63e62]">
+                  <span className="shrink-0 text-right text-sm font-semibold tabular-nums text-[var(--color-primary)]">
                     Rs. {shippingCost.toLocaleString()}
                   </span>
                 </div>
@@ -621,19 +615,19 @@ export default function CheckoutPage() {
             </section>
 
             {/* 03 Payment */}
-            <section className="bg-white p-6 md:p-8">
-              <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
+            <section className="min-w-0 bg-white p-4 sm:p-6 md:p-8">
+              <div className="mb-5 sm:mb-6">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                   03
                 </p>
 
-                <h2 className="mt-1 font-serif text-2xl text-[#292524]">
+                <h2 className="mt-1 font-serif text-xl text-[#292524] sm:text-2xl">
                   Payment
                 </h2>
               </div>
 
               {/* ONLY CASH ON DELIVERY */}
-              <div className="border border-[#e63e62] bg-[#FAF6F5] p-4">
+              <div className="border border-[var(--color-primary)] bg-[#F5F5F5] p-4">
                 <label className="flex cursor-pointer items-center gap-3">
                   <input
                     type="radio"
@@ -645,7 +639,7 @@ export default function CheckoutPage() {
                     onChange={(e) =>
                       setPaymentMethod(e.target.value)
                     }
-                    className="h-4 w-4 accent-[#e63e62]"
+                    className="h-4 w-4 accent-[var(--color-primary)]"
                   />
 
                   <div>
@@ -660,7 +654,7 @@ export default function CheckoutPage() {
 
                   <CheckCircle
                     size={18}
-                    className="ml-auto text-[#e63e62]"
+                    className="ml-auto text-[var(--color-primary)]"
                   />
                 </label>
               </div>
@@ -668,25 +662,25 @@ export default function CheckoutPage() {
           </div>
 
           {/* RIGHT SIDE */}
-          <div>
-            <section className="sticky top-24 bg-white p-6 md:p-8">
+          <div className="min-w-0">
+            <section className="min-w-0 bg-white p-4 sm:p-6 md:p-8 lg:sticky lg:top-24">
               {/* Order Summary */}
-              <div className="border-b border-[#E7DEDC] pb-6">
-                <p className="text-xs font-semibold uppercase tracking-[2px] text-[#e63e62]">
+              <div className="border-b border-[#E5E5E5] pb-6">
+                <p className="text-xs font-semibold uppercase tracking-[2px] text-[var(--color-primary)]">
                   04
                 </p>
 
-                <h2 className="mt-1 font-serif text-2xl text-[#292524]">
+                <h2 className="mt-1 font-serif text-xl text-[#292524] sm:text-2xl">
                   Order Summary
                 </h2>
               </div>
 
               {/* Products */}
-              <div className="mt-6 space-y-5">
+              <div className="mt-5 space-y-4 sm:mt-6 sm:space-y-5">
                 {cart.map((item) => (
                   <div
                     key={`${item.productId}-${item.size}-${item.color}`}
-                    className="flex gap-4"
+                    className="flex min-w-0 gap-3 sm:gap-4"
                   >
                     {/* Image */}
                     <div className="h-20 w-16 shrink-0 overflow-hidden bg-[#FFFFFF]">
@@ -725,8 +719,8 @@ export default function CheckoutPage() {
                     </div>
 
                     {/* Price */}
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-[#e63e62]">
+                    <div className="shrink-0 text-right">
+                      <p className="text-xs font-medium tabular-nums text-[var(--color-primary)] sm:text-sm">
                         Rs.{" "}
                         {(
                           Number(item.price) *
@@ -739,34 +733,34 @@ export default function CheckoutPage() {
               </div>
 
               {/* Price Details */}
-              <div className="mt-8 space-y-4 border-t border-[#E7DEDC] pt-6">
-                <div className="flex items-center justify-between text-sm">
+              <div className="mt-6 space-y-4 border-t border-[#E5E5E5] pt-5 sm:mt-8 sm:pt-6">
+                <div className="flex items-center justify-between gap-3 text-sm">
                   <span className="text-[#6B625C]">
                     Subtotal
                   </span>
 
-                  <span className="font-medium text-[#292524]">
+                  <span className="shrink-0 text-right font-medium tabular-nums text-[#292524]">
                     Rs. {subtotal.toLocaleString()}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center justify-between gap-3 text-sm">
                   <span className="text-[#6B625C]">
                     Delivery
                   </span>
 
-                  <span className="font-medium text-[#292524]">
+                  <span className="shrink-0 text-right font-medium tabular-nums text-[#292524]">
                     Rs. {shippingCost.toLocaleString()}
                   </span>
                 </div>
 
                 {couponDiscount > 0 && selectedCoupon && (
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between gap-3 text-sm">
                     <span className="text-[#6B625C]">
                       Coupon ({selectedCoupon.code})
                     </span>
 
-                    <span className="font-medium text-[#e63e62]">
+                    <span className="shrink-0 text-right font-medium tabular-nums text-[var(--color-primary)]">
                       - Rs. {couponDiscount.toLocaleString()}
                     </span>
                   </div>
@@ -774,18 +768,18 @@ export default function CheckoutPage() {
               </div>
 
               {/* Total */}
-              <div className="mt-5 flex items-center justify-between border-t border-[#E7DEDC] pt-5">
-                <span className="text-base font-semibold uppercase tracking-[1px] text-[#292524]">
+              <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#E5E5E5] pt-5">
+                <span className="text-sm font-semibold uppercase tracking-[1px] text-[#292524] sm:text-base">
                   Total
                 </span>
 
-                <span className="text-2xl font-semibold text-[#e63e62]">
+                <span className="text-xl font-semibold tabular-nums text-[var(--color-primary)] sm:text-2xl">
                   Rs. {total.toLocaleString()}
                 </span>
               </div>
 
               {/* Eligible Coupons */}
-              <section className="mt-6 border-t border-[#E7DEDC] pt-5">
+              <section className="mt-6 border-t border-[#E5E5E5] pt-5">
                 <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
                   Coupons you can use
                 </h3>
@@ -795,7 +789,7 @@ export default function CheckoutPage() {
                     Checking available coupons...
                   </p>
                 ) : couponLoadError ? (
-                  <p role="alert" className="mt-3 text-sm text-[#e63e62]">
+                  <p role="alert" className="mt-3 text-sm text-[var(--color-primary)]">
                     {couponLoadError}
                   </p>
                 ) : eligibleCoupons.length > 0 ? (
@@ -858,11 +852,11 @@ export default function CheckoutPage() {
               </section>
 
               {/* Payment Info */}
-              <div className="mt-6 bg-[#FAF6F5] p-4">
+              <div className="mt-6 bg-[#F5F5F5] p-4">
                 <div className="flex items-start gap-3">
                   <CheckCircle
                     size={18}
-                    className="mt-0.5 shrink-0 text-[#e63e62]"
+                    className="mt-0.5 shrink-0 text-[var(--color-primary)]"
                   />
 
                   <div>
@@ -883,7 +877,7 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-7 w-full bg-[#e63e62] px-6 py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white transition hover:bg-[#A96870] disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-7 min-h-12 w-full bg-[var(--color-primary)] px-4 py-4 text-xs font-semibold uppercase tracking-[1.2px] text-white transition hover:bg-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:tracking-[1.5px]"
               >
                 {isSubmitting ? "Placing Order..." : "Place Order"}
               </button>

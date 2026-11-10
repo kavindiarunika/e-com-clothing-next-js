@@ -299,17 +299,17 @@ export default function CartPage() {
   if (cart.length === 0) {
     return (
       <main className="min-h-screen bg-[#FFFFFF] py-16">
-        <div className="mx-auto w-[92%] max-w-175 text-center">
+        <div className="mx-auto w-[92%] max-w-175 px-1 text-center">
           <ShoppingBag
             size={50}
-            className="mx-auto text-[#e63e62]"
+            className="mx-auto text-[var(--color-primary)]"
           />
 
-          <p className="mt-6 text-xs uppercase tracking-[3px] text-[#e63e62]">
+          <p className="mt-6 text-xs uppercase tracking-[3px] text-[var(--color-primary)]">
             Velora
           </p>
 
-          <h1 className="mt-2 font-serif text-4xl text-[#292524]">
+          <h1 className="mt-2 font-serif text-3xl leading-tight text-[#292524] sm:text-4xl">
             Your Cart is Empty
           </h1>
 
@@ -319,7 +319,7 @@ export default function CartPage() {
 
           <Link
             href="/user/shop"
-            className="mt-8 inline-flex items-center gap-2 bg-[#e63e62] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[#A96870]"
+            className="mt-8 inline-flex items-center gap-2 bg-[var(--color-primary)] px-7 py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white hover:bg-[var(--color-primary-hover)]"
           >
             <ArrowLeft size={15} />
             Continue Shopping
@@ -330,16 +330,16 @@ export default function CartPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FFFFFF] py-10 md:py-16">
-      <div className="mx-auto w-[92%] max-w-[1280px]">
+    <main className="min-h-screen bg-[#FFFFFF] py-6 sm:py-10 md:py-16">
+      <div className="mx-auto w-[94%] max-w-[1280px] sm:w-[92%]">
 
         {/* Header */}
-        <div className="mb-10">
-          <p className="text-xs uppercase tracking-[3px] text-[#e63e62]">
+        <div className="mb-6 sm:mb-10">
+          <p className="text-xs uppercase tracking-[3px] text-[var(--color-primary)]">
             Velora
           </p>
 
-          <h1 className="mt-2 font-serif text-4xl text-[#292524] md:text-5xl">
+          <h1 className="mt-2 font-serif text-3xl leading-tight text-[#292524] sm:text-4xl md:text-5xl">
             Shopping Cart
           </h1>
 
@@ -353,27 +353,27 @@ export default function CartPage() {
           )}
         </div>
 
-        <div className="grid gap-6 md:gap-8 lg:grid-cols-[1.8fr_0.9fr] lg:items-start lg:gap-12">
+        <div className="grid min-w-0 gap-5 md:gap-8 lg:grid-cols-[1.8fr_0.9fr] lg:items-start lg:gap-12">
 
           {/* Cart Items */}
-          <section className="bg-white px-4 md:px-6 lg:px-8">
-            <div className="flex items-center justify-between border-b border-[#E7DEDC] py-3 text-[10px] font-semibold uppercase tracking-[1.8px] text-[#6B625C] md:py-4 md:text-[11px]">
-              <label className="flex items-center gap-3">
+          <section className="min-w-0 bg-white px-2 sm:px-4 md:px-6 lg:px-8">
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-[#E5E5E5] py-3 text-[10px] font-semibold uppercase tracking-[1px] text-[#6B625C] sm:tracking-[1.8px] md:py-4 md:text-[11px]">
+              <label className="flex min-h-11 items-center gap-2 sm:gap-3">
                 <input
                   type="checkbox"
                   checked={allSelected}
                   onChange={toggleSelectAll}
-                  className="h-4 w-4 accent-[#e63e62]"
+                  className="h-4 w-4 accent-[var(--color-primary)]"
                 />
                 <span>Select all</span>
               </label>
 
-              <span>{selectedCount} item selected</span>
+              <span className="text-right">{selectedCount} items selected</span>
             </div>
 
-            <div className="max-h-[72vh] overflow-y-auto pr-1 md:pr-2">
+            <div className="overflow-visible md:max-h-[72vh] md:overflow-y-auto md:pr-2">
               {/* Desktop Header */}
-              <div className="hidden border-b border-[#E7DEDC] py-4 text-[10px] font-semibold uppercase tracking-[2px] text-[#6B625C] sm:grid sm:grid-cols-[minmax(0,1fr)_110px_160px] md:text-[11px]">
+              <div className="hidden border-b border-[#E5E5E5] py-4 text-[10px] font-semibold uppercase tracking-[2px] text-[#6B625C] sm:grid sm:grid-cols-[minmax(0,1fr)_110px_160px] md:text-[11px]">
                 <span>Product</span>
 
                 <span className="text-center">
@@ -402,7 +402,7 @@ export default function CartPage() {
             {/* Continue Shopping */}
             <Link
               href="/user/shop"
-              className="my-6 inline-flex items-center gap-2 text-xs uppercase tracking-[1px] text-[#e63e62] hover:underline"
+              className="my-4 inline-flex min-h-11 items-center gap-2 text-xs uppercase tracking-[1px] text-[var(--color-primary)] hover:underline sm:my-6"
             >
               <ArrowLeft size={14} />
               Continue Shopping

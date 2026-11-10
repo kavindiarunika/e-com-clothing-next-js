@@ -238,7 +238,7 @@ export default function ProductCard({
           PRODUCT IMAGE
       ====================================== */}
 
-      <div className="relative aspect-[3/4] overflow-hidden bg-[#FAF6F5]">
+      <div className="relative aspect-[3/4] overflow-hidden bg-[#F5F5F5]">
 
         <Link
           href={`/user/product/${product.id}`}
@@ -275,7 +275,7 @@ export default function ProductCard({
 
         {hasDiscount && !isSoldOut && (
           <span
-            className="absolute left-3 top-3 z-10 bg-[#e63e62] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white"
+            className="absolute left-3 top-3 z-10 bg-[var(--color-primary)] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white"
           >
             -{product.discount}%
           </span>
@@ -294,7 +294,7 @@ export default function ProductCard({
               ? "Remove from wishlist"
               : "Add to wishlist"
           }
-          className={`absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-white ${isWishlisted ? "text-[#e63e62]" : "text-[#292524]"}`}
+          className={`absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-red-500 shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-red-600`}
         >
           <Heart
             size={19}
@@ -315,11 +315,12 @@ export default function ProductCard({
           <button
             type="button"
             onClick={handleAddToCart}
-            className="absolute bottom-0 left-0 right-0 z-30 flex translate-y-full items-center justify-center gap-2 bg-[#e63e62] py-3 text-xs font-semibold uppercase tracking-[1.5px] text-white transition-transform duration-300 hover:bg-[#A96870] group-hover:translate-y-0"
+            className="group/add-to-cart absolute bottom-0 left-0 right-0 z-30 flex min-h-11 translate-y-0 items-center justify-center gap-1 bg-[var(--color-primary)] px-1 py-2 text-[10px] font-semibold uppercase tracking-wide text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_-4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] [@media(hover:hover)]:translate-y-full [@media(hover:hover)]:group-hover:translate-y-0 motion-reduce:transition-none sm:gap-2 sm:py-3 sm:text-xs sm:tracking-[1.5px]"
           >
             <ShoppingBag
               size={16}
               strokeWidth={1.7}
+              className="transition-transform duration-300 ease-out group-hover/add-to-cart:scale-110 motion-reduce:transition-none"
             />
 
             Add to Cart
@@ -340,7 +341,7 @@ export default function ProductCard({
           href={`/user/product/${product.id}`}
         >
           <h3
-            className="text-sm font-medium text-[#292524] transition-colors hover:text-[#e63e62]"
+            className="text-sm font-medium text-[#292524] transition-colors hover:text-[var(--color-primary)]"
           >
             {product.name}
           </h3>
@@ -364,8 +365,8 @@ export default function ProductCard({
                     Math.round(
                       currentRating
                     )
-                      ? "fill-[#e63e62] text-[#e63e62]"
-                      : "text-[#E7DEDC]"
+                      ? "fill-yellow-400 text-yellow-400"
+                      : "text-[#E5E5E5]"
                   }
                 />
               )
@@ -389,7 +390,7 @@ export default function ProductCard({
         >
 
           <span
-            className="text-sm font-semibold text-[#e63e62]"
+            className="text-sm font-semibold text-[var(--color-primary)]"
           >
             Rs.{" "}
             {Math.round(

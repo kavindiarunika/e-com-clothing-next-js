@@ -48,7 +48,7 @@ export default function SizeSelector({
           aria-label="Select size"
           value={selectedSize || ""}
           onChange={(event) => setSelectedSize(event.target.value)}
-          className="w-full max-w-xs border border-[#E7DEDC] bg-white px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[#e63e62]"
+          className="w-full max-w-xs border border-[#E5E5E5] bg-white px-4 py-3 text-sm text-[#292524] outline-none transition focus:border-[var(--color-primary)]"
         >
           <option value="" disabled>
             Select size

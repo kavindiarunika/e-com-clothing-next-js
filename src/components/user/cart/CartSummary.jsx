@@ -29,7 +29,7 @@ export default function CartSummary({
   selectedItems = [],
 }) {
   return (
-    <div className="bg-white p-5 md:p-7 lg:p-8">
+    <div className="min-w-0 bg-white p-4 sm:p-5 md:p-7 lg:p-8">
       <h2 className="font-serif text-2xl text-[#292524] md:text-[2rem]">
         Cart Summary
       </h2>
@@ -45,7 +45,7 @@ export default function CartSummary({
           <PriceRow
             label="Product discount"
             value={`- Rs. ${productDiscount.toLocaleString()}`}
-            valueClassName="text-[#e63e62]"
+            valueClassName="text-[var(--color-primary)]"
           />
         )}
 
@@ -53,28 +53,28 @@ export default function CartSummary({
           <PriceRow
             label={`Coupon (${selectedCoupon.code})`}
             value={`- Rs. ${couponDiscount.toLocaleString()}`}
-            valueClassName="text-[#e63e62]"
+            valueClassName="text-[var(--color-primary)]"
           />
         )}
 
         <PriceRow label="Shipping" value={`Rs. ${shipping.toLocaleString()}`} />
       </div>
 
-      <div className="my-6 border-t border-[#E7DEDC]" />
+      <div className="my-6 border-t border-[#E5E5E5]" />
 
       {/* Total */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-3">
         <span className="text-sm font-semibold uppercase tracking-[1px] text-[#292524]">
           Total
         </span>
 
-        <span className="shrink-0 text-right text-xl font-semibold tabular-nums text-[#e63e62]">
+        <span className="shrink-0 text-right text-lg font-semibold tabular-nums text-[var(--color-primary)] sm:text-xl">
           Rs. {total.toLocaleString()}
         </span>
       </div>
 
       {/* Available coupons */}
-      <section className="mt-7 border-t border-[#E7DEDC] pt-6">
+      <section className="mt-7 border-t border-[#E5E5E5] pt-6">
         <h3 className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
           Coupons you can use
         </h3>
@@ -84,7 +84,7 @@ export default function CartSummary({
             Checking available coupons...
           </p>
         ) : couponLoadError ? (
-          <p role="alert" className="mt-3 text-sm text-[#e63e62]">
+          <p role="alert" className="mt-3 text-sm text-[var(--color-primary)]">
             {couponLoadError}
           </p>
         ) : coupons.length > 0 ? (
@@ -162,10 +162,10 @@ export default function CartSummary({
             sessionStorage.removeItem("velora-selected-coupon");
           }
         }}
-        className={`mt-7 block w-full px-6 py-4 text-center text-xs font-semibold uppercase tracking-[1.5px] text-white transition ${
+        className={`mt-7 block min-h-12 w-full px-4 py-4 text-center text-xs font-semibold uppercase tracking-[1.2px] text-white transition sm:px-6 sm:tracking-[1.5px] ${
           selectedItems.length === 0
             ? "cursor-not-allowed bg-[#8B817A]"
-            : "bg-[#e63e62] hover:bg-[#A96870]"
+            : "bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)]"
         }`}
       >
         Proceed to Checkout
