@@ -342,7 +342,7 @@ export default function ProductCard({
         
 
         <Link href={`/user/product/${product.id}`}>
-          <h3 className="line-clamp-2 min-h-8 break-words text-[17px] font-medium leading-4 text-[#292524] transition-colors hover:text-[var(--color-primary)] sm:min-h-10 sm:text-sm sm:leading-5">
+          <h3 className="line-clamp-2 min-h-8 break-words text-[15px] font-medium leading-4 text-[#292524] transition-colors hover:text-[var(--color-primary)] sm:min-h-10 sm:text-sm sm:leading-5">
             {product.name}
           </h3>
         </Link>
