@@ -1,8 +1,16 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
+import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
-import { Image as ImageIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Heart,
+  Image as ImageIcon,
+  Minus,
+  Plus,
+  ShoppingBag,
+} from "lucide-react";
 
 import ProductImageGallery from "@/components/user/product/ProductImageGallery";
 import ProductRating from "@/components/user/product/ProductRating";
@@ -371,9 +379,28 @@ export default function ProductPage({ params }) {
 
   return (
     <main className="bg-[#FFFFFF]">
-      <section className="mx-auto w-[92%] max-w-[1200px] py-10 md:py-16">
-        <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
-          <div>
+      <section className="mx-auto w-[97%] max-w-[1280px] py-3 sm:w-[96%] sm:py-5 lg:py-8">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-3 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[#8A8178] sm:mb-5"
+        >
+          <Link href="/user" className="transition hover:text-[var(--color-primary)]">
+            Home
+          </Link>
+          <span aria-hidden="true">/</span>
+          <Link href="/user/shop" className="transition hover:text-[var(--color-primary)]">
+            Shop
+          </Link>
+          {product.category && (
+            <>
+              <span aria-hidden="true">/</span>
+              <span className="truncate">{product.category}</span>
+            </>
+          )}
+        </nav>
+
+        <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-8">
+          <div className="min-w-0">
             {product.images.length > 0 ? (
               <ProductImageGallery
                 key={`${selectedColor?.color_id || selectedColor?.name || "default"}-${selectedSize || "default"}`}
@@ -391,47 +418,47 @@ export default function ProductPage({ params }) {
             )}
           </div>
 
-          <div className="flex flex-col justify-center">
-            <p className="mb-3 text-xs font-medium uppercase tracking-[3px] text-[var(--color-primary)]">
+          <div className="min-w-0 border border-[#EEE8E3] bg-[#FDFCFA] px-2.5 py-3 sm:px-3 sm:py-4 lg:sticky lg:top-28 lg:px-4 lg:py-5">
+            <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[2.4px] text-[var(--color-primary)] sm:mb-2 sm:text-xs">
               {product.category}
             </p>
 
-            <h1 className="font-serif text-4xl leading-tight text-[#292524] md:text-5xl">
+            <h1 className="break-words font-serif text-3xl font-medium leading-tight text-[#292524] sm:text-4xl lg:text-[42px]">
               {product.name}
             </h1>
 
-            <div className="mt-4 text-sm">
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-[#EAE4DE] pb-3 sm:mt-3 sm:pb-4">
               <ProductRating
                 productId={product.id}
               />
             </div>
 
-            <div className="mt-6 flex items-center gap-3">
-              <span className="text-3xl font-semibold text-[var(--color-primary)]">
+            <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-2 sm:mt-5">
+              <span className="text-2xl font-semibold text-[#292524] sm:text-3xl">
                 Rs. {Math.round(discountedPrice).toLocaleString()}
               </span>
 
               {hasDiscount && (
-                <span className="text-sm text-[#6B625C] line-through">
+                <span className="text-sm text-[#8A8178] line-through sm:text-base">
                   Rs. {originalPrice.toLocaleString()}
                 </span>
               )}
 
               {hasDiscount && (
-                <span className="bg-[var(--color-primary)] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                <span className="bg-[#F3E9E7] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-primary)]">
                   {product.discount}% OFF
                 </span>
               )}
             </div>
 
             <div
-              className="product-description mt-6 text-sm leading-7 text-[#6B625C]"
+              className="product-description mt-3 border-b border-[#EAE4DE] pb-4 text-sm leading-6 text-[#6B625C] sm:mt-4 sm:pb-5 sm:leading-7"
               dangerouslySetInnerHTML={{
                 __html: product.description || "",
               }}
             />
 
-            <div className="mt-8 space-y-6">
+            <div className="mt-4 space-y-4 sm:mt-5 sm:space-y-5">
               {product.colors.length > 0 && (
                 <ColorSelector
                   colors={product.colors}
@@ -478,63 +505,84 @@ export default function ProductPage({ params }) {
                 />
               )}
 
-              <div>
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]">
-                  Quantity
-                </p>
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-[1.5px] text-[#6B625C]">
+                    Quantity
+                  </p>
+                  <div className="flex w-fit items-center border border-[#E5E5E5] bg-white">
+                    <button
+                      type="button"
+                      onClick={decreaseQuantity}
+                      disabled={quantity <= 1 || availableStock <= 0}
+                      aria-label="Decrease quantity"
+                      className="flex h-10 w-10 items-center justify-center text-[#292524] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <Minus size={15} />
+                    </button>
 
-                <div className="flex w-fit items-center border border-[#E5E5E5] bg-white">
-                  <button
-                    type="button"
-                    onClick={decreaseQuantity}
-                    disabled={quantity <= 1 || availableStock <= 0}
-                    aria-label="Decrease quantity"
-                    className="flex h-11 w-11 items-center justify-center text-xl text-[#292524] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    ?
-                  </button>
+                    <span className="flex h-10 w-10 items-center justify-center text-sm font-medium text-[#292524]">
+                      {quantity}
+                    </span>
 
-                  <span className="flex h-11 w-14 items-center justify-center text-sm font-medium text-[#292524]">
-                    {quantity}
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={increaseQuantity}
-                    disabled={quantity >= quantityLimit || availableStock <= 0}
-                    aria-label="Increase quantity"
-                    className="flex h-11 w-11 items-center justify-center text-xl text-[#292524] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    +
-                  </button>
+                    <button
+                      type="button"
+                      onClick={increaseQuantity}
+                      disabled={quantity >= quantityLimit || availableStock <= 0}
+                      aria-label="Increase quantity"
+                      className="flex h-10 w-10 items-center justify-center text-[#292524] transition hover:bg-[#F6F1EA] disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <Plus size={15} />
+                    </button>
+                  </div>
                 </div>
+                <p
+                  role="status"
+                  className={`pb-2 text-xs ${
+                    availableStock > 0 ? "text-[#397553]" : "text-[#9B3D42]"
+                  }`}
+                >
+                  {availableStock > 0
+                    ? `${availableStock} available`
+                    : "Currently unavailable"}
+                </p>
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row">
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="flex-1 bg-[var(--color-primary)] px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-white transition hover:bg-[#5E2B30]"
+                  className="group flex min-h-12 items-center justify-center gap-2 bg-[var(--color-primary)] px-4 py-3 text-xs font-semibold uppercase tracking-[1.2px] text-white transition-colors hover:bg-[var(--color-primary-hover)] sm:text-sm"
                 >
+                  <ShoppingBag size={16} />
                   Add to Cart
                 </button>
 
                 <button
                   type="button"
                   onClick={handleBuyNow}
-                  className="flex-1 border border-[var(--color-primary)] bg-transparent px-6 py-3 text-sm font-medium uppercase tracking-[1.5px] text-[var(--color-primary)] transition hover:bg-[#F6F1EA]"
+                  className="flex min-h-12 items-center justify-center gap-2 border border-[#292524] bg-white px-4 py-3 text-xs font-semibold uppercase tracking-[1.2px] text-[#292524] transition-colors hover:bg-[#F6F1EA] sm:text-sm"
                 >
                   Buy Now
+                  <ArrowRight size={15} />
                 </button>
               </div>
 
-              <button
-                type="button"
-                onClick={handleWishlist}
-                className="mt-2 self-start text-xs font-medium uppercase tracking-[1.5px] text-[#292524] transition hover:text-[var(--color-primary)]"
-              >
-                {isWishlisted ? "Saved to wishlist" : "Add to wishlist"}
-              </button>
+              <div className="border-t border-[#EAE4DE] pt-3">
+                <button
+                  type="button"
+                  onClick={handleWishlist}
+                  aria-pressed={isWishlisted}
+                  className="inline-flex min-h-10 items-center gap-2 text-xs font-medium text-[#5D554F] transition hover:text-[var(--color-primary)]"
+                >
+                  <Heart
+                    size={17}
+                    fill={isWishlisted ? "currentColor" : "none"}
+                    className={isWishlisted ? "text-[var(--color-primary)]" : ""}
+                  />
+                  {isWishlisted ? "Saved to wishlist" : "Add to wishlist"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -545,8 +593,8 @@ export default function ProductPage({ params }) {
           relatedProduct &&
           String(relatedProduct.id) !== String(product.id)
       ) && (
-        <section className="mx-auto w-[92%] max-w-[1200px] pb-12">
-          <div className="rounded-[24px] border border-[#F5F5F5] bg-white/60 p-6 md:p-8">
+        <section className="mx-auto w-[92%] max-w-[1200px] pb-8">
+          <div className="rounded-[20px] border border-[#F5F5F5] bg-white/60 p-3 sm:p-4 md:p-5">
             <RelatedProducts
               products={relatedProducts}
               currentProduct={product}
@@ -555,11 +603,11 @@ export default function ProductPage({ params }) {
         </section>
       )}
 
-      <section className="mx-auto w-[92%] max-w-[1200px] pb-16">
+      <section className="mx-auto w-[92%] max-w-[1200px] pb-12">
         <ReviewSection product={product} />
       </section>
 
-      <section className="mx-auto w-[92%] max-w-[1200px] pb-16">
+      <section className="mx-auto w-[92%] max-w-[1200px] pb-12">
         <ProductComments product={product} />
       </section>
     </main>

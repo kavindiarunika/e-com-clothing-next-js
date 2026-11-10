@@ -67,11 +67,27 @@ export default function FeaturedProducts() {
       <div className="mx-0 w-full max-w-none">
 
         {/* Heading */}
-        <div className="mb-5 flex flex-col items-start gap-3 sm:mb-8 sm:flex-row sm:items-end sm:justify-between md:mb-10">
-          <h2 className="font-serif text-2xl font-bold leading-tight tracking-wide text-[#292524] sm:text-[38px]">
-            Featured Collection
-          </h2>
-        
+        <div className="mb-5 flex items-center justify-between gap-2 sm:mb-8 md:mb-10">
+          <div className="min-w-0">
+            <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-primary)]">
+              Handpicked for you
+            </p>
+            <h2 className="font-serif text-2xl font-bold leading-tight tracking-wide text-[#292524] sm:text-[38px]">
+              Featured Collection
+            </h2>
+          </div>
+          <Link
+            href="/user/shop?sort=featured"
+            className="group/button inline-flex min-h-9 shrink-0 items-center gap-1 bg-[var(--color-primary)] px-2.5 py-2 text-[9px] font-bold uppercase tracking-[0.8px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] motion-reduce:transition-none sm:min-h-10 sm:gap-2 sm:px-4 sm:text-xs sm:tracking-[1.2px] sm:active:scale-100"
+          >
+            View All
+            <ArrowRight
+              size={12}
+              strokeWidth={1.8}
+              aria-hidden="true"
+              className="transition-transform duration-300 group-hover/button:translate-x-1 motion-reduce:transition-none sm:h-[14px] sm:w-[14px]"
+            />
+          </Link>
         </div>
 
         {/* Products - 4 Cards Horizontal */}
@@ -82,7 +98,7 @@ export default function FeaturedProducts() {
                 key={product.id}
                 className="shadow-[0_4px_15px_rgba(50,45,41,0.10)]"
               >
-                <ProductCard product={product} />
+                <ProductCard product={product} compact />
               </div>
             ))}
           </div>
@@ -106,8 +122,6 @@ export default function FeaturedProducts() {
             No featured products available right now.
           </p>
         )}
-       
-
       </div>
     </section>
   );

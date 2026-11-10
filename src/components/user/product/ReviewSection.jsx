@@ -164,7 +164,7 @@ export default function ReviewSection({ product }) {
                   className={
                     star <=
                     (selectedRating ?? Math.round(ratingSummary.averageRating))
-                      ? "fill-yellow-400 text-yellow-400"
+                      ? "fill-[#C99B42] text-[#C99B42]"
                       : "text-[#E5E5E5]"
                   }
                 />
@@ -221,7 +221,7 @@ export default function ReviewSection({ product }) {
                 <span className="w-3 text-right">{star}</span>
                 <Star
                   size={14}
-                  className="shrink-0 fill-yellow-400 text-yellow-400"
+                  className="shrink-0 fill-[#C99B42] text-[#C99B42]"
                   aria-hidden="true"
                 />
                 <div

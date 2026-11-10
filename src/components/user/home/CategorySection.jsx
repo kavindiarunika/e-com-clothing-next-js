@@ -163,6 +163,9 @@ export default function CategorySection() {
 
         <div className="mb-5 flex items-end justify-between gap-3 sm:mb-8 md:mb-10">
           <div>
+            <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-primary)]">
+              Explore your options
+            </p>
             <h2 className="font-serif text-2xl font-bold leading-tight tracking-wide text-[#292524] sm:text-[38px]">
               Shop by Category
             </h2>

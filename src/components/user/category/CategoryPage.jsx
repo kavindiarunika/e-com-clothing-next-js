@@ -470,36 +470,14 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
       {/* ================= CATEGORY CONTENT ================= */}
 
-      <section className="mx-auto w-[92%] max-w-300 py-10 md:py-14">
+      <section className="mx-auto w-[92%] max-w-[1440px] py-8 sm:py-10 md:py-14">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 sm:mb-6 sm:gap-4">
+          <p className="text-sm text-[#6B625C]">
+            {filteredProducts.length}{" "}
+            {filteredProducts.length === 1 ? "item" : "items"}
+          </p>
 
-        {/* ================= MOBILE FILTER + SORT ================= */}
-
-        <div className="mb-6 flex items-center justify-between gap-3 md:hidden">
-          <button
-            type="button"
-            onClick={() => setMobileFiltersOpen(true)}
-            className="flex items-center gap-2 border border-[#E5E5E5] bg-white px-4 py-2.5 text-sm text-[#292524]"
-          >
-            <SlidersHorizontal size={17} />
-            Filters
-          </button>
-
-          <SortDropdown
-            sortBy={sortBy}
-            setSortBy={(value) => {
-              setSortBy(value);
-              setCurrentPage(1);
-            }}
-          />
-        </div>
-
-        {/* Desktop Toolbar */}
-        <div className="mb-6 hidden items-center justify-between md:flex">
-          <div className="flex items-center gap-4">
-            <p className="text-sm text-[#6B625C]">
-              {filteredProducts.length}{" "}
-              {filteredProducts.length === 1 ? "product" : "products"}
-            </p>
+          <div className="hidden items-center gap-4 md:flex">
             <button
               type="button"
               onClick={() => setDesktopFiltersOpen((open) => !open)}
@@ -510,10 +488,31 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
               <SlidersHorizontal size={16} />
               {desktopFiltersOpen ? "Hide filters" : "Show filters"}
             </button>
+            <div className="w-48">
+              <SortDropdown
+                id="category-sort-desktop"
+                sortBy={sortBy}
+                setSortBy={(value) => {
+                  setSortBy(value);
+                  setCurrentPage(1);
+                }}
+              />
+            </div>
           </div>
+        </div>
 
-          <div className="flex items-center gap-3">
+        <div className="mb-5 flex items-center gap-2 md:hidden">
+          <button
+            type="button"
+            onClick={() => setMobileFiltersOpen(true)}
+            className="flex min-h-11 flex-1 items-center justify-center gap-2 border border-[#E5E5E5] bg-white px-3 py-2.5 text-sm text-[#292524]"
+          >
+            <SlidersHorizontal size={17} />
+            Filters
+          </button>
+          <div className="min-w-0 flex-1">
             <SortDropdown
+              id="category-sort-mobile-toolbar"
               sortBy={sortBy}
               setSortBy={(value) => {
                 setSortBy(value);
@@ -525,27 +524,16 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
         {/* ================= SIDEBAR + PRODUCTS ================= */}
 
-        <div className="flex items-start gap-6 lg:gap-8">
+        <div className="flex min-w-0 gap-6 lg:gap-8">
 
           {/* SIDEBAR */}
 
           {desktopFiltersOpen && <aside
             id="category-filter-sidebar"
-            className="hidden w-[230px] shrink-0 self-start md:block lg:w-[260px]"
+            className="hidden w-[220px] shrink-0 md:block lg:w-[250px]"
           >
-            <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
-              <div className="mb-4 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setDesktopFiltersOpen(false)}
-                  aria-label="Close filters"
-                  className="flex items-center gap-1 text-xs text-[#6B625C] hover:text-[var(--color-primary)]"
-                >
-                  <X size={16} />
-                  Close
-                </button>
-              </div>
-              <div className="mb-6">
+            <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto border border-[#E5E5E5] border-t-2 border-t-[var(--color-primary)] bg-gradient-to-b from-white to-[#F5F5F5] p-5 shadow-[0_12px_32px_rgba(50,45,41,0.08)] lg:p-6">
+              <div className="mb-6 rounded-sm bg-[#F5F5F5] p-2">
                 <SearchBar
                   value={searchTerm}
                   onChange={(value) => {
@@ -553,6 +541,26 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                     setCurrentPage(1);
                   }}
                 />
+              </div>
+              <div className="mb-6 flex items-center justify-between">
+                <h2 className="font-serif text-lg text-[#292524]">Filters</h2>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="text-xs text-[var(--color-primary)] hover:underline"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDesktopFiltersOpen(false)}
+                    aria-label="Close filters"
+                    className="text-[#6B625C] hover:text-[var(--color-primary)]"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
               </div>
               <CategoryFilterSidebar
                 subcategories={subcategories}
@@ -577,6 +585,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                   setCurrentPage(1);
                 }}
                 onClear={clearFilters}
+                showHeader={false}
               />
             </div>
           </aside>}
@@ -584,12 +593,6 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
           {/* PRODUCTS */}
 
           <div className="min-w-0 flex-1">
-
-            {/* Mobile Product Count */}
-            <p className="mb-5 text-sm text-[#6B625C] md:hidden">
-              {filteredProducts.length}{" "}
-              {filteredProducts.length === 1 ? "product" : "products"}
-            </p>
 
             {isLoadingProducts ? (
               <div className="flex min-h-75 items-center justify-center bg-white">
@@ -692,7 +695,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
       {/* ================= MOBILE FILTER DRAWER ================= */}
 
       {mobileFiltersOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className="fixed inset-0 z-[100] md:hidden">
 
           {/* Background */}
 
@@ -705,29 +708,21 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
           {/* Drawer */}
 
-          <div className="absolute right-0 top-0 h-full w-[85%] max-w-[360px] overflow-y-auto bg-[#FFFFFF] p-5">
-
-            <div className="mb-5 flex items-center justify-between">
-
-              <h2 className="font-serif text-2xl text-[#292524]">
-                Filters
-              </h2>
-
+          <div className="absolute right-0 top-0 flex h-dvh w-[85%] max-w-[360px] flex-col overflow-y-auto bg-[#FFFFFF]">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#E5E5E5] bg-white px-5 py-3">
+              <h2 className="font-serif text-xl text-[#292524]">Filters</h2>
               <button
                 type="button"
-                onClick={() =>
-                  setMobileFiltersOpen(false)
-                }
-                className="flex h-9 w-9 items-center justify-center bg-white text-[#292524]"
+                onClick={() => setMobileFiltersOpen(false)}
+                aria-label="Close filters"
+                className="flex h-11 w-11 items-center justify-center text-[#292524]"
               >
-                <ChevronRight
-                  size={18}
-                />
+                <X size={22} />
               </button>
-
             </div>
 
-            <div className="mb-6 rounded-sm bg-[#F5F5F5] p-2">
+            <div className="flex-1 bg-gradient-to-b from-white to-[#F5F5F5] p-6">
+              <div className="mb-6 rounded-sm bg-[#F5F5F5] p-2">
               <SearchBar
                 value={searchTerm}
                 onChange={(value) => {
@@ -735,19 +730,36 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                   setCurrentPage(1);
                 }}
               />
-            </div>
+              </div>
 
-            <div className="mb-5 flex justify-end">
-              <button
-                type="button"
-                onClick={clearFilters}
-                className="text-xs text-[var(--color-primary)] hover:underline"
-              >
-                Clear All
-              </button>
-            </div>
+              <div className="mb-6 border-b border-[#E5E5E5] pb-6">
+                <label
+                  htmlFor="category-sort-mobile"
+                  className="mb-3 block text-[10px] font-semibold uppercase tracking-[1.5px] text-[#786E66]"
+                >
+                  Sort by
+                </label>
+                <SortDropdown
+                  id="category-sort-mobile"
+                  sortBy={sortBy}
+                  setSortBy={(value) => {
+                    setSortBy(value);
+                    setCurrentPage(1);
+                  }}
+                />
+              </div>
 
-            <CategoryFilterSidebar
+              <div className="mb-6 flex justify-end">
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="text-xs text-[var(--color-primary)] hover:underline"
+                >
+                  Clear All
+                </button>
+              </div>
+
+              <CategoryFilterSidebar
               subcategories={subcategories}
               selectedSubcategory={selectedSubcategory}
               setSelectedSubcategory={(value) => {
@@ -769,19 +781,19 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
                 setSelectedAvailability(value);
                 setCurrentPage(1);
               }}
-              showHeader={false}
-            />
+                showHeader={false}
+              />
+            </div>
 
-            <button
-              type="button"
-              onClick={() =>
-                setMobileFiltersOpen(false)
-              }
-              className="mt-6 w-full bg-[var(--color-primary)] py-4 text-xs font-semibold uppercase tracking-[1.5px] text-white"
-            >
-              View {filteredProducts.length} Products
-            </button>
-
+            <div className="sticky bottom-0 z-10 border-t border-[#E5E5E5] bg-white px-6 py-3">
+              <button
+                type="button"
+                onClick={() => setMobileFiltersOpen(false)}
+                className="min-h-11 w-full bg-[var(--color-primary)] px-4 py-3 text-xs font-medium uppercase tracking-[1px] text-white"
+              >
+                Show {filteredProducts.length} Products
+              </button>
+            </div>
           </div>
 
         </div>

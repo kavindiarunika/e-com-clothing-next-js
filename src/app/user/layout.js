@@ -1,7 +1,5 @@
 import "./globals.css";
-import Navbar from "../../components/user/common/Navbar";
-import Footer from "../../components/user/common/Footer";
-import FloatingWhatsApp from "../../components/user/common/FloatingWhatsApp";
+import UserLayoutShell from "../../components/user/common/UserLayoutShell";
 
 export const metadata = {
   title: "Velora | Premium Fashion",
@@ -9,14 +7,5 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  return (
-    <>
-      <Navbar />
-
-      <main className="user-page-gutter">{children}</main>
-
-      <FloatingWhatsApp />
-      <Footer />
-    </>
-  );
+  return <UserLayoutShell>{children}</UserLayoutShell>;
 }

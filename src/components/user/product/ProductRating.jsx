@@ -78,7 +78,7 @@ export default function ProductRating({ productId }) {
                 ? "#FACC15"
                 : "none"
             }
-            className="text-yellow-400"
+            className="fill-[#C99B42] text-[#C99B42]"
           />
         ))}
       </div>

@@ -10,6 +10,7 @@ export default function ProductCard({
   product,
   showSoldOut = false,
   onWishlistChange,
+  compact = false,
 }) {
   const router = useRouter();
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -232,13 +233,17 @@ export default function ProductCard({
   };
 
   return (
-    <div className="group relative">
+    <article className="group relative flex h-full flex-col overflow-hidden border border-[#EAE7E4] bg-white transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-[#D8CDC7] hover:shadow-[0_10px_28px_rgba(41,37,36,0.10)]">
 
       {/* =====================================
           PRODUCT IMAGE
       ====================================== */}
 
-      <div className="relative aspect-[3/4] overflow-hidden bg-[#F5F5F5]">
+      <div
+        className={`relative overflow-hidden bg-[#F5F5F5] ${
+          compact ? "aspect-[1/1.15] sm:aspect-[3/4]" : "aspect-[3/4]"
+        }`}
+      >
 
         <Link
           href={`/user/product/${product.id}`}
@@ -249,7 +254,7 @@ export default function ProductCard({
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover object-center transition duration-700 ease-out group-hover:scale-105"
+            className="object-cover object-center transition duration-500 ease-out group-hover:scale-[1.03]"
             onError={(event) => {
               event.currentTarget.onerror = null;
               event.currentTarget.src = fallbackImage;
@@ -263,7 +268,7 @@ export default function ProductCard({
 
         {isSoldOut && (
           <span
-            className="absolute left-0 top-4 z-20 bg-red-600 px-4 py-2 text-[10px] font-semibold uppercase tracking-[1.5px] text-white shadow-sm"
+            className="absolute left-2 top-2 z-20 bg-[#292524] px-2 py-1 text-[9px] font-semibold uppercase tracking-[1px] text-white shadow-sm sm:left-3 sm:top-3 sm:px-2.5 sm:py-1.5"
           >
             Sold Out
           </span>
@@ -275,7 +280,7 @@ export default function ProductCard({
 
         {hasDiscount && !isSoldOut && (
           <span
-            className="absolute left-3 top-3 z-10 bg-[var(--color-primary)] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white"
+            className="absolute left-2 top-2 z-10 bg-[var(--color-primary)] px-2 py-1 text-[9px] font-semibold uppercase tracking-wider text-white sm:left-3 sm:top-3 sm:px-2.5 sm:py-1.5"
           >
             -{product.discount}%
           </span>
@@ -294,10 +299,10 @@ export default function ProductCard({
               ? "Remove from wishlist"
               : "Add to wishlist"
           }
-          className={`absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-red-500 shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-red-600`}
+          className="absolute right-2 top-2 z-30 flex h-9 w-9 items-center justify-center rounded-full border border-black/5 bg-white/95 text-[#5D554F] shadow-sm backdrop-blur-sm transition-colors duration-200 hover:text-[var(--color-primary)] sm:right-3 sm:top-3 sm:h-10 sm:w-10"
         >
           <Heart
-            size={19}
+            size={17}
             strokeWidth={1.6}
             fill={
               isWishlisted
@@ -315,10 +320,10 @@ export default function ProductCard({
           <button
             type="button"
             onClick={handleAddToCart}
-            className="group/add-to-cart absolute bottom-0 left-0 right-0 z-30 flex min-h-11 translate-y-0 items-center justify-center gap-1 bg-[var(--color-primary)] px-1 py-2 text-[10px] font-semibold uppercase tracking-wide text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_-4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] [@media(hover:hover)]:translate-y-full [@media(hover:hover)]:group-hover:translate-y-0 motion-reduce:transition-none sm:gap-2 sm:py-3 sm:text-xs sm:tracking-[1.5px]"
+            className="group/add-to-cart absolute bottom-0 left-0 right-0 z-30 flex min-h-10 translate-y-0 items-center justify-center gap-1 bg-[var(--color-primary)] px-1 py-2 text-[9px] font-semibold uppercase tracking-[0.8px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_-4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] [@media(hover:hover)]:translate-y-full [@media(hover:hover)]:group-hover:translate-y-0 motion-reduce:transition-none sm:min-h-11 sm:gap-2 sm:py-3 sm:text-xs sm:tracking-[1.5px]"
           >
             <ShoppingBag
-              size={16}
+              size={14}
               strokeWidth={1.7}
               className="transition-transform duration-300 ease-out group-hover/add-to-cart:scale-110 motion-reduce:transition-none"
             />
@@ -333,83 +338,52 @@ export default function ProductCard({
           PRODUCT INFORMATION
       ====================================== */}
 
-      <div className="px-1 pt-4">
+      <div className="flex flex-1 flex-col px-2 py-2 sm:px-3.5 sm:py-3">
+        
 
-        {/* Product Name */}
-
-        <Link
-          href={`/user/product/${product.id}`}
-        >
-          <h3
-            className="text-sm font-medium text-[#292524] transition-colors hover:text-[var(--color-primary)]"
-          >
+        <Link href={`/user/product/${product.id}`}>
+          <h3 className="line-clamp-2 min-h-8 break-words text-[15px] font-medium leading-4 text-[#292524] transition-colors hover:text-[var(--color-primary)] sm:min-h-10 sm:text-sm sm:leading-5">
             {product.name}
           </h3>
         </Link>
 
-        {/* =================================
-            RATING
-        ================================== */}
-
-        <div className="mt-2 flex items-center gap-1">
-
-          <div className="flex">
-            {[1, 2, 3, 4, 5].map(
-              (star) => (
+        {currentRating > 0 && (
+          <div
+            className="mt-1 flex items-center gap-1"
+            aria-label={`${currentRating} out of 5 stars${reviewCount ? `, ${reviewCount} reviews` : ""}`}
+          >
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
-                  size={13}
+                  size={12}
                   strokeWidth={1.5}
                   className={
-                    star <=
-                    Math.round(
-                      currentRating
-                    )
-                      ? "fill-yellow-400 text-yellow-400"
+                    star <= Math.round(currentRating)
+                      ? "fill-[#C99B42] text-[#C99B42]"
                       : "text-[#E5E5E5]"
                   }
                 />
-              )
-            )}
+              ))}
+            </div>
+            <span className="ml-1 text-[10px] text-[#6B625D]">
+              {currentRating.toFixed(1)}
+              {reviewCount > 0 ? ` (${reviewCount})` : ""}
+            </span>
           </div>
+        )}
 
-          <span
-            className="ml-1 text-[11px] text-[#6B625D]"
-          >
-            {currentRating} ({reviewCount})
+        <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-1 pt-1.5 sm:pt-2">
+          <span className="text-xs font-semibold text-[#292524] sm:text-sm">
+            Rs. {Math.round(discountedPrice).toLocaleString()}
           </span>
-
-        </div>
-
-        {/* =================================
-            PRICE
-        ================================== */}
-
-        <div
-          className="mt-2 flex items-center gap-2"
-        >
-
-          <span
-            className="text-sm font-semibold text-[var(--color-primary)]"
-          >
-            Rs.{" "}
-            {Math.round(
-              discountedPrice
-            ).toLocaleString()}
-          </span>
-
           {hasDiscount && (
-            <span
-              className="text-xs text-[#6B625D] line-through"
-            >
-              Rs.{" "}
-              {originalPrice.toLocaleString()}
+            <span className="text-[10px] text-[#8A8178] line-through sm:text-xs">
+              Rs. {originalPrice.toLocaleString()}
             </span>
           )}
-
         </div>
-
       </div>
-    </div>
+    </article>
   );
 }
