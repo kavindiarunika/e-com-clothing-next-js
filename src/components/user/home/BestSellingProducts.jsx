@@ -70,25 +70,25 @@ export default function BestSellingProducts() {
   return (
     <section className="bg-[#FFFFFF] px-0 py-7 sm:py-10 md:py-12">
       <div className="mx-0 w-full max-w-none">
-        <div className="mb-5 flex flex-col items-start gap-3 sm:mb-8 sm:flex-row sm:items-end sm:justify-between md:mb-10">
-          <div>
+        <div className="mb-5 flex items-center justify-between gap-2 sm:mb-8 md:mb-10">
+          <div className="min-w-0">
             <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-primary)]">
               Loved by our customers
             </p>
-            <h2 className="font-serif text-2xl font-bold leading-tight tracking-wide text-[#292524] sm:text-[38px]">
-              Best Selling 
+            <h2 className="font-serif text-xl font-bold leading-tight tracking-wide text-[#292524] sm:text-[38px]">
+              Best Selling
             </h2>
           </div>
           <Link
             href="/user/shop?sort=best-selling"
-            className="group/button hidden min-h-10 items-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] motion-reduce:transition-none sm:inline-flex sm:text-xs sm:active:scale-100"
+            className="group/button inline-flex min-h-9 shrink-0 items-center gap-1 bg-[var(--color-primary)] px-2.5 py-2 text-[9px] font-bold uppercase tracking-[0.8px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] motion-reduce:transition-none sm:min-h-10 sm:gap-2 sm:px-4 sm:text-xs sm:tracking-[1.2px] sm:active:scale-100"
           >
-            View All Products
+            View All
             <ArrowRight
-              size={14}
+              size={12}
               strokeWidth={1.8}
               aria-hidden="true"
-              className="transition-transform duration-300 group-hover/button:translate-x-1 motion-reduce:transition-none"
+              className="transition-transform duration-300 group-hover/button:translate-x-1 motion-reduce:transition-none sm:h-[14px] sm:w-[14px]"
             />
           </Link>
         </div>
@@ -123,18 +123,6 @@ export default function BestSellingProducts() {
           </p>
         )}
 
-        <Link
-          href="/user/shop?sort=best-selling"
-          className="group/button mt-5 inline-flex min-h-10 w-full items-center justify-center gap-2 bg-[var(--color-primary)] px-4 py-2 text-[10px] font-bold uppercase tracking-[1.2px] text-white transition-[background-color,box-shadow,transform] duration-300 ease-out hover:bg-[var(--color-primary-hover)] hover:shadow-[0_4px_14px_rgba(17,17,17,0.18)] active:scale-[0.98] motion-reduce:transition-none sm:hidden"
-        >
-          View All Products
-          <ArrowRight
-            size={14}
-            strokeWidth={1.8}
-            aria-hidden="true"
-            className="transition-transform duration-300 group-hover/button:translate-x-1 motion-reduce:transition-none"
-          />
-        </Link>
       </div>
     </section>
   );
