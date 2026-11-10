@@ -1,6 +1,7 @@
 import HeroBanner from "../components/user/home/HeroBanner";
 import FeaturedProducts from "../components/user/home/FeaturedProducts";
 import BestSellingProducts from "../components/user/home/BestSellingProducts";
+import CategorySection from "../components/user/home/CategorySection";
 import NewArrivals from "../components/user/home/NewArrivals";
 import SubcategorySection from "../components/user/home/SubcategorySection";
 import Newsletter from "../components/user/home/Newsletter";
@@ -17,6 +18,7 @@ export default function Home() {
       <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10">
         <SubcategorySection />
         <BestSellingProducts />
+        <CategorySection />
         <FeaturedProducts />
         <NewArrivals />
         <FindYourStyle />
