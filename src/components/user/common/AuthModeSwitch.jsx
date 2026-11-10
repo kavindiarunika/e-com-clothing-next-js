@@ -1,48 +1,53 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const modes = [
   { id: "login", label: "Sign In", href: "/user/login" },
   { id: "register", label: "Sign Up", href: "/user/register" },
 ];
 
-export default function AuthModeSwitch({ activeMode }) {
+export default function AuthModeSwitch({ activeMode, embedded = false }) {
   return (
-    <>
-      <nav aria-label="Account access" className="mb-6 flex justify-end lg:hidden">
-        <div className="inline-flex items-center gap-1 border border-[#E5E5E5] bg-[#F5F5F5] p-1">
-          {modes.map((mode) => {
-            const isActive = mode.id === activeMode;
-
-            return (
-              <Link
-                key={mode.id}
-                href={mode.href}
-                aria-current={isActive ? "page" : undefined}
-                className={`px-4 py-2 text-[10px] font-semibold uppercase tracking-[1.2px] transition ${
-                  isActive
-                    ? "bg-[#292524] text-white"
-                    : "text-[#6B625C] hover:bg-white hover:text-[#292524]"
-                }`}
-              >
-                {mode.label}
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-
+    <aside
+      className={`relative flex w-full items-center overflow-hidden bg-[#292524] ${
+        embedded
+          ? "h-44 shrink-0 lg:h-full lg:min-h-[620px]"
+          : "min-h-[100svh]"
+      }`}
+    >
+      {embedded ? (
+        <>
+          <Image
+            src="/login.jpg"
+            alt=""
+            fill
+            sizes="(max-width: 1023px) 100vw, 40vw"
+            priority
+            className="object-cover object-center"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-[#292524]/35"
+          />
+        </>
+      ) : (
+        <>
+          <span
+            aria-hidden="true"
+            className="absolute -left-20 -top-20 h-64 w-64 rotate-45 border-[24px] border-white/[0.06]"
+          />
+          <span
+            aria-hidden="true"
+            className="absolute -bottom-28 -left-10 h-72 w-72 rotate-45 border-[24px] border-white/[0.06]"
+          />
+        </>
+      )}
       <nav
         aria-label="Account access"
-        className="relative hidden h-[320px] w-[88px] shrink-0 flex-col items-center justify-center gap-7 overflow-hidden bg-[#292524] lg:flex"
+        className={`relative z-10 flex w-full items-center justify-center gap-3 lg:ml-auto lg:w-1/2 lg:flex-col lg:gap-7 lg:py-10 ${
+          embedded ? "" : "flex-col py-10"
+        }`}
       >
-        <span
-          aria-hidden="true"
-          className="absolute -left-12 top-8 h-36 w-36 rotate-45 border-[12px] border-white/10"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute -bottom-16 -right-12 h-40 w-40 rotate-45 border-[12px] border-white/10"
-        />
         {modes.map((mode) => {
           const isActive = mode.id === activeMode;
 
@@ -51,10 +56,10 @@ export default function AuthModeSwitch({ activeMode }) {
               key={mode.id}
               href={mode.href}
               aria-current={isActive ? "page" : undefined}
-              className={`relative z-10 flex min-h-11 w-full items-center justify-center text-[10px] font-semibold uppercase tracking-[1px] transition ${
+              className={`flex min-h-12 min-w-28 items-center justify-center text-[11px] font-semibold uppercase tracking-[1.4px] transition lg:w-full ${
                 isActive
-                  ? "-ml-5 w-[calc(100%+20px)] rounded-l-full bg-white text-[#292524]"
-                  : "text-white/75 hover:text-white"
+                  ? "rounded-full bg-white text-[#292524] lg:-ml-5 lg:w-[calc(100%+20px)] lg:rounded-l-full lg:rounded-r-none"
+                  : "text-white/90 hover:text-white"
               }`}
             >
               {mode.label}
@@ -62,6 +67,6 @@ export default function AuthModeSwitch({ activeMode }) {
           );
         })}
       </nav>
-    </>
+    </aside>
   );
 }
