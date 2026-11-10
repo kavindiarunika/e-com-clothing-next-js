@@ -4,10 +4,13 @@
 import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AuthModeSwitch from "@/components/user/common/AuthModeSwitch";
 import {
   ArrowRight,
   Eye,
   EyeOff,
+  LockKeyhole,
+  Mail,
 } from "lucide-react";
 
 export default function LoginPage() {
@@ -111,8 +114,8 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#747b78] px-4 py-8 sm:px-8">
-      <div className="grid w-full max-w-5xl overflow-hidden bg-white shadow-2xl lg:min-h-[620px] lg:grid-cols-2">
+    <main className="flex min-h-[100svh] items-center justify-center bg-white px-4 py-6 sm:px-8 sm:py-8">
+      <div className="my-4 grid w-full max-w-5xl overflow-hidden bg-white shadow-2xl sm:my-6 lg:min-h-[620px] lg:grid-cols-2">
 
         {/* =========================
             LEFT IMAGE
@@ -148,8 +151,11 @@ export default function LoginPage() {
         {/* =========================
             RIGHT LOGIN
         ========================= */}
-        <div className="flex items-center justify-center px-6 py-10 sm:px-10 lg:px-14">
-          <div className="w-full max-w-sm">
+        <div className="flex items-center justify-center px-6 py-10 sm:px-10 lg:px-8">
+          <div className="flex w-full max-w-[500px] items-center justify-center gap-3">
+            <div className="w-full min-w-0 max-w-sm">
+
+              <AuthModeSwitch activeMode="login" />
 
             {/* BRAND */}
             <div className="mb-5 text-center">
@@ -161,20 +167,6 @@ export default function LoginPage() {
               </Link>
 
               <div className="mx-auto mt-4 h-px w-8 bg-[var(--color-primary)]" />
-            </div>
-
-            {/* TITLE */}
-            <div className="mb-5">
-              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[3px] text-[var(--color-primary)]">
-                Welcome Back
-              </p>
-
-              <h1 className="font-serif text-3xl text-[#292524]">
-                Sign in to your account
-              </h1>
-              <p className="mt-2 text-sm leading-6 text-[#6B625C]">
-                Sign in to your Velora account
-              </p>
             </div>
 
             {/* GOOGLE LOGIN */}
@@ -245,10 +237,7 @@ export default function LoginPage() {
             </div>
 
             {/* LOGIN FORM */}
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-4"
-            >
+            <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
                 <p
                   role="alert"
@@ -258,16 +247,20 @@ export default function LoginPage() {
                 </p>
               )}
 
-              {/* EMAIL */}
               <div>
                 <label
                   htmlFor="email"
-                  className="mb-2 block text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
+                  className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[#292524]"
                 >
                   Email
                 </label>
-
-                <div className="relative">
+                <div className="group flex items-center border-b border-[#D8D8D8] transition-colors focus-within:border-[#292524]">
+                  <Mail
+                    size={17}
+                    strokeWidth={1.8}
+                    aria-hidden="true"
+                    className="shrink-0 text-[#8B817A] transition-colors group-focus-within:text-[#292524]"
+                  />
                   <input
                     id="email"
                     type="email"
@@ -276,51 +269,35 @@ export default function LoginPage() {
                       setEmail(event.target.value);
                       setError("");
                     }}
-                    placeholder="Enter your email"
+                    placeholder="Email"
                     required
-                    className="
-                      w-full
-                      border
-                      border-[#E5E5E5]
-                      bg-white
-                      px-4
-                      py-3
-                      text-sm
-                      text-[#292524]
-                      outline-none
-                      transition
-                      placeholder:text-[#A69C94]
-                      focus:border-[var(--color-primary)]
-                    "
+                    className="h-11 w-full bg-transparent px-3 text-sm text-[#292524] outline-none placeholder:text-[#A69C94]"
                   />
                 </div>
               </div>
 
-              {/* PASSWORD */}
               <div>
-                <div className="mb-2 flex items-center justify-between">
+                <div className="mb-1 flex items-center justify-between">
                   <label
                     htmlFor="password"
-                    className="text-xs font-semibold uppercase tracking-[1.5px] text-[#292524]"
+                    className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#292524]"
                   >
-                    Password
+                  Password
                   </label>
-
                   <Link
                     href="/user/forgot-password"
-                    className="
-                      text-[11px]
-                      font-medium
-                      text-[var(--color-primary)]
-                      transition
-                      hover:text-[var(--color-primary-hover)]
-                    "
+                    className="text-xs font-medium text-[var(--color-primary)] transition hover:text-[var(--color-primary-hover)]"
                   >
                     Forgot Password?
                   </Link>
                 </div>
-
-                <div className="relative">
+                <div className="group flex items-center border-b border-[#D8D8D8] transition-colors focus-within:border-[#292524]">
+                  <LockKeyhole
+                    size={17}
+                    strokeWidth={1.8}
+                    aria-hidden="true"
+                    className="shrink-0 text-[#8B817A] transition-colors group-focus-within:text-[#292524]"
+                  />
                   <input
                     id="password"
                     type={
@@ -331,23 +308,9 @@ export default function LoginPage() {
                       setPassword(event.target.value);
                       setError("");
                     }}
-                    placeholder="Enter your password"
+                    placeholder="Password"
                     required
-                    className="
-                      w-full
-                      border
-                      border-[#E5E5E5]
-                      bg-white
-                      px-4
-                      py-3
-                      pr-12
-                      text-sm
-                      text-[#292524]
-                      outline-none
-                      transition
-                      placeholder:text-[#A69C94]
-                      focus:border-[var(--color-primary)]
-                    "
+                    className="h-11 w-full bg-transparent px-3 text-sm text-[#292524] outline-none placeholder:text-[#A69C94]"
                   />
 
                   <button
@@ -356,13 +319,15 @@ export default function LoginPage() {
                       setShowPassword(!showPassword)
                     }
                     className="
-                      absolute
-                      right-4
-                      top-1/2
-                      -translate-y-1/2
+                      shrink-0
+                      rounded-full
+                      p-2
                       text-[#8B817A]
                       transition
                       hover:text-[var(--color-primary)]
+                      focus-visible:outline-2
+                      focus-visible:outline-offset-2
+                      focus-visible:outline-[var(--color-primary)]
                     "
                     aria-label={
                       showPassword
@@ -379,44 +344,21 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* LOGIN BUTTON */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="
-                  group
-                  flex
-                  h-11
-                  w-full
-                  items-center
-                  justify-center
-                  gap-3
-                  bg-[#292524]
-                  text-xs
-                  font-semibold
-                  uppercase
-                  tracking-[2px]
-                  text-white
-                  transition
-                  duration-300
-                  hover:bg-[var(--color-primary)]
-                  disabled:cursor-not-allowed
-                  disabled:opacity-60
-                "
-              >
-                {loading ? "Signing In..." : "Login"}
-
-                {!loading && (
-                  <ArrowRight
-                    size={16}
-                    className="
-                      transition-transform
-                      duration-300
-                      group-hover:translate-x-1
-                    "
-                  />
-                )}
-              </button>
+              <div className="flex justify-end pt-1">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="group flex h-11 min-w-24 items-center justify-center gap-2 rounded-full bg-[#292524] px-6 text-xs font-semibold uppercase tracking-[1.2px] text-white transition duration-300 hover:bg-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {loading ? "Signing In..." : "Login"}
+                  {!loading && (
+                    <ArrowRight
+                      size={15}
+                      className="transition-transform duration-300 group-hover:translate-x-1"
+                    />
+                  )}
+                </button>
+              </div>
             </form>
 
             <div className="mt-5">
@@ -439,28 +381,8 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* REGISTER */}
-            <div className="mt-6 border-t border-[#E5E5E5] pt-5 text-center">
-              <p className="text-sm text-[#6B625C]">
-                Don&apos;t have an account?
-              </p>
-
-              <Link
-                href="/user/register"
-                className="
-                  mt-2
-                  inline-block
-                  text-sm
-                  font-semibold
-                  text-[var(--color-primary)]
-                  transition
-                  hover:text-[var(--color-primary-hover)]
-                "
-              >
-                Create Account
-              </Link>
             </div>
-
+            <AuthModeSwitch activeMode="login" />
           </div>
         </div>
       </div>
