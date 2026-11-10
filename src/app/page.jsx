@@ -17,7 +17,7 @@ export default function Home() {
         <BestSellingProducts />
         <FeaturedProducts />
         
-        <NewArrivals />
+        
         <FindYourStyle />
         <HomeEditorialSections />
         <Newsletter />
