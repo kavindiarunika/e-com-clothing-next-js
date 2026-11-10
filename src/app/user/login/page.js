@@ -1,10 +1,9 @@
-
 "use client";
 
 import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import AuthModeSwitch from "@/components/user/common/AuthModeSwitch";
 import {
   ArrowRight,
   Eye,
@@ -12,21 +11,22 @@ import {
   LockKeyhole,
   Mail,
 } from "lucide-react";
+import AuthModeSwitch from "@/components/user/common/AuthModeSwitch";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
 
   const getPostLoginPath = () => {
     const requestedPath = new URLSearchParams(window.location.search).get("next");
-    return (requestedPath === "/user" ||
+    return requestedPath === "/user" ||
       (requestedPath?.startsWith("/user/") &&
-        !requestedPath.startsWith("/user/login")))
+        !requestedPath.startsWith("/user/login"))
       ? requestedPath
       : "/user";
   };
@@ -41,42 +41,14 @@ export default function LoginPage() {
     } else if (googleStatus === "unavailable") {
       startTransition(() => setError("Google sign-in is not configured yet."));
     } else if (googleStatus === "error") {
-      const failureMessages = {
-        account_database:
-          "Google authenticated you, but your account could not be loaded or created. Check the MySQL server and users table.",
-        account_inactive:
-          "This email is linked to an inactive or non-customer account. Contact the store administrator.",
-        identity_verification:
-          "Google sign-in could not verify your account. Try again or check the dev-server terminal.",
-        oauth_invalid_client:
-          "Google rejected the OAuth client credentials. Verify the client ID and current client secret in .env, then restart the dev server.",
-        oauth_invalid_grant:
-          "Google rejected the sign-in code. Start again at http://localhost:3000 and make sure the authorized redirect URI is exactly http://localhost:3000/api/auth/google/callback.",
-        oauth_unauthorized_client:
-          "This OAuth client is not permitted for the requested sign-in. Check the OAuth client type and consent-screen configuration in Google Cloud Console.",
-        oauth_config:
-          "Google OAuth credentials are missing. Check GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env, then restart the dev server.",
-        provider_error:
-          "Google declined or canceled sign-in. Check the OAuth consent screen and add your account as a test user if the app is in testing mode.",
-        session_error:
-          "The Google sign-in session expired or changed hosts. Start again at http://localhost:3000 and use the same address throughout.",
-        token_exchange_network:
-          "The app could not reach Google's token service. Check the server's internet connection, then try again.",
-        token_exchange:
-          "Google rejected the OAuth token exchange. Check the client secret and confirm the authorized redirect URI is exactly http://localhost:3000/api/auth/google/callback.",
-      };
-      const reason = searchParams.get("google_reason");
       startTransition(() =>
-        setError(
-          failureMessages[reason] ||
-            "Google sign-in failed. Check the dev-server terminal for details."
-        )
+        setError("Google sign-in failed. Please try again.")
       );
     }
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError("");
     setLoading(true);
 
@@ -109,95 +81,45 @@ export default function LoginPage() {
     window.location.assign(googleUrl);
   };
 
-  const handleGuestCheckout = () => {
-    router.push("/user/checkout?guest=true");
-  };
-
   return (
-    <main className="flex min-h-[100svh] items-center justify-center bg-white px-4 py-6 sm:px-8 sm:py-8">
-      <div className="my-4 grid w-full max-w-5xl overflow-hidden bg-white shadow-2xl sm:my-6 lg:min-h-[620px] lg:grid-cols-2">
+    <main className="flex min-h-[100svh] items-center justify-center bg-white p-4 sm:p-8">
+      <div className="grid w-full max-w-5xl overflow-hidden bg-white shadow-[0_18px_55px_rgba(0,0,0,0.28)] lg:min-h-[620px] lg:grid-cols-[0.8fr_1.2fr]">
+        <AuthModeSwitch activeMode="login" embedded />
 
-        {/* =========================
-            LEFT IMAGE
-        ========================= */}
-        <div className="relative hidden min-h-[620px] overflow-hidden lg:block">
-          <img
-            src="/images/login/login.jpg"
-            alt="Velora fashion"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-
-          <div className="absolute inset-0 bg-[#292524]/40" />
-
-          <div className="absolute bottom-12 left-12 max-w-md text-white">
-            <p className="mb-4 text-xs uppercase tracking-[4px] text-[#F5F5F5]">
-              VELORA
-            </p>
-
-            <h2 className="font-serif text-5xl leading-tight">
-              Style that
-              <span className="block italic text-[#CCB2A5]">
-                feels like you.
-              </span>
-            </h2>
-
-            <p className="mt-5 text-sm leading-6 text-white/70">
-              Discover timeless pieces designed for your everyday
-              elegance.
-            </p>
-          </div>
-        </div>
-
-        {/* =========================
-            RIGHT LOGIN
-        ========================= */}
-        <div className="flex items-center justify-center px-6 py-10 sm:px-10 lg:px-8">
-          <div className="flex w-full max-w-[500px] items-center justify-center gap-3">
-            <div className="w-full min-w-0 max-w-sm">
-
-              <AuthModeSwitch activeMode="login" />
-
-            {/* BRAND */}
-            <div className="mb-5 text-center">
+        <section className="flex items-center justify-center px-6 py-10 sm:px-10 lg:px-14">
+          <div className="w-full max-w-sm">
+            <div className="mb-7 text-center">
               <Link
                 href="/"
-                className="font-serif text-2xl font-semibold tracking-wide text-[#292524]"
+                aria-label="Velora home"
+                className="inline-flex justify-center"
               >
-                VELORA
+                <Image
+                  src="/logo.jpeg"
+                  alt="Velora"
+                  width={100}
+                  height={100}
+                  className="h-20 w-20 object-contain"
+                  priority
+                />
               </Link>
-
-              <div className="mx-auto mt-4 h-px w-8 bg-[var(--color-primary)]" />
             </div>
 
-            {/* GOOGLE LOGIN */}
+            {error && (
+              <p
+                role="alert"
+                className="mb-5 border border-[#C98B8B] bg-[#F8EAEA] px-4 py-3 text-sm text-[#8B3A3A]"
+              >
+                {error}
+              </p>
+            )}
+
             <button
               type="button"
               onClick={handleGoogleLogin}
               disabled={googleLoading}
-              className="
-                flex
-                h-11
-                w-full
-                items-center
-                justify-center
-                gap-3
-                border
-                border-[#E5E5E5]
-                bg-white
-                text-xs
-                font-semibold
-                uppercase
-                tracking-[1.3px]
-                text-[#292524]
-                transition
-                duration-300
-                hover:border-[#292524]
-                hover:bg-[#F5F5F5]
-                disabled:cursor-not-allowed
-                disabled:opacity-60
-              "
+              className="flex h-11 w-full items-center justify-center gap-3 border border-[#E5E5E5] bg-white text-xs font-semibold uppercase tracking-[1.3px] text-[#292524] transition hover:border-[#292524] hover:bg-[#F5F5F5] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {/* Google Icon */}
               <svg
                 width="18"
                 height="18"
@@ -221,40 +143,26 @@ export default function LoginPage() {
                   d="M12 6.39c1.43 0 2.71.49 3.72 1.46l2.79-2.79C16.84 3.49 14.63 2.5 12 2.5a9.75 9.75 0 0 0-8.72 5.39l3.25 2.53C7.3 8.11 9.46 6.39 12 6.39Z"
                 />
               </svg>
-
               {googleLoading ? "Redirecting..." : "Continue with Google"}
             </button>
 
-            {/* DIVIDER */}
             <div className="my-5 flex items-center gap-4">
               <span className="h-px flex-1 bg-[#E5E5E5]" />
-
               <span className="text-[10px] uppercase tracking-[2px] text-[#A69C94]">
                 Or
               </span>
-
               <span className="h-px flex-1 bg-[#E5E5E5]" />
             </div>
 
-            {/* LOGIN FORM */}
             <form onSubmit={handleSubmit} className="space-y-5">
-              {error && (
-                <p
-                  role="alert"
-                  className="border border-[#C98B8B] bg-[#F8EAEA] px-4 py-3 text-sm text-[#8B3A3A]"
-                >
-                  {error}
-                </p>
-              )}
-
               <div>
-                <label
-                  htmlFor="email"
-                  className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[#292524]"
-                >
-                  Email
-                </label>
-                <div className="group flex items-center border-b border-[#D8D8D8] transition-colors focus-within:border-[#292524]">
+                <div className="group relative flex items-center rounded-md border border-[#D8D8D8] bg-white px-3 transition-colors focus-within:border-[#292524]">
+                  <label
+                    htmlFor="email"
+                    className="absolute -top-2 left-3 z-10 bg-white px-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#292524]"
+                  >
+                    Email
+                  </label>
                   <Mail
                     size={17}
                     strokeWidth={1.8}
@@ -264,6 +172,7 @@ export default function LoginPage() {
                   <input
                     id="email"
                     type="email"
+                    autoComplete="email"
                     value={email}
                     onChange={(event) => {
                       setEmail(event.target.value);
@@ -271,19 +180,13 @@ export default function LoginPage() {
                     }}
                     placeholder="Email"
                     required
-                    className="h-11 w-full bg-transparent px-3 text-sm text-[#292524] outline-none placeholder:text-[#A69C94]"
+                    className="h-12 w-full bg-transparent px-3 text-sm text-[#292524] outline-none placeholder:text-[#A69C94]"
                   />
                 </div>
               </div>
 
               <div>
-                <div className="mb-1 flex items-center justify-between">
-                  <label
-                    htmlFor="password"
-                    className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#292524]"
-                  >
-                  Password
-                  </label>
+                <div className="mb-2 flex justify-end">
                   <Link
                     href="/user/forgot-password"
                     className="text-xs font-medium text-[var(--color-primary)] transition hover:text-[var(--color-primary-hover)]"
@@ -291,7 +194,13 @@ export default function LoginPage() {
                     Forgot Password?
                   </Link>
                 </div>
-                <div className="group flex items-center border-b border-[#D8D8D8] transition-colors focus-within:border-[#292524]">
+                <div className="group relative flex items-center rounded-md border border-[#D8D8D8] bg-white px-3 transition-colors focus-within:border-[#292524]">
+                  <label
+                    htmlFor="password"
+                    className="absolute -top-2 left-3 z-10 bg-white px-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#292524]"
+                  >
+                    Password
+                  </label>
                   <LockKeyhole
                     size={17}
                     strokeWidth={1.8}
@@ -300,9 +209,8 @@ export default function LoginPage() {
                   />
                   <input
                     id="password"
-                    type={
-                      showPassword ? "text" : "password"
-                    }
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
                     value={password}
                     onChange={(event) => {
                       setPassword(event.target.value);
@@ -310,68 +218,38 @@ export default function LoginPage() {
                     }}
                     placeholder="Password"
                     required
-                    className="h-11 w-full bg-transparent px-3 text-sm text-[#292524] outline-none placeholder:text-[#A69C94]"
+                    className="h-12 w-full bg-transparent px-3 text-sm text-[#292524] outline-none placeholder:text-[#A69C94]"
                   />
-
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowPassword(!showPassword)
-                    }
-                    className="
-                      shrink-0
-                      rounded-full
-                      p-2
-                      text-[#8B817A]
-                      transition
-                      hover:text-[var(--color-primary)]
-                      focus-visible:outline-2
-                      focus-visible:outline-offset-2
-                      focus-visible:outline-[var(--color-primary)]
-                    "
-                    aria-label={
-                      showPassword
-                        ? "Hide password"
-                        : "Show password"
-                    }
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="shrink-0 rounded-full p-2 text-[#8B817A] transition hover:text-[var(--color-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
-                    {showPassword ? (
-                      <EyeOff size={18} />
-                    ) : (
-                      <Eye size={18} />
-                    )}
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
 
-              <div className="flex justify-end pt-1">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="group flex h-11 min-w-24 items-center justify-center gap-2 rounded-full bg-[#292524] px-6 text-xs font-semibold uppercase tracking-[1.2px] text-white transition duration-300 hover:bg-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {loading ? "Signing In..." : "Login"}
-                  {!loading && (
-                    <ArrowRight
-                      size={15}
-                      className="transition-transform duration-300 group-hover:translate-x-1"
-                    />
-                  )}
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="group flex h-11 w-full items-center justify-center gap-2 bg-[#292524] text-xs font-semibold uppercase tracking-[2px] text-white transition duration-300 hover:bg-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? "Signing In..." : "Login"}
+                {!loading && (
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                )}
+              </button>
             </form>
 
-            <div className="mt-5">
-              <div className="mb-4 flex items-center gap-4">
-                <span className="h-px flex-1 bg-[#E5E5E5]" />
-                <span className="text-[10px] uppercase tracking-[2px] text-[#A69C94]">
-                  Or
-                </span>
-                <span className="h-px flex-1 bg-[#E5E5E5]" />
-              </div>
+            <div className="mt-5 border-t border-[#E5E5E5] pt-5">
               <button
                 type="button"
-                onClick={handleGuestCheckout}
+                onClick={() => router.push("/user/checkout?guest=true")}
                 className="h-11 w-full border border-[#292524] bg-white text-xs font-semibold uppercase tracking-[1.5px] text-[#292524] transition hover:bg-[#F5F5F5]"
               >
                 Continue as Guest
@@ -380,11 +258,8 @@ export default function LoginPage() {
                 No account, email, or password needed.
               </p>
             </div>
-
-            </div>
-            <AuthModeSwitch activeMode="login" />
           </div>
-        </div>
+        </section>
       </div>
     </main>
   );

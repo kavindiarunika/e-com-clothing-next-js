@@ -421,16 +421,6 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
     setCurrentPage(1);
   };
 
-  const categoryDescription = {
-    Men: "Explore timeless styles and premium essentials designed for modern men.",
-
-    Women:
-      "Discover elegant and contemporary pieces designed to express your unique style.",
-
-    Kids:
-      "Find comfortable, stylish and playful pieces made for every little personality.",
-  };
-
   return (
     <main className="min-h-screen bg-[#FFFFFF]">
 
@@ -438,9 +428,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
       <section className="border-b border-[#E5E5E5] bg-[#FFFFFF]">
 
-        <div className="mx-auto w-[92%] max-w-300 py-8 md:py-8">
-
-          
+        <div className="mx-auto w-[92%] max-w-300 py-5">
           <div className="flex items-center gap-2 text-sm text-[#6B625C]">
 
             <Link
@@ -455,14 +443,6 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
             <span>{category}</span>
 
           </div>
-
-          <h1 className="mt-3 font-serif text-3xl font-medium text-[#292524] md:text-4xl">
-            {category}
-          </h1>
-
-          <p className="mt-3 max-w-xl text-sm leading-6 text-[#6B625C]">
-            {categoryDescription[category]}
-          </p>
 
         </div>
 
