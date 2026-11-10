@@ -113,14 +113,10 @@ export default function HeroBanner() {
                 }`}
               />
 
-              {/* OVERLAYS */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#060302]/90 via-[#060302]/50 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#060302]/50 to-transparent" />
-
               {/* CONTENT */}
               <div className="relative z-10 mx-auto flex h-full max-w-[1200px] items-center px-5 sm:px-[5%]">
                 <div
-                  className={`max-w-[520px] text-white transition-all duration-700 ease-out ${
+                  className={`max-w-[520px] text-[#292524] transition-all duration-700 ease-out ${
                     activeIndex === index
                       ? "translate-y-0 opacity-100 delay-200"
                       : "translate-y-6 opacity-0"
@@ -128,16 +124,16 @@ export default function HeroBanner() {
                 >
                   <div className="mb-3 flex items-center gap-2.5 sm:mb-4">
                     <span className="h-px w-8 bg-[#e63e62]" />
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#FAF6F5]">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#292524]">
                       Velora
                     </span>
                   </div>
 
-                  <h1 className="max-w-[500px] text-[2rem] font-semibold leading-[1.08] tracking-tight [word-spacing:0.1em] text-white sm:text-4xl md:text-[48px]">
+                  <h1 className="max-w-[500px] text-[2rem] font-semibold leading-[1.08] tracking-tight [word-spacing:0.1em] text-[#292524] sm:text-4xl md:text-[48px]">
                     {slide.title}
                   </h1>
 
-                  <p className="mt-3 max-w-[440px] text-[13px] leading-5 text-white/70 sm:mt-4 sm:text-sm sm:leading-6">
+                  <p className="mt-3 max-w-[440px] text-[13px] leading-5 text-[#57514D] sm:mt-4 sm:text-sm sm:leading-6">
                     {slide.subtitle}
                   </p>
 
@@ -163,12 +159,12 @@ export default function HeroBanner() {
               </div>
 
               {/* SLIDE NUMBER */}
-              <div className="absolute bottom-6 right-[5%] z-20 hidden items-center gap-2.5 text-white sm:flex">
+              <div className="absolute bottom-6 right-[5%] z-20 hidden items-center gap-2.5 text-[#292524] sm:flex">
                 <span className="font-serif text-sm font-medium">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="h-px w-10 bg-white/30" />
-                <span className="text-[10px] tracking-wide text-white/45">
+                <span className="h-px w-10 bg-[#292524]/30" />
+                <span className="text-[10px] tracking-wide text-[#292524]/60">
                   {String(slides.length).padStart(2, "0")}
                 </span>
               </div>
@@ -183,14 +179,14 @@ export default function HeroBanner() {
           <button
             type="button"
             aria-label="Previous slide"
-            className="velora-prev flex h-9 w-9 items-center justify-center border border-white/25 bg-black/10 text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white hover:text-[#292524]"
+            className="velora-prev flex h-9 w-9 items-center justify-center border border-[#292524]/25 bg-white/50 text-[#292524] backdrop-blur-md transition-all duration-300 hover:border-[#292524] hover:bg-white hover:text-[#292524]"
           >
             <ArrowLeft size={14} strokeWidth={1.5} />
           </button>
           <button
             type="button"
             aria-label="Next slide"
-            className="velora-next flex h-9 w-9 items-center justify-center border border-white/25 bg-black/10 text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white hover:text-[#292524]"
+            className="velora-next flex h-9 w-9 items-center justify-center border border-[#292524]/25 bg-white/50 text-[#292524] backdrop-blur-md transition-all duration-300 hover:border-[#292524] hover:bg-white hover:text-[#292524]"
           >
             <ArrowRight size={14} strokeWidth={1.5} />
           </button>
@@ -207,14 +203,14 @@ export default function HeroBanner() {
           width: 6px;
           height: 6px;
           border-radius: 9999px;
-          background: rgba(255, 255, 255, 0.35);
+          background: rgba(41, 37, 36, 0.35);
           opacity: 1;
           margin: 0 !important;
           transition: width 0.4s ease, background-color 0.4s ease;
         }
         .velora-pagination .swiper-pagination-bullet-active {
           width: 22px;
-          background: #ffffff;
+          background: #292524;
         }
       `}</style>
     </section>

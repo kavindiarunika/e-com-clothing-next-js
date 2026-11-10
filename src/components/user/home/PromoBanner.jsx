@@ -149,9 +149,8 @@ export default function PromoBanner() {
                 border
                 border-white/80
                 overflow-hidden
-                bg-[var(--color-dark)]
+                bg-[#F2EEE8]
                 py-3 sm:py-6
-                shadow-[0_12px_36px_rgba(0,0,0,0.32)]
               `)}
             >
 
@@ -178,33 +177,25 @@ export default function PromoBanner() {
               />
 
               {/* =====================================================
-                  DARK OVERLAY
-              ===================================================== */}
-
-              <div className="absolute inset-0 bg-[var(--color-dark)]/70" />
-
-              <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-dark)]/90 via-[var(--color-dark)]/70 to-[var(--color-dark)]/45" />
-
-              {/* =====================================================
                   CONTENT
               ===================================================== */}
 
-              <div className="relative z-10 flex min-h-[136px] w-full items-center px-4 py-3 sm:min-h-[208px] sm:px-7 sm:py-6">
+              <div className="relative z-10 flex min-h-[136px] w-full items-center bg-white/75 px-4 py-3 backdrop-blur-[2px] sm:min-h-[208px] sm:px-7 sm:py-6">
                 <div className="flex w-full flex-col items-start gap-2 sm:gap-4">
-                  <div className="flex items-center gap-2 text-[var(--color-banner)]">
+                  <div className="flex items-center gap-2 text-[var(--color-primary)]">
                     <Sparkles size={15} strokeWidth={1.8} />
-                    <span className="text-[10px] font-semibold uppercase tracking-[2px]">
+                    <span className="text-[10px] font-semibold uppercase tracking-[2px] text-[#292524]">
                       Exclusive Offer
                     </span>
                   </div>
 
                   <div className="w-full">
-                    <h2 className="text-lg font-semibold leading-tight tracking-wide text-white sm:text-2xl">
+                    <h2 className="text-lg font-semibold leading-tight tracking-wide text-[#292524] sm:text-2xl">
                       {offer.title}
                     </h2>
                     {offer.description && (
                       <div
-                        className="mt-1 line-clamp-2 text-xs leading-relaxed text-white/85 sm:mt-2 sm:line-clamp-3 sm:text-base"
+                        className="mt-1 line-clamp-2 text-xs leading-relaxed text-[#57514D] sm:mt-2 sm:line-clamp-3 sm:text-base"
                         dangerouslySetInnerHTML={{
                           __html: sanitizeProductDescription(offer.description),
                         }}
@@ -212,10 +203,10 @@ export default function PromoBanner() {
                     )}
                   </div>
 
-                  <div className="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-white/20 pt-4">
+                  <div className="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-[#292524]/15 pt-4">
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                       {(formatOfferDate(offer.start_date) || formatOfferDate(offer.end_date)) && (
-                        <p className="text-xs font-medium text-white/80">
+                        <p className="text-xs font-medium text-[#57514D]">
                           {formatOfferDate(offer.start_date) && formatOfferDate(offer.end_date)
                             ? `Valid ${formatOfferDate(offer.start_date)} - ${formatOfferDate(offer.end_date)}`
                             : `Valid ${formatOfferDate(offer.start_date || offer.end_date)}`}

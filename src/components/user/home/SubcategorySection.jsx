@@ -96,8 +96,8 @@ export default function SubcategorySection() {
           onSwiper={(swiper) => {
             swiperRef.current = swiper;
           }}
-          slidesPerView={2.2}
-          spaceBetween={14}
+          slidesPerView={3}
+          spaceBetween={8}
           loop={subcategories.length > 2}
           autoplay={{
             delay: 2500,
@@ -107,8 +107,8 @@ export default function SubcategorySection() {
           speed={900}
           breakpoints={{
             480: {
-              slidesPerView: 2.8,
-              spaceBetween: 18,
+              slidesPerView: 3.2,
+              spaceBetween: 12,
             },
             640: {
               slidesPerView: 3.5,
@@ -139,7 +139,7 @@ export default function SubcategorySection() {
                   className="group flex h-full flex-col items-center gap-4 pb-3 text-center"
                 >
                   {/* 3D Circle Image */}
-                  <div className="relative aspect-square w-[min(34vw,150px)] shrink-0 rounded-full p-[5px] transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105 sm:w-[140px] md:w-[155px] lg:w-[165px]"
+                  <div className="relative aspect-square w-[min(25vw,110px)] shrink-0 rounded-full p-[5px] transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105 sm:w-[140px] md:w-[155px] lg:w-[165px]"
                     style={{
                       background:
                         "linear-gradient(145deg, #ffffff, #e9d9d5, #c99da0)",
@@ -153,7 +153,7 @@ export default function SubcategorySection() {
                           src={subcategory.image}
                           alt={`${subcategory.name} fashion`}
                           fill
-                          sizes="(max-width: 480px) 34vw, (max-width: 768px) 140px, 165px"
+                          sizes="(max-width: 639px) 25vw, (max-width: 768px) 140px, 165px"
                           unoptimized
                           className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
                         />
