@@ -100,7 +100,7 @@ export default function BestSellingProducts() {
                 key={product.id}
                 className="shadow-[0_4px_15px_rgba(50,45,41,0.10)]"
               >
-                <ProductCard product={product} />
+                <ProductCard product={product} compact />
               </div>
             ))}
           </div>

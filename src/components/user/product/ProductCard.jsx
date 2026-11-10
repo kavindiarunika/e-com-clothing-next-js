@@ -10,6 +10,7 @@ export default function ProductCard({
   product,
   showSoldOut = false,
   onWishlistChange,
+  compact = false,
 }) {
   const router = useRouter();
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -238,7 +239,11 @@ export default function ProductCard({
           PRODUCT IMAGE
       ====================================== */}
 
-      <div className="relative aspect-[3/4] overflow-hidden bg-[#F5F5F5]">
+      <div
+        className={`relative overflow-hidden bg-[#F5F5F5] ${
+          compact ? "aspect-[1/1.15] sm:aspect-[3/4]" : "aspect-[3/4]"
+        }`}
+      >
 
         <Link
           href={`/user/product/${product.id}`}
