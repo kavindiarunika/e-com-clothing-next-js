@@ -61,7 +61,7 @@ export default function HeroBanner() {
   if (loading) {
     return (
       <section className="user-page-full-bleed relative w-full overflow-visible bg-[#292524] sm:h-[400px] sm:overflow-hidden">
-        <div className="h-[400px] w-full animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622] sm:absolute sm:inset-0 sm:h-full" />
+        <div className="h-[100px] w-full animate-pulse bg-gradient-to-r from-[#2a2622] via-[#292524] to-[#2a2622] sm:absolute sm:inset-0 sm:h-full" />
         <PromoBanner />
       </section>
     );

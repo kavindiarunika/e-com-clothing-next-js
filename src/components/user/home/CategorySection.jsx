@@ -289,8 +289,8 @@ export default function CategorySection() {
             onSwiper={(swiper) => {
               swiperRef.current = swiper;
             }}
-            slidesPerView={1.15}
-            spaceBetween={16}
+            slidesPerView={2}
+            spaceBetween={10}
             breakpoints={{
               640: { slidesPerView: 2, spaceBetween: 16 },
               1024: { slidesPerView: 3, spaceBetween: 20 },
