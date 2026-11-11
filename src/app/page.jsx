@@ -16,11 +16,11 @@ export default function Home() {
       <Navbar />
       <HeroBanner />
       <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10">
+        <SubcategorySection />
         <BestSellingProducts />
         <CategorySection />
         <FeaturedProducts />
         <NewArrivals />
-        <SubcategorySection />
         <FindYourStyle />
         <HomeEditorialSections />
         <Newsletter />
