@@ -29,7 +29,7 @@ export default function ShopPage({
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 8;
+  const pageSize = 12;
   const productGridRef = useRef(null);
 
   useEffect(() => {

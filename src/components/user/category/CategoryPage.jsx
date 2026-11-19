@@ -40,7 +40,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
-  const pageSize = 8;
+  const pageSize = 12;
   const productGridRef = useRef(null);
 
   useEffect(() => {
