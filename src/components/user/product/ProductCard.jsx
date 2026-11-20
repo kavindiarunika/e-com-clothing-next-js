@@ -268,7 +268,7 @@ export default function ProductCard({
 
         {isSoldOut && (
           <span
-            className="absolute left-2 top-2 z-20 bg-[#292524] px-2 py-1 text-[9px] font-semibold uppercase tracking-[1px] text-white shadow-sm sm:left-3 sm:top-3 sm:px-2.5 sm:py-1.5"
+            className="absolute left-2 top-2 z-20 bg-red-600 px-2 py-1 text-[9px] font-semibold uppercase tracking-[1px] text-white shadow-sm sm:left-3 sm:top-3 sm:px-2.5 sm:py-1.5"
           >
             Sold Out
           </span>

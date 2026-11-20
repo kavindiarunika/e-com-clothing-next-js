@@ -23,7 +23,7 @@ export default function ShopPage({
 
   // Availability
   const [selectedAvailability, setSelectedAvailability] =
-    useState("available");
+    useState("all");
 
   const [sortBy, setSortBy] = useState(initialSort);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -38,7 +38,7 @@ export default function ShopPage({
     async function loadProducts() {
       try {
         const response = await fetch(
-          "/api/user/Product?status=active",
+          "/api/user/Product?status=active&include_out_of_stock=1",
           {
             signal: controller.signal,
             cache: "no-store",
@@ -53,17 +53,6 @@ export default function ShopPage({
         const apiProducts = Array.isArray(result.data) ? result.data : [];
         setProducts(
           apiProducts
-            .filter((product) => {
-              const variants = product.variants || [];
-              const variantStock = variants.reduce(
-                (total, variant) => total + (Number(variant.stock) || 0),
-                0
-              );
-              const totalStock = variantStock > 0
-                ? variantStock
-                : Number(product.total_stock) || 0;
-              return totalStock > 0;
-            })
             .map((product) => ({
               id: product.item_id,
               name: product.title,
@@ -141,16 +130,11 @@ export default function ShopPage({
     return availableStock <= 0;
   }, []);
 
-  const hasAvailableStock = useCallback(
-    (product) => !isProductSoldOut(product),
-    [isProductSoldOut]
-  );
-
   // =========================
   // Filter Products
   // =========================
   const filteredProducts = useMemo(() => {
-    let result = [...products].filter(hasAvailableStock);
+    let result = [...products];
 
     if (sortBy === "featured") {
       result = result.filter((product) => product.isFeatured);
@@ -316,7 +300,6 @@ export default function ShopPage({
     selectedSizes,
     selectedAvailability,
     sortBy,
-    hasAvailableStock,
     isProductSoldOut,
   ]);
 

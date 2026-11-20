@@ -11,7 +11,7 @@ export async function GET(req) {
     const status = searchParams.get('status'); // optional filter: active/inactive/out_of_stock
     const category_id = searchParams.get('category_id'); // optional filter
     const includeCategoryFamily = searchParams.get('include_category_family') === '1';
-    const includeOutOfStock = searchParams.get('include_out_of_stock') === '1';
+    const includeOutOfStock = searchParams.get('include_out_of_stock') !== '0';
     const offer_id = searchParams.get('offer_id'); // optional filter
     const featured = searchParams.get('featured'); // optional: "1" or "0"
     const search = searchParams.get('search')?.trim();

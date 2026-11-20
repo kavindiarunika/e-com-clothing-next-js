@@ -16,7 +16,7 @@ export default function FeaturedProducts() {
     async function loadFeaturedProducts() {
       try {
         const response = await fetch(
-          "/api/user/Product?status=active&featured=1",
+          "/api/user/Product?status=active&featured=1&include_out_of_stock=1",
           { signal: controller.signal }
         );
 
@@ -98,7 +98,7 @@ export default function FeaturedProducts() {
                 key={product.id}
                 className="shadow-[0_4px_15px_rgba(50,45,41,0.10)]"
               >
-                <ProductCard product={product} compact />
+                <ProductCard product={product} showSoldOut compact />
               </div>
             ))}
           </div>

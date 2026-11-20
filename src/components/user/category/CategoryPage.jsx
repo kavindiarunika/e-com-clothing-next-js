@@ -50,7 +50,7 @@ function CategoryPageContent({ category, subcategory, subcategorySlug }) {
       try {
         const [categoriesResponse, productsResponse] = await Promise.all([
           fetch("/api/admin/categories", { signal: controller.signal }),
-          fetch("/api/user/Product?status=active", {
+          fetch("/api/user/Product?status=active&include_out_of_stock=1", {
             signal: controller.signal,
           }),
         ]);

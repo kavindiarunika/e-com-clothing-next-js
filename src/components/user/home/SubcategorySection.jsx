@@ -74,7 +74,7 @@ export default function SubcategorySection() {
                 type="button"
                 onClick={() => swiperRef.current?.slidePrev()}
                 aria-label="Previous subcategories"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition-all duration-300 hover:-translate-y-1 hover:bg-[#A96870] hover:text-white hover:shadow-lg sm:h-10 sm:w-10"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition-all duration-300 hover:-translate-y-1 hover:bg-[var(--color-primary)] hover:text-white hover:shadow-lg sm:h-10 sm:w-10"
               >
                 <ArrowLeft size={17} />
               </button>
@@ -82,7 +82,7 @@ export default function SubcategorySection() {
                 type="button"
                 onClick={() => swiperRef.current?.slideNext()}
                 aria-label="Next subcategories"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition-all duration-300 hover:-translate-y-1 hover:bg-[#A96870] hover:text-white hover:shadow-lg sm:h-10 sm:w-10"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E7DEDC] text-[#292524] transition-all duration-300 hover:-translate-y-1 hover:bg-[var(--color-primary)] hover:text-white hover:shadow-lg sm:h-10 sm:w-10"
               >
                 <ArrowRight size={17} />
               </button>

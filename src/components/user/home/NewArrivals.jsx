@@ -16,7 +16,7 @@ export default function NewArrivals() {
     async function loadNewArrivals() {
       try {
         const response = await fetch(
-          "/api/user/Product?status=active",
+          "/api/user/Product?status=active&include_out_of_stock=1",
           { signal: controller.signal }
         );
 
@@ -98,7 +98,7 @@ export default function NewArrivals() {
                 key={product.id}
                 className="shadow-[0_4px_15px_rgba(50,45,41,0.10)]"
               >
-                <ProductCard product={product} compact />
+                <ProductCard product={product} showSoldOut compact />
               </div>
             ))}
           </div>

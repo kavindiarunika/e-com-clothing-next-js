@@ -79,6 +79,7 @@ export default function FilterSidebar({
             {[
               ["all", "All Products"],
               ["available", "In Stock"],
+              ["soldout", "Out of Stock"],
             ].map(([value, label]) => (
               <label
                 key={value}

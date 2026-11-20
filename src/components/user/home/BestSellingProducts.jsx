@@ -14,7 +14,7 @@ export default function BestSellingProducts() {
 
     async function loadBestSellingProducts() {
       try {
-        const response = await fetch("/api/user/Product?status=active", {
+        const response = await fetch("/api/user/Product?status=active&include_out_of_stock=1", {
           signal: controller.signal,
         });
 
@@ -100,7 +100,7 @@ export default function BestSellingProducts() {
                 key={product.id}
                 className="shadow-[0_4px_15px_rgba(50,45,41,0.10)]"
               >
-                <ProductCard product={product} compact />
+                <ProductCard product={product} showSoldOut compact />
               </div>
             ))}
           </div>
