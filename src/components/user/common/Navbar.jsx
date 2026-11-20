@@ -363,18 +363,18 @@ export default function Navbar() {
 
             {openCollection && (
               <div className="absolute left-1/2 top-full flex w-[35rem] -translate-x-1/2 items-start gap-2 pt-3">
-                <div className="w-72 shrink-0 overflow-hidden rounded-xl border border-[#E5E5E5] bg-black p-2 text-white shadow-[0_16px_40px_rgba(41,37,36,0.18)]">
-                  <label className="flex h-10 items-center gap-2 rounded-lg bg-[#F5F5F5] px-3 focus-within:ring-1 focus-within:ring-[var(--color-primary)]">
-                    <Search size={15} className="shrink-0 text-[var(--color-primary)]" />
+                <div className="w-72 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[#171717] p-2 text-white shadow-[0_16px_40px_rgba(0,0,0,0.38)]">
+                  <label className="flex h-10 items-center gap-2 rounded-lg border border-white/10 bg-[#262626] px-3 focus-within:border-white/30 focus-within:ring-1 focus-within:ring-white/20">
+                    <Search size={15} className="shrink-0 text-white/70" />
                     <input
                       type="search"
                       value={collectionSearchTerm}
                       onChange={(event) => setCollectionSearchTerm(event.target.value)}
                       placeholder="Search collections..."
                       aria-label="Search collections"
-                      className="min-w-0 flex-1 bg-transparent text-xs text-[#292524] outline-none placeholder:text-[#8B817A]"
+                      className="min-w-0 flex-1 bg-transparent text-xs text-white outline-none placeholder:text-white/45"
                     />
-                    <ChevronDown size={14} className="shrink-0 text-white" />
+                    <ChevronDown size={14} className="shrink-0 text-white/60" />
                   </label>
 
                   <div className="mt-2 max-h-64 overflow-y-auto">
@@ -384,7 +384,7 @@ export default function Navbar() {
 
                         return (
                           <div key={collection.id}>
-                            <div className="group flex min-h-12 items-center rounded-lg text-white transition-colors hover:bg-[#F1F1F1] hover:text-[var(--color-primary-hover)]">
+                            <div className="group flex min-h-12 items-center rounded-lg text-white transition-colors hover:bg-[#303030]">
                               <Link
                                 href={collection.href}
                                 onClick={closeMenu}
@@ -399,7 +399,7 @@ export default function Navbar() {
                                 ) : (
                                   <span
                                     aria-hidden="true"
-                                    className="h-9 w-9 shrink-0 rounded-full bg-[#F5F5F5]"
+                                    className="h-9 w-9 shrink-0 rounded-full bg-white/10"
                                   />
                                 )}
                                 <span className="flex-1">{collection.name}</span>
@@ -414,7 +414,7 @@ export default function Navbar() {
                                       expanded ? null : collection.id
                                     )
                                   }
-                                  className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
+                                  className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
                                 >
                                   <ChevronRight
                                     size={16}
@@ -438,7 +438,7 @@ export default function Navbar() {
 
                 {expandedCollection && (
                   <div
-                    className="w-64 shrink-0 overflow-hidden rounded-xl border border-[#E5E5E5] bg-black p-2 text-white shadow-[0_16px_40px_rgba(41,37,36,0.18)]"
+                    className="w-64 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[#171717] p-2 text-white shadow-[0_16px_40px_rgba(0,0,0,0.38)]"
                     style={{ marginTop: `${56 + expandedCollectionIndex * 48}px` }}
                   >
                     <div className="max-h-80 overflow-y-auto">
@@ -447,7 +447,7 @@ export default function Navbar() {
                           key={subcategory.id}
                           href={subcategory.href}
                           onClick={closeMenu}
-                          className="flex min-h-12 items-center gap-3 rounded-lg px-3 py-2 text-xs text-white transition-colors hover:bg-[#F1F1F1] hover:text-[var(--color-primary-hover)] focus-visible:bg-[#F1F1F1] focus-visible:outline-none"
+                          className="flex min-h-12 items-center gap-3 rounded-lg px-3 py-2 text-xs text-white/85 transition-colors hover:bg-[#303030] hover:text-white focus-visible:bg-[#303030] focus-visible:outline-none"
                         >
                           {subcategory.image ? (
                             <img
@@ -458,7 +458,7 @@ export default function Navbar() {
                           ) : (
                             <span
                               aria-hidden="true"
-                              className="h-9 w-9 shrink-0 rounded-full bg-[#F5F5F5]"
+                              className="h-9 w-9 shrink-0 rounded-full bg-white/10"
                             />
                           )}
                           <span>{subcategory.name}</span>
