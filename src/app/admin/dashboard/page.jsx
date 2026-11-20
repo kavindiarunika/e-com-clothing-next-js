@@ -22,6 +22,10 @@ export default function AdminDashboard() {
   const [data, setData] = useState(null);
   const [products, setProducts] = useState([]);
   const [offers, setOffers] = useState([]);
+  const [soldProducts, setSoldProducts] = useState([]);
+  const [soldProductsPeriod, setSoldProductsPeriod] = useState("today");
+  const [soldProductsLoading, setSoldProductsLoading] = useState(true);
+  const [soldProductsError, setSoldProductsError] = useState("");
   const [productSearch, setProductSearch] = useState("");
   const [productStatus, setProductStatus] = useState("all");
   const [productCategory, setProductCategory] = useState("all");
@@ -164,6 +168,47 @@ export default function AdminDashboard() {
     loadDashboard();
   }, [router]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadSoldProducts() {
+      try {
+        setSoldProductsLoading(true);
+        setSoldProductsError("");
+
+        const response = await fetch(
+          `/api/admin/dashboard/sold-products?period=${encodeURIComponent(soldProductsPeriod)}`,
+          {
+            cache: "no-store",
+            signal: controller.signal,
+          }
+        );
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Failed to load sold products.");
+        }
+
+        setSoldProducts(Array.isArray(result.data) ? result.data : []);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Sold products loading error:", error);
+          setSoldProductsError(
+            error.message || "Failed to load sold products."
+          );
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setSoldProductsLoading(false);
+        }
+      }
+    }
+
+    void loadSoldProducts();
+
+    return () => controller.abort();
+  }, [soldProductsPeriod]);
+
   // ============================================
   // LOADING
   // ============================================
@@ -274,6 +319,78 @@ export default function AdminDashboard() {
 
       </div>
 
+      <section className="admin-card dashboard-panel">
+        <div className="card-header">
+          <div>
+            <p className="panel-kicker">SALES</p>
+            <h2>Products sold</h2>
+          </div>
+
+          <div className="dashboard-sold-products-header">
+            <label className="dashboard-sold-products-filter">
+              <span>Period</span>
+              <select
+                value={soldProductsPeriod}
+                onChange={(event) => setSoldProductsPeriod(event.target.value)}
+                aria-label="Filter products sold by period"
+              >
+                <option value="today">Today</option>
+                <option value="week">Last 7 days</option>
+                <option value="month">Last 30 days</option>
+                <option value="twoMonths">Last 60 days</option>
+              </select>
+            </label>
+            <span className="panel-period">
+              {soldProducts.length} products
+            </span>
+          </div>
+        </div>
+
+        <div className="dashboard-table-wrapper">
+          <table className="dashboard-table dashboard-sold-products-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>SKU</th>
+                <th>Category</th>
+                <th>Quantity sold</th>
+              </tr>
+            </thead>
+            <tbody>
+              {soldProductsLoading ? (
+                <tr>
+                  <td colSpan={4} className="dashboard-table-empty">
+                    Loading sold products...
+                  </td>
+                </tr>
+              ) : soldProductsError ? (
+                <tr>
+                  <td colSpan={4} className="dashboard-table-empty">
+                    {soldProductsError}
+                  </td>
+                </tr>
+              ) : soldProducts.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="dashboard-table-empty">
+                    No paid sales found for this period.
+                  </td>
+                </tr>
+              ) : (
+                soldProducts.map((product) => (
+                  <tr key={product.item_id}>
+                    <td>
+                      <strong>{product.title}</strong>
+                    </td>
+                    <td>{product.sku || "-"}</td>
+                    <td>{product.category_name || "-"}</td>
+                    <td>{Number(product.quantity_sold).toLocaleString()}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {/* ============================================
           STAT CARDS
